@@ -1,0 +1,7 @@
+{
+    "host":"192.168.0.4",
+    "user":"scshin",
+    "password":"Rnalek19!",
+    "port":"5432",
+    "database":"management"
+}
