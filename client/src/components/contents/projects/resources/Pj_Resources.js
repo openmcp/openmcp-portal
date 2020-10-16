@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-class Settings extends Component {
+class Pj_Resources extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                This is Settings page.
+                This is Resources page.
                 
             </div>
         );
     }
 }
 
-export default Settings;
+export default Pj_Resources;

@@ -3,7 +3,7 @@ import React, { Component } from "react";
 class Storages extends Component {
   render() {
     return (
-      <div className="content-wrapper">
+      <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>

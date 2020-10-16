@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 
-class Projects extends Component {
+class Clusters extends Component {
   render() {
     return (
-      <div className="content-wrapper">
+        <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-          Projects
+            Clusters
             <small>Info</small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <a href="/dashboard/">
+              <a href="/dashboard">
                 <i className="fa fa-dashboard"></i> Home
               </a>
             </li>
@@ -24,4 +24,4 @@ class Projects extends Component {
   }
 }
 
-export default Projects;
+export default Clusters;

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
-class Secrets extends Component {
+class Pj_Pods extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                This is Secrets page.
+                This is Pods page.
+                
             </div>
         );
     }
 }
 
-export default Secrets;
+export default Pj_Pods;

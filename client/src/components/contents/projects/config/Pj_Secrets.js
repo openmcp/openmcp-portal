@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 
-class ConfigMaps extends Component {
+class Pj_Secrets extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                 This is ConfigMaps page.
+                This is Secrets page.
             </div>
         );
     }
 }
 
-export default ConfigMaps;
+export default Pj_Secrets;

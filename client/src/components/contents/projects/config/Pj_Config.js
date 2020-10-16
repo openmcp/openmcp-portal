@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-class Pods extends Component {
+class Pj_Config extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                This is Pods page.
+                This is Conifg page.
                 
             </div>
         );
     }
 }
 
-export default Pods;
+export default Pj_Config;

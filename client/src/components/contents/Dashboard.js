@@ -2,8 +2,10 @@ import React, { Component } from "react";
 
 class Dashboard extends Component {
   render() {
+    // let classNam = 'content-wrapper';
+    // console.log(this.props);
     return (
-      <div className="content-wrapper">
+      <div className="content-wrapper full">
 
         {/* 컨텐츠 헤더 */}
         <section className="content-header">

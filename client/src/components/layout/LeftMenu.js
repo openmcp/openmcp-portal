@@ -23,7 +23,7 @@ class LeftMenuProject extends Component{
     }
   }
   render(){
-    console.log("LeftMenuProject");
+    console.log("LeftMenu comp");
     return(
       <aside className="main-sidebar">
         <section className="sidebar">

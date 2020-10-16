@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-class Conifg extends Component {
+class Pj_Services extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                This is Conifg page.
+                This is Services page.
                 
             </div>
         );
     }
 }
 
-export default Conifg;
+export default Pj_Services;

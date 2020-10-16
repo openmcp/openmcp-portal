@@ -30,7 +30,7 @@ class SignIn extends Component {
         e.preventDefault()
         const { username, password } = this.state
         //login magic
-        if(username === "A" && password === "B"){
+        if(username === "penguinoz" && password === "123qweasd"){
 
             localStorage.setItem("token","asdlfkasjldkfjlkwejflkawef")
             this.setState({
@@ -38,12 +38,9 @@ class SignIn extends Component {
             })
         }
     }
-
-
-
-
     render() {
         if(this.state.loggedIn){
+            console.log('SignIn',this.state.loggedIn);
             return <Redirect to="/dashboard"></Redirect>
         }
         return (

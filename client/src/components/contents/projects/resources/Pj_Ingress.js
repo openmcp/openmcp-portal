@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 
-class Resources extends Component {
+class Pj_Ingress extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                This is Resources page.
-                
+                This is Ingress page.
             </div>
         );
     }
 }
 
-export default Resources;
+export default Pj_Ingress;

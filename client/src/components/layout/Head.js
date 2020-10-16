@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "../../css/style.css";
-import { Menu, Settings } from "@material-ui/icons";
+import { Settings } from "@material-ui/icons";
 
 // import styled from "styled-components";
 // import oc from "open-color";
@@ -33,14 +33,23 @@ class Head extends Component {
     this.props.onSelectMenu(false);
   };
 
+  onSelectLeftMenu = (e) => {
+    this.props.onSelectMenu(true);
+  };
+  
+  onLogout = (e) => {
+    // debugger;
+    localStorage.removeItem("token");
+  }
   render() {
+    console.log("Head comp");
     return (
       <header className="main-header">
-        <Link to="/dashboard" className="logo">
+        <NavLink to="/dashboard" className="logo" onClick={this.onSelectLeftMenu}>
           <span className="logo-lg">
             <b>OpenMCP</b>
           </span>
-        </Link>
+        </NavLink>
 
         <nav className="navbar navbar-static-top">
           <div className="top-menu navbar-left">
@@ -49,6 +58,9 @@ class Head extends Component {
             </NavLink>
             <NavLink to="/projects" activeClassName="active" onClick={this.onSelectTopMenu}>
               <span>Projects</span>
+            </NavLink>
+            <NavLink to="/pods" activeClassName="active" onClick={this.onSelectTopMenu}>
+              <span>Pods</span>
             </NavLink>
             <NavLink to="/clusters" activeClassName="active" onClick={this.onSelectTopMenu}>
               <span>Clusters</span>
@@ -69,12 +81,12 @@ class Head extends Component {
           <div className="navbar-custom-menu">
             <ul className="nav navbar-nav">
               <li className="dropdown user user-menu">
-                <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+                <Link to="/login" className="dropdown-toggle" data-toggle="dropdown" onClick={this.onLogout}>
                   <span className="hidden-xs">scshin</span>
-                </a>
+                </Link>
               </li>
               <li className="dropdown user user-menu">
-                <a href="#" className="dropdown-toggle" data-toggle="dropdown">
+                <a href="/" className="dropdown-toggle" data-toggle="dropdown">
                   {/* <span className="hidden-xs">설정아이콘</span> */}
                   <Settings style={{ fontSize: 20 }}></Settings>
                 </a>

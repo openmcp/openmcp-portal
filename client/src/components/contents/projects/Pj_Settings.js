@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 
-class Workloads extends Component {
+class Pj_Settings extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                This is Workloads page.
+                This is Settings page.
                 
             </div>
         );
     }
 }
 
-export default Workloads;
+export default Pj_Settings;

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
-class Ingress extends Component {
+class Pj_Volumes extends Component {
     render() {
         return (
             <div className="content-wrapper">
-                This is Ingress page.
+                This is Volumes page.
+                
             </div>
         );
     }
 }
 
-export default Ingress;
+export default Pj_Volumes;
