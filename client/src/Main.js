@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Head from "./components/layout/Head";
-import LeftMenu from "./components/layout/LeftMenu";
 import Contents from "./components/layout/Contents";
 import { Redirect } from "react-router-dom";
+import LeftMenu from './components/layout/LeftMenu';
 
 class Main extends Component {
   constructor(props) {
@@ -15,53 +15,42 @@ class Main extends Component {
     }
 
     this.state = {
-      isLeftMenuOn: true,
+      isLeftMenuOn: false,
       isLogined: true,
       loggedIn,
+      windowHeight: undefined,
+      windowWidth: undefined
     };
   }
 
-  onSelectMenu = (data) => {
-    //왼쪽 메뉴의 표시여부를 결정
-    this.setState({ isLeftMenuOn: Boolean(data) });
-    //컨텐츠 영역 확장되도록 수정
-  };
-  
-  // onStage = () => {
-  //   console.log("onStage");
-  //   if (this.state.loggedIn) {
-  //     console.log("login");
-  //     return <SignIn></SignIn>;
-  //   } else {
-  //     console.log("not login");
-  //     if (this.state.isLeftMenuOn) {
-  //       return [
-  //         <Head onSelectMenu={this.onSelectMenu} />,
-  //         <LeftMenu />,
-  //         <Contents />,
-  //       ];
-  //     }
-  //     return [<Head onSelectMenu={this.onSelectMenu} />, <Contents />];
-  //   }
-  // };
-  // componentDidMount(){
-  //   console.log(this.props.location.pathname);
-  //   if(this.props.location.pathname === "/"){
-  //     console.log("true");
-  //     return <Redirect to="/dashboard"></Redirect>;
-  //   }
-  // }
-  
+//   componentWillMount(){
+//     console.log("WINDOW : ",window);
+//     this.setState({height: window.innerHeight + 'px',width:window.innerWidth+'px'});
+// }
+
+  handleResize = () => this.setState({
+    windowHeight: window.innerHeight,
+    windowWidth: window.innerWidth
+  });
+
+  componentDidMount() {
+    this.handleResize();
+    window.addEventListener('resize', this.handleResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+  }
+
   render() {
     if (!this.state.loggedIn) {
-      console.log("Main", this.state.loggedIn);
       return <Redirect to="/login"></Redirect>;
     }
     return (
-      <div className="wrapper">
-        <Head onSelectMenu={this.onSelectMenu} />
-        {this.state.isLeftMenuOn ? <LeftMenu /> : ""}
-        <Contents path={this.props.location.pathname}/>
+      <div className="wrapper" style={{minHeight:this.state.windowHeight}}>
+        <Head onSelectMenu={this.onLeftMenu} />
+        {/* <LeftMenu /> */}
+        <Contents path={this.props.location.pathname} onSelectMenu={this.onLeftMenu} info={this.props}/>
       </div>
     );
   }

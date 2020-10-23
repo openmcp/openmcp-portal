@@ -1,9 +1,11 @@
 import React, { Component } from "react";
 
 class Dashboard extends Component {
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
   render() {
     // let classNam = 'content-wrapper';
-    // console.log(this.props);
     return (
       <div className="content-wrapper full">
 

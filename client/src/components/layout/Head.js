@@ -29,23 +29,22 @@ import { Link, NavLink } from 'react-router-dom';
 // `;
 
 class Head extends Component {
-  onSelectTopMenu = (e) => {
-    this.props.onSelectMenu(false);
-  };
+  // onSelectTopMenu = (e) => {
+  //   this.props.onSelectMenu(false,"");
+  // };
 
-  onSelectLeftMenu = (e) => {
-    this.props.onSelectMenu(true);
-  };
+  // onSelectLeftMenu = (e) => {
+  //   this.props.onSelectMenu(true,"");
+  // };
   
   onLogout = (e) => {
     // debugger;
     localStorage.removeItem("token");
   }
   render() {
-    console.log("Head comp");
     return (
       <header className="main-header">
-        <NavLink to="/dashboard" className="logo" onClick={this.onSelectLeftMenu}>
+        <NavLink to="/dashboard" className="logo">
           <span className="logo-lg">
             <b>OpenMCP</b>
           </span>
@@ -53,19 +52,19 @@ class Head extends Component {
 
         <nav className="navbar navbar-static-top">
           <div className="top-menu navbar-left">
-            <NavLink to="/dashboard" activeClassName="active" onClick={this.onSelectTopMenu}>
+            <NavLink to="/dashboard" activeClassName="active">
               <span>Dashboard</span>
             </NavLink>
-            <NavLink to="/projects" activeClassName="active" onClick={this.onSelectTopMenu}>
+            <NavLink to="/projects" activeClassName="active" >
               <span>Projects</span>
             </NavLink>
-            <NavLink to="/pods" activeClassName="active" onClick={this.onSelectTopMenu}>
+            <NavLink to="/pods" activeClassName="active" >
               <span>Pods</span>
             </NavLink>
-            <NavLink to="/clusters" activeClassName="active" onClick={this.onSelectTopMenu}>
+            <NavLink to="/clusters" activeClassName="active" >
               <span>Clusters</span>
             </NavLink>
-            <NavLink to="/storages" activeClassName="active" onClick={this.onSelectTopMenu}>
+            <NavLink to="/storages" activeClassName="active" >
               <span>Storages</span>
             </NavLink>
           </div>

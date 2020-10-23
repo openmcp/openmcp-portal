@@ -1,0 +1,125 @@
+{
+  "basic_info": {
+    "name": "project1",
+    "creator": "admin",
+    "description": "project1 namespace"
+  },
+
+  "project_resource": [
+    {
+      "resource": "Pods",
+      "total": 12,
+      "abnormal": 5
+    },
+    {
+      "resource": "Deployments",
+      "total": 5,
+      "abnormal": 0
+    },
+    {
+      "resource": "StatefulSets",
+      "total": 2,
+      "abnormal": 2
+    },
+    {
+      "resource": "DaemonSets",
+      "total": 1,
+      "abnormal": 0
+    },
+    {
+      "resource": "Jobs",
+      "total": 1,
+      "abnormal": 0
+    }    
+  ],
+
+  "usage_top_5": {
+    "cpu": [
+      {
+        "name": "cattle-cluster-agent",
+        "type": "Deployment",
+        "usage": "3m"
+      },
+      {
+        "name": "cattle-node-agent",
+        "type": "DaemonSet",
+        "usage": "2m"
+      },
+      {
+        "name": "openldap",
+        "type": "StatefulSet",
+        "usage": "1m"
+      },
+      {
+        "name": "cattle-node-agent",
+        "type": "DaemonSet",
+        "usage": "2m"
+      },
+      {
+        "name": "openldap",
+        "type": "StatefulSet",
+        "usage": "10m"
+      }
+    ],
+    "memory": [
+      {
+        "name": "ram-cattle-cluster-agent",
+        "type": "Deployment",
+        "usage": "3m"
+      },
+      {
+        "name": "ram-cattle-node-agent",
+        "type": "DaemonSet",
+        "usage": "2m"
+      },
+      {
+        "name": "ram-openldap",
+        "type": "StatefulSet",
+        "usage": "1m"
+      },
+      {
+        "name": "ram-cattle-node-agent",
+        "type": "DaemonSet",
+        "usage": "2m"
+      },
+      {
+        "name": "ram-openldap",
+        "type": "StatefulSet",
+        "usage": "11m"
+      }
+    ]
+  },
+
+  "physical_resources": [
+    {
+      "description": "이건 솔직히 실시간으로 가져와야 하는데 가능할지 모르겠다 일단 1분간격으로 가져온다고 생각하고 하자"
+    },
+    {
+      "datetime": "2020/10/22 13:20:22",
+      "cpu": "6.2m",
+      "memory": "386.2mib",
+      "network": {
+        "in": "77.66 Bps",
+        "out": "47.79 Bps"
+      }
+    },
+    {
+      "datetime": "2020/10/22 13:21:22",
+      "cpu": "6.2m",
+      "memory": "386.2mib",
+      "network": {
+        "in": "77.66 Bps",
+        "out": "47.79 Bps"
+      }
+    },
+    {
+      "datetime": "2020/10/22 13:22:22",
+      "cpu": "6.2m",
+      "memory": "386.2mib",
+      "network": {
+        "in": "77.66 Bps",
+        "out": "47.79 Bps"
+      }
+    }
+  ]
+}

@@ -14,16 +14,23 @@ import { NavLink } from 'react-router-dom';
 // }
 // 
 class LeftMenuProject extends Component{
-  constructor(props){
-    super(props);
-
-    this.state = {
-      projectName : "project02", //프로젝트에 다라서 수정되야함
-      createDate : "2020-10-10"
+  // constructor(props){
+    // super(props);
+    
+    state = {
+      params : this.props.title, //프로젝트에 따라서 수정되야함
+      rotate : false,
+      linkDisabled: true,
+      isActive: 1
     }
+  // }
+  handleClick(data) {
+    this.setState({isActive:data});
   }
+  
   render(){
-    console.log("LeftMenu comp");
+    // console.log("LeftMenuProject", this.props, this.state.params)
+    // console.log("LeftMenuProject state", this.state.params)
     return(
       <aside className="main-sidebar">
         <section className="sidebar">
@@ -31,69 +38,94 @@ class LeftMenuProject extends Component{
             <div className="pull-left image">
             </div>
             <div className="pull-left info">
-              <p>{this.state.projectName}</p>
-              <a href="/">{this.state.createDate}</a>
+              <p>{this.state.params}</p>
+              {/* <a href="/">{this.state.createDate}</a> */}
             </div>
           </div>
           
           <ul className="sidebar-menu tree" data-widget="tree">
-            <li className="header">Projects</li>
+            {/* <li className="header">Projects</li> */}
             <li className="" >
-              <NavLink to={"/projects/"+this.state.projectName+"/overview"} activeClassName="active">
+              <NavLink to={"/projects/"+this.state.params+"/overview"} activeClassName="active"
+              onClick={function(e){
+                this.handleClick("Overview")
+              }.bind(this)} 
+              >
                 <i className="fa fa-dashboard"></i> <span>Overview</span>
               </NavLink>
             </li>
             <li className="treeview">
-              <NavLink to={"/projects/"+this.state.projectName+"/resources"} activeClassName="active">
+              <NavLink to={"/projects/"+this.state.params+"/resources"} activeClassName="active" 
+              onClick={function(e){
+                e.preventDefault();
+                this.handleClick("Resource")
+                this.setState({ rotate: true })
+              }.bind(this)} 
+              className={this.state.isActive==="Resource" ? "active" : ""}>
                 <i className="fa fa-dashboard"></i> <span>Resources</span>
                 <span className="pull-right-container">
-                  <ArrowBackIos style={{fontSize:14}}/>
+                  <ArrowBackIos 
+                    style={{fontSize:14}}
+                    className={this.state.rotate ? "rotate" : ""}
+                  />
                 </span>
               </NavLink>
-              <ul className="treeview-menu">
+              <ul className={this.state.isActive==="Resource" ? "treeview-menu active" : "treeview-menu"}>
                 <li>
-                  <NavLink to={"/projects/"+this.state.projectName+"/resources/workloads"} activeClassName="active">
+                  <NavLink to={"/projects/"+this.state.params+"/resources/workloads"} activeClassName="active">
                     <i className="fa fa-circle-o"></i> <span>Workloads</span>
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to={"/projects/"+this.state.projectName+"/resources/pods"} activeClassName="active">
+                  <NavLink to={"/projects/"+this.state.params+"/resources/pods"} activeClassName="active">
                     <i className="fa fa-circle-o"></i> <span>Pods</span>
                   </NavLink>
                 </li>
 
                 <li>
-                  <NavLink to={"/projects/"+this.state.projectName+"/resources/services"} activeClassName="active">
+                  <NavLink to={"/projects/"+this.state.params+"/resources/services"} activeClassName="active">
                     <i className="fa fa-circle-o"></i> <span>Services</span>
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to={"/projects/"+this.state.projectName+"/resources/Ingress"} activeClassName="active">
+                  <NavLink to={"/projects/"+this.state.params+"/resources/Ingress"} activeClassName="active">
                     <i className="fa fa-circle-o"></i> <span>Ingress</span>
                   </NavLink>
                 </li>
               </ul>
             </li>
             <li className="">
-              <NavLink to={"/projects/"+this.state.projectName+"/volumes"} activeClassName="active">
+              <NavLink to={"/projects/"+this.state.params+"/volumes"} activeClassName="active"
+              onClick={function(e){
+                this.handleClick("Volumes")
+              }.bind(this)} >
                 <i className="fa fa-dashboard"></i> <span>Volumes</span>
               </NavLink>
             </li>
             <li className="treeview">
-              <NavLink to={"/projects/"+this.state.projectName+"/config"} activeClassName="active">
+              <NavLink to={"/projects/"+this.state.params+"/config"} activeClassName="active"
+              onClick={function(e){
+                e.preventDefault();
+                this.handleClick("Config")
+                this.setState({ rotate: true })
+              }.bind(this)} 
+              className={this.state.isActive==="Config" ? "active" : ""}>
                 <i className="fa fa-plus"></i> <span>Config</span>
                 <span className="pull-right-container">
-                  <ArrowBackIos style={{fontSize:14}}/>
+                <ArrowBackIos 
+                    style={{fontSize:14}}
+                    className={this.state.rotate ? "rotate" : ""}
+                  />
                 </span>
               </NavLink>
-              <ul className="treeview-menu">
+              <ul className={this.state.isActive==="Config" ? "treeview-menu active" : "treeview-menu"}>
                 <li>
-                  <NavLink to={"/projects/"+this.state.projectName+"/config/secrets"} activeClassName="active">
+                  <NavLink to={"/projects/"+this.state.params+"/config/secrets"} activeClassName="active">
                     <i className="fa fa-circle-o"></i> <span>Secrets</span>
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink to={"/projects/"+this.state.projectName+"/config/configmaps"} activeClassName="active">
+                  <NavLink to={"/projects/"+this.state.params+"/config/configmaps"} activeClassName="active">
                     <i className="fa fa-circle-o"></i> <span>ConfigMaps</span>
                   </NavLink>
                 </li>
@@ -101,15 +133,24 @@ class LeftMenuProject extends Component{
             </li>
 
             <li className="treeview">
-              <NavLink to={"/projects/"+this.state.projectName+"/settings"} activeClassName="active">
+              <NavLink to={"/projects/"+this.state.params+"/settings"} activeClassName="active"
+              onClick={function(e){
+                e.preventDefault();
+                this.handleClick("Settings")
+                this.setState({ rotate: true })
+              }.bind(this)} 
+              className={this.state.isActive==="Settings" ? "active" : ""}>
                 <i className="fa fa-cog"></i> <span>Settings</span>
                 <span className="pull-right-container">
-                  <ArrowBackIos style={{fontSize:14}}/>
+                <ArrowBackIos 
+                    style={{fontSize:14}}
+                    className={this.state.rotate ? "rotate" : ""}
+                  />
                 </span>
               </NavLink>
-              <ul className="treeview-menu">
+              <ul className={this.state.isActive==="Settings" ? "treeview-menu active" : "treeview-menu"}>
                 <li>
-                  <NavLink to={"/projects/"+this.state.projectName+"/settings/members"} activeClassName="active">
+                  <NavLink to={"/projects/"+this.state.params+"/settings/members"} activeClassName="active">
                     <i className="fa fa-circle-o"></i> <span>Members</span>
                   </NavLink>
                 </li>
@@ -198,9 +239,11 @@ class LeftMenuClusters extends Component{
 // }
 
 class LeftMenu extends Component {
+
   render() {
+    console.log("LeftMenu", this.props);
     return (
-      <LeftMenuProject></LeftMenuProject>
+      <LeftMenuProject title={this.props.title}></LeftMenuProject>
       //<LeftMenuClusters></LeftMenuClusters>
     );
   }

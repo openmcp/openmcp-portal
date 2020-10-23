@@ -7,7 +7,6 @@ import { Switch, Route } from "react-router-dom";
 class App extends Component {
 
   render() {
-    console.log('App');
     return (
       <Switch>
         <Route exact path="/login" component={SignIn} />

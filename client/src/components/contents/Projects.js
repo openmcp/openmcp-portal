@@ -1,157 +1,287 @@
-// import React, { Component } from "react";
+import React, { Component } from "react";
+import Paper from "@material-ui/core/Paper";
+import { NavLink, Link } from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {
+  SearchState,
+  IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
+  SortingState,
+  IntegratedSorting,
+} from "@devexpress/dx-react-grid";
+import {
+  Grid,
+  Table,
+  Toolbar,
+  SearchPanel,
+  TableHeaderRow,
+  PagingPanel,
+} from "@devexpress/dx-react-grid-material-ui";
+import Editor from "./../common/Editor";
 
-// class Projects extends Component {
-//   render() {
-//     return (
-//       <div className="content-wrapper full">
-//         {/* 컨텐츠 헤더 */}
-//         <section className="content-header">
-//           <h1>
-//           Projects
-//             <small>Info</small>
-//           </h1>
-//           <ol className="breadcrumb">
-//             <li>
-//               <a href="/dashboard/">
-//                 <i className="fa fa-dashboard"></i> Home
-//               </a>
-//             </li>
-//             <li className="active">Dashboard</li>
-//           </ol>
-//         </section>
-//       </div>
-//     );
-//   }
-// }
+class Projects extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { name: "project_name", title: "Name" },
+        { name: "project_status", title: "Status" },
+        { name: "project_creator", title: "Createor" },
+        { name: "project_create_time", title: "Created Time" },
+      ],
+      // rows: [
+      //   {
+      //     name: "project1",
+      //     status: "Healthy",
+      //     createor: "Admin",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project2",
+      //     status: "Unhealthy",
+      //     createor: "PM1",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project3",
+      //     status: "Healthy",
+      //     createor: "Admin",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project4",
+      //     status: "Healthy",
+      //     createor: "PM1",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project5",
+      //     status: "Healthy",
+      //     createor: "Admin",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project6",
+      //     status: "Unhealthy",
+      //     createor: "PM1",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project7",
+      //     status: "Healthy",
+      //     createor: "PM1",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project8",
+      //     status: "Healthy",
+      //     createor: "Admin",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project9",
+      //     status: "Healthy",
+      //     createor: "PM2",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project10",
+      //     status: "Healthy",
+      //     createor: "Admin",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project11",
+      //     status: "Unhealthy",
+      //     createor: "PM2",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      //   {
+      //     name: "project12",
+      //     status: "Healthy",
+      //     createor: "Admin",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      // ],
+      rows: "",
 
-// export default Projects;
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
+      // Paging Settings
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 5,
+      setPageSize: 5,
+      pageSizes: [5, 10, 15, 0],
 
-const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
-  {
-    id: 'population',
-    label: 'Population',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
-  },
-  {
-    id: 'density',
-    label: 'Density',
-    minWidth: 170,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
-];
+      completed: 0,
+    };
+  }
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
 
-const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520),
-  createData('Canada', 'CA', 37602103, 9984670),
-  createData('Australia', 'AU', 25475400, 7692024),
-  createData('Germany', 'DE', 83019200, 357578),
-  createData('Ireland', 'IE', 4857000, 70273),
-  createData('Mexico', 'MX', 126577691, 1972550),
-  createData('Japan', 'JP', 126317000, 377973),
-  createData('France', 'FR', 67022000, 640679),
-  createData('United Kingdom', 'GB', 67545757, 242495),
-  createData('Russia', 'RU', 146793744, 17098246),
-  createData('Nigeria', 'NG', 200962417, 923768),
-  createData('Brazil', 'BR', 210147125, 8515767),
-];
+  
 
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-  },
-  container: {
-    maxHeight: 440,
-  },
-});
-
-export default function StickyHeadTable() {
-  const classes = useStyles();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
+  callApi = async () => {
+    const response = await fetch("/api/projects");
+    const body = await response.json();
+    return body;
   };
 
-  const Projects = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
-  return (
-    <Paper className={classes.root}>
-      <TableContainer className={classes.container}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-              return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onChangePage={handleChangePage}
-        onChangeRowsPerPage={Projects}
+  //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  componentDidMount() {
+    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  render() {
+
+    // 셀 데이터 스타일 변경
+    const HighlightedCell = ({ value, style, row, ...restProps }) => (
+      <Table.Cell
+        {...restProps}
+        style={{
+          backgroundColor:
+            value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          cursor: "pointer",
+          ...style,
+        }}
+      >
+        <span
+          style={{
+            color:
+              value === "Healthy" ? "green" : value === "Unhealthy" ? "red" : undefined,
+          }}
+        >
+          {value}
+        </span>
+      </Table.Cell>
+    );
+
+    //셀
+    const Cell = (props) => {
+      const { column, row } = props;
+      if (column.name === "project_status") {
+        return <HighlightedCell {...props} />;
+      } else if (column.name === "project_name") {
+        return (
+          <Table.Cell
+            component={Link}
+            to={{
+              pathname: `/projects/${props.value}/overview`,
+              state: {
+                data : row
+              }
+            }}
+            {...props}
+            style={{ cursor: "pointer" }}
+          ></Table.Cell>
+        );
+      }
+      return <Table.Cell {...props} />;
+    };
+
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
       />
-    </Paper>
-  );
+    );
+    const Row = (props) => {
+      return <Table.Row {...props} />;
+    };
+
+    return (
+      <div className="content-wrapper full">
+        {/* 컨텐츠 헤더 */}
+        <section className="content-header">
+          <h1>
+            Projects
+            <small>List</small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <NavLink to="/dashboard">Home</NavLink>
+            </li>
+            <li className="active">Projects</li>
+          </ol>
+        </section>
+        <section className="content" style={{ position: "relative" }}>
+          <Paper>
+            {this.state.rows ? (
+              [
+                // <input type="button" value="create"></input>,
+                <Editor />,
+                <Grid
+                  rows={this.state.rows}
+                  columns={this.state.columns}
+                >
+                  <Toolbar />
+                  {/* 검색 */}
+                  <SearchState defaultValue="" />
+                  <IntegratedFiltering />
+                  <SearchPanel style={{ marginLeft: 0 }} />
+
+                  {/* 페이징 */}
+                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  {/* Sorting */}
+                  <SortingState
+                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+                  />
+                  <IntegratedSorting />
+
+                  {/* 테이블 */}
+                  <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={HeaderRow}
+                  />
+                </Grid>,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
+          </Paper>
+        </section>
+      </div>
+    );
+  }
 }
+
+export default Projects;

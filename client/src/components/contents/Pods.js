@@ -1,186 +1,219 @@
-// import React, { Component } from 'react';
+import React, { Component } from "react";
+import Paper from "@material-ui/core/Paper";
+import { NavLink, Link } from "react-router-dom";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import {
+  SearchState,
+  IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
+  SortingState,
+  IntegratedSorting,
+} from "@devexpress/dx-react-grid";
+import {
+  Grid,
+  Table,
+  Toolbar,
+  SearchPanel,
+  TableHeaderRow,
+  PagingPanel,
+} from "@devexpress/dx-react-grid-material-ui";
+import Editor from "./../common/Editor";
 
-// class Pods extends Component {
-//     render() {
-//         return (
-//             <div className="content-wrapper">
-//                 This is Conifg Pod list.
-//             </div>
-//         );
-//     }
-// }
+class Pods extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { name: "project_name", title: "Name" },
+        { name: "project_status", title: "Status" },
+        { name: "project_creator", title: "Createor" },
+        { name: "project_create_time", title: "Created Time" },
+      ],
+      // rows: [
+      //   {
+      //     name: "project1",
+      //     status: "Healthy",
+      //     createor: "Admin",
+      //     createdTime: "2020-07-16 21:45:36",
+      //     extradata: "scshin",
+      //   },
+      // ],
+      rows: "",
 
-// export default Pods;
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
+      // Paging Settings
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 5,
+      setPageSize: 5,
+      pageSizes: [5, 10, 15, 0],
 
-const useStyles1 = makeStyles((theme) => ({
-  root: {
-    flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
-  },
-}));
+      completed: 0,
+    };
+  }
 
-function TablePaginationActions(props) {
-  const classes = useStyles1();
-  const theme = useTheme();
-  const { count, page, rowsPerPage, onChangePage } = props;
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
 
-  const handleFirstPageButtonClick = (event) => {
-    onChangePage(event, 0);
+  
+
+  callApi = async () => {
+    const response = await fetch("/api/projects");
+    const body = await response.json();
+    return body;
   };
 
-  const handleBackButtonClick = (event) => {
-    onChangePage(event, page - 1);
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
-  const handleNextButtonClick = (event) => {
-    onChangePage(event, page + 1);
-  };
+  //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  componentDidMount() {
+    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  }
 
-  const handleLastPageButtonClick = (event) => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-  };
-
-  return (
-    <div className={classes.root}>
-      <IconButton
-        onClick={handleFirstPageButtonClick}
-        disabled={page === 0}
-        aria-label="first page"
+  render() {
+    // 셀 데이터 스타일 변경
+    const HighlightedCell = ({ value, style, row, ...restProps }) => (
+      <Table.Cell
+        {...restProps}
+        style={{
+          backgroundColor:
+            value === "Healthy"
+              ? "white"
+              : value === "Unhealthy"
+              ? "white"
+              : undefined,
+          cursor: "pointer",
+          ...style,
+        }}
       >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-      </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-      </IconButton>
-      <IconButton
-        onClick={handleNextButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="next page"
-      >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-      </IconButton>
-    </div>
-  );
+        <span
+          style={{
+            color:
+              value === "Healthy"
+                ? "green"
+                : value === "Unhealthy"
+                ? "red"
+                : undefined,
+          }}
+        >
+          {value}
+        </span>
+      </Table.Cell>
+    );
+
+    //셀
+    const Cell = (props) => {
+      const { column } = props;
+      if (column.name === "project_status") {
+        return <HighlightedCell {...props} />;
+      } else if (column.name === "project_name") {
+        return (
+          <Table.Cell
+            component={Link}
+            to={{
+              pathname: `/projects/${props.value}/overview`,
+              state: {
+                test : "testvalue"
+              }
+            }}
+            {...props}
+            style={{ cursor: "pointer" }}
+          ></Table.Cell>
+        );
+      }
+      return <Table.Cell {...props} />;
+    };
+
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
+      />
+    );
+    const i = 0;
+    const Row = (props) => {
+      return <Table.Row {...props} />;
+    };
+
+    return (
+      <div className="content-wrapper full">
+        {/* 컨텐츠 헤더 */}
+        <section className="content-header">
+          <h1>
+          Pods
+            <small>List</small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <NavLink to="/dashboard">Home</NavLink>
+            </li>
+            <li className="active">Pods</li>
+          </ol>
+        </section>
+        <section className="content" style={{ position: "relative" }}>
+          <Paper>
+            {this.state.rows ? (
+              [
+                // <input type="button" value="create"></input>,
+                <Editor />,
+                <Grid
+                  rows={this.state.rows}
+                  columns={this.state.columns}
+                  style={{ color: "red" }}
+                >
+                  <Toolbar />
+                  {/* 검색 */}
+                  <SearchState defaultValue="" />
+                  <IntegratedFiltering />
+                  <SearchPanel style={{ marginLeft: 0 }} />
+
+                  {/* 페이징 */}
+                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  {/* Sorting */}
+                  <SortingState
+                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+                  />
+                  <IntegratedSorting />
+
+                  {/* 테이블 */}
+                  <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={HeaderRow}
+                  />
+                </Grid>,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
+          </Paper>
+        </section>
+      </div>
+    );
+  }
 }
 
-TablePaginationActions.propTypes = {
-  count: PropTypes.number.isRequired,
-  onChangePage: PropTypes.func.isRequired,
-  page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired,
-};
-
-function createData(name, calories, fat) {
-  return { name, calories, fat };
-}
-
-const rows = [
-  createData('Cupcake', 305, 3.7),
-  createData('Donut', 452, 25.0),
-  createData('Eclair', 262, 16.0),
-  createData('Frozen yoghurt', 159, 6.0),
-  createData('Gingerbread', 356, 16.0),
-  createData('Honeycomb', 408, 3.2),
-  createData('Ice cream sandwich', 237, 9.0),
-  createData('Jelly Bean', 375, 0.0),
-  createData('KitKat', 518, 26.0),
-  createData('Lollipop', 392, 0.2),
-  createData('Marshmallow', 318, 0),
-  createData('Nougat', 360, 19.0),
-  createData('Oreo', 437, 18.0),
-].sort((a, b) => (a.calories < b.calories ? -1 : 1));
-
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-});
-
-export default function CustomPaginationActionsTable() {
-  const classes = useStyles2();
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="custom pagination table">
-        <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
-            <TableRow key={row.name}>
-              <TableCell component="th" scope="row">
-                {row.name}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.calories}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="right">
-                {row.fat}
-              </TableCell>
-            </TableRow>
-          ))}
-
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-  );
-}
+export default Pods;
