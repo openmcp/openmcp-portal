@@ -81,7 +81,7 @@ class Contents extends Component {
           {/* <Route path="/projects/:project/overview" component={Pj_Overview} /> */}
 
           <Route path="/projects/:name/overview" render={({match,location}) => <Pj_Overview  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-          <Route path="/projects/:name/resources/workloads" render={({match,location}) => <Pj_Workloads  match={match} location={location}/>} ></Route>
+          <Route path="/projects/:name/resources/workloads" render={({match,location}) => <Pj_Workloads  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/projects/:name/resources/pods" component={Pj_Pods} />
           <Route
             path="/projects/:project/resources/services"
