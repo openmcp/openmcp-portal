@@ -22,12 +22,17 @@ import MyResponsiveLine from "./../../../modules/LineChart";
 import SelectBox from "./../../../modules/SelectBox";
 import { withStyles } from "@material-ui/core/styles";
 
-import PropTypes from 'prop-types';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import PropTypes from "prop-types";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+
+
+
+
+
 
 
 const styles = (theme) => ({
@@ -70,13 +75,28 @@ function a11yProps(index) {
   };
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 let apiParams = "";
 class Pj_Workloads extends Component {
   state = {
     rows: "",
     completed: 0,
     reRender: "",
-    value:0,
+    value: 0,
   };
 
   componentWillMount() {
@@ -109,13 +129,12 @@ class Pj_Workloads extends Component {
   };
 
   render() {
-
-  const handleChange = (event, newValue) => {
-    this.setState({value : newValue});
-  };
+    const handleChange = (event, newValue) => {
+      this.setState({ value: newValue });
+    };
 
     // console.log("Pj_Workloads_Render : ", this.state.rows.basic_info);
-    const {classes} = this.props;
+    const { classes } = this.props;
     return (
       <div>
         <div className="content-wrapper">
@@ -137,7 +156,7 @@ class Pj_Workloads extends Component {
           </section>
 
           {/* 내용부분 */}
-          <section >
+          <section>
             {/* 탭매뉴가 들어간다. */}
             <div className={classes.root + "content"}>
               <AppBar position="static">
