@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import { NavLink } from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import line_chart_sample from './../../../json/line_chart_sample.json'
-import {ArrowBackIos, NavigateNext} from '@material-ui/icons';
+import { NavigateNext} from '@material-ui/icons';
+
 
 import {
   SearchState,
@@ -24,7 +25,7 @@ import MyResponsiveLine from './../../modules/LineChart';
 import SelectBox from './../../modules/SelectBox';
 
 let apiParams = "";
-class Pj_Overview extends Component {
+class Cs_Overview extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -32,9 +33,8 @@ class Pj_Overview extends Component {
   }
 
   componentWillMount() {
-    //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
-      menu : "projects",
+      menu : "clusters",
       title : this.props.match.params.name
     }
     this.props.menuData(result);
@@ -65,7 +65,7 @@ class Pj_Overview extends Component {
   };
 
   render() {
-    // console.log("Pj_Overview_Render : ",this.state.rows.basic_info);
+    console.log("Pj_Overview_Render : ",this.state.rows.basic_info);
     return (
       <div>
         <div className="content-wrapper">
@@ -81,7 +81,7 @@ class Pj_Overview extends Component {
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/projects">Projects</NavLink>
+                <NavLink to="/clusters">Clusters</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
@@ -301,5 +301,5 @@ class PhysicalResources extends Component {
 
 
 
-export default Pj_Overview;
+export default Cs_Overview;
 

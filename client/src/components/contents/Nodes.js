@@ -19,29 +19,25 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../common/Editor";
-import { NavigateNext} from '@material-ui/icons';
 
-
-
-
-class Clusters extends Component {
+class Nodes extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "provider", title: "Provider" },
-        { name: "nodes", title: "nodes" },
-        { name: "cpu", title: "CPU" },
-        { name: "ram", title: "Memory" },
+        { name: "project_name", title: "Name" },
+        { name: "project_status", title: "Status" },
+        { name: "project_creator", title: "Createor" },
+        { name: "project_create_time", title: "Created Time" },
       ],
+      
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, //화면 리스트 개수
+      pageSize: 5,
+      setPageSize: 5,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -55,7 +51,7 @@ class Clusters extends Component {
   
 
   callApi = async () => {
-    const response = await fetch("/clusters");
+    const response = await fetch("/api/projects");
     const body = await response.json();
     return body;
   };
@@ -75,27 +71,34 @@ class Clusters extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   render() {
-
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
         {...restProps}
         style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          backgroundColor:
+            value === "Healthy"
+              ? "white"
+              : value === "Unhealthy"
+              ? "white"
+              : undefined,
           cursor: "pointer",
           ...style,
-        }}>
+        }}
+      >
         <span
           style={{
             color:
-              value === "Provisioning" ? "skyblue" : 
-                value === "Unhealthy" ? "red" : 
-                  value === "Active" ? "green" : "black"
-          }}>
+              value === "Healthy"
+                ? "green"
+                : value === "Unhealthy"
+                ? "red"
+                : undefined,
+          }}
+        >
           {value}
         </span>
       </Table.Cell>
@@ -103,21 +106,22 @@ class Clusters extends Component {
 
     //셀
     const Cell = (props) => {
-      const { column, row } = props;
-      // console.log("cell : ", props);
-      if (column.name === "status") {
+      const { column } = props;
+      if (column.name === "project_status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "name") {
+      } else if (column.name === "project_name") {
         return (
           <Table.Cell
+            component={Link}
+            to={{
+              pathname: `/projects/${props.value}/overview`,
+              state: {
+                test : "testvalue"
+              }
+            }}
             {...props}
             style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/clusters/${props.value}/overview`,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
+          ></Table.Cell>
         );
       }
       return <Table.Cell {...props} />;
@@ -134,9 +138,9 @@ class Clusters extends Component {
         // onClick={()=> alert(JSON.stringify(row))}
       />
     );
+    const i = 0;
     const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} />;
     };
 
     return (
@@ -144,27 +148,26 @@ class Clusters extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Cluster
+          Nodes
             <small>List</small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
-            <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Clusters
-            </li>
+            <li className="active">Nodes</li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
               [
+                // <input type="button" value="create"></input>,
                 <Editor />,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
+                  style={{ color: "red" }}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -173,13 +176,13 @@ class Clusters extends Component {
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
@@ -205,4 +208,4 @@ class Clusters extends Component {
   }
 }
 
-export default Clusters;
+export default Nodes;

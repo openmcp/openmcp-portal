@@ -3,13 +3,10 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
-var os = require('os');
-var path = require('path');
-
+var os = require("os");
+var path = require("path");
 
 const port = process.env.PORT || 5000;
-
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -34,133 +31,104 @@ const connection = new Client({
 //데이터베이스 접속
 connection.connect();
 
-
-
 //데이터베이스에서 데이터 가져오기
-app.get("/api/customers", (req, res) => {
-  // res.send()
-  connection.query("SELECT * FROM CUSTOMER", (err, result) => {
-    res.send(result.rows);
-  });
-});
+// app.get("/api/customers", (req, res) => {
+//   // res.send()
+//   connection.query("SELECT * FROM CUSTOMER", (err, result) => {
+//     res.send(result.rows);
+//   });
+// });
 
-app.get("/projects/:name/overview", (req, res) => {
-  let rawdata = fs.readFileSync('./api_sample_json/projects_overview.json');
+///////////////////////
+/* Dashboard APIs */
+///////////////////////
+app.get("/dashboard", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/dashboard.json");
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);
 });
 
+///////////////////////
+/* Projects APIs */
+///////////////////////
 
-// callApi = async () => {
-//     const response = await fetch("http://192.168.0.152:31635/token?username=openmcp&password=keti");
-//     const body = await response.json();
-//     return body;
-//   };
-//    callApi= async ()=>{
-//     const response = await fetch("http://192.168.0.152:31635/token?username=openmcp&password=keti");
-//     const body = await response.json();
-//     return body;
-//   }
 let token = "";
+
 // Projects 리스트 가져오기
 app.get("/api/projects", (req, res) => {
   var request = require("request");
   // var url = "http://192.168.0.152:31635/token?username=openmcp&password=keti";
   // var uri ="http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1";
 
-
-var options = {
-    uri:"http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
-    method: 'GET',
+  var options = {
+    uri:
+      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+    method: "GET",
     headers: {
-        "Authorization" : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI',
-      }
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    },
   };
-
-
 
   var options = {
-    uri:"http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
-    method: 'GET',
+    uri:
+      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+    method: "GET",
     headers: {
-        "Authorization" : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI',
-      }
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    },
   };
 
-request(options, function (error, response, body) {
+  request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-        console.log('dsfddf',body)
-
-
+      console.log("result", body);
     } else {
-        console.log('error',error)
-        return error
+      console.log("error", error);
+      return error;
     }
   });
 
-//   request(url, function (error, response, body) {
-//     if (!error && response.statusCode == 200) {
-//         console.log(body);
-//         token = body.token;
-//     } else {
-//         return error
-//     }
-//   });
-  
+  //   request(url, function (error, response, body) {
+  //     if (!error && response.statusCode == 200) {
+  //         console.log(body);
+  //         token = body.token;
+  //     } else {
+  //         return error
+  //     }
+  //   });
+
   connection.query("SELECT * FROM PROJECT_LIST", (err, result) => {
     res.send(result.rows);
   });
 });
 
-// app.get('/api/customers',(req, res) => {
-//     res.send([
-//         {
-//             id: 1,
-//             image: "https://placeimg.com/64/64/1",
-//             name: "신승철",
-//             birthday: "961222",
-//             gender: "남자",
-//             job: "대학생",
-//           },
-//           {
-//             id: 2,
-//             image: "https://placeimg.com/64/64/2",
-//             name: "홍길동",
-//             birthday: "951215",
-//             gender: "남자",
-//             job: "개발자",
-//           },
-//           {
-//             id: 3,
-//             image: "https://placeimg.com/64/64/3",
-//             name: "이순신",
-//             birthday: "821224",
-//             gender: "남자",
-//             job: "디자이너",
-//           }
-//     ])
 
-// });
-const multer = require('multer'); //추후사용하지 않으니 삭제하길 바람
-const upload = multer({dest:'./uplad'});
+app.get("/projects", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
 
-app.use('/image', express.static('./upload'));
+// Prjects > overview 데이터
+app.get("/projects/:name/overview", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_overview.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
 
-//고객정보 등록
-app.post('/api/customers', upload.single('image'), (req, res)=>{
-  let sql = 'INSERT INTO CUSTOMER VALUES (null, ?,?,?,?,?)';
-  let image = '/image/' + req.file.filename;
-  let name = req.body.name;
-  let birthday = req.body.name;
-  let gender = req.body.name;
-  let job = req.body.name;
-  let params = [image,name,birthday,gender,job];
-  connection.query(sql, params,
-    (err, rows, fields) => {
-      res.send(rows);
-    })
 
-})
+///////////////////////
+/* Clusters APIs */
+///////////////////////
+app.get("/clusters", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

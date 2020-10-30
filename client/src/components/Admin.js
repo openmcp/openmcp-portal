@@ -5,7 +5,9 @@ class Admin extends Component {
 
     constructor(props){
         super(props)
-        const token = localStorage.getItem("token")
+        // const token = localStorage.getItem("token")
+        const token = sessionStorage.getItem("token")
+        
 
         let loggedIn = true
         if(token == null){

@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 class SignOut extends Component {
     constructor(props){
         super(props)
-        localStorage.removeItem("token")
+        // localStorage.removeItem("token")
+        sessionStorage.removeItem("token")
     }
     render() {
         return (

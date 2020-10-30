@@ -1,62 +1,80 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom'
-
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 
 class SignIn extends Component {
-    constructor(props){
-        super(props)
-        const token = localStorage.getItem("token")
+  constructor(props) {
+    super(props);
+    // const token = localStorage.getItem("token")
+    const token = sessionStorage.getItem("token");
 
-        let loggedIn = true
-        if(token == null){
-            loggedIn = false
-        }
-
-        this.state = {
-            username: '',
-            password: '',
-            loggedIn
-        }
-        this.onChange = this.onChange.bind(this);
-        this.submitForm = this.submitForm.bind(this);
-    }
-    onChange(e){
-        this.setState({
-            [e.target.name]:e.target.value
-        })
+    let loggedIn = true;
+    console.log(token);
+    if (token == null) {
+      loggedIn = false;
     }
 
-    submitForm(e){
-        e.preventDefault()
-        const { username, password } = this.state
-        //login magic
-        if(username === "penguinoz" && password === "123qweasd"){
+    this.state = {
+      username: "",
+      password: "",
+      loggedIn,
+    };
+    this.onChange = this.onChange.bind(this);
+    this.submitForm = this.submitForm.bind(this);
+  }
+  onChange(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  }
 
-            localStorage.setItem("token","asdlfkasjldkfjlkwejflkawef")
-            this.setState({
-                loggedIn : true
-            })
-        }
+  submitForm(e) {
+    e.preventDefault();
+    const { username, password } = this.state;
+    //login magic
+    if (
+      (username === "admin" && password === "admin123") ||
+      (username === "demo" && password === "demo123")
+    ) {
+      sessionStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
+      sessionStorage.setItem("userName", username);
+      // localStorage.setItem("token","asdlfkasjldkfjlkwejflkawef");
+      this.setState({
+        loggedIn: true,
+      });
+    } else {
+      alert("Please check username & password !!");
     }
-    render() {
-        if(this.state.loggedIn){
-            console.log('SignIn',this.state.loggedIn);
-            return <Redirect to="/dashboard"></Redirect>
-        }
-        return (
-            <div>
-               <h1>Login</h1> 
-               <form onSubmit={this.submitForm}>
-                   <input type="text" placeholder="username" name="username" value={this.state.username} onChange={this.onChange}/>
-                   <br/>
-                   <input type="password" placeholder="password" name="password" value={this.state.password} onChange={this.onChange}/>
-                   <br/>
-                   <input type="submit"/>
-                   <br/>
-               </form>
-            </div>
-        );
+  }
+  render() {
+    if (this.state.loggedIn) {
+      console.log("SignIn", this.state.loggedIn);
+      return <Redirect to="/dashboard"></Redirect>;
     }
+    return (
+      <div className="login">
+        <div className="login-form">
+          <h1>OpenMCP-Portal</h1>
+          <form onSubmit={this.submitForm}>
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              value={this.state.username}
+              onChange={this.onChange}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={this.state.password}
+              onChange={this.onChange}
+            />
+            <input className="btn-signIn" type="submit" value="Sign In"/>
+          </form>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default SignIn;

@@ -12,6 +12,7 @@
         "multer": "^1.4.2",
         "nodemon": "^2.0.5",
         "pg": "^8.4.1",
+        "react-d3-tree": "^1.16.1",
         "request": "^2.88.2"
     },
     "devDependencies": {

@@ -36,12 +36,20 @@ class Head extends Component {
   // onSelectLeftMenu = (e) => {
   //   this.props.onSelectMenu(true,"");
   // };
+
+  // const userName = sessionStorage.getItem("username");
+  // componentWillMount(){
+  //   userName = 
+  // }
   
   onLogout = (e) => {
     // debugger;
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
   }
   render() {
+    const userName = sessionStorage.getItem("userName");
+    // console.log(sessionStorage.getItem("userName"));
     return (
       <header className="main-header">
         <NavLink to="/dashboard" className="logo">
@@ -55,33 +63,32 @@ class Head extends Component {
             <NavLink to="/dashboard" activeClassName="active">
               <span>Dashboard</span>
             </NavLink>
+            <NavLink to="/clusters" activeClassName="active" >
+              <span>Clusters</span>
+            </NavLink>
+            <NavLink to="/nodes" activeClassName="active" >
+              <span>Nodes</span>
+            </NavLink>
             <NavLink to="/projects" activeClassName="active" >
               <span>Projects</span>
             </NavLink>
             <NavLink to="/pods" activeClassName="active" >
               <span>Pods</span>
             </NavLink>
-            <NavLink to="/clusters" activeClassName="active" >
-              <span>Clusters</span>
-            </NavLink>
-            <NavLink to="/storages" activeClassName="active" >
-              <span>Storages</span>
-            </NavLink>
           </div>
-          <a
+          {/* <a
             href="/"
             className="sidebar-toggle"
             data-toggle="push-menu"
             role="button"
           >
-            {/* <Menu/> */}
-          </a>
+          </a> */}
 
           <div className="navbar-custom-menu">
             <ul className="nav navbar-nav">
               <li className="dropdown user user-menu">
                 <Link to="/login" className="dropdown-toggle" data-toggle="dropdown" onClick={this.onLogout}>
-                  <span className="hidden-xs">scshin</span>
+                  <span className="hidden-xs">{userName}</span>
                 </Link>
               </li>
               <li className="dropdown user user-menu">

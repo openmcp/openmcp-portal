@@ -19,16 +19,20 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../common/Editor";
+import { NavigateNext} from '@material-ui/icons';
+
+
+
 
 class Projects extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "project_name", title: "Name" },
-        { name: "project_status", title: "Status" },
-        { name: "project_creator", title: "Createor" },
-        { name: "project_create_time", title: "Created Time" },
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status" },
+        { name: "createor", title: "Createor" },
+        { name: "createdTime", title: "Created Time" },
       ],
       // rows: [
       //   {
@@ -121,8 +125,7 @@ class Projects extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5,
-      setPageSize: 5,
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -136,7 +139,7 @@ class Projects extends Component {
   
 
   callApi = async () => {
-    const response = await fetch("/api/projects");
+    const response = await fetch("/projects");
     const body = await response.json();
     return body;
   };
@@ -156,7 +159,7 @@ class Projects extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   render() {
 
@@ -185,21 +188,27 @@ class Projects extends Component {
     //셀
     const Cell = (props) => {
       const { column, row } = props;
-      if (column.name === "project_status") {
+      // console.log("cell : ", props);
+      if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "project_name") {
+      } else if (column.name === "name") {
         return (
           <Table.Cell
-            component={Link}
-            to={{
-              pathname: `/projects/${props.value}/overview`,
-              state: {
-                data : row
-              }
-            }}
+            // component={Link}
+            // to={{
+            //   pathname: `/projects/${props.value}/overview`,
+            //   state: {
+            //     data : row
+            //   }
+            // }}
             {...props}
             style={{ cursor: "pointer" }}
-          ></Table.Cell>
+          ><Link to={{
+            pathname: `/projects/${props.value}/overview`,
+            state: {
+              data : row
+            }
+          }}>{props.value}</Link></Table.Cell>
         );
       }
       return <Table.Cell {...props} />;
@@ -217,7 +226,8 @@ class Projects extends Component {
       />
     );
     const Row = (props) => {
-      return <Table.Row {...props} />;
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
     return (
@@ -232,14 +242,16 @@ class Projects extends Component {
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
-            <li className="active">Projects</li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Projects
+            </li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
               [
-                // <input type="button" value="create"></input>,
                 <Editor />,
                 <Grid
                   rows={this.state.rows}
@@ -252,7 +264,7 @@ class Projects extends Component {
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
