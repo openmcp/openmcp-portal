@@ -84,7 +84,7 @@ class Dashboard extends Component {
 
         {/* 컨텐츠 내용 */}
         <section className="content" style={{ minWidth: 1160 }}>
-          <input type="button" value="refresh" onClick={this.onRefresh} />
+          {/* <input type="button" value="refresh" onClick={this.onRefresh} />
           {this.state.rows ? (
             [
               <div style={{ display: "flex" }}>
@@ -132,7 +132,7 @@ class Dashboard extends Component {
               value={this.state.completed}
               style={{ position: "absolute", left: "50%", marginTop: "20px" }}
             ></CircularProgress>
-          )}
+          )} */}
           <MyComponent/>
         </section>
       </div>
