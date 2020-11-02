@@ -1,11 +1,18 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 #database 
-#데이터베이스 내용은 git에 올라가지 않도록 gitignore에 설정해야한다.
 /database.json
+
+#json_data
+/json_data
+
+#backup files
+/client/backup
+
 
 # dependencies
 /node_modules
+/client/node_modules
 /.pnp
 .pnp.js
 
