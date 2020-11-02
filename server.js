@@ -112,7 +112,7 @@ app.get("/projects", (req, res) => {
   res.send(overview);
 });
 
-// Prjects > overview 데이터
+// Prjects > overview
 app.get("/projects/:name/overview", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_overview.json");
   let overview = JSON.parse(rawdata);
@@ -126,6 +126,14 @@ app.get("/projects/:name/overview", (req, res) => {
 ///////////////////////
 app.get("/clusters", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/clusters.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Clusters > overview
+app.get("/clusters/:name/overview", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_overview.json");
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);

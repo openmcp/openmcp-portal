@@ -79,7 +79,7 @@ class PieReChart extends Component {
       const textAnchor = cos >= 0 ? "start" : "end";
 
       return (
-        <g>
+        <g style={{fontSize:"14px"}}>
           <text x={cx} y={cy} dy={3} textAnchor="middle" fill={fill}>
             {payload.name}
           </text>
@@ -115,13 +115,14 @@ class PieReChart extends Component {
       );
     };
     const style = {
-      top: 29,
-      left: 238,
-      lineHeight: "33px",
+      top: 48,
+      left: 200,
+      lineHeight: "25px",
+      fontSize:"14px",
     };
     return (
       <div style={{ position: "relative" }} className="pieChart">
-        <PieChart width={371} height={200}>
+        <PieChart width={200} height={200}>
           <Pie
             activeIndex={this.state.activeIndex}
             activeShape={renderActiveShape}
@@ -130,11 +131,11 @@ class PieReChart extends Component {
             cy={95}
             startAngle={this.props.angle.startAngle}
             endAngle={this.props.angle.endAngle}
-            innerRadius={60}
-            outerRadius={100}
+            innerRadius={50}
+            outerRadius={80}
             fill="#367fa9"
             dataKey="value"
-            paddingAngle={2}
+            paddingAngle={0}
             onMouseEnter={this.onPieEnter}
           >
             {this.state.rows.map((entry, index) => (

@@ -54,7 +54,7 @@ class Cs_Overview extends Component {
 
   callApi = async () => {
     var param = this.props.match.params.name;
-    const response = await fetch(`/projects/${param}/overview`);
+    const response = await fetch(`/clusters/${param}/overview`);
     const body = await response.json();
     return body;
   };
@@ -65,7 +65,7 @@ class Cs_Overview extends Component {
   };
 
   render() {
-    console.log("Pj_Overview_Render : ",this.state.rows.basic_info);
+    console.log("Cs_Overview_Render : ",this.state.rows.basic_info);
     return (
       <div>
         <div className="content-wrapper">
@@ -96,10 +96,10 @@ class Cs_Overview extends Component {
             [
             <BasicInfo rowData={this.state.rows.basic_info}/>,
             <div style={{display:"flex"}}>
-              <ProjectResources rowData={this.state.rows.project_resource}/>
-              <UsageTop5 rowData={this.state.rows.usage_top_5}/>
+              <ProjectUsageTop5 rowData={this.state.rows.project_usage_top5}/>
+              <NodeUsageTop5 rowData={this.state.rows.node_usage_top5}/>
             </div>,
-            <PhysicalResources rowData={this.state.rows.physical_resources}/>
+            <ClusterResourceUsage rowData={this.state.rows.physical_resources}/>
             ]
           ) : (
             <CircularProgress
@@ -124,16 +124,16 @@ class BasicInfo extends Component {
         <div className="cb-header">BaseicInfo</div>
         <div className="cb-body">
           <div>
-            <span>name : </span>
+            <span>Name : </span>
             <strong>{this.props.rowData.name}</strong>
           </div>
           <div>
-            <span>creator : </span>
-            {this.props.rowData.creator}
+            <span>Provider : </span>
+            {this.props.rowData.provider}
           </div>
           <div>
-            <span>description : </span>
-            {this.props.rowData.description}
+            <span>Kubernetes Version : </span>
+            {this.props.rowData.kubernetes_version}
           </div>
         </div>
       </div>
@@ -141,65 +141,17 @@ class BasicInfo extends Component {
   }
 }
 
-class ProjectResources extends Component {
-  state = {
-    columns: [
-      { name: "resource", title: "Resource" },
-      { name: "total", title: "Total" },
-      { name: "abnormal", title: "Abnormal" },
-    ],
-  }
-  render(){
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-    return (
-      <div className="content-box col-sep-2 ">
-        <div className="cb-header">Project Resources</div>
-        <div className="cb-body table-style">
-          <Grid
-            rows = {this.props.rowData}
-            columns = {this.state.columns}
-            >
-
-            {/* Sorting */}
-            <SortingState
-            // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
-            />
-            <IntegratedSorting />
-
-            <Table/>
-            <TableHeaderRow showSortingControls rowComponent={HeaderRow}/>
-          </Grid>
-        </div>
-      </div>
-    );
-  }
-}
-
-
-
-
-class UsageTop5 extends Component {
+class ProjectUsageTop5 extends Component {
   state = {
     columns: [
       { name: "name", title: "Name" },
-      { name: "type", title: "Type" },
       { name: "usage", title: "Usage" },
     ],
     rows : this.props.rowData.cpu,
   }
 
   callApi = async () => {
-    const response = await fetch(`/projects/${apiParams}/overview`);
+    const response = await fetch(`/clusters/${apiParams}/overview`);
     const body = await response.json();
     return body;
   };
@@ -226,7 +178,7 @@ class UsageTop5 extends Component {
 
           this.callApi()
           .then((res) => {
-            this.setState({ rows: res.usage_top_5.cpu });
+            this.setState({ rows: res.project_usage_top5.cpu });
           })
           .catch((err) => console.log(err));
 
@@ -237,7 +189,7 @@ class UsageTop5 extends Component {
 
           this.callApi()
           .then((res) => {
-            this.setState({ rows: res.usage_top_5.memory });
+            this.setState({ rows: res.project_usage_top5.memory });
           })
           .catch((err) => console.log(err));
 
@@ -251,7 +203,7 @@ class UsageTop5 extends Component {
     return (
       <div className="content-box col-sep-2">
         <div className="cb-header">
-          Usage Top5
+          Project Usage Top5
           <SelectBox rows={selectBoxData} onSelectBoxChange={onSelectBoxChange}></SelectBox>
         </div>
         
@@ -276,11 +228,102 @@ class UsageTop5 extends Component {
   }
 }
 
-class PhysicalResources extends Component {
+
+
+
+class NodeUsageTop5 extends Component {
+  state = {
+    columns: [
+      { name: "name", title: "Name" },
+      { name: "usage", title: "Usage" },
+    ],
+    rows : this.props.rowData.cpu,
+  }
+
+  callApi = async () => {
+    const response = await fetch(`/clusters/${apiParams}/overview`);
+    const body = await response.json();
+    return body;
+  };
+  
+  render(){
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
+      />
+    );
+
+    const onSelectBoxChange = (data) => {
+      console.log("onSelectBoxChange", data)
+      switch(data){
+        case "cpu":
+          console.log("cpu")
+          // this.setState({rows:this.props.rowData.cpu});
+
+          this.callApi()
+          .then((res) => {
+            this.setState({ rows: res.node_usage_top5.cpu });
+          })
+          .catch((err) => console.log(err));
+
+          break;
+        case "memory":
+          console.log("memory")
+          // this.setState({rows:this.props.rowData.memory});
+
+          this.callApi()
+          .then((res) => {
+            this.setState({ rows: res.node_usage_top5.memory });
+          })
+          .catch((err) => console.log(err));
+
+          break;
+        default:
+          this.setState(this.props.rowData.cpu);
+      }
+    }
+
+    const selectBoxData = [{name:"cpu", value:"cpu"},{name:"memory", value:"memory"}];
+    return (
+      <div className="content-box col-sep-2">
+        <div className="cb-header">
+          Node Usage Top5
+          <SelectBox rows={selectBoxData} onSelectBoxChange={onSelectBoxChange}></SelectBox>
+        </div>
+        
+        <div className="cb-body table-style">
+          {this.state.aaa}
+          <Grid
+            rows = {this.state.rows}
+            columns = {this.state.columns}>
+
+            {/* Sorting */}
+            <SortingState
+            // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+            />
+            <IntegratedSorting />
+
+            <Table/>
+            <TableHeaderRow showSortingControls rowComponent={HeaderRow}/>
+          </Grid>
+        </div>
+      </div>
+    );
+  }
+}
+
+class ClusterResourceUsage extends Component {
   render(){
     return (
       <div className="content-box">
-        <div className="cb-header">Physical Resources</div>
+        <div className="cb-header">Cluster Resource Usage
+</div>
         <div className="cb-body">
           <div className="cb-bdoy-content" style={{height:"250px"}}>
             <MyResponsiveLine data={line_chart_sample[0].cpu} ></MyResponsiveLine>

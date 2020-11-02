@@ -83,47 +83,53 @@ class Dashboard extends Component {
         </section>
 
         {/* 컨텐츠 내용 */}
+        
         <section className="content" style={{ minWidth: 1160 }}>
-          {/* <input type="button" value="refresh" onClick={this.onRefresh} />
           {this.state.rows ? (
             [
               <div style={{ display: "flex" }}>
                 <DashboardCard_1
                   title="Clusters"
-                  width="33.333%"
+                  width="25%"
                   data={this.state.rows.clusters}
                   path="/clusters"
                   angle={this.angle.full}
                 ></DashboardCard_1>
                 <DashboardCard_1
                   title="Nodes"
-                  width="33.333%"
+                  width="25%"
                   data={this.state.rows.nodes}
                   path="/nodes"
                   angle={this.angle.full}
                 ></DashboardCard_1>
                 <DashboardCard_1
                   title="Pods"
-                  width="33.333%"
+                  width="25%"
                   data={this.state.rows.pods}
                   path="/pods"
                   angle={this.angle.full}
                 ></DashboardCard_1>
-              </div>,
-              <div style={{ display: "flex" }}>
-                <DashboardCard_2
-                  title="Resources"
-                  width="67.777%"
-                  data={this.state.rows.resources}
-                  angle={this.angle.half}
-                ></DashboardCard_2>
                 <DashboardCard_1
                   title="Projects"
-                  width="33.222%"
+                  width="25%"
                   data={this.state.rows.projects}
                   path="/projects"
                   angle={this.angle.full}
                 ></DashboardCard_1>
+              </div>,
+              <div style={{ display: "flex" }}>
+                <DashboardCard_3
+                  title="Region-Clusters"
+                  width="100%"
+                  data={this.state.rows.resources}
+                ></DashboardCard_3>
+                {/* <DashboardCard_2
+                  title="Resources"
+                  width="67.777%"
+                  data={this.state.rows.resources}
+                  angle={this.angle.half}
+                ></DashboardCard_2> */}
+                
               </div>,
             ]
           ) : (
@@ -132,9 +138,10 @@ class Dashboard extends Component {
               value={this.state.completed}
               style={{ position: "absolute", left: "50%", marginTop: "20px" }}
             ></CircularProgress>
-          )} */}
-          <MyComponent/>
+          )}
+          
         </section>
+        <input type="button" value="refresh" onClick={this.onRefresh} />
       </div>
     );
   }
@@ -182,6 +189,30 @@ class DashboardCard_2 extends Component {
         <PieHalfReChart data={this.props.data.cpu} angle={this.props.angle}></PieHalfReChart>
         <PieHalfReChart data={this.props.data.memory} angle={this.props.angle}></PieHalfReChart>
         <PieHalfReChart data={this.props.data.storage} angle={this.props.angle}></PieHalfReChart>
+      </div>
+    </div>
+    );
+  }
+}
+
+
+class DashboardCard_3 extends Component {
+  render() {
+    // console.log("BasicInfo:", this.props.data)
+
+    return (
+      <div className="content-box" style={{ width: this.props.width }}>
+      <div className="cb-header">
+        <span>{this.props.title}</span>
+        {/* <div className="cb-btn">
+          <Link to={this.props.path}>detail</Link>
+        </div> */}
+      </div>
+      <div
+        className="cb-body"
+        style={{ position: "relative", width: "100%", display:"flex"}}
+      >
+        <MyComponent/>
       </div>
     </div>
     );

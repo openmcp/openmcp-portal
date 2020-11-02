@@ -33,7 +33,7 @@
     }    
   ],
 
-  "usage_top_5": {
+  "usage_top5": {
     "cpu": [
       {
         "name": "cattle-cluster-agent",

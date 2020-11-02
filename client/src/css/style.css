@@ -1122,11 +1122,11 @@ tbody {
 /* 차트 다이어그램 */
 .pieChart {
   width: 100%;
-  margin: 28px 0;
+  /* margin: 28px 0; */
 }
 
 .pieChart > div {
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
 
 .pieChart.half {
@@ -1136,4 +1136,8 @@ tbody {
 
 .pieChart.half > div {
   margin: 0 auto;
+}
+
+g {
+  display:block;
 }

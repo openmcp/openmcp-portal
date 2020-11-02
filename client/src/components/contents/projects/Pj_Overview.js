@@ -97,7 +97,7 @@ class Pj_Overview extends Component {
             <BasicInfo rowData={this.state.rows.basic_info}/>,
             <div style={{display:"flex"}}>
               <ProjectResources rowData={this.state.rows.project_resource}/>
-              <UsageTop5 rowData={this.state.rows.usage_top_5}/>
+              <UsageTop5 rowData={this.state.rows.usage_top5}/>
             </div>,
             <PhysicalResources rowData={this.state.rows.physical_resources}/>
             ]
@@ -124,15 +124,15 @@ class BasicInfo extends Component {
         <div className="cb-header">BaseicInfo</div>
         <div className="cb-body">
           <div>
-            <span>name : </span>
+            <span>Name : </span>
             <strong>{this.props.rowData.name}</strong>
           </div>
           <div>
-            <span>creator : </span>
+            <span>Creator : </span>
             {this.props.rowData.creator}
           </div>
           <div>
-            <span>description : </span>
+            <span>Description : </span>
             {this.props.rowData.description}
           </div>
         </div>
@@ -226,7 +226,7 @@ class UsageTop5 extends Component {
 
           this.callApi()
           .then((res) => {
-            this.setState({ rows: res.usage_top_5.cpu });
+            this.setState({ rows: res.usage_top5.cpu });
           })
           .catch((err) => console.log(err));
 
@@ -237,7 +237,7 @@ class UsageTop5 extends Component {
 
           this.callApi()
           .then((res) => {
-            this.setState({ rows: res.usage_top_5.memory });
+            this.setState({ rows: res.usage_top5.memory });
           })
           .catch((err) => console.log(err));
 
