@@ -5,6 +5,7 @@
 
 #json_data
 /json_data
+/client/src/json
 
 #backup files
 /client/backup
