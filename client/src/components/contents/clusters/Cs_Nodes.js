@@ -15,24 +15,37 @@ import {
   Table,
   Toolbar,
   SearchPanel,
+  TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../common/Editor";
+import Editor from "./../../common/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
-
-class Clusters extends Component {
+let apiParams = "";
+class Cs_Nodes extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
+        { name: "name", title: "Node" },
+        { name: "cluster", title: "Cluster"},
         { name: "status", title: "Status" },
-        { name: "provider", title: "Provider" },
-        { name: "nodes", title: "nodes" },
+        { name: "role", title: "Role" },
+        { name: "system_version", title: "System Version" },
         { name: "cpu", title: "CPU" },
-        { name: "ram", title: "Memory" },
+        { name: "memory", title: "Memory" },
+        { name: "pods", title: "Pods" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 130 },
+        { columnName: "cluster", width: 130},
+        { columnName: "status", width: 150 },
+        { columnName: "role", width: 130 },
+        { columnName: "system_version", width: 250 },
+        { columnName: "cpu", width: 150 },
+        { columnName: "memory", width: 170 },
+        { columnName: "pods", width: 150 },
       ],
       rows: "",
 
@@ -47,13 +60,20 @@ class Clusters extends Component {
   }
 
   componentWillMount() {
-    // this.props.onSelectMenu(false, "");
+    const result = {
+      menu : "clusters",
+      title : this.props.match.params.cluster
+    }
+    this.props.menuData(result);
+    apiParams = this.props.match.params.cluster;
   }
+
 
   
 
   callApi = async () => {
-    const response = await fetch("/clusters");
+    var param = this.props.match.params.cluster;
+    const response = await fetch(`/clusters/${apiParams}/nodes`);
     const body = await response.json();
     return body;
   };
@@ -90,9 +110,10 @@ class Clusters extends Component {
         <span
           style={{
             color:
-              value === "Provisioning" ? "skyblue" : 
-                value === "Unhealthy" ? "red" : 
-                  value === "Active" ? "green" : "black"
+              value === "Warning" ? "orange" : 
+                value === "Unschedulable" ? "red" : 
+                  value === "Stop" ? "red" : 
+                    value === "Running" ? "green" : "skyblue"
           }}>
           {value}
         </span>
@@ -103,22 +124,45 @@ class Clusters extends Component {
     const Cell = (props) => {
       const { column, row } = props;
       // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      // debugger;
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        return (
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( item => {
+              return (
+                <p>{item}</p>
+            )}) : 
+              props.value
+        )
+      }
+
+
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
+        console.log("name", props.value);
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/clusters/${props.value}/overview`,
+            pathname: `/clusters/${apiParams}/nodes/${props.value}`,
             state: {
               data : row
             }
-          }}>{props.value}</Link></Table.Cell>
+          }}>{fnEnterCheck()}</Link></Table.Cell>
         );
-      }
-      return <Table.Cell {...props} />;
+      } else if (column.name === "cluster"){
+        return(
+        <Table.Cell>{apiParams}</Table.Cell>
+        );
+      } 
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -138,12 +182,12 @@ class Clusters extends Component {
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper cluster-nodes">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Cluster
-            <small>List</small>
+            Nodes
+            <small> in {apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -183,6 +227,7 @@ class Clusters extends Component {
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -203,4 +248,4 @@ class Clusters extends Component {
   }
 }
 
-export default Clusters;
+export default Cs_Nodes;

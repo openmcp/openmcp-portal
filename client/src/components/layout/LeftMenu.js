@@ -14,7 +14,20 @@ class LeftMenu extends Component {
       params : this.props.menu, //프로젝트에 따라서 수정되야함
     }
   }
+
+
+  shouldComponentUpdate(prevProps, prevState) {
+    if (this.props.menu !== prevProps.menu) {
+      // console.log("true");
+       return true;
+    } else {
+      // console.log("false");
+      return false;
+    }
+  }
+
   render() {
+    // console.log("leftmenu render", this.props);
     const menuList = fnMenuList.getMenu(this.props.title);
     // console.log(menuList[this.props.menu]);
     // console.log(ad, this.props.menu);

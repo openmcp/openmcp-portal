@@ -38,116 +38,116 @@ const myTreeData = [
       },
     ],
   },
-  // {
-  //   name: "ap-northeast-1",
-  //   attributes: {
-  //     status: "healthy",
-  //   },
-  //   children: [
-  //     {
-  //       name: "cluster_01",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_02",
-  //       attributes: {
-  //         status: "unhealthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_03",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_04",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_05",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "eu-west-2",
-  //   attributes: {
-  //     status: "healthy",
-  //   },
-  //   children: [
-  //     {
-  //       name: "cluster_01",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_02",
-  //       attributes: {
-  //         status: "unhealthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_03",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //   ],
-  // },
-  // {
-  //   name: "us-east-2",
-  //   attributes: {
-  //     status: "healthy",
-  //   },
-  //   children: [
-  //     {
-  //       name: "cluster_01",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_02",
-  //       attributes: {
-  //         status: "unhealthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_03",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_04",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_05",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //     {
-  //       name: "cluster_06",
-  //       attributes: {
-  //         status: "healthy",
-  //       },
-  //     },
-  //   ],
-  // }
-
-  
+  {
+    name: "ap-northeast-1",
+    attributes: {
+      status: "healthy",
+    },
+    children: [
+      {
+        name: "cluster_01",
+        attributes: {
+          status: "healthy",
+        },
+      },
+      {
+        name: "cluster_02",
+        attributes: {
+          status: "unhealthy",
+        },
+      },
+      {
+        name: "cluster_03",
+        attributes: {
+          status: "healthy",
+        },
+      }
+    ],
+  },
+  {
+    name: "eu-west-2",
+    attributes: {
+      status: "healthy",
+    },
+    children: [
+      {
+        name: "cluster_01",
+        attributes: {
+          status: "healthy",
+        },
+      },
+      {
+        name: "cluster_02",
+        attributes: {
+          status: "unhealthy",
+        },
+      },
+      {
+        name: "cluster_03",
+        attributes: {
+          status: "healthy",
+        },
+      },
+    ],
+  },
+  {
+    name: "us-east-2",
+    attributes: {
+      status: "healthy",
+    },
+    children: [
+      {
+        name: "cluster_01",
+        attributes: {
+          status: "healthy",
+        },
+      },
+      {
+        name: "cluster_02",
+        attributes: {
+          status: "unhealthy",
+        },
+      },
+      {
+        name: "cluster_03",
+        attributes: {
+          status: "healthy",
+        },
+      }
+    ],
+  },
+  {
+    name: "us-east-2",
+    attributes: {
+      status: "healthy",
+    },
+    children: [
+      {
+        name: "cluster_01",
+        attributes: {
+          status: "healthy",
+        },
+      },
+      {
+        name: "cluster_02",
+        attributes: {
+          status: "unhealthy",
+        },
+      },
+      {
+        name: "cluster_03",
+        attributes: {
+          status: "healthy",
+        },
+      },
+      {
+        name: "cluster_03",
+        attributes: {
+          status: "healthy",
+        },
+      }
+    ],
+  },
 ];
 
 class NodeLabel extends Component {
@@ -231,7 +231,7 @@ class MyComponent extends React.Component {
 
     const containerStyles = {
       // width: 100/myTreeData.length+"%",
-      width: "100%",
+      width: "20%",
       height: "45vh",
       // border:"1px solid #000",
       float:"left"

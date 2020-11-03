@@ -43,16 +43,18 @@ class PieReChart extends Component {
     //   { name: "converging", value: 10 },
     //   { name: "unhealthy", value: 20 },
     // ];
-    const COLORS = [
-      "#0088FE",
-      "#00C49F",
-      "#FFBB28",
-      "#FF8042",
-      "#00C49F",
-      "#FFBB28",
-      "#00C49F",
-      "#FFBB28",
-    ];
+    // const COLORS = [
+    //   "#0088FE",
+    //   "#00C49F",
+    //   "#FFBB28",
+    //   "#FF8042",
+    //   "#00C49F",
+    //   "#FFBB28",
+    //   "#00C49F",
+    //   "#FFBB28",
+    // ];
+    console.log("color", this.props.color);
+    const COLORS = this.props.colors;
     const renderActiveShape = (props) => {
       const RADIAN = Math.PI / 180;
       const {
@@ -121,7 +123,7 @@ class PieReChart extends Component {
       fontSize:"14px",
     };
     return (
-      <div style={{ position: "relative" }} className="pieChart">
+      <div style={{ position: "relative" }} className="pie-chart">
         <PieChart width={200} height={200}>
           <Pie
             activeIndex={this.state.activeIndex}
@@ -155,7 +157,7 @@ class PieReChart extends Component {
             payload={this.state.rows.map((item, index) => ({
               id: item.name,
               type: "square",
-              value: `${item.name} (${item.value})`,
+              value: `${item.name} (${item.value} ${this.props.unit})`,
               color: COLORS[index % COLORS.length],
             }))}
           />

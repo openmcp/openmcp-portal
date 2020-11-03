@@ -1,21 +1,35 @@
 import React, { PureComponent, Component } from "react";
 import { PieChart, Pie, Sector, Cell, Legend } from "recharts";
 
-class PieHalfReChart extends Component {
+class PieReChart2 extends Component {
   constructor(props) {
     super(props);
     console.log("pierechar constructor");
+    const result = []
+    result.push(this.props.data.status[0])
+    result.push({
+      name : "left",
+      value : this.props.data.status[1].value -  this.props.data.status[0].value
+    })
     this.state = {
       activeIndex: 0,
       rows: this.props.data.status,
+      calResult : result
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.data.status !== prevProps.data.status) {
+      const result = []
+      result.push(this.props.data.status[0])
+      result.push({
+        name : "left",
+        value : this.props.data.status[1].value -  this.props.data.status[0].value
+      })
       this.setState({
         ...this.state,
         rows: this.props.data.status,
+        calResult : result
       });
     }
   }
@@ -85,9 +99,24 @@ class PieHalfReChart extends Component {
       <div style={{ position: "relative" }} className="pie-chart">
         <PieChart width={200} height={200}>
           <Pie
+            data={[this.state.rows[1]]}
+            cx={95}
+            cy={95}
+            startAngle={this.props.angle.startAngle}
+            endAngle={this.props.angle.endAngle}
+            innerRadius={50}
+            outerRadius={80}
+            fill="#ecf0f5"
+            dataKey="value"
+            paddingAngle={0}
+            onMouseEnter={this.onPieEnter}
+            isAnimationActive={false}
+          >
+          </Pie>
+          <Pie
             activeIndex={this.state.activeIndex}
             activeShape={renderActiveShape}
-            data={this.state.rows}
+            data={this.state.calResult}
             cx={95}
             cy={95}
             startAngle={this.props.angle.startAngle}
@@ -99,7 +128,7 @@ class PieHalfReChart extends Component {
             paddingAngle={0}
             onMouseEnter={this.onPieEnter}
           >
-            {this.state.rows.map((entry, index) => (
+            {this.state.calResult.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
@@ -120,10 +149,11 @@ class PieHalfReChart extends Component {
               color: COLORS[index % COLORS.length],
             }))}
           />
+          
         </PieChart>
       </div>
     );
   }
 }
 
-export default PieHalfReChart;
+export default PieReChart2;

@@ -20,7 +20,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import MyResponsiveLine from './../../modules/LineChart';
+import LineChart from './../../modules/LineChart';
 import SelectBox from './../../modules/SelectBox';
 
 let apiParams = "";
@@ -35,10 +35,10 @@ class Pj_Overview extends Component {
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
       menu : "projects",
-      title : this.props.match.params.name
+      title : this.props.match.params.project
     }
     this.props.menuData(result);
-    apiParams = this.props.match.params;
+    apiParams = this.props.match.params.project;
   }
 
   componentDidMount() {
@@ -53,7 +53,7 @@ class Pj_Overview extends Component {
   }  
 
   callApi = async () => {
-    var param = this.props.match.params.name;
+    var param = this.props.match.params.project;
     const response = await fetch(`/projects/${param}/overview`);
     const body = await response.json();
     return body;
@@ -73,7 +73,7 @@ class Pj_Overview extends Component {
           <section className="content-header">
             <h1>
             Overview
-              <small>{this.props.match.params.name}</small>
+              <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -121,7 +121,7 @@ class BasicInfo extends Component {
     
     return (
       <div className="content-box">
-        <div className="cb-header">BaseicInfo</div>
+        <div className="cb-header">Basic Info</div>
         <div className="cb-body">
           <div>
             <span>Name : </span>
@@ -282,14 +282,14 @@ class PhysicalResources extends Component {
       <div className="content-box">
         <div className="cb-header">Physical Resources</div>
         <div className="cb-body">
-          <div className="cb-bdoy-content" style={{height:"250px"}}>
-            <MyResponsiveLine data={line_chart_sample[0].cpu} ></MyResponsiveLine>
+          <div className="cb-body-content" style={{height:"250px"}}>
+            <LineChart data={line_chart_sample[0].cpu} ></LineChart>
           </div>
-          <div className="cb-bdoy-content" style={{height:"250px"}}>
-            <MyResponsiveLine data={line_chart_sample[1].memory} ></MyResponsiveLine>
+          <div className="cb-body-content" style={{height:"250px"}}>
+            <LineChart data={line_chart_sample[1].memory} ></LineChart>
           </div>
-          <div className="cb-bdoy-content" style={{height:"250px"}}>
-            <MyResponsiveLine data={line_chart_sample[2].network} ></MyResponsiveLine>
+          <div className="cb-body-content" style={{height:"250px"}}>
+            <LineChart data={line_chart_sample[2].network} ></LineChart>
           </div>
         </div>
       </div>

@@ -61,6 +61,7 @@ class Dashboard extends Component {
   render() {
     // let classNam = 'content-wrapper';
     // console.log(this.state.rows);
+    
     return (
       <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
@@ -150,6 +151,16 @@ class Dashboard extends Component {
 class DashboardCard_1 extends Component {
   render() {
     // console.log("DashboardCard_1:", this.state.rows);
+    const colors = [
+      "#0088FE",
+      "#00C49F",
+      "#FFBB28",
+      "#FF8042",
+      "#00C49F",
+      "#FFBB28",
+      "#00C49F",
+      "#FFBB28",
+    ];
     return (
       <div className="content-box" style={{ width: this.props.width }}>
         <div className="cb-header">
@@ -163,7 +174,7 @@ class DashboardCard_1 extends Component {
           className="cb-body"
           style={{ position: "relative", width: "100%" }}
         >
-          <PieReChart data={this.props.data} angle={this.props.angle}></PieReChart>
+          <PieReChart data={this.props.data} angle={this.props.angle} colors={colors} unit=""></PieReChart>
         </div>
       </div>
     );

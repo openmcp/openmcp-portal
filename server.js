@@ -113,7 +113,7 @@ app.get("/projects", (req, res) => {
 });
 
 // Prjects > overview
-app.get("/projects/:name/overview", (req, res) => {
+app.get("/projects/:project/overview", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_overview.json");
   let overview = JSON.parse(rawdata);
   console.log(overview);
@@ -132,8 +132,32 @@ app.get("/clusters", (req, res) => {
 });
 
 // Clusters > overview
-app.get("/clusters/:name/overview", (req, res) => {
+app.get("/clusters/:cluster/overview", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/clusters_overview.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Clusters > nodes
+app.get("/clusters/:cluster/nodes", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_nodes.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Clusters > nodes > detail
+app.get("/clusters/:cluster/nodes/:node", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_node_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Clusters > nodes
+app.get("/clusters/:cluster/pods", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_pods.json");
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);

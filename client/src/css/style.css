@@ -49,7 +49,7 @@ h6,
 }
 
 p {
-  margin: 0 0 10px;
+  margin: 10px 0;
 }
 
 a {
@@ -145,8 +145,7 @@ li {
   box-sizing: border-box; */
 }
 
-header {
-}
+header {}
 
 body {
   font-family: "Source Sans Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -765,7 +764,7 @@ body {
 .content-header > h1 > small {
   font-size: 15px;
   display: inline-block;
-  padding-left: 4px;
+  padding-left: 10px;
   font-weight: 300;
 }
 
@@ -822,6 +821,10 @@ body {
 
 .col-xs-9 {
   width: 75%;
+}
+
+.flex {
+  display : flex;
 }
 
 .box {
@@ -1120,24 +1123,118 @@ tbody {
 }
 
 /* 차트 다이어그램 */
-.pieChart {
+.pie-chart {
   width: 100%;
   /* margin: 28px 0; */
 }
 
-.pieChart > div {
+.pie-chart > div {
   /* margin: 0 auto; */
 }
 
-.pieChart.half {
+.pie-chart.half {
   width: 100%;
   margin: 53px 0;
 }
 
-.pieChart.half > div {
+.pie-chart.half > div {
   margin: 0 auto;
 }
 
 g {
   display:block;
 }
+
+/* cluster overview */
+.cluster-overview{}
+.cluster-overview .pie-chart {
+  height: 200px;
+  width : 33.3333%;
+  padding: 16px 0 0 32px;
+  position: relative;
+}
+
+.cluster-overview .pie-chart path {
+  stroke: rgb(0 0 0 / 0%);
+}
+
+.cluster-overview .cb-sub-title {
+  position: absolute;
+  top: 22px;
+  left: 47px;
+  font-weight: bold;
+  color: #3c8dbc;
+  
+}
+
+.cs-node-detail .cb-kube-status,
+.cluster-overview .cb-kube-status {
+  position: relative;
+}
+.cs-node-detail .cb-kube-status .cb-body,
+.cluster-overview .cb-kube-status .cb-body {
+  width : 992px;
+  margin : auto;
+}
+
+
+.cs-node-detail .cb-kube-status .cb-body-content,
+.cluster-overview .cb-kube-status .cb-body-content {
+  margin : 12px 24px;
+  padding: 12px;
+  border : 2px solid #3c8dbc;
+  border-radius: 4px;
+  min-width: 200px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.cs-node-detail.cluster-overview .cb-kube-status .cb-body-content >div:first-child,
+.cluster-overview .cb-kube-status .cb-body-content >div:first-child{
+  font-weight: bold;
+  font-size: 16px;
+}
+.cs-node-detail .cb-kube-status .cb-body-content.healthy,
+.cluster-overview .cb-kube-status .cb-body-content.healthy{
+  color:green;
+  border : 4px solid green;
+}
+
+.cs-node-detail .cb-kube-status .cb-body-content.unhealthy,
+.cluster-overview .cb-kube-status .cb-body-content.unhealthy{
+  color: red;
+  border : 4px solid red;
+}
+
+
+
+
+/* cluster > node_detail */
+.cs-node-detail{}
+.cs-node-detail .pie-chart {
+  height: 200px;
+  width : 24.5%;
+  padding: 16px 0 0 0px;
+  position: relative;
+}
+.cs-node-detail .pie-chart path {
+  stroke: rgb(0 0 0 / 0%);
+}
+
+.cs-node-detail .cb-sub-title {
+  position: absolute;
+  top: 20px;
+  left: 17px;
+  font-weight: bold;
+  color: #3c8dbc;
+}
+
+.cs-node-detail .cb-body > div:first-child{
+  padding-bottom: 11px;
+}
+.cs-node-detail .cb-body .cb-body-left{
+  float: left;
+  margin-right: 100px;
+}
+/* .cs-node-detail .cb-body .cb-body-right{} */
+

@@ -100,12 +100,13 @@ class Pj_Workloads extends Component {
   componentWillMount() {
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
-      menu : "clusters",
-      title : this.props.match.params.name
+      menu : "projects",
+      title : this.props.match.params.project
     }
     this.props.menuData(result);
-    apiParams = this.props.match.params;
+    apiParams = this.props.match.params.project;
   }
+  
   componentDidMount() {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
@@ -118,8 +119,7 @@ class Pj_Workloads extends Component {
   }
 
   callApi = async () => {
-    var param = this.props.match.params.name;
-    const response = await fetch(`/projects/${param}/overview`);
+    const response = await fetch(`/projects/${apiParams}/overview`);
     const body = await response.json();
     return body;
   };
@@ -156,7 +156,7 @@ class Pj_Workloads extends Component {
           <section className="content-header">
             <h1>
               Workloads
-              <small>{this.props.match.params.name}</small>
+              <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -198,7 +198,7 @@ class Pj_Workloads extends Component {
                       );
                   })} */}
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
-                <DeploymentsTab pathParam={this.props.match.params.name}></DeploymentsTab>
+                <DeploymentsTab pathParam={this.props.match.params.project}></DeploymentsTab>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
                 Item Two
