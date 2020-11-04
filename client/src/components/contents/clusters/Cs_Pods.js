@@ -42,7 +42,7 @@ class Cs_Pods extends Component {
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
-        { columnName: "cluster", width: 130},
+        { columnName: "cluster", width: 130 },
         { columnName: "project", width: 130 },
         { columnName: "pod_ip", width: 150 },
         { columnName: "node", width: 130 },

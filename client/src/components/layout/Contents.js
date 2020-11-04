@@ -22,11 +22,12 @@ import Pj_Secrets from "../contents/projects/config/Pj_Secrets";
 import Pj_ConfigMaps from "./../contents/projects/config/Pj_ConfigMaps";
 // import Pj_Config from "../contents/projects/config/Pj_Config";
 
-import Cs_Nodes from "../contents/clusters/Cs_Nodes";
 import Cs_Overview from "../contents/clusters/Cs_Overview";
-import Cs_Pods from "../contents/clusters/Cs_Pods";
-import Cs_StorageClass from "../contents/clusters/Cs_StorageClass";
+import Cs_Nodes from "../contents/clusters/Cs_Nodes";
 import Cs_NodeDetail from './../contents/clusters/Cs_NodeDetail';
+import Cs_Pods from "../contents/clusters/Cs_Pods";
+import Cs_PodDetail from './../contents/clusters/Cs_PodDetail';
+import Cs_StorageClass from "../contents/clusters/Cs_StorageClass";
 
 
 
@@ -127,6 +128,8 @@ class Contents extends Component {
             render={({match,location}) => <Cs_NodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/nodes" 
             render={({match,location}) => <Cs_Nodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters/:cluster/pods/:pod" 
+            render={({match,location}) => <Cs_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/pods" 
             render={({match,location}) => <Cs_Pods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/storage_class" 

@@ -155,9 +155,17 @@ app.get("/clusters/:cluster/nodes/:node", (req, res) => {
   res.send(overview);
 });
 
-// Clusters > nodes
+// Clusters > pods
 app.get("/clusters/:cluster/pods", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/clusters_pods.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Clusters > pods > detail
+app.get("/clusters/:cluster/pods/:pod", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_pod_detail.json");
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);

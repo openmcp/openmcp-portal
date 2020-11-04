@@ -128,41 +128,44 @@ class BasicInfo extends Component {
             <span>Name : </span>
             <strong>{this.props.rowData.name}</strong>
           </div>
-          <div className="cb-body-left">
-            <div>
-              <span>Status : </span>
-              {this.props.rowData.status}
-            </div>
-            <div>
-              <span>Role : </span>
-              {this.props.rowData.role}
-            </div>
-            <div>
-              <span>Kubernetes : </span>
-              {this.props.rowData.kubernetes}
-            </div>
-            <div>
-              <span>Kubernetes Proxy : </span>
-              {this.props.rowData.kubernetes_proxy}
-            </div>
-          </div>
-          <div className="cb-body-right">
-            <div>
-                <span>IP : </span>
-                {this.props.rowData.ip}
+          <div style={{display:"flex"}}>
+
+            <div className="cb-body-left">
+              <div>
+                <span>Status : </span>
+                {this.props.rowData.status}
               </div>
               <div>
-                <span>OS : </span>
-                {this.props.rowData.os}
+                <span>Role : </span>
+                {this.props.rowData.role}
               </div>
               <div>
-                <span>Docker : </span>
-                {this.props.rowData.docker}
+                <span>Kubernetes : </span>
+                {this.props.rowData.kubernetes}
               </div>
               <div>
-                <span>Create Time : </span>
-                {this.props.rowData.create_time}
+                <span>Kubernetes Proxy : </span>
+                {this.props.rowData.kubernetes_proxy}
               </div>
+            </div>
+            <div className="cb-body-right">
+              <div>
+                  <span>IP : </span>
+                  {this.props.rowData.ip}
+                </div>
+                <div>
+                  <span>OS : </span>
+                  {this.props.rowData.os}
+                </div>
+                <div>
+                  <span>Docker : </span>
+                  {this.props.rowData.docker}
+                </div>
+                <div>
+                  <span>Create Time : </span>
+                  {this.props.rowData.create_time}
+                </div>
+            </div>
           </div>
           
         </div>
