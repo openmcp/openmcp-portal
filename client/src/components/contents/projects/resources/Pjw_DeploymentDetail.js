@@ -19,34 +19,44 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../../../common/Editor";
+import Editor from "../../../common/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
 let apiParams = "";
-class Pj_Services extends Component {
+class Pjw_DeploymentDetail extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name"},
-        { name: "namespace", title: "Namespace" },
-        { name: "type", title: "Type"},
-        { name: "selector", title: "Selector" },
-        { name: "port", title: "Port" },
+        { name: "name", title: "Pod" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
+        { name: "pod_ip", title: "Pod IP" },
+        { name: "node", title: "Node" },
+        { name: "node_ip", title: "Node IP" },
+        { name: "cpu", title: "CPU" },
+        { name: "memory", title: "Memory" },
+        { name: "create_time", title: "Create Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
-        { columnName: "namespace", width: 130 },
-        { columnName: "type", width: 130 },
-        { columnName: "selector", width: 150 },
-        { columnName: "port", width: 150 },
+        { columnName: "status", width: 130 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "project", width: 130 },
+        { columnName: "pod_ip", width: 150 },
+        { columnName: "node", width: 130 },
+        { columnName: "node_ip", width: 150 },
+        { columnName: "cpu", width: 80 },
+        { columnName: "memory", width: 120 },
+        { columnName: "create_time", width: 170 },
       ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, //화면 리스트 개수
+      pageSize: 5, //화면 리스트 개수
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -54,18 +64,20 @@ class Pj_Services extends Component {
   }
 
   componentWillMount() {
-    const result = {
-      menu : "projects",
-      title : this.props.match.params.project
-    }
-    this.props.menuData(result);
-    
-    apiParams = this.props.match.params.project;
+    // const result = {
+    //   menu : "clusters",
+    //   title : this.props.match.params.cluster
+    // }
+    // this.props.menuData(result);
+    apiParams = this.props.param;
   }
 
+
+  
+
   callApi = async () => {
-    var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/services`);
+    // var param = this.props.match.params.cluster;
+    const response = await fetch(`/projects/${apiParams}/workloads/deployments`);
     const body = await response.json();
     return body;
   };
@@ -143,14 +155,14 @@ class Pj_Services extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/projects/${apiParams}/resources/services/${props.value}`,
+            pathname: `/projects/${apiParams}/resources/workloads/deployments/${props.value}`,
             state: {
               data : row
             }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
+          }}>{props.value}</Link></Table.Cell>
         );
-      } 
-      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
+      }
+      return <Table.Cell>{props.value}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -170,23 +182,8 @@ class Pj_Services extends Component {
     };
 
     return (
-      <div className="content-wrapper">
+      <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
-          <h1>
-            Services
-            <small> in {apiParams}</small>
-          </h1>
-          <ol className="breadcrumb">
-            <li>
-              <NavLink to="/dashboard">Home</NavLink>
-            </li>
-            <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Projects
-            </li>
-          </ol>
-        </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
@@ -209,7 +206,7 @@ class Pj_Services extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
@@ -236,4 +233,4 @@ class Pj_Services extends Component {
   }
 }
 
-export default Pj_Services;
+export default Pjw_DeploymentDetail;

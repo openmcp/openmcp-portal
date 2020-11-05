@@ -49,62 +49,65 @@ app.get("/dashboard", (req, res) => {
   res.send(overview);
 });
 
+
+
+let token = "";
+
+// // Projects 리스트 가져오기
+// app.get("/api/projects", (req, res) => {
+//   var request = require("request");
+//   // var url = "http://192.168.0.152:31635/token?username=openmcp&password=keti";
+//   // var uri ="http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1";
+
+//   var options = {
+//     uri:
+//       "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+//     method: "GET",
+//     headers: {
+//       Authorization:
+//         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+//     },
+//   };
+
+//   var options = {
+//     uri:
+//       "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+//     method: "GET",
+//     headers: {
+//       Authorization:
+//         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+//     },
+//   };
+
+//   request(options, function (error, response, body) {
+//     if (!error && response.statusCode == 200) {
+//       console.log("result", body);
+//     } else {
+//       console.log("error", error);
+//       return error;
+//     }
+//   });
+
+//   //   request(url, function (error, response, body) {
+//   //     if (!error && response.statusCode == 200) {
+//   //         console.log(body);
+//   //         token = body.token;
+//   //     } else {
+//   //         return error
+//   //     }
+//   //   });
+
+//   connection.query("SELECT * FROM PROJECT_LIST", (err, result) => {
+//     res.send(result.rows);
+//   });
+// });
+
+
 ///////////////////////
 /* Projects APIs */
 ///////////////////////
 
-let token = "";
-
-// Projects 리스트 가져오기
-app.get("/api/projects", (req, res) => {
-  var request = require("request");
-  // var url = "http://192.168.0.152:31635/token?username=openmcp&password=keti";
-  // var uri ="http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1";
-
-  var options = {
-    uri:
-      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
-    method: "GET",
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-    },
-  };
-
-  var options = {
-    uri:
-      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
-    method: "GET",
-    headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-    },
-  };
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      console.log("result", body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-
-  //   request(url, function (error, response, body) {
-  //     if (!error && response.statusCode == 200) {
-  //         console.log(body);
-  //         token = body.token;
-  //     } else {
-  //         return error
-  //     }
-  //   });
-
-  connection.query("SELECT * FROM PROJECT_LIST", (err, result) => {
-    res.send(result.rows);
-  });
-});
-
-
+// Prjects
 app.get("/projects", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects.json");
   let overview = JSON.parse(rawdata);
@@ -115,6 +118,75 @@ app.get("/projects", (req, res) => {
 // Prjects > overview
 app.get("/projects/:project/overview", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_overview.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Resources > Workloads > Deployments
+app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Deployments 상세부터 구현해나가야 함
+
+// // Prjects > Resources > Workloads > Statefulsets
+// app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
+//   let rawdata = fs.readFileSync("./json_data/projects_statefulsets.json");
+//   let overview = JSON.parse(rawdata);
+//   console.log(overview);
+//   res.send(overview);
+// });
+
+// Prjects > Resources > pods
+app.get("/projects/:project/resources/pods", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_pods.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+
+// Prjects > Resources > Pods Detail
+app.get("/projects/:project/resources/pods/:pod", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_pod_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+
+
+// Prjects > Resources > Services
+app.get("/projects/:project/resources/services", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_services.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Resources > Services Detail
+app.get("/projects/:project/resources/services/:service", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_service_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Resources > Ingress
+app.get("/projects/:project/resources/ingress", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_ingress.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Resources > Ingress Detail
+app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_ingress_detail.json");
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);
@@ -195,7 +267,7 @@ app.get("/nodes", (req, res) => {
   res.send(overview);
 });
 
-// Nodes > overview
+// Nodes > datail
 app.get("/nodes/:node", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/nodes_detail.json");
   let overview = JSON.parse(rawdata);
@@ -204,7 +276,7 @@ app.get("/nodes/:node", (req, res) => {
 });
 
 
-// Nodes
+// Pods
 app.get("/pods", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/pods.json");
   let overview = JSON.parse(rawdata);
@@ -212,7 +284,7 @@ app.get("/pods", (req, res) => {
   res.send(overview);
 });
 
-// Nodes > overview
+// Pods > detail
 app.get("/pods/:pod", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/pods_detail.json");
   let overview = JSON.parse(rawdata);

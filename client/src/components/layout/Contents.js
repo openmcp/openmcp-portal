@@ -31,6 +31,9 @@ import Cs_StorageClass from "../contents/clusters/Cs_StorageClass";
 import Cs_StorageClassDetail from './../contents/clusters/Cs_StorageClassDetail';
 import Nd_NodeDetail from './../contents/nodes/Nd_NodeDetail';
 import Pd_PodDetail from './../contents/pods/Pd_PodDetail';
+import Pj_PodDetail from './../contents/projects/resources/Pj_PodDetail';
+import Pj_ServicesDetail from './../contents/projects/resources/Pj_ServicesDetail';
+import Pj_IngressDetail from './../contents/projects/resources/Pj_IngressDetail';
 
 
 
@@ -86,7 +89,7 @@ class Contents extends Component {
         <Route exact path="/storages" ><Storages /></Route>
       )
     } else {
-      // console.log("contents last", this.state.menuData);
+      console.log("contents last", this.state.menuData);
     return (
       <div>
         {
@@ -102,22 +105,64 @@ class Contents extends Component {
           <Route path="/projects/:project/overview" 
             render={({match,location}) => <Pj_Overview  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          
-          <Route path="/projects/:project/resources/workloads" 
+
+
+
+          {/* 
+              <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
+                render={({match,location}) => <Pjw_DeploymentDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+              </Route>
+              <Route path="/projects/:project/resources/workloads/deployments/:deployment/pods/:pod" 
+                render={({match,location}) => <Pjw_Deployment_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+              </Route>
+              <Route path="/projects/:project/resources/workloads/deployments/:deployment/containers/:container" 
+                  render={({match,location}) => <Pjw_Deployment_ContainerDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+              </Route> 
+          */}
+          <Route path="/projects/:project/resources/workloads/statefulsets" 
             render={({match,location}) => <Pj_Workloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/pods" component={Pj_Pods} />
-          <Route path="/projects/:project/resources/services" component={Pj_Services} />
-          <Route path="/projects/:project/resources/ingress" component={Pj_Ingress} />
+          <Route path="/projects/:project/resources/workloads/deployments" 
+            render={({match,location}) => <Pj_Workloads  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Redirect exact from="/projects/:project/resources/workloads" to="/projects/:project/resources/workloads/deployments" />
+
+
+          <Route path="/projects/:project/resources/pods/:pod" 
+            render={({match,location}) => <Pj_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/projects/:project/resources/pods" 
+            render={({match,location}) => <Pj_Pods  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/projects/:project/resources/services/:service" 
+            render={({match,location}) => <Pj_ServicesDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/projects/:project/resources/services" 
+            render={({match,location}) => <Pj_Services  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/projects/:project/resources/ingress/:ingress" 
+            render={({match,location}) => <Pj_IngressDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/projects/:project/resources/ingress" 
+            render={({match,location}) => <Pj_Ingress  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           <Redirect from="/projects/:project/resources" to="/projects/:project/resources/workloads" />
          
-          <Route path="/projects/:project/volumes" component={Pj_Volumes} />
+          <Route path="/projects/:project/volumes" 
+            render={({match,location}) => <Pj_Volumes  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           
-          <Route path="/projects/:project/config/secrets" component={Pj_Secrets} />
-          <Route path="/projects/:project/config/configmaps" component={Pj_ConfigMaps} />
+          <Route path="/projects/:project/config/secrets" 
+            render={({match,location}) => <Pj_Secrets  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/projects/:project/config/configmaps" 
+            render={({match,location}) => <Pj_ConfigMaps  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           <Redirect from="/projects/:project/config" to="/projects/:project/config/secrets" />
 
-          <Route path="/projects/:project/settings/members" component={Pj_Settings} />
+          <Route path="/projects/:project/settings/members" 
+            render={({match,location}) => <Pj_Settings  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           <Redirect from="/projects/:project/settings" to="/projects/:project/settings/members" />
           {/* Projects contents END*/}
 

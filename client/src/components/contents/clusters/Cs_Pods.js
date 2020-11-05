@@ -161,11 +161,7 @@ class Cs_Pods extends Component {
             }
           }}>{fnEnterCheck()}</Link></Table.Cell>
         );
-      } else if (column.name === "cluster"){
-        return(
-        <Table.Cell>{apiParams}</Table.Cell>
-        );
-      } 
+      }
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 

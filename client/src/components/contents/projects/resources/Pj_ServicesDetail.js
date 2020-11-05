@@ -3,17 +3,17 @@ import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
 import Paper from "@material-ui/core/Paper";
-import LineChart from './../../modules/LineChart';
+import LineChart from './../../../modules/LineChart';
 import {
   SearchState,IntegratedFiltering,PagingState,IntegratedPaging,SortingState,IntegratedSorting,
 } from "@devexpress/dx-react-grid";
-import LineReChart from './../../modules/LineReChart';
+import LineReChart from './../../../modules/LineReChart';
 import {
   Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 
 let apiParams = "";
-class Pd_PodDetail extends Component {
+class Pj_ServicesDetail extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -21,7 +21,12 @@ class Pd_PodDetail extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    const result = {
+      menu : "projects",
+      title : this.props.match.params.project
+    }
+    this.props.menuData(result);
+    apiParams = this.props.match.params.project;
   }
 
   componentDidMount() {
@@ -37,7 +42,7 @@ class Pd_PodDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/pods/${param.pod}`);
+    const response = await fetch(`/projects/${param.project}/resources/services/${param.service}`);
     const body = await response.json();
     return body;
   };
@@ -50,12 +55,12 @@ class Pd_PodDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pod-detail full">
+        <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Pod Information
-              <small>{ this.props.match.params.pod}</small>
+            Service Information
+              <small>{ this.props.match.params.service}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -63,11 +68,11 @@ class Pd_PodDetail extends Component {
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Clusters</NavLink>
+                <NavLink to="/projects">Projects</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Nodes
+                Resources
               </li>
             </ol>
           </section>
@@ -77,9 +82,8 @@ class Pd_PodDetail extends Component {
           {this.state.rows ? (
             [
             <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <Containers rowData={this.state.rows.containers}/>,
-            <PodStatus rowData={this.state.rows.pod_status}/>,
-            <PhysicalResources rowData={this.state.rows.physical_resources}/>,
+            <Workloads rowData={this.state.rows.workloads}/>,
+            <Pods rowData={this.state.rows.pods}/>,
             <Events rowData={this.state.rows.events}/>
             ]
           ) : (
@@ -102,45 +106,53 @@ class BasicInfo extends Component {
       <div className="content-box">
         <div className="cb-header">Basic Info</div>
         <div className="cb-body">
-          <div>
-            <span>Name : </span>
-            <strong>{this.props.rowData.name}</strong>
-          </div>
           <div style={{display:"flex"}}>
             <div className="cb-body-left">
               <div>
-                <span>Status : </span>
-                {this.props.rowData.status}
-              </div>
-              <div>
-                <span>Cluster : </span>
-                {this.props.rowData.cluster}
+                <span>Name : </span>
+                <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
                 <span>Project : </span>
                 {this.props.rowData.project}
               </div>
               <div>
-                <span>Node : </span>
-                {this.props.rowData.node}
+                <span>Type : </span>
+                {this.props.rowData.type}
               </div>
               <div>
-                <span>Total Restart Count : </span>
-                {this.props.rowData.total_restart_count}
+                <span>Selector : </span>
+                {this.props.rowData.selector}
+              </div>
+              <div>
+                <span>DNS : </span>
+                {this.props.rowData.dns}
+              </div>
+              <div>
+                <span>Access Type : </span>
+                {this.props.rowData.access_type}
               </div>
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>namespace : </span>
+                  <span>Published IP Addresses : </span>
+                  {this.props.rowData.published_ip_addresses}
+                </div>
+                <div>
+                  <span>Namespace : </span>
                   {this.props.rowData.namespace}
                 </div>
                 <div>
-                  <span>Node IP : </span>
-                  {this.props.rowData.node_ip}
+                  <span>Cluster IP : </span>
+                  {this.props.rowData.cluster_iP}
                 </div>
                 <div>
-                  <span>Pod IP : </span>
-                  {this.props.rowData.pod_ip}
+                  <span>external_ip : </span>
+                  {this.props.rowData.external_ip}
+                </div>
+                <div>
+                  <span>Endpoints : </span>
+                  {this.props.rowData.endpoints}
                 </div>
                 <div>
                   <span>Create Time : </span>
@@ -155,23 +167,19 @@ class BasicInfo extends Component {
   }
 }
 
-class Containers extends Component {
+class Workloads extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "restart_count", title: "Restart Count" },
-        { name: "port", title: "Port" },
-        { name: "image", title: "Image" },
+        { name: "type", title: "Type" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 400 },
         { columnName: "status", width: 150 },
-        { columnName: "restart_count", width: 150 },
-        { columnName: "port", width: 150 },
-        { columnName: "image", width: 280 },
+        { columnName: "type", width: 150 },
       ],
       rows: this.props.rowData,
 
@@ -233,7 +241,7 @@ class Containers extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Containers</div>
+        <div className="cb-header">Workloads</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -282,23 +290,25 @@ class Containers extends Component {
   };
 };
 
-class PodStatus extends Component {
+class Pods extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "type", title: "Type" },
-        { name: "status", title: "Status" },
-        { name: "last_update", title: "Last Update" },
-        { name: "reson", title: "Reson" },
-        { name: "message", title: "Message" },
+        { name: "name", title: "Type" },
+        { name: "cluster", title: "Cluster" },
+        { name: "nodes", title: "Nodes" },
+        { name: "pod_ip", title: "Pod IP" },
+        { name: "cpu", title: "CPU" },
+        { name: "memory", title: "Memory" },
       ],
       defaultColumnWidths: [
-        { columnName: "type", width: 150 },
-        { columnName: "status", width: 150 },
-        { columnName: "last_update", width: 150 },
-        { columnName: "reson", width: 240 },
-        { columnName: "message", width: 280 },
+        { columnName: "name", width: 150 },
+        { columnName: "cluster", width: 150 },
+        { columnName: "nodes", width: 150 },
+        { columnName: "pod_ip", width: 240 },
+        { columnName: "cpu", width: 280 },
+        { columnName: "memory", width: 280 },
       ],
       rows: this.props.rowData,
 
@@ -360,7 +370,7 @@ class PodStatus extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Pod Status</div>
+        <div className="cb-header">Pods</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -408,35 +418,6 @@ class PodStatus extends Component {
     );
   };
 };
-
-class PhysicalResources extends Component {
-  render(){
-    const network_title = ["in", "out"];
-    return (
-      <div className="content-box line-chart">
-        <div className="cb-header">Physical Resources</div>
-        <div className="cb-body">
-          <div className="cb-body-content">
-            <LineReChart 
-              rowData={this.props.rowData.cpu}
-              unit="m"
-              name="cpu"
-              title="CPU"
-              cardinal={false}
-            >
-            </LineReChart>
-          </div>
-          <div className="cb-body-content">
-            <LineReChart rowData={this.props.rowData.memory} unit="mib" name="memory" title="Memory" cardinal={false}></LineReChart>
-          </div>
-          <div className="cb-body-content">
-            <LineReChart rowData={this.props.rowData.network} unit="Bps" name={network_title} title="Network" cardinal={true}></LineReChart>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
 
 class Events extends Component {
   constructor(props) {
@@ -564,4 +545,4 @@ class Events extends Component {
 };
 
 
-export default Pd_PodDetail;
+export default Pj_ServicesDetail;

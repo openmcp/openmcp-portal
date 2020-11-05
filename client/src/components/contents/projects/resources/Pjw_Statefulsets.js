@@ -23,23 +23,33 @@ import Editor from "./../../../common/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
 let apiParams = "";
-class Pj_Services extends Component {
+class Pjw_Statefulsets extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name"},
-        { name: "namespace", title: "Namespace" },
-        { name: "type", title: "Type"},
-        { name: "selector", title: "Selector" },
-        { name: "port", title: "Port" },
+        { name: "name", title: "Pod" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
+        { name: "pod_ip", title: "Pod IP" },
+        { name: "node", title: "Node" },
+        { name: "node_ip", title: "Node IP" },
+        { name: "cpu", title: "CPU" },
+        { name: "memory", title: "Memory" },
+        { name: "create_time", title: "Create Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
-        { columnName: "namespace", width: 130 },
-        { columnName: "type", width: 130 },
-        { columnName: "selector", width: 150 },
-        { columnName: "port", width: 150 },
+        { columnName: "status", width: 130 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "project", width: 130 },
+        { columnName: "pod_ip", width: 150 },
+        { columnName: "node", width: 130 },
+        { columnName: "node_ip", width: 150 },
+        { columnName: "cpu", width: 80 },
+        { columnName: "memory", width: 120 },
+        { columnName: "create_time", width: 170 },
       ],
       rows: "",
 
@@ -55,17 +65,19 @@ class Pj_Services extends Component {
 
   componentWillMount() {
     const result = {
-      menu : "projects",
-      title : this.props.match.params.project
+      menu : "clusters",
+      title : this.props.match.params.cluster
     }
     this.props.menuData(result);
-    
-    apiParams = this.props.match.params.project;
+    apiParams = this.props.match.params.cluster;
   }
+
+
+  
 
   callApi = async () => {
     var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/services`);
+    const response = await fetch(`/clusters/${apiParams}/pods`);
     const body = await response.json();
     return body;
   };
@@ -143,11 +155,15 @@ class Pj_Services extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/projects/${apiParams}/resources/services/${props.value}`,
+            pathname: `/projects/${apiParams}/workloads/statefulsets`,
             state: {
               data : row
             }
           }}>{fnEnterCheck()}</Link></Table.Cell>
+        );
+      } else if (column.name === "cluster"){
+        return(
+        <Table.Cell>{apiParams}</Table.Cell>
         );
       } 
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
@@ -170,11 +186,11 @@ class Pj_Services extends Component {
     };
 
     return (
-      <div className="content-wrapper">
+      <div className="content-wrapper cluster-nodes">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Services
+            Pods
             <small> in {apiParams}</small>
           </h1>
           <ol className="breadcrumb">
@@ -183,7 +199,7 @@ class Pj_Services extends Component {
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Projects
+              Clusters
             </li>
           </ol>
         </section>
@@ -236,4 +252,4 @@ class Pj_Services extends Component {
   }
 }
 
-export default Pj_Services;
+export default Pjw_Statefulsets;

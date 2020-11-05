@@ -3,17 +3,17 @@ import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
 import Paper from "@material-ui/core/Paper";
-import LineChart from './../../modules/LineChart';
+import LineChart from './../../../modules/LineChart';
 import {
   SearchState,IntegratedFiltering,PagingState,IntegratedPaging,SortingState,IntegratedSorting,
 } from "@devexpress/dx-react-grid";
-import LineReChart from './../../modules/LineReChart';
+import LineReChart from './../../../modules/LineReChart';
 import {
   Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 
 let apiParams = "";
-class Pd_PodDetail extends Component {
+class Pj_PodDetail extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -21,7 +21,12 @@ class Pd_PodDetail extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    const result = {
+      menu : "projects",
+      title : this.props.match.params.project
+    }
+    this.props.menuData(result);
+    apiParams = this.props.match.params.project;
   }
 
   componentDidMount() {
@@ -37,7 +42,7 @@ class Pd_PodDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/pods/${param.pod}`);
+    const response = await fetch(`/projects/${param.project}/resources/pods/${param.pod}`);
     const body = await response.json();
     return body;
   };
@@ -50,7 +55,7 @@ class Pd_PodDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pod-detail full">
+        <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
@@ -63,11 +68,11 @@ class Pd_PodDetail extends Component {
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Clusters</NavLink>
+                <NavLink to="/projects">Projects</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Nodes
+                Resources
               </li>
             </ol>
           </section>
@@ -564,4 +569,4 @@ class Events extends Component {
 };
 
 
-export default Pd_PodDetail;
+export default Pj_PodDetail;
