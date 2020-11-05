@@ -1166,21 +1166,21 @@ g {
   color: #3c8dbc;
 }
 
-.cs-pod-detail .cb-kube-status,
-.cs-node-detail .cb-kube-status,
+.pod-detail .cb-kube-status,
+.node-detail .cb-kube-status,
 .cluster-overview .cb-kube-status {
   position: relative;
 }
 
-.cs-pod-detail .cb-kube-status .cb-body,
-.cs-node-detail .cb-kube-status .cb-body,
+.pod-detail .cb-kube-status .cb-body,
+.node-detail .cb-kube-status .cb-body,
 .cluster-overview .cb-kube-status .cb-body {
   width: 992px;
   margin: auto;
 }
 
-.cs-pod-detail .cb-kube-status .cb-body-content,
-.cs-node-detail .cb-kube-status .cb-body-content,
+.pod-detail .cb-kube-status .cb-body-content,
+.node-detail .cb-kube-status .cb-body-content,
 .cluster-overview .cb-kube-status .cb-body-content {
   margin: 12px 24px;
   padding: 12px;
@@ -1191,11 +1191,11 @@ g {
   font-size: 14px;
 }
 
-.cs-pod-detail.cluster-overview
+.pod-detail.cluster-overview
   .cb-kube-status
   .cb-body-content
   > div:first-child,
-.cs-node-detail.cluster-overview
+.node-detail.cluster-overview
   .cb-kube-status
   .cb-body-content
   > div:first-child,
@@ -1203,34 +1203,34 @@ g {
   font-weight: bold;
   font-size: 16px;
 }
-.cs-pod-detail .cb-kube-status .cb-body-content.healthy,
-.cs-node-detail .cb-kube-status .cb-body-content.healthy,
+.pod-detail .cb-kube-status .cb-body-content.healthy,
+.node-detail .cb-kube-status .cb-body-content.healthy,
 .cluster-overview .cb-kube-status .cb-body-content.healthy {
   color: green;
   border: 4px solid green;
 }
 
-.cs-pod-detail .cb-kube-status .cb-body-content.unhealthy,
-.cs-node-detail .cb-kube-status .cb-body-content.unhealthy,
+.pod-detail .cb-kube-status .cb-body-content.unhealthy,
+.node-detail .cb-kube-status .cb-body-content.unhealthy,
 .cluster-overview .cb-kube-status .cb-body-content.unhealthy {
   color: red;
   border: 4px solid red;
 }
 
 /* cluster > node_detail */
-.cs-node-detail {
+.node-detail {
 }
-.cs-node-detail .pie-chart {
+.node-detail .pie-chart {
   height: 200px;
   width: 24.5%;
   padding: 16px 0 0 0px;
   position: relative;
 }
-.cs-node-detail .pie-chart path {
+.node-detail .pie-chart path {
   stroke: rgb(0 0 0 / 0%);
 }
 
-.cs-node-detail .cb-sub-title {
+.node-detail .cb-sub-title {
   position: absolute;
   top: 20px;
   left: 17px;
@@ -1238,24 +1238,24 @@ g {
   color: #3c8dbc;
 }
 
-.cs-pod-detail .cb-body > div:first-child,
-.cs-node-detail .cb-body > div:first-child {
+.pod-detail .cb-body > div:first-child,
+.node-detail .cb-body > div:first-child {
   /* padding-bottom: 11px; */
 }
 
-.cs-pod-detail .cb-body .cb-body-left,
-.cs-node-detail .cb-body .cb-body-left {
+.pod-detail .cb-body .cb-body-left,
+.node-detail .cb-body .cb-body-left {
   margin-right: 100px;
 }
-/* .cs-node-detail .cb-body .cb-body-right{} */
+/* .node-detail .cb-body .cb-body-right{} */
 
 /* cluster > pod_detail */
-.cs-pod-detail .content-box.line-chart .cb-body-content {
+.pod-detail .content-box.line-chart .cb-body-content {
   min-height: 100px;
   padding: 20px 30px;
 }
 
-.cs-pod-detail .content-box.line-chart .cb-body-content > div {
+.pod-detail .content-box.line-chart .cb-body-content > div {
   /* margin:auto; */
   width: fit-content;
 }

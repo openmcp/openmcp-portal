@@ -15,37 +15,48 @@ import {
   Table,
   Toolbar,
   SearchPanel,
+  TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../common/Editor";
+import { NavigateNext} from '@material-ui/icons';
 
+// let apiParams = "";
 class Pods extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "project_name", title: "Name" },
-        { name: "project_status", title: "Status" },
-        { name: "project_creator", title: "Createor" },
-        { name: "project_create_time", title: "Created Time" },
+        { name: "name", title: "Pod" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
+        { name: "pod_ip", title: "Pod IP" },
+        { name: "node", title: "Node" },
+        { name: "node_ip", title: "Node IP" },
+        { name: "cpu", title: "CPU" },
+        { name: "memory", title: "Memory" },
+        { name: "create_time", title: "Create Time" },
       ],
-      // rows: [
-      //   {
-      //     name: "project1",
-      //     status: "Healthy",
-      //     createor: "Admin",
-      //     createdTime: "2020-07-16 21:45:36",
-      //     extradata: "scshin",
-      //   },
-      // ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 130 },
+        { columnName: "status", width: 130 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "project", width: 130 },
+        { columnName: "pod_ip", width: 150 },
+        { columnName: "node", width: 130 },
+        { columnName: "node_ip", width: 150 },
+        { columnName: "cpu", width: 80 },
+        { columnName: "memory", width: 120 },
+        { columnName: "create_time", width: 170 },
+      ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5,
-      setPageSize: 5,
+      pageSize: 10, //화면 리스트 개수
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -53,13 +64,19 @@ class Pods extends Component {
   }
 
   componentWillMount() {
-    // this.props.onSelectMenu(false, "");
+    // const result = {
+    //   menu : "clusters",
+    //   title : this.props.match.params.pod
+    // }
+    // this.props.menuData(result);
+    // apiParams = this.props.match.params.pod;
   }
+
 
   
 
   callApi = async () => {
-    const response = await fetch("/api/projects");
+    const response = await fetch(`/pods`);
     const body = await response.json();
     return body;
   };
@@ -79,34 +96,28 @@ class Pods extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   render() {
+
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
         {...restProps}
         style={{
-          backgroundColor:
-            value === "Healthy"
-              ? "white"
-              : value === "Unhealthy"
-              ? "white"
-              : undefined,
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           cursor: "pointer",
           ...style,
-        }}
-      >
+        }}>
         <span
           style={{
             color:
-              value === "Healthy"
-                ? "green"
-                : value === "Unhealthy"
-                ? "red"
-                : undefined,
-          }}
-        >
+              value === "Warning" ? "orange" : 
+                value === "Unschedulable" ? "red" : 
+                  value === "Stop" ? "red" : 
+                    value === "Running" ? "green" : "skyblue"
+          }}>
           {value}
         </span>
       </Table.Cell>
@@ -114,25 +125,43 @@ class Pods extends Component {
 
     //셀
     const Cell = (props) => {
-      const { column } = props;
-      if (column.name === "project_status") {
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      // debugger;
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        return (
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( item => {
+              return (
+                <p>{item}</p>
+            )}) : 
+              props.value
+        )
+      }
+
+
+      if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "project_name") {
+      } else if (column.name === "name") {
+        console.log("name", props.value);
         return (
           <Table.Cell
-            component={Link}
-            to={{
-              pathname: `/projects/${props.value}/overview`,
-              state: {
-                test : "testvalue"
-              }
-            }}
             {...props}
             style={{ cursor: "pointer" }}
-          ></Table.Cell>
+          ><Link to={{
+            pathname: `/pods/${props.value}`,
+            state: {
+              data : row
+            }
+          }}>{fnEnterCheck()}</Link></Table.Cell>
         );
       }
-      return <Table.Cell {...props} />;
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -146,9 +175,9 @@ class Pods extends Component {
         // onClick={()=> alert(JSON.stringify(row))}
       />
     );
-    const i = 0;
     const Row = (props) => {
-      return <Table.Row {...props} />;
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
     return (
@@ -156,26 +185,27 @@ class Pods extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-          Pods
-            <small>List</small>
+            Pods
+            <small>list</small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
-            <li className="active">Pods</li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Pods
+            </li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
               [
-                // <input type="button" value="create"></input>,
                 <Editor />,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
-                  style={{ color: "red" }}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -184,18 +214,19 @@ class Pods extends Component {
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* Sorting */}
                   <SortingState
-                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}

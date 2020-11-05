@@ -38,7 +38,7 @@ class LineReChart extends Component {
             <span style={{fontSize:"13px", fontWeight:"normal", paddingLeft:"5px"}}>
                 {this.props.cardinal ? 
                 this.props.name.map((i, index) => {
-                    return <span>{index === this.props.name.length-1 ? "("+avg[index] +" "+ this.props.unit +" "+ i +")" : "("+avg[index] +" "+ this.props.unit +" "+ i+")" + " / "}</span>;
+                    return <span>{index === this.props.name.length-1 ? "("+avg[index] +" "+ this.props.unit +" "+ i +")" : "("+avg[index] +" "+ this.props.unit +" "+ i+")" + " /"}</span>;
                 }) : 
                 <span>{"("+avg[0] + this.props.unit+")"}</span>
                 }
@@ -50,8 +50,8 @@ class LineReChart extends Component {
           data={this.state.rows}
           margin={{
             top: 24,
-            right: 0,
-            left: 0,
+            right: 30,
+            left: 30,
             bottom: 0,
           }}
           style={{ fontSize: "12px" }}

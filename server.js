@@ -171,4 +171,56 @@ app.get("/clusters/:cluster/pods/:pod", (req, res) => {
   res.send(overview);
 });
 
+// Clusters > Storage Class
+app.get("/clusters/:cluster/storage_class", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_storage_class.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Clusters > Storage Class > detail
+app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_storage_class_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Nodes
+app.get("/nodes", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/nodes.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Nodes > overview
+app.get("/nodes/:node", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/nodes_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+
+// Nodes
+app.get("/pods", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/pods.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Nodes > overview
+app.get("/pods/:pod", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/pods_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+
+
+
 app.listen(port, () => console.log(`Listening on port ${port}`));

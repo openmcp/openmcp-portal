@@ -21,14 +21,14 @@ export function getMenu(pathParams) {
         title : "Storage Class",
         path : "/clusters/" + pathParams + "/storage_class",
       },
-      {
-        type: "multi",
-        title : "Settings",
-        path : "/clusters/" + pathParams + "/settings",
-        sub : [
-          { title: "Workloads", path: "/clusters/"+pathParams+"/settings/member" },
-        ]
-      }
+      // {
+      //   type: "multi",
+      //   title : "Settings",
+      //   path : "/clusters/" + pathParams + "/settings",
+      //   sub : [
+      //     { title: "Workloads", path: "/clusters/"+pathParams+"/settings/member" },
+      //   ]
+      // }
     ],
     nodes : [
       {

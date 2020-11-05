@@ -20,15 +20,9 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import SelectBox from '../../modules/SelectBox';
-import PieReChart2 from '../../modules/PieReChart2';
-// import LineChart from './../../modules/LineChart';
-// import PieHalfReChart from './../../modules/PieHalfReChart';
-// import PieReChart from './../../modules/PieReChart';
-// import line_chart_sample from './../../../json/line_chart_sample.json'
 
 let apiParams = "";
-class Cs_NodeDetail extends Component {
+class Cs_StorageClassDetail extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -57,7 +51,7 @@ class Cs_NodeDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/clusters/${param.cluster}/nodes/${param.node}`);
+    const response = await fetch(`/clusters/${param.cluster}/storage_class/${param.storage_class}`);
     const body = await response.json();
     return body;
   };
@@ -75,8 +69,8 @@ class Cs_NodeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Node Information
-              <small>{ this.props.match.params.node}</small>
+            Storage Class Information
+              <small>{this.props.match.params.storage_class}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -98,9 +92,7 @@ class Cs_NodeDetail extends Component {
           {this.state.rows ? (
             [
             <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <KubernetesStatus rowData={this.state.rows.kubernetes_node_status}/>,
-            <NodeResourceUsage rowData={this.state.rows.node_resource_usage}/>,
-            <Events rowData={this.state.rows.events}/>
+            <Volumes rowData={this.state.rows.volumes}/>
             ]
           ) : (
             <CircularProgress
@@ -119,51 +111,52 @@ class Cs_NodeDetail extends Component {
 class BasicInfo extends Component {
   render(){
     // console.log("BasicInfo:", this.props.rowData.name)
-    
     return (
       <div className="content-box">
         <div className="cb-header">Basic Info</div>
         <div className="cb-body">
-          <div>
-            <span>Name : </span>
-            <strong>{this.props.rowData.name}</strong>
-          </div>
           <div style={{display:"flex"}}>
-
             <div className="cb-body-left">
               <div>
-                <span>Status : </span>
-                {this.props.rowData.status}
+                <span>Name : </span>
+                <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Role : </span>
+                <span>Project : </span>
+                {this.props.rowData.project}
+              </div>
+              <div>
+                <span>Provisioner : </span>
                 {this.props.rowData.role}
               </div>
               <div>
-                <span>Kubernetes : </span>
-                {this.props.rowData.kubernetes}
+                <span>Reclaim Policy : </span>
+                {this.props.rowData.reclaim_policy}
               </div>
               <div>
-                <span>Kubernetes Proxy : </span>
-                {this.props.rowData.kubernetes_proxy}
+                <span>Volume Binding Mode : </span>
+                {this.props.rowData.volume_binding_mode}
               </div>
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>IP : </span>
-                  {this.props.rowData.ip}
+                  <span>Parameters : </span>
                 </div>
                 <div>
-                  <span>OS : </span>
-                  {this.props.rowData.os}
+                  <span> - voluem type : </span>
+                  {this.props.rowData.parameters.volume_type}
                 </div>
                 <div>
-                  <span>Docker : </span>
-                  {this.props.rowData.docker}
+                  <span> - availabilty zone : </span>
+                  {this.props.rowData.parameters.availabilty_zone}
                 </div>
                 <div>
-                  <span>Create Time : </span>
-                  {this.props.rowData.create_time}
+                  <span> - encryption : </span>
+                  {this.props.rowData.parameters.encryption}
+                </div>
+                <div>
+                  <span> - filesystem type : </span>
+                  {this.props.rowData.parameters.filesystem_type}
                 </div>
             </div>
           </div>
@@ -175,93 +168,24 @@ class BasicInfo extends Component {
 }
 
 
-class NodeResourceUsage extends Component {
-  state = {
-    rows : this.props.rowData,
-  }
-  angle = {
-    full : {
-      startAngle : 0,
-      endAngle : 360
-    },
-    half : {
-      startAngle : 180,
-      endAngle : 0
-    }  
-  }
-  render(){
-    const colors = [
-      "#0088FE",
-      "#ecf0f5",
-    ];
-    return (
-      <div className="content-box">
-        <div className="cb-header">Node Resource Usage</div>
-        <div className="cb-body flex">
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">CPU</div>
-            <PieReChart2 data={this.state.rows.cpu} angle={this.angle.half} unit={this.state.rows.cpu.unit} colors={colors}></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Memory</div>
-            <PieReChart2 data={this.state.rows.memory} angle={this.angle.half} unit={this.state.rows.memory.unit} colors={colors}></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Storage</div>
-            <PieReChart2 data={this.state.rows.storage} angle={this.angle.half} unit={this.state.rows.storage.unit} colors={colors}></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Storage</div>
-            <PieReChart2 data={this.state.rows.pods} angle={this.angle.half} unit={this.state.rows.pods.unit} colors={colors}></PieReChart2>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
 
-class KubernetesStatus extends Component {
-  state = {
-    rows : this.props.rowData
-  }
-  render(){
-    
-    return(
-      <div className="content-box cb-kube-status">
-        <div className="cb-header">Kubernetes Node Status</div>
-        <div className="cb-body flex">
-          {this.state.rows.map((item)=>{
-            return (
-          <div className={"cb-body-content "+item.status}>
-            <div>{item.name}</div>
-            <div>({item.status})</div>
-          </div>)
-          })}
-        </div>
-      </div>
-    );
-  };
-};
-
-class Events extends Component {
+class Volumes extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "project", title: "Project" },
-        { name: "type", title: "Type" },
-        { name: "reason", title: "Reason" },
-        { name: "object", title: "Object" },
-        { name: "message", title: "Message" },
-        { name: "time", title: "Time" },
+        { name: "name", title: "Name" },
+        { name: "namespace", title: "Namespace" },
+        { name: "status", title: "Status" },
+        { name: "mount_status", title: "Mount Status" },
+        { name: "capacity", title: "Capacity" },
       ],
       defaultColumnWidths: [
-        { columnName: "project", width: 150 },
-        { columnName: "type", width: 150 },
-        { columnName: "reason", width: 150 },
-        { columnName: "object", width: 240 },
-        { columnName: "message", width: 280 },
-        { columnName: "time", width: 180 },
+        { columnName: "name", width: 150 },
+        { columnName: "namespace", width: 150 },
+        { columnName: "status", width: 150 },
+        { columnName: "mount_status", width: 400 },
+        { columnName: "capacity", width: 240 },
       ],
       rows: this.props.rowData,
 
@@ -345,7 +269,7 @@ class Events extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
@@ -371,4 +295,4 @@ class Events extends Component {
     );
   };
 };
-export default Cs_NodeDetail;
+export default Cs_StorageClassDetail;

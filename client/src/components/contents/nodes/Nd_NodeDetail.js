@@ -20,15 +20,10 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import SelectBox from '../../modules/SelectBox';
 import PieReChart2 from '../../modules/PieReChart2';
-// import LineChart from './../../modules/LineChart';
-// import PieHalfReChart from './../../modules/PieHalfReChart';
-// import PieReChart from './../../modules/PieReChart';
-// import line_chart_sample from './../../../json/line_chart_sample.json'
 
 let apiParams = "";
-class Cs_NodeDetail extends Component {
+class Nd_NodeDetail extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -36,12 +31,12 @@ class Cs_NodeDetail extends Component {
   }
 
   componentWillMount() {
-    const result = {
-      menu : "clusters",
-      title : this.props.match.params.cluster
-    }
-    this.props.menuData(result);
-    apiParams = this.props.match.params.cluster;
+    // const result = {
+    //   menu : "clusters",
+    //   title : this.props.match.params.cluster
+    // }
+    // this.props.menuData(result);
+    // apiParams = this.props.match.params.cluster;
   }
 
   componentDidMount() {
@@ -57,7 +52,7 @@ class Cs_NodeDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/clusters/${param.cluster}/nodes/${param.node}`);
+    const response = await fetch(`/nodes/${param.node}`);
     const body = await response.json();
     return body;
   };
@@ -71,7 +66,7 @@ class Cs_NodeDetail extends Component {
     // console.log("Cs_Overview_Render : ",this.state.rows.basic_info);
     return (
       <div>
-        <div className="content-wrapper node-detail">
+        <div className="content-wrapper node-detail full">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
@@ -371,4 +366,4 @@ class Events extends Component {
     );
   };
 };
-export default Cs_NodeDetail;
+export default Nd_NodeDetail;

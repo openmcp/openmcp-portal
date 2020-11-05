@@ -13,7 +13,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 
 let apiParams = "";
-class Cs_PodDetail extends Component {
+class Pd_PodDetail extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -21,12 +21,12 @@ class Cs_PodDetail extends Component {
   }
 
   componentWillMount() {
-    const result = {
-      menu : "clusters",
-      title : this.props.match.params.cluster
-    }
-    this.props.menuData(result);
-    apiParams = this.props.match.params.cluster;
+    // const result = {
+    //   menu : "clusters",
+    //   title : this.props.match.params.pod
+    // }
+    // this.props.menuData(result);
+    // apiParams = this.props.match.params.pod;
   }
 
   componentDidMount() {
@@ -42,7 +42,7 @@ class Cs_PodDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/clusters/${param.cluster}/pods/${param.pod}`);
+    const response = await fetch(`/pods/${param.pod}`);
     const body = await response.json();
     return body;
   };
@@ -55,7 +55,7 @@ class Cs_PodDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pod-detail">
+        <div className="content-wrapper pod-detail full">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
@@ -569,4 +569,4 @@ class Events extends Component {
 };
 
 
-export default Cs_PodDetail;
+export default Pd_PodDetail;

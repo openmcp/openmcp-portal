@@ -28,6 +28,10 @@ import Cs_NodeDetail from './../contents/clusters/Cs_NodeDetail';
 import Cs_Pods from "../contents/clusters/Cs_Pods";
 import Cs_PodDetail from './../contents/clusters/Cs_PodDetail';
 import Cs_StorageClass from "../contents/clusters/Cs_StorageClass";
+import Cs_StorageClassDetail from './../contents/clusters/Cs_StorageClassDetail';
+import Nd_NodeDetail from './../contents/nodes/Nd_NodeDetail';
+import Pd_PodDetail from './../contents/pods/Pd_PodDetail';
+
 
 
 
@@ -132,15 +136,23 @@ class Contents extends Component {
             render={({match,location}) => <Cs_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/pods" 
             render={({match,location}) => <Cs_Pods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters/:cluster/storage_class/:storage_class" 
+            render={({match,location}) => <Cs_StorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/storage_class" 
             render={({match,location}) => <Cs_StorageClass  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-
-
           {/* <Route path="/clusters/:name/settings/" component={Pj_Settings} />
           <Redirect from="/clusters/:name/settings" to="/projects/:name/settings/members" /> */}
           {/* Clusters contents END*/}
 
+
+          {/* Nodes contents */}
+            <Route path="/nodes/:node"
+              render={({match,location}) => <Nd_NodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* Nodes contents END*/}
+
           {/* Pods contents */}
+          <Route path="/pods/:pod"
+              render={({match,location}) => <Pd_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* Pods contents END*/}
         </Switch>
           

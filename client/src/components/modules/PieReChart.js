@@ -157,7 +157,7 @@ class PieReChart extends Component {
             payload={this.state.rows.map((item, index) => ({
               id: item.name,
               type: "square",
-              value: `${item.name} (${item.value} ${this.props.unit})`,
+              value: `${item.name} (${item.value}${this.props.unit})`,
               color: COLORS[index % COLORS.length],
             }))}
           />
