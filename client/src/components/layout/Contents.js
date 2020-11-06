@@ -11,7 +11,6 @@ import LeftMenu from './LeftMenu';
 import Nodes from './../contents/Nodes';
 
 // Sub menu contents
-import Pj_Settings from "../contents/projects/Pj_Settings";
 import Pj_Overview from "../contents/projects/Pj_Overview";
 import Pj_Workloads from "../contents/projects/resources/Pj_Workloads";
 import Pj_Pods from "../contents/projects/resources/Pj_Pods";
@@ -34,6 +33,10 @@ import Pd_PodDetail from './../contents/pods/Pd_PodDetail';
 import Pj_PodDetail from './../contents/projects/resources/Pj_PodDetail';
 import Pj_ServicesDetail from './../contents/projects/resources/Pj_ServicesDetail';
 import Pj_IngressDetail from './../contents/projects/resources/Pj_IngressDetail';
+import Pj_VolumeDetail from './../contents/projects/Pj_VolumeDetail';
+import Pj_SecretDetail from './../contents/projects/config/Pj_SecretDetail';
+import Pj_ConfigMapDetail from './../contents/projects/config/Pj_ConfigMapDetail';
+import Pj_Members from '../contents/projects/settings/Pj_Members';
 
 
 
@@ -101,13 +104,33 @@ class Contents extends Component {
         }
 
         <Switch>
+
+          {/* Clusters contents */}
+          <Route path="/clusters/:cluster/overview" 
+            render={({match,location}) => <Cs_Overview  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/clusters/:cluster/nodes/:node" 
+            render={({match,location}) => <Cs_NodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters/:cluster/nodes" 
+            render={({match,location}) => <Cs_Nodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters/:cluster/pods/:pod" 
+            render={({match,location}) => <Cs_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters/:cluster/pods" 
+            render={({match,location}) => <Cs_Pods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters/:cluster/storage_class/:storage_class" 
+            render={({match,location}) => <Cs_StorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters/:cluster/storage_class" 
+            render={({match,location}) => <Cs_StorageClass  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* <Route path="/clusters/:name/settings/" component={Pj_Settings} />
+          <Redirect from="/clusters/:name/settings" to="/projects/:name/settings/members" /> */}
+          {/* Clusters contents END*/}
+
+
+
           {/* Projects contents */}
           <Route path="/projects/:project/overview" 
             render={({match,location}) => <Pj_Overview  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-
-
-
           {/* 
               <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
                 render={({match,location}) => <Pjw_DeploymentDetail  match={match} location={location} menuData={this.onMenuData}/>} >
@@ -148,52 +171,39 @@ class Contents extends Component {
           </Route>
           <Redirect from="/projects/:project/resources" to="/projects/:project/resources/workloads" />
          
+          <Route path="/projects/:project/volumes/:volume" 
+            render={({match,location}) => <Pj_VolumeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           <Route path="/projects/:project/volumes" 
             render={({match,location}) => <Pj_Volumes  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           
+          <Route path="/projects/:project/config/secrets/:secret" 
+            render={({match,location}) => <Pj_SecretDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           <Route path="/projects/:project/config/secrets" 
             render={({match,location}) => <Pj_Secrets  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/config/configmaps" 
+          <Route path="/projects/:project/config/config_maps/:config_map" 
+            render={({match,location}) => <Pj_ConfigMapDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/projects/:project/config/config_maps" 
             render={({match,location}) => <Pj_ConfigMaps  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           <Redirect from="/projects/:project/config" to="/projects/:project/config/secrets" />
 
           <Route path="/projects/:project/settings/members" 
-            render={({match,location}) => <Pj_Settings  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Pj_Members  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           <Redirect from="/projects/:project/settings" to="/projects/:project/settings/members" />
           {/* Projects contents END*/}
-
-
-
-
-          {/* Clusters contents */}
-          <Route path="/clusters/:cluster/overview" 
-            render={({match,location}) => <Cs_Overview  match={match} location={location} menuData={this.onMenuData}/>} >
-          </Route>
-          <Route path="/clusters/:cluster/nodes/:node" 
-            render={({match,location}) => <Cs_NodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-          <Route path="/clusters/:cluster/nodes" 
-            render={({match,location}) => <Cs_Nodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-          <Route path="/clusters/:cluster/pods/:pod" 
-            render={({match,location}) => <Cs_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-          <Route path="/clusters/:cluster/pods" 
-            render={({match,location}) => <Cs_Pods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-          <Route path="/clusters/:cluster/storage_class/:storage_class" 
-            render={({match,location}) => <Cs_StorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-          <Route path="/clusters/:cluster/storage_class" 
-            render={({match,location}) => <Cs_StorageClass  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
-          {/* <Route path="/clusters/:name/settings/" component={Pj_Settings} />
-          <Redirect from="/clusters/:name/settings" to="/projects/:name/settings/members" /> */}
-          {/* Clusters contents END*/}
 
 
           {/* Nodes contents */}
             <Route path="/nodes/:node"
               render={({match,location}) => <Nd_NodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* Nodes contents END*/}
+          
 
           {/* Pods contents */}
           <Route path="/pods/:pod"

@@ -143,8 +143,8 @@ class BasicInfo extends Component {
                 {this.props.rowData.namespace}
               </div>
               <div>
-                <span>create_time : </span>
-                {this.props.rowData.create_time}
+                <span>created_time : </span>
+                {this.props.rowData.created_time}
               </div>
             </div>
           </div>

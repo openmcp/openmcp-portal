@@ -3,27 +3,17 @@ import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
 import Paper from "@material-ui/core/Paper";
+import LineChart from '../../../modules/LineChart';
 import {
-  SearchState,
-  IntegratedFiltering,
-  PagingState,
-  IntegratedPaging,
-  SortingState,
-  IntegratedSorting,
+  SearchState,IntegratedFiltering,PagingState,IntegratedPaging,SortingState,IntegratedSorting,
 } from "@devexpress/dx-react-grid";
+import LineReChart from '../../../modules/LineReChart';
 import {
-  Grid,
-  Table,
-  Toolbar,
-  SearchPanel,
-  TableColumnResizing,
-  TableHeaderRow,
-  PagingPanel,
+  Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import PieReChart2 from '../../modules/PieReChart2';
 
 let apiParams = "";
-class Nd_NodeDetail extends Component {
+class Pj_ConfigMapDetail extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -31,7 +21,12 @@ class Nd_NodeDetail extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    const result = {
+      menu : "projects",
+      title : this.props.match.params.project
+    }
+    this.props.menuData(result);
+    apiParams = this.props.match.params.project;
   }
 
   componentDidMount() {
@@ -47,7 +42,7 @@ class Nd_NodeDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/nodes/${param.node}`);
+    const response = await fetch(`/projects/${param.project}/config/config_maps/${param.config_map}`);
     const body = await response.json();
     return body;
   };
@@ -58,15 +53,14 @@ class Nd_NodeDetail extends Component {
   };
 
   render() {
-    // console.log("Cs_Overview_Render : ",this.state.rows.basic_info);
     return (
       <div>
-        <div className="content-wrapper node-detail full">
+        <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Node Information
-              <small>{ this.props.match.params.node}</small>
+            Config Map Information
+              <small>{ this.props.match.params.config_map}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -74,11 +68,11 @@ class Nd_NodeDetail extends Component {
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Clusters</NavLink>
+                <NavLink to="/projects">Projects</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Nodes
+                Config
               </li>
             </ol>
           </section>
@@ -87,10 +81,8 @@ class Nd_NodeDetail extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <KubernetesStatus rowData={this.state.rows.kubernetes_node_status}/>,
-            <NodeResourceUsage rowData={this.state.rows.node_resource_usage}/>,
-            <Events rowData={this.state.rows.events}/>
+              <BasicInfo rowData={this.state.rows.basic_info}/>,
+              <Data rowData={this.state.rows.data}/>,
             ]
           ) : (
             <CircularProgress
@@ -108,53 +100,30 @@ class Nd_NodeDetail extends Component {
 
 class BasicInfo extends Component {
   render(){
-    // console.log("BasicInfo:", this.props.rowData.name)
-    
     return (
       <div className="content-box">
         <div className="cb-header">Basic Info</div>
         <div className="cb-body">
-          <div>
-            <span>Name : </span>
-            <strong>{this.props.rowData.name}</strong>
-          </div>
           <div style={{display:"flex"}}>
-
             <div className="cb-body-left">
               <div>
-                <span>Status : </span>
-                {this.props.rowData.status}
+                <span>Name : </span>
+                <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Role : </span>
-                {this.props.rowData.role}
-              </div>
-              <div>
-                <span>Kubernetes : </span>
-                {this.props.rowData.kubernetes}
-              </div>
-              <div>
-                <span>Kubernetes Proxy : </span>
-                {this.props.rowData.kubernetes_proxy}
+                <span>Project : </span>
+                {this.props.rowData.project}
               </div>
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>IP : </span>
-                  {this.props.rowData.ip}
-                </div>
-                <div>
-                  <span>OS : </span>
-                  {this.props.rowData.os}
-                </div>
-                <div>
-                  <span>Docker : </span>
-                  {this.props.rowData.docker}
-                </div>
-                <div>
-                  <span>Created Time : </span>
-                  {this.props.rowData.created_time}
-                </div>
+                <span>Namespace : </span>
+                {this.props.rowData.namespace}
+              </div>
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
             </div>
           </div>
           
@@ -164,94 +133,17 @@ class BasicInfo extends Component {
   }
 }
 
-
-class NodeResourceUsage extends Component {
-  state = {
-    rows : this.props.rowData,
-  }
-  angle = {
-    full : {
-      startAngle : 0,
-      endAngle : 360
-    },
-    half : {
-      startAngle : 180,
-      endAngle : 0
-    }  
-  }
-  render(){
-    const colors = [
-      "#0088FE",
-      "#ecf0f5",
-    ];
-    return (
-      <div className="content-box">
-        <div className="cb-header">Node Resource Usage</div>
-        <div className="cb-body flex">
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">CPU</div>
-            <PieReChart2 data={this.state.rows.cpu} angle={this.angle.half} unit={this.state.rows.cpu.unit} colors={colors}></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Memory</div>
-            <PieReChart2 data={this.state.rows.memory} angle={this.angle.half} unit={this.state.rows.memory.unit} colors={colors}></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Storage</div>
-            <PieReChart2 data={this.state.rows.storage} angle={this.angle.half} unit={this.state.rows.storage.unit} colors={colors}></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Storage</div>
-            <PieReChart2 data={this.state.rows.pods} angle={this.angle.half} unit={this.state.rows.pods.unit} colors={colors}></PieReChart2>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-class KubernetesStatus extends Component {
-  state = {
-    rows : this.props.rowData
-  }
-  render(){
-    
-    return(
-      <div className="content-box cb-kube-status">
-        <div className="cb-header">Kubernetes Node Status</div>
-        <div className="cb-body flex">
-          {this.state.rows.map((item)=>{
-            return (
-          <div className={"cb-body-content "+item.status}>
-            <div>{item.name}</div>
-            <div>({item.status})</div>
-          </div>)
-          })}
-        </div>
-      </div>
-    );
-  };
-};
-
-class Events extends Component {
+class Data extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "project", title: "Project" },
-        { name: "type", title: "Type" },
-        { name: "reason", title: "Reason" },
-        { name: "object", title: "Object" },
-        { name: "message", title: "Message" },
-        { name: "time", title: "Time" },
+        { name: "key", title: "Key" },
+        { name: "value", title: "Value" },
       ],
       defaultColumnWidths: [
-        { columnName: "project", width: 150 },
-        { columnName: "type", width: 150 },
-        { columnName: "reason", width: 150 },
-        { columnName: "object", width: 240 },
-        { columnName: "message", width: 280 },
-        { columnName: "time", width: 180 },
+        { columnName: "key", width: 250 },
+        { columnName: "value", width: 150 },
       ],
       rows: this.props.rowData,
 
@@ -313,7 +205,7 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">Data</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -335,7 +227,7 @@ class Events extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
@@ -361,4 +253,6 @@ class Events extends Component {
     );
   };
 };
-export default Nd_NodeDetail;
+
+
+export default Pj_ConfigMapDetail;

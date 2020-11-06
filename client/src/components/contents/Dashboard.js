@@ -4,7 +4,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from 'react-router-dom';
 import PieHalfReChart from './../modules/PieHalfReChart';
 import { NavigateNext} from '@material-ui/icons';
-import MyComponent from './../modules/TreeView';
+import TreeView from './../modules/TreeView';
 
 
 
@@ -122,7 +122,7 @@ class Dashboard extends Component {
                 <DashboardCard_3
                   title="Region-Clusters"
                   width="100%"
-                  data={this.state.rows.resources}
+                  data={this.state.rows.regions}
                 ></DashboardCard_3>
                 {/* <DashboardCard_2
                   title="Resources"
@@ -223,7 +223,7 @@ class DashboardCard_3 extends Component {
         className="cb-body"
         style={{ position: "relative", width: "100%", display:"flex"}}
       >
-        <MyComponent/>
+        <TreeView data={this.props.data}/>
       </div>
     </div>
     );

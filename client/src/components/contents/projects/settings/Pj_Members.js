@@ -9,46 +9,40 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  TableColumnResizing,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
   Table,
   Toolbar,
   SearchPanel,
+  TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../../common/Editor";
+import Editor from "../../../common/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
 let apiParams = "";
-class Pj_Volumes extends Component {
+class Pj_Members extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "namespace", title: "Namespace" },
-        { name: "capacity", title: "Capacity" },
-        { name: "mount", title: "Mount" },
-        { name: "created_time", title: "Created Time" },
+        { name: "name", title: "Name"},
+        { name: "role", title: "Role" },
+        { name: "last_login_time", title: "Last Login Time"},
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "namespace", width: 130 },
-        { columnName: "capacity", width: 150 },
-        { columnName: "mount", width: 150 },
-        { columnName: "created_time", width: 150 },
+        { columnName: "role", width: 130 },
+        { columnName: "last_login_time", width: 150 },
       ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10,
+      pageSize: 10, //화면 리스트 개수
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -57,18 +51,16 @@ class Pj_Volumes extends Component {
 
   componentWillMount() {
     const result = {
-      menu: "projects",
-      title: this.props.match.params.project,
-    };
+      menu : "projects",
+      title : this.props.match.params.project
+    }
     this.props.menuData(result);
-
+    
     apiParams = this.props.match.params.project;
   }
 
-  
-
   callApi = async () => {
-    const response = await fetch(`/projects/${apiParams}/volumes`);
+    const response = await fetch(`/projects/${apiParams}/settings/members`);
     const body = await response.json();
     return body;
   };
@@ -97,18 +89,19 @@ class Pj_Volumes extends Component {
       <Table.Cell
         {...restProps}
         style={{
-          backgroundColor:
-            value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           cursor: "pointer",
           ...style,
-        }}
-      >
+        }}>
         <span
           style={{
             color:
-              value === "Healthy" ? "green" : value === "Unhealthy" ? "red" : undefined,
-          }}
-        >
+              value === "Warning" ? "orange" : 
+                value === "Unschedulable" ? "red" : 
+                  value === "Stop" ? "red" : 
+                    value === "Running" ? "green" : "skyblue"
+          }}>
           {value}
         </span>
       </Table.Cell>
@@ -118,29 +111,42 @@ class Pj_Volumes extends Component {
     const Cell = (props) => {
       const { column, row } = props;
       // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      // debugger;
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        return (
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( item => {
+              return (
+                <p>{item}</p>
+            )}) : 
+              props.value
+        )
+      }
+
+
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
+        console.log("name", props.value);
         return (
           <Table.Cell
-            // component={Link}
-            // to={{
-            //   pathname: `/projects/${props.value}/overview`,
-            //   state: {
-            //     data : row
-            //   }
-            // }}
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/projects/${apiParams}/volumes/${props.value}`,
+            pathname: `/projects/${apiParams}/settings/members/${props.value}`,
             state: {
               data : row
             }
-          }}>{props.value}</Link></Table.Cell>
+          }}>{fnEnterCheck()}</Link></Table.Cell>
         );
-      }
-      return <Table.Cell {...props} />;
+      } 
+      console.log("ddd", props.value);
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -164,8 +170,8 @@ class Pj_Volumes extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Volumes
-            <small>List</small>
+            Members
+            <small> in {apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -174,6 +180,10 @@ class Pj_Volumes extends Component {
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
               Projects
+            </li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Settings
             </li>
           </ol>
         </section>
@@ -199,15 +209,13 @@ class Pj_Volumes extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing
-                    defaultColumnWidths={this.state.defaultColumnWidths}
-                  />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -228,4 +236,4 @@ class Pj_Volumes extends Component {
   }
 }
 
-export default Pj_Volumes;
+export default Pj_Members;

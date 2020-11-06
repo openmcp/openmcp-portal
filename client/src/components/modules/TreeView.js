@@ -15,25 +15,25 @@ const myTreeData = [
   {
     name: "ap-northeast-2",
     attributes: {
-      status: "healthy",
+      status: "Healthy",
     },
     children: [
       {
         name: "cluster_01",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
       {
         name: "cluster_02",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
       {
         name: "cluster_03",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
     ],
@@ -41,25 +41,25 @@ const myTreeData = [
   {
     name: "ap-northeast-1",
     attributes: {
-      status: "healthy",
+      status: "Healthy",
     },
     children: [
       {
         name: "cluster_01",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
       {
         name: "cluster_02",
         attributes: {
-          status: "unhealthy",
+          status: "unHealthy",
         },
       },
       {
         name: "cluster_03",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       }
     ],
@@ -67,25 +67,25 @@ const myTreeData = [
   {
     name: "eu-west-2",
     attributes: {
-      status: "healthy",
+      status: "Healthy",
     },
     children: [
       {
         name: "cluster_01",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
       {
         name: "cluster_02",
         attributes: {
-          status: "unhealthy",
+          status: "unHealthy",
         },
       },
       {
         name: "cluster_03",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
     ],
@@ -93,25 +93,25 @@ const myTreeData = [
   {
     name: "us-east-2",
     attributes: {
-      status: "healthy",
+      status: "Healthy",
     },
     children: [
       {
         name: "cluster_01",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
       {
         name: "cluster_02",
         attributes: {
-          status: "unhealthy",
+          status: "unHealthy",
         },
       },
       {
         name: "cluster_03",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       }
     ],
@@ -119,31 +119,31 @@ const myTreeData = [
   {
     name: "us-east-2",
     attributes: {
-      status: "healthy",
+      status: "Healthy",
     },
     children: [
       {
         name: "cluster_01",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
       {
         name: "cluster_02",
         attributes: {
-          status: "unhealthy",
+          status: "unHealthy",
         },
       },
       {
         name: "cluster_03",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       },
       {
         name: "cluster_03",
         attributes: {
-          status: "healthy",
+          status: "Healthy",
         },
       }
     ],
@@ -168,10 +168,10 @@ class NodeLabel extends Component {
             <HomeWorkIcon style={{position:"relative", fontSize:"43px", color: "#367fa9", background: "#ffffff", stroke: "none" }}/>,
           ] : 
           [
-            <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "healthy" ? "#0088fe" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>,
+            <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>,
             <div class="" style={{fontSize:"14px", fontWeight:"bold"}}>{nodeData.name}</div>,
             <div class="" style={{fontSize:"14px"}}>
-              <span style={{color:(nodeData.attributes.status === "healthy" ? "#0088fe" : "#ff8042"), fontSize:"14px"}}>{nodeData.attributes.status}</span>
+              <span style={{color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), fontSize:"14px"}}>{nodeData.attributes.status}</span>
             </div>
           ]}
 
@@ -180,8 +180,10 @@ class NodeLabel extends Component {
   }
 }
 
-class MyComponent extends React.Component {
-  state = {};
+class TreeView extends React.Component {
+  state = {
+    data: this.props.data
+  }
   componentDidMount() {
     console.log("didMount")
     const dimensions = this.treeContainer.getBoundingClientRect();
@@ -242,7 +244,7 @@ class MyComponent extends React.Component {
       /* <Tree /> will fill width/height of its container; in this case `#treeWrapper` */
       // <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
       <div style={{ width: "100%"}}>
-        {myTreeData.map((c) => {
+        {this.state.data.map((c) => {
           return (
             <div style={containerStyles} ref={(tc) => (this.treeContainer = tc)}>
               <Tree
@@ -292,4 +294,4 @@ class MyComponent extends React.Component {
   }
 }
 
-export default MyComponent;
+export default TreeView;

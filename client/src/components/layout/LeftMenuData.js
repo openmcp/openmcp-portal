@@ -76,7 +76,7 @@ export function getMenu(pathParams) {
         path : "/projects/" + pathParams + "/config",
         sub : [
           { title: "Secrets", path: "/projects/" + pathParams + "/config/secrets"},
-          { title: "ConfigMaps", path: "/projects/"+pathParams+"/config/configMaps" },
+          { title: "ConfigMaps", path: "/projects/"+pathParams+"/config/config_maps" },
         ]
       },
       {

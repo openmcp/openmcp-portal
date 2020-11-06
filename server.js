@@ -43,64 +43,87 @@ connection.connect();
 /* Dashboard APIs */
 ///////////////////////
 app.get("/dashboard", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // console.log(overview);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri:
+      "http://192.168.0.152:4885/apis/dashboard",
+      // "http://192.168.0.51:4885/apis/dashboard",
+    method: "GET",
+    // headers: {
+    //   Authorization:
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    // },
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      console.log("result", body);
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+
+
 });
 
 
 
 let token = "";
 
-// // Projects 리스트 가져오기
-// app.get("/api/projects", (req, res) => {
-//   var request = require("request");
-//   // var url = "http://192.168.0.152:31635/token?username=openmcp&password=keti";
-//   // var uri ="http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1";
+// Projects 리스트 가져오기
+app.get("/api/projects", (req, res) => {
+  var request = require("request");
+  // var url = "http://192.168.0.152:31635/token?username=openmcp&password=keti";
+  // var uri ="http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1";
 
-//   var options = {
-//     uri:
-//       "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
-//     method: "GET",
-//     headers: {
-//       Authorization:
-//         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-//     },
-//   };
+  var options = {
+    uri:
+      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+    method: "GET",
+    headers: {
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    },
+  };
 
-//   var options = {
-//     uri:
-//       "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
-//     method: "GET",
-//     headers: {
-//       Authorization:
-//         "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-//     },
-//   };
+  var options = {
+    uri:
+      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+    method: "GET",
+    headers: {
+      Authorization:
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    },
+  };
 
-//   request(options, function (error, response, body) {
-//     if (!error && response.statusCode == 200) {
-//       console.log("result", body);
-//     } else {
-//       console.log("error", error);
-//       return error;
-//     }
-//   });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      console.log("result", body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 
-//   //   request(url, function (error, response, body) {
-//   //     if (!error && response.statusCode == 200) {
-//   //         console.log(body);
-//   //         token = body.token;
-//   //     } else {
-//   //         return error
-//   //     }
-//   //   });
+  //   request(url, function (error, response, body) {
+  //     if (!error && response.statusCode == 200) {
+  //         console.log(body);
+  //         token = body.token;
+  //     } else {
+  //         return error
+  //     }
+  //   });
 
-//   connection.query("SELECT * FROM PROJECT_LIST", (err, result) => {
-//     res.send(result.rows);
-//   });
-// });
+  connection.query("SELECT * FROM PROJECT_LIST", (err, result) => {
+    res.send(result.rows);
+  });
+});
 
 
 ///////////////////////
@@ -187,6 +210,63 @@ app.get("/projects/:project/resources/ingress", (req, res) => {
 // Prjects > Resources > Ingress Detail
 app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_ingress_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+
+// Prjects > volumes
+app.get("/projects/:project/volumes", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_volumes.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > volumes Detail
+app.get("/projects/:project/volumes/:volume", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_volume_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Config > Secrets
+app.get("/projects/:project/config/secrets", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_secrets.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Config > Secrets Detail
+app.get("/projects/:project/config/secrets/:secret", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_secret_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Config > ConfigMaps
+app.get("/projects/:project/config/config_maps", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_config_maps.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Config > ConfigMaps Detail
+app.get("/projects/:project/config/config_maps/:config_map", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_config_map_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+// Prjects > Settings > Members
+app.get("/projects/:project/settings/members", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_members.json");
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);

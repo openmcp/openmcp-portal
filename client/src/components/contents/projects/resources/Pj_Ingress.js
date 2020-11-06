@@ -31,13 +31,13 @@ class Pj_Ingress extends Component {
         { name: "name", title: "Name" },
         { name: "namespace", title: "Namespace" },
         { name: "address", title: "Address" },
-        { name: "create_time", title: "Create Time" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "namespace", width: 130 },
         { columnName: "address", width: 130 },
-        { columnName: "create_time", width: 150 },
+        { columnName: "created_time", width: 150 },
       ],
       rows: "",
 

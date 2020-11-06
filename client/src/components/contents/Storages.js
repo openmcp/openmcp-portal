@@ -28,7 +28,7 @@ class Storages extends Component {
         { name: "project_name", title: "Name" },
         { name: "project_status", title: "Status" },
         { name: "project_creator", title: "Createor" },
-        { name: "project_create_time", title: "Created Time" },
+        { name: "project_created_time", title: "Created Time" },
       ],
       
       rows: "",

@@ -143,8 +143,8 @@ class BasicInfo extends Component {
                   {this.props.rowData.pod_ip}
                 </div>
                 <div>
-                  <span>Create Time : </span>
-                  {this.props.rowData.create_time}
+                  <span>Created Time : </span>
+                  {this.props.rowData.created_time}
                 </div>
             </div>
           </div>

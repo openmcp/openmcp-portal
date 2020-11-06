@@ -32,7 +32,7 @@ class Projects extends Component {
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
         { name: "createor", title: "Createor" },
-        { name: "createdTime", title: "Created Time" },
+        { name: "created_time", title: "Created Time" },
       ],
       rows: "",
 

@@ -37,7 +37,7 @@ class Pjw_Statefulsets extends Component {
         { name: "node_ip", title: "Node IP" },
         { name: "cpu", title: "CPU" },
         { name: "memory", title: "Memory" },
-        { name: "create_time", title: "Create Time" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
@@ -49,7 +49,7 @@ class Pjw_Statefulsets extends Component {
         { columnName: "node_ip", width: 150 },
         { columnName: "cpu", width: 80 },
         { columnName: "memory", width: 120 },
-        { columnName: "create_time", width: 170 },
+        { columnName: "created_time", width: 170 },
       ],
       rows: "",
 

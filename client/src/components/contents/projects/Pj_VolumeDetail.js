@@ -3,17 +3,15 @@ import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
 import Paper from "@material-ui/core/Paper";
-import LineChart from './../../../modules/LineChart';
 import {
   SearchState,IntegratedFiltering,PagingState,IntegratedPaging,SortingState,IntegratedSorting,
 } from "@devexpress/dx-react-grid";
-import LineReChart from './../../../modules/LineReChart';
 import {
   Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 
 let apiParams = "";
-class Pj_ServicesDetail extends Component {
+class Pj_VolumeDetail extends Component {
   state = {
     rows:"",
     completed: 0,
@@ -42,7 +40,7 @@ class Pj_ServicesDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/projects/${param.project}/resources/services/${param.service}`);
+    const response = await fetch(`/projects/${param.project}/volumes/${param.volume}`);
     const body = await response.json();
     return body;
   };
@@ -59,7 +57,7 @@ class Pj_ServicesDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Service Information
+            Volume Information
               <small>{ this.props.match.params.service}</small>
             </h1>
             <ol className="breadcrumb">
@@ -70,10 +68,6 @@ class Pj_ServicesDetail extends Component {
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
                 <NavLink to="/projects">Projects</NavLink>
               </li>
-              <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Resources
-              </li>
             </ol>
           </section>
 
@@ -82,8 +76,7 @@ class Pj_ServicesDetail extends Component {
           {this.state.rows ? (
             [
             <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <Workloads rowData={this.state.rows.workloads}/>,
-            <Pods rowData={this.state.rows.pods}/>,
+            <MountedBy rowData={this.state.rows.mounted_by}/>,
             <Events rowData={this.state.rows.events}/>
             ]
           ) : (
@@ -117,42 +110,30 @@ class BasicInfo extends Component {
                 {this.props.rowData.project}
               </div>
               <div>
-                <span>Type : </span>
-                {this.props.rowData.type}
+                <span>Status : </span>
+                {this.props.rowData.status}
               </div>
               <div>
-                <span>Selector : </span>
-                {this.props.rowData.selector}
+                <span>Access Mode : </span>
+                {this.props.rowData.access_mode}
               </div>
               <div>
-                <span>DNS : </span>
-                {this.props.rowData.dns}
-              </div>
-              <div>
-                <span>Access Type : </span>
-                {this.props.rowData.access_type}
+                <span>Provisioner : </span>
+                {this.props.rowData.provisioner}
               </div>
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>Published IP Addresses : </span>
-                  {this.props.rowData.published_ip_addresses}
-                </div>
-                <div>
                   <span>Namespace : </span>
                   {this.props.rowData.namespace}
                 </div>
                 <div>
-                  <span>Cluster IP : </span>
-                  {this.props.rowData.cluster_iP}
+                  <span>Capacity : </span>
+                  {this.props.rowData.capacity}
                 </div>
                 <div>
-                  <span>external_ip : </span>
-                  {this.props.rowData.external_ip}
-                </div>
-                <div>
-                  <span>Endpoints : </span>
-                  {this.props.rowData.endpoints}
+                  <span>Storage Class : </span>
+                  {this.props.rowData.strage_class}
                 </div>
                 <div>
                   <span>Created Time : </span>
@@ -167,19 +148,25 @@ class BasicInfo extends Component {
   }
 }
 
-class Workloads extends Component {
+class MountedBy extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "type", title: "Type" },
+        { name: "cluster", title: "Cluster" },
+        { name: "node", title: "Node" },
+        { name: "pod_ip", title: "Pod IP" },
+        { name: "cpu", title: "Cpu" },
+        { name: "memory", title: "Memory" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 400 },
-        { columnName: "status", width: 150 },
-        { columnName: "type", width: 150 },
+        { columnName: "name", width: 200 },
+        { columnName: "cluster", width: 150 },
+        { columnName: "node", width: 150 },
+        { columnName: "pod_ip", width: 150 },
+        { columnName: "cpu", width: 150 },
+        { columnName: "memory", width: 150 },
       ],
       rows: this.props.rowData,
 
@@ -242,135 +229,6 @@ class Workloads extends Component {
     return (
       <div className="content-box">
         <div className="cb-header">Workloads</div>
-        <div className="cb-body">
-        <Paper>
-            {this.state.rows ? (
-              [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
-                  <Toolbar />
-                  {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <IntegratedFiltering />
-                  <SearchPanel style={{ marginLeft: 0 }} />
-
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
-
-                  {/* Sorting */}
-                  <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
-
-                  {/* 테이블 */}
-                  <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
-        </div>
-      </div>
-    );
-  };
-};
-
-class Pods extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columns: [
-        { name: "name", title: "Type" },
-        { name: "cluster", title: "Cluster" },
-        { name: "nodes", title: "Nodes" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "name", width: 150 },
-        { columnName: "cluster", width: 150 },
-        { columnName: "nodes", width: 150 },
-        { columnName: "pod_ip", width: 240 },
-        { columnName: "cpu", width: 280 },
-        { columnName: "memory", width: 280 },
-      ],
-      rows: this.props.rowData,
-
-      // Paging Settings
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 10, //화면 리스트 개수
-      pageSizes: [5, 10, 15, 0],
-
-      completed: 0,
-    };
-  }
-
-  componentWillMount() {
-    // this.props.onSelectMenu(false, "");
-  }
-
-  
-
-  // callApi = async () => {
-  //   const response = await fetch("/clusters");
-  //   const body = await response.json();
-  //   return body;
-  // };
-
-  // progress = () => {
-  //   const { completed } = this.state;
-  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  // };
-
-  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  // componentDidMount() {
-  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-  //   this.timer = setInterval(this.progress, 20);
-  //   this.callApi()
-  //     .then((res) => {
-  //       this.setState({ rows: res });
-  //       clearInterval(this.timer);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  render() {
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-    const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
-    };
-
-    return (
-      <div className="content-box">
-        <div className="cb-header">Pods</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -545,4 +403,4 @@ class Events extends Component {
 };
 
 
-export default Pj_ServicesDetail;
+export default Pj_VolumeDetail;
