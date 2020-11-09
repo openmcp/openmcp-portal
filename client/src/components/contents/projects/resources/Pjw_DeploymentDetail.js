@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
+// import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { NavigateNext } from "@material-ui/icons";
+import Paper from "@material-ui/core/Paper";
+// import LineChart from './../../../modules/LineChart';
 import {
   SearchState,
   IntegratedFiltering,
@@ -10,6 +12,7 @@ import {
   SortingState,
   IntegratedSorting,
 } from "@devexpress/dx-react-grid";
+import LineReChart from "./../../../modules/LineReChart";
 import {
   Grid,
   Table,
@@ -19,75 +22,26 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "../../../common/Editor";
-import { NavigateNext} from '@material-ui/icons';
+import { withStyles, makeStyles } from "@material-ui/core/styles";
+import clsx from "clsx";
 
 let apiParams = "";
 class Pjw_DeploymentDetail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columns: [
-        { name: "name", title: "Pod" },
-        { name: "status", title: "Status"},
-        { name: "cluster", title: "Cluster"},
-        { name: "project", title: "Project" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "node", title: "Node" },
-        { name: "node_ip", title: "Node IP" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "cluster", width: 130 },
-        { columnName: "project", width: 130 },
-        { columnName: "pod_ip", width: 150 },
-        { columnName: "node", width: 130 },
-        { columnName: "node_ip", width: 150 },
-        { columnName: "cpu", width: 80 },
-        { columnName: "memory", width: 120 },
-        { columnName: "created_time", width: 170 },
-      ],
-      rows: "",
-
-      // Paging Settings
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 5, //화면 리스트 개수
-      pageSizes: [5, 10, 15, 0],
-
-      completed: 0,
-    };
-  }
+  state = {
+    rows: "",
+    completed: 0,
+    reRender: "",
+  };
 
   componentWillMount() {
     // const result = {
-    //   menu : "clusters",
-    //   title : this.props.match.params.cluster
+    //   menu : "projects",
+    //   title : this.props.match.params.project
     // }
     // this.props.menuData(result);
-    apiParams = this.props.param;
+    apiParams = this.props.match.params.project;
   }
 
-
-  
-
-  callApi = async () => {
-    // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/workloads/deployments`);
-    const body = await response.json();
-    return body;
-  };
-
-  progress = () => {
-    const { completed } = this.state;
-    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  };
-
-  //컴포넌트가 모두 마운트가 되었을때 실행된다.
   componentDidMount() {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
@@ -97,74 +51,287 @@ class Pjw_DeploymentDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+  }
+
+  callApi = async () => {
+    var param = this.props.match.params;
+    const response = await fetch(
+      `/projects/${param.project}/resources/workloads/deployments/${param.deployment}`
+    );
+    const body = await response.json();
+    return body;
+  };
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
   render() {
+    return (
+      <div>
+        <div className="content-wrapper pj-deployments full">
+          {/* 컨텐츠 헤더 */}
+          <section className="content-header" style={{ paddingTop: 15 }}>
+            Deployment Information
+            <small>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
+              {this.props.match.params.deployment}
+            </small>
+            {/* <ol className="breadcrumb">
+              <li>
+                <NavLink to="/dashboard">Home</NavLink>
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavLink to="/projects">Projects</NavLink>
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                Resources
+              </li>
+            </ol> */}
+          </section>
 
-    // 셀 데이터 스타일 변경
-    const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
-          ...style,
-        }}>
-        <span
-          style={{
-            color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "green" : "skyblue"
-          }}>
-          {value}
-        </span>
-      </Table.Cell>
+          {/* 내용부분 */}
+          <section className="content">
+            {this.state.rows ? (
+              [
+                <BasicInfo rowData={this.state.rows.basic_info} />,
+                <ReplicaStatus rowData={this.state.rows.replica_status} />,
+                <Pods rowData={this.state.rows.pods} />,
+                <Ports rowData={this.state.rows.ports} />,
+                <PhysicalResources
+                  rowData={this.state.rows.physical_resources}
+                />,
+                <Events rowData={this.state.rows.events} />,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
+          </section>
+        </div>
+      </div>
+    );
+  }
+}
+
+class BasicInfo extends Component {
+  render() {
+    return (
+      <div className="content-box">
+        <div className="cb-header">Basic Info</div>
+        <div className="cb-body">
+          <div>
+            <span>Name : </span>
+            <strong>{this.props.rowData.name}</strong>
+          </div>
+          <div style={{ display: "flex" }}>
+            <div className="cb-body-left">
+              <div>
+                <span>Namespace : </span>
+                {this.props.rowData.namespace}
+              </div>
+            </div>
+            <div className="cb-body-right">
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+// const styles = (theme) => ({
+//       root: {
+//         '& > *': {
+//           margin: theme.spacing(1),
+//         },
+//       },
+//       shape: {
+//         backgroundColor: theme.palette.primary.main,
+//         width: 40,
+//         height: 40,
+//       },
+//       shapeCircle: {
+//         borderRadius: '50%',
+//       },
+//     });
+
+// const styles = {
+//   root: {
+//     backgroundColor: 'red',
+//   },
+// };
+
+class ReplicaStatus extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rows: this.props.rowData,
+      // status,
+    };
+  }
+
+  shouldComponentUpdate(prevProps, prevState) {
+    if (this.props.rowData !== prevProps.rowData) {
+      // console.log("true");
+      return true;
+    } else {
+      // console.log("false");
+      return false;
+    }
+  }
+
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
+
+  // callApi = async () => {
+  //   const response = await fetch("/clusters");
+  //   const body = await response.json();
+  //   return body;
+  // };
+
+  // progress = () => {
+  //   const { completed } = this.state;
+  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  // };
+
+  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  // componentDidMount() {
+  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+  //   this.timer = setInterval(this.progress, 20);
+  //   this.callApi()
+  //     .then((res) => {
+  //       this.setState({ rows: res });
+  //       clearInterval(this.timer);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  render() {
+    const rectangle = (status) => {
+      return (
+        <div className="rectangle"
+          style={{ 
+            backgroundColor: status === "Ready" ? "#367fa9" : "orange",
+          }}
+        />
+      );
+    };
+    const circle = (status) => (
+      <div className="circle"
+        style={{ 
+          backgroundColor: status === "Ready" ? "#367fa9" : "orange",
+        }}
+      />
     );
 
-    //셀
-    const Cell = (props) => {
-      const { column, row } = props;
-      // console.log("cell : ", props);
-      // const values = props.value.split("|");
-      // console.log("values", props.value);
-      // debugger;
-      // const values = props.value.replace("|","1");
-      // console.log("values,values", values)
+    return (
+      <div className="content-box replica-set">
+        <div className="cb-header">Replica Status</div>
+        <div className="cb-body">
+          {this.state.rows.map((i) => {
 
-      const fnEnterCheck = () => {
-        return (
-          props.value.indexOf("|") > 0 ? 
-            props.value.split("|").map( item => {
-              return (
-                <p>{item}</p>
-            )}) : 
-              props.value
-        )
-      }
+            const ready_count = i.pods.reduce((obj, v) => {
+              obj[v.status] = (obj[v.status] || 0) + 1;
+              return obj;
+            }, {})
 
+            const count = i.pods.length
+            return (
+              <div className="rs-cluster">
+                <div className="cluster-title">
+                  {i.cluster} <span>({ready_count.Ready}/{count})</span></div>
+                <div className="cluster-content">
+                {i.pods.map((p)=>{
+                  return (
+                    rectangle(p.status)
+                  );
+                })}
+                </div>
+                <div className="cluster-button">
+                  <div>+</div>
+                  <div>-</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+}
 
-      if (column.name === "status") {
-        return <HighlightedCell {...props} />;
-      } else if (column.name === "name") {
-        console.log("name", props.value);
-        return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/projects/${apiParams}/resources/workloads/deployments/${props.value}`,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
-        );
-      }
-      return <Table.Cell>{props.value}</Table.Cell>;
+class Pods extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status" },
+        { name: "node", title: "Node" },
+        { name: "cpu", title: "Cpu" },
+        { name: "memory", title: "Memory" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 300 },
+        { columnName: "status", width: 150 },
+        { columnName: "node", width: 200 },
+        { columnName: "cpu", width: 150 },
+        { columnName: "memory", width: 150 },
+      ],
+      rows: this.props.rowData,
+
+      // Paging Settings
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 10, //화면 리스트 개수
+      pageSizes: [5, 10, 15, 0],
+
+      completed: 0,
     };
+  }
 
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
+
+  // callApi = async () => {
+  //   const response = await fetch("/clusters");
+  //   const body = await response.json();
+  //   return body;
+  // };
+
+  // progress = () => {
+  //   const { completed } = this.state;
+  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  // };
+
+  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  // componentDidMount() {
+  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+  //   this.timer = setInterval(this.progress, 20);
+  //   this.callApi()
+  //     .then((res) => {
+  //       this.setState({ rows: res });
+  //       clearInterval(this.timer);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  render() {
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -178,21 +345,17 @@ class Pjw_DeploymentDetail extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
-      <div className="content-wrapper full">
-        {/* 컨텐츠 헤더 */}
-        <section className="content" style={{ position: "relative" }}>
+      <div className="content-box">
+        <div className="cb-header">Pods</div>
+        <div className="cb-body">
           <Paper>
             {this.state.rows ? (
               [
-                <Editor />,
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -200,19 +363,24 @@ class Pjw_DeploymentDetail extends Component {
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* Sorting */}
                   <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
                   {/* 테이블 */}
-                  <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <Table rowComponent={Row} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -227,7 +395,297 @@ class Pjw_DeploymentDetail extends Component {
               ></CircularProgress>
             )}
           </Paper>
-        </section>
+        </div>
+      </div>
+    );
+  }
+}
+
+class Ports extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { name: "port_name", title: "Port Name" },
+        { name: "port", title: "Port" },
+        { name: "listening_port", title: "Listening Port" },
+        { name: "protocol", title: "Protocol" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "port_name", width: 200 },
+        { columnName: "port", width: 150 },
+        { columnName: "listening_port", width: 150 },
+        { columnName: "protocol", width: 150 },
+      ],
+      rows: this.props.rowData,
+
+      // Paging Settings
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 10, //화면 리스트 개수
+      pageSizes: [5, 10, 15, 0],
+
+      completed: 0,
+    };
+  }
+
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
+
+  // callApi = async () => {
+  //   const response = await fetch("/clusters");
+  //   const body = await response.json();
+  //   return body;
+  // };
+
+  // progress = () => {
+  //   const { completed } = this.state;
+  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  // };
+
+  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  // componentDidMount() {
+  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+  //   this.timer = setInterval(this.progress, 20);
+  //   this.callApi()
+  //     .then((res) => {
+  //       this.setState({ rows: res });
+  //       clearInterval(this.timer);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  render() {
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
+      />
+    );
+    const Row = (props) => {
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key} />;
+    };
+
+    return (
+      <div className="content-box">
+        <div className="cb-header">Ports</div>
+        <div className="cb-body">
+          <Paper>
+            {this.state.rows ? (
+              [
+                <Grid rows={this.state.rows} columns={this.state.columns}>
+                  <Toolbar />
+                  {/* 검색 */}
+                  <SearchState defaultValue="" />
+                  <IntegratedFiltering />
+                  <SearchPanel style={{ marginLeft: 0 }} />
+
+                  {/* 페이징 */}
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  {/* Sorting */}
+                  <SortingState
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  />
+                  <IntegratedSorting />
+
+                  {/* 테이블 */}
+                  <Table rowComponent={Row} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={HeaderRow}
+                  />
+                </Grid>,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
+          </Paper>
+        </div>
+      </div>
+    );
+  }
+}
+
+class PhysicalResources extends Component {
+  render() {
+    const network_title = ["in", "out"];
+    return (
+      <div className="content-box line-chart">
+        <div className="cb-header">Physical Resources</div>
+        <div className="cb-body">
+          <div className="cb-body-content">
+            <LineReChart
+              rowData={this.props.rowData.cpu}
+              unit="m"
+              name="cpu"
+              title="CPU"
+              cardinal={false}
+            ></LineReChart>
+          </div>
+          <div className="cb-body-content">
+            <LineReChart
+              rowData={this.props.rowData.memory}
+              unit="mib"
+              name="memory"
+              title="Memory"
+              cardinal={false}
+            ></LineReChart>
+          </div>
+          <div className="cb-body-content">
+            <LineReChart
+              rowData={this.props.rowData.network}
+              unit="Bps"
+              name={network_title}
+              title="Network"
+              cardinal={true}
+            ></LineReChart>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+class Events extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { name: "status", title: "Status" },
+        { name: "reason", title: "Reason" },
+        { name: "message", title: "Message" },
+        { name: "time", title: "Time" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "status", width: 150 },
+        { columnName: "reason", width: 150 },
+        { columnName: "message", width: 240 },
+        { columnName: "time", width: 180 },
+      ],
+      rows: this.props.rowData,
+
+      // Paging Settings
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 10, //화면 리스트 개수
+      pageSizes: [5, 10, 15, 0],
+
+      completed: 0,
+    };
+  }
+
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
+
+  // callApi = async () => {
+  //   const response = await fetch("/clusters");
+  //   const body = await response.json();
+  //   return body;
+  // };
+
+  // progress = () => {
+  //   const { completed } = this.state;
+  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  // };
+
+  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  // componentDidMount() {
+  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+  //   this.timer = setInterval(this.progress, 20);
+  //   this.callApi()
+  //     .then((res) => {
+  //       this.setState({ rows: res });
+  //       clearInterval(this.timer);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  render() {
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
+      />
+    );
+    const Row = (props) => {
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key} />;
+    };
+
+    return (
+      <div className="content-box">
+        <div className="cb-header">Events</div>
+        <div className="cb-body">
+          <Paper>
+            {this.state.rows ? (
+              [
+                <Grid rows={this.state.rows} columns={this.state.columns}>
+                  <Toolbar />
+                  {/* 검색 */}
+                  <SearchState defaultValue="" />
+                  <IntegratedFiltering />
+                  <SearchPanel style={{ marginLeft: 0 }} />
+
+                  {/* 페이징 */}
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  {/* Sorting */}
+                  <SortingState
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  />
+                  <IntegratedSorting />
+
+                  {/* 테이블 */}
+                  <Table rowComponent={Row} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={HeaderRow}
+                  />
+                </Grid>,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
+          </Paper>
+        </div>
       </div>
     );
   }

@@ -37,6 +37,7 @@ import Pj_VolumeDetail from './../contents/projects/Pj_VolumeDetail';
 import Pj_SecretDetail from './../contents/projects/config/Pj_SecretDetail';
 import Pj_ConfigMapDetail from './../contents/projects/config/Pj_ConfigMapDetail';
 import Pj_Members from '../contents/projects/settings/Pj_Members';
+import Members from './../settings/Members';
 
 
 
@@ -145,6 +146,9 @@ class Contents extends Component {
           <Route path="/projects/:project/resources/workloads/statefulsets" 
             render={({match,location}) => <Pj_Workloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
+          <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
+            render={({match,location}) => <Pj_Workloads  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           <Route path="/projects/:project/resources/workloads/deployments" 
             render={({match,location}) => <Pj_Workloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
@@ -209,6 +213,12 @@ class Contents extends Component {
           <Route path="/pods/:pod"
               render={({match,location}) => <Pd_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* Pods contents END*/}
+
+          {/* Settings contents */}
+          <Route path="/settings/members" 
+            render={({match,location}) => <Members  match={match} location={location}/>} >
+          </Route>
+          {/* Settings contents END*/}
         </Switch>
           
       </div>

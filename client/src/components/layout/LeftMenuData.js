@@ -79,14 +79,14 @@ export function getMenu(pathParams) {
           { title: "ConfigMaps", path: "/projects/"+pathParams+"/config/config_maps" },
         ]
       },
-      {
-        type: "multi",
-        title : "Settings",
-        path : "/projects/" + pathParams + "/settings",
-        sub : [
-          { title: "Members", path: "/projects/" + pathParams + "/settings/members"},
-        ]
-      }
+      // {
+      //   type: "multi",
+      //   title : "Settings",
+      //   path : "/projects/" + pathParams + "/settings",
+      //   sub : [
+      //     { title: "Members", path: "/projects/" + pathParams + "/settings/members"},
+      //   ]
+      // }
     ],
     pods : [
       {

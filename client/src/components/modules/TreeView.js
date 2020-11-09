@@ -164,7 +164,7 @@ class NodeLabel extends Component {
 
         {nodeData._children ? 
           [
-            <div class="" style={{fontSize:"16px", fontWeight:"bold", color:"#006280"}}>{nodeData.name}</div>,
+            <div className="" style={{fontSize:"16px", fontWeight:"bold", color:"#006280"}}>{nodeData.name}</div>,
             <HomeWorkIcon style={{position:"relative", fontSize:"43px", color: "#367fa9", background: "#ffffff", stroke: "none" }}/>,
           ] : 
           [
@@ -185,9 +185,9 @@ class TreeView extends React.Component {
     data: this.props.data
   }
   componentDidMount() {
-    console.log("didMount")
+    // console.log("didMount")
     const dimensions = this.treeContainer.getBoundingClientRect();
-    console.log("dimensions.width", dimensions.width, dimensions.height);
+    // console.log("dimensions.width", dimensions.width, dimensions.height);
     this.setState({
       translate: {
         x: dimensions.width / 2,
@@ -198,7 +198,7 @@ class TreeView extends React.Component {
   }
 
   componentDidUpdate(){
-    console.log(this.treeContainer.getElementsByTagName("g")[0].getBoundingClientRect().width);
+    // console.log(this.treeContainer.getElementsByTagName("g")[0].getBoundingClientRect().width);
   }
   
 
@@ -239,7 +239,7 @@ class TreeView extends React.Component {
       float:"left"
     };
 
-    console.log("ddddd");
+    // console.log("ddddd");
     return (
       /* <Tree /> will fill width/height of its container; in this case `#treeWrapper` */
       // <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>

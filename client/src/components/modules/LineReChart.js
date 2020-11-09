@@ -13,7 +13,7 @@ class LineReChart extends Component {
     rows: this.props.rowData,
   };
   render() {
-    console.log(this.state.rows, this.props.name);
+    // console.log(this.state.rows, this.props.name);
     const color = ["#367fa9", "#3cb0bc"];
     const avg = [];
     const key = this.props.name;
@@ -73,10 +73,10 @@ class LineReChart extends Component {
           />
           {this.props.cardinal
             ? this.state.rows.map((i, index) => {
-                console.log(
-                  this.props.name[index],
-                  color[index % this.props.name.length]
-                );
+                // console.log(
+                //   this.props.name[index],
+                //   color[index % this.props.name.length]
+                // );
                 return [
                   <defs>
                     <linearGradient

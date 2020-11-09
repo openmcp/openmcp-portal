@@ -154,6 +154,14 @@ app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
   res.send(overview);
 });
 
+// Prjects > Resources > Workloads > Deployments > detail
+app.get("/projects/:project/resources/workloads/deployments/:deployment", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_deployment_detail.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
 // Deployments 상세부터 구현해나가야 함
 
 // // Prjects > Resources > Workloads > Statefulsets

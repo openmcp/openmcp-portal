@@ -1,34 +1,36 @@
 import React, { Component } from "react";
 import { NavLink, Link, Route, Switch } from "react-router-dom";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import {
-  SearchState,
-  IntegratedFiltering,
-  PagingState,
-  IntegratedPaging,
-  SortingState,
-  IntegratedSorting,
-} from "@devexpress/dx-react-grid";
-import {
-  Grid,
-  Table,
-  Toolbar,
-  SearchPanel,
-  TableHeaderRow,
-  PagingPanel,
-} from "@devexpress/dx-react-grid-material-ui";
+// import CircularProgress from "@material-ui/core/CircularProgress";
+// import {
+//   SearchState,
+//   IntegratedFiltering,
+//   PagingState,
+//   IntegratedPaging,
+//   SortingState,
+//   IntegratedSorting,
+// } from "@devexpress/dx-react-grid";
+// import {
+//   Grid,
+//   Table,
+//   Toolbar,
+//   SearchPanel,
+//   TableHeaderRow,
+//   PagingPanel,
+// } from "@devexpress/dx-react-grid-material-ui";
 import { withStyles } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
+// import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
-import Paper from "@material-ui/core/Paper";
-import Editor from "../../../common/Editor";
+// import Paper from "@material-ui/core/Paper";
+// import Editor from "../../../common/Editor";
 import { Container } from "@material-ui/core";
 import Pjw_Deployments from './Pjw_Deployments';
+import Pjw_DeploymentDetail from './Pjw_DeploymentDetail';
+import { NavigateNext } from '@material-ui/icons';
 
 const styles = (theme) => ({
   root: {
@@ -141,9 +143,14 @@ class Pj_Workloads extends Component {
                 <NavLink to="/dashboard">Home</NavLink>
               </li>
               <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
                 <NavLink to="/Projects">Projects</NavLink>
               </li>
-              <li className="active">Resources</li>
+              
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                Resources
+              </li>
             </ol>
           </section>
 
@@ -186,18 +193,21 @@ class Pj_Workloads extends Component {
                       );
                   })} */}
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
+                <Switch>
+                  <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
+                    render={({match,location}) => <Pjw_DeploymentDetail  match={match} location={location}/>} >
+                  </Route>
                   <Route path="/projects/:project/resources/workloads/deployments" 
                     render={({match,location}) => <Pjw_Deployments  match={match} location={location}/>} >
                   </Route>
-                  {/* <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
-                    render={({match,location}) => <Pjw_DeploymentDetail  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
-                  <Route path="/projects/:project/resources/workloads/deployments/:deployment/pods/:pod" 
+            
+                  {/* <Route path="/projects/:project/resources/workloads/deployments/:deployment/pods/:pod" 
                     render={({match,location}) => <Pjw_Deployment_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                   <Route path="/projects/:project/resources/workloads/deployments/:deployment/containers/:container" 
                     render={({match,location}) => <Pjw_Deployment_ContainerDetail  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route> */}
+                </Switch>
                 {/* <DeploymentsTab pathParam={this.props.match.params.project}></DeploymentsTab> */}
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>

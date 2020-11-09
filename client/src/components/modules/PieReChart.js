@@ -4,7 +4,7 @@ import { PieChart, Pie, Sector, Cell, Legend } from "recharts";
 class PieReChart extends Component {
   constructor(props) {
     super(props);
-    console.log("pierechar constructor");
+    // console.log("pierechar constructor");
     this.state = {
       activeIndex: 0,
       rows: this.props.data.status,
@@ -53,7 +53,7 @@ class PieReChart extends Component {
     //   "#00C49F",
     //   "#FFBB28",
     // ];
-    console.log("color", this.props.color);
+    // console.log("color", this.props.color);
     const COLORS = this.props.colors;
     const renderActiveShape = (props) => {
       const RADIAN = Math.PI / 180;

@@ -19,32 +19,30 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../../../common/Editor";
+import Editor from "../common/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
 let apiParams = "";
-class Pjw_Deployments extends Component {
+class Members extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status"},
-        { name: "image", title: "Image"},
-        { name: "updated_time", title: "Updated Time" },
+        { name: "name", title: "Name"},
+        { name: "role", title: "Role" },
+        { name: "last_login_time", title: "Last Login Time"},
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "image", width: 130 },
-        { columnName: "updated_time", width: 170 },
+        { columnName: "role", width: 130 },
+        { columnName: "last_login_time", width: 150 },
       ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5, //화면 리스트 개수
+      pageSize: 10, //화면 리스트 개수
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -53,16 +51,16 @@ class Pjw_Deployments extends Component {
 
   componentWillMount() {
     // const result = {
-    //   menu : "clusters",
-    //   title : this.props.match.params.cluster
+    //   menu : "projects",
+    //   title : this.props.match.params.project
     // }
     // this.props.menuData(result);
-    apiParams = this.props.param;
+    
+    apiParams = 'members';
   }
 
   callApi = async () => {
-    // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/workloads/deployments`);
+    const response = await fetch(`/projects/${apiParams}/settings/members`);
     const body = await response.json();
     return body;
   };
@@ -140,14 +138,15 @@ class Pjw_Deployments extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/projects/${apiParams}/resources/workloads/deployments/${props.value}`,
+            pathname: `/projects/${apiParams}/settings/members/${props.value}`,
             state: {
               data : row
             }
-          }}>{props.value}</Link></Table.Cell>
+          }}>{fnEnterCheck()}</Link></Table.Cell>
         );
-      }
-      return <Table.Cell>{props.value}</Table.Cell>;
+      } 
+      console.log("ddd", props.value);
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -169,6 +168,21 @@ class Pjw_Deployments extends Component {
     return (
       <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
+        <section className="content-header">
+          <h1>
+            Members
+            <small> in Settings</small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <NavLink to="/dashboard">Home</NavLink>
+            </li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Settings
+            </li>
+          </ol>
+        </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
@@ -191,7 +205,7 @@ class Pjw_Deployments extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
@@ -218,4 +232,4 @@ class Pjw_Deployments extends Component {
   }
 }
 
-export default Pjw_Deployments;
+export default Members;
