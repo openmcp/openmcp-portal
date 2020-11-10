@@ -3,7 +3,7 @@ import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
 import Paper from "@material-ui/core/Paper";
-import LineChart from './../../modules/LineChart';
+// import LineChart from './../../modules/LineChart';
 import {
   SearchState,IntegratedFiltering,PagingState,IntegratedPaging,SortingState,IntegratedSorting,
 } from "@devexpress/dx-react-grid";
@@ -54,8 +54,8 @@ class Pd_PodDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Pod Information
-              <small>{ this.props.match.params.pod}</small>
+              { this.props.match.params.pod}
+              <small>Pod Information</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -63,11 +63,7 @@ class Pd_PodDetail extends Component {
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Clusters</NavLink>
-              </li>
-              <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Nodes
+                <NavLink to="/clusters">Pods</NavLink>
               </li>
             </ol>
           </section>
@@ -77,8 +73,8 @@ class Pd_PodDetail extends Component {
           {this.state.rows ? (
             [
             <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <Containers rowData={this.state.rows.containers}/>,
             <PodStatus rowData={this.state.rows.pod_status}/>,
+            <Containers rowData={this.state.rows.containers}/>,
             <PhysicalResources rowData={this.state.rows.physical_resources}/>,
             <Events rowData={this.state.rows.events}/>
             ]
@@ -382,7 +378,7 @@ class PodStatus extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'last_update', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 

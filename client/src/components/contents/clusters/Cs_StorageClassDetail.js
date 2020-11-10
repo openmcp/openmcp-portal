@@ -69,8 +69,8 @@ class Cs_StorageClassDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Storage Class Information
-              <small>{this.props.match.params.storage_class}</small>
+            {this.props.match.params.storage_class}
+              <small>Storage Class Information</small>
             </h1>
             <ol className="breadcrumb">
               <li>

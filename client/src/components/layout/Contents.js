@@ -36,8 +36,8 @@ import Pj_IngressDetail from './../contents/projects/resources/Pj_IngressDetail'
 import Pj_VolumeDetail from './../contents/projects/Pj_VolumeDetail';
 import Pj_SecretDetail from './../contents/projects/config/Pj_SecretDetail';
 import Pj_ConfigMapDetail from './../contents/projects/config/Pj_ConfigMapDetail';
-import Pj_Members from '../contents/projects/settings/Pj_Members';
-import Members from './../settings/Members';
+import Pj_Members from './../contents/projects/settings/Pj_Members';
+import Members from './../contents/settings/Members';
 
 
 
@@ -216,7 +216,7 @@ class Contents extends Component {
 
           {/* Settings contents */}
           <Route path="/settings/members" 
-            render={({match,location}) => <Members  match={match} location={location}/>} >
+            render={({match,location}) => <Members  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           {/* Settings contents END*/}
         </Switch>

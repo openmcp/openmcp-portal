@@ -84,7 +84,6 @@ function a11yProps(index) {
   };
 }
 
-let apiParams = "";
 class Pj_Workloads extends Component {
   state = {
     // rows: "",
@@ -106,7 +105,7 @@ class Pj_Workloads extends Component {
       title : this.props.match.params.project
     }
     this.props.menuData(result);
-    apiParams = this.props.match.params.project;
+    // apiParams = this.props.match.params.project;
   }
 
   render() {
@@ -173,7 +172,7 @@ class Pj_Workloads extends Component {
                     <Tab label={i.label} {...a11yProps(i.index)}
                           component={Link}
                           to={{
-                            pathname: `/projects/${apiParams}/resources/workloads/${i.param}`
+                            pathname: `/projects/${this.props.match.params.project}/resources/workloads/${i.param}`
                             // state: {
                             //   data : row
                             // }

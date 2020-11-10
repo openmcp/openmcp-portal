@@ -1324,6 +1324,25 @@ g {
   padding: 15px 10px;
   border-left: 1px solid #ececec;
 }
+.pj-deployments .content .replica-set .rs-cluster .cluster-content>div {
+text-align: left;
+margin-bottom: 5px;
+/* font-size:18px; */
+font-weight: bold;
+}
+
+.pj-deployments .content .replica-set .rs-cluster .cluster-content>div>span {
+  margin-right:4px;
+}
+
+.pj-deployments .content .replica-set .rs-cluster .cluster-content>div>span:first-child {
+  font-size: 25px;
+}
+
+.pj-deployments .content .replica-set .rs-cluster .cluster-content>div>span:nth-child(2) {
+  font-size: 14px;
+}
+
 
 .pj-deployments .content .replica-set .rs-cluster .cluster-button {
   border-radius: 0px 0px 4px 4px;

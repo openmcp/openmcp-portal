@@ -163,7 +163,7 @@ class Storages extends Component {
             {this.state.rows ? (
               [
                 // <input type="button" value="create"></input>,
-                <Editor />,
+                <Editor title="create"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

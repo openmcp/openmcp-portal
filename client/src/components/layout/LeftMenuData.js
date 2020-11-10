@@ -16,11 +16,11 @@ export function getMenu(pathParams) {
         title : "Pods",
         path : "/clusters/" + pathParams + "/pods",
       },
-      {
-        type: "single",
-        title : "Storage Class",
-        path : "/clusters/" + pathParams + "/storage_class",
-      },
+      // {
+      //   type: "single",
+      //   title : "Storage Class",
+      //   path : "/clusters/" + pathParams + "/storage_class",
+      // },
       // {
       //   type: "multi",
       //   title : "Settings",

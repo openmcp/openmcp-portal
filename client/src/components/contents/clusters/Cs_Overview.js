@@ -137,6 +137,10 @@ class BasicInfo extends Component {
             <span>Kubernetes Version : </span>
             {this.props.rowData.kubernetes_version}
           </div>
+          <div>
+            <span>Status : </span>
+            {this.props.rowData.status}
+          </div>
         </div>
       </div>
     );

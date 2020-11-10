@@ -204,7 +204,7 @@ class Editor extends Component {
     return (
       <div>
         <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{position:"absolute", right:"30px", top:"28px", zIndex:"10"}}>
-          create
+          {this.props.title}
         </Button>
         <Dialog
           onClose={handleClose}

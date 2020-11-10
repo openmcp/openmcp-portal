@@ -22,7 +22,7 @@ import {
 import Editor from "./../../../common/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
-let apiParams = "";
+// let apiParams = "";
 class Pjw_Deployments extends Component {
   constructor(props) {
     super(props);
@@ -57,12 +57,12 @@ class Pjw_Deployments extends Component {
     //   title : this.props.match.params.cluster
     // }
     // this.props.menuData(result);
-    apiParams = this.props.param;
+    // apiParams = this.props.param;
   }
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/workloads/deployments`);
+    const response = await fetch(`/projects/${this.props.match.params.project}/resources/workloads/deployments`);
     const body = await response.json();
     return body;
   };
@@ -134,13 +134,14 @@ class Pjw_Deployments extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        console.log("name", props.value);
+        // console.log("name", props.value);
+        // console.log("this.props.match.params", this.props)
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/projects/${apiParams}/resources/workloads/deployments/${props.value}`,
+            pathname: `/projects/${this.props.match.params.project}/resources/workloads/deployments/${props.value}`,
             state: {
               data : row
             }
@@ -173,7 +174,7 @@ class Pjw_Deployments extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor />,
+                <Editor title="create deployment"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

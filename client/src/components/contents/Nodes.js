@@ -31,6 +31,7 @@ class Nodes extends Component {
         { name: "name", title: "Node" },
         { name: "cluster", title: "Cluster"},
         { name: "status", title: "Status" },
+        { name: "region", title: "Region" },
         { name: "role", title: "Role" },
         { name: "system_version", title: "System Version" },
         { name: "cpu", title: "CPU" },
@@ -41,6 +42,7 @@ class Nodes extends Component {
         { columnName: "name", width: 130 },
         { columnName: "cluster", width: 130},
         { columnName: "status", width: 150 },
+        { columnName: "region", width: 150 },
         { columnName: "role", width: 130 },
         { columnName: "system_version", width: 250 },
         { columnName: "cpu", width: 150 },
@@ -138,7 +140,7 @@ class Nodes extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        console.log("name", props.value);
+        // console.log("name", props.value);
         return (
           <Table.Cell
             {...props}
@@ -192,7 +194,7 @@ class Nodes extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor />,
+                <Editor title="add node"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

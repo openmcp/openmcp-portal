@@ -57,8 +57,8 @@ class Pj_VolumeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Volume Information
-              <small>{ this.props.match.params.service}</small>
+              { this.props.match.params.service}
+              <small> Volume Information</small>
             </h1>
             <ol className="breadcrumb">
               <li>

@@ -49,9 +49,8 @@ app.get("/dashboard", (req, res) => {
   // res.send(overview);
   var request = require("request");
   var options = {
-    uri:
-      "http://192.168.0.152:4885/apis/dashboard",
-      // "http://192.168.0.51:4885/apis/dashboard",
+    uri: "http://192.168.0.152:4885/apis/dashboard",
+    // "http://192.168.0.51:4885/apis/dashboard",
     method: "GET",
     // headers: {
     //   Authorization:
@@ -68,11 +67,7 @@ app.get("/dashboard", (req, res) => {
       return error;
     }
   });
-
-
 });
-
-
 
 let token = "";
 
@@ -125,7 +120,6 @@ app.get("/api/projects", (req, res) => {
   });
 });
 
-
 ///////////////////////
 /* Projects APIs */
 ///////////////////////
@@ -155,12 +149,90 @@ app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
 });
 
 // Prjects > Resources > Workloads > Deployments > detail
-app.get("/projects/:project/resources/workloads/deployments/:deployment", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects_deployment_detail.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+app.get(
+  "/projects/:project/resources/workloads/deployments/:deployment",
+  (req, res) => {
+    let rawdata = fs.readFileSync(
+      "./json_data/projects_deployment_detail.json"
+    );
+    let overview = JSON.parse(rawdata);
+    // console.log(overview);
+    res.send(overview);
+  }
+);
+
+
+
+// Prjects > Resources > Workloads > Deployments > detail > replica status
+app.get(
+  "/projects/:project/resources/workloads/deployments/:deployment/replica_status",
+  (req, res) => {
+    
+    connection.query(
+      "select * from tb_replica_status order by cluster asc, created_time desc, status desc",
+      (err, result) => {
+
+        var result2 = result.rows.reduce(
+          (obj, { cluster, status, pod, created_time }, index) => {
+            if (!obj[cluster]) {
+              obj[cluster] = { cluster: cluster, pods: [] };
+            }
+
+            obj[cluster].pods.push({ status: status, name: pod, created_time: created_time });
+            return obj;
+          },
+          {}
+        );
+
+        var arr = [];
+        for (i = 0; i < Object.keys(result2).length; i++) {
+          arr.push(result2[Object.keys(result2)[i]]);
+          // console.log(result2[Object.keys(result2)[i]]);
+        }
+        // console.log(arr)
+
+        res.send(arr);
+      }
+    );
+    // let rawdata = fs.readFileSync("./json_data/projects_deployment_detail.json");
+    // let overview = JSON.parse(rawdata);
+    // console.log(overview);
+    // res.send(overview);
+  }
+);
+
+function getDateTime(){
+  var d = new Date();
+  d = new Date(d.getTime());
+  var date_format_str = d.getFullYear().toString()+"-"+((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+"-"+(d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString())+" "+(d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString())+":"+((parseInt(d.getMinutes()/5)*5).toString().length==2?(parseInt(d.getMinutes()/5)*5).toString():"0"+(parseInt(d.getMinutes()/5)*5).toString())+":00";
+  console.log(date_format_str);
+  return date_format_str
+}
+
+
+app.post("/projects/:project/resources/workloads/deployments/:deployment/replica_status/add_pod", (req, res) => {
+
+  var create_time = getDateTime();
+  var podName = Math.random().toString(36).substring(10);
+  connection.query(
+    `insert into tb_replica_status values ('${req.body.cluster}', '${podName}','config','${create_time}');`,
+    (err, result) => {
+      res.send(result);
+    }
+  );
 });
+
+app.delete("/projects/:project/resources/workloads/deployments/:deployment/replica_status/del_pod", (req, res) => {
+
+  console.log('delete', req.body);
+  connection.query(
+    `delete from tb_replica_status where ctid IN (select ctid from tb_replica_status where cluster = '${req.body.cluster}' order by created_time desc limit 1)`,
+    (err, result) => {
+      res.send(result);
+    }
+  );
+});
+
 
 // Deployments 상세부터 구현해나가야 함
 
@@ -180,7 +252,6 @@ app.get("/projects/:project/resources/pods", (req, res) => {
   res.send(overview);
 });
 
-
 // Prjects > Resources > Pods Detail
 app.get("/projects/:project/resources/pods/:pod", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_pod_detail.json");
@@ -188,8 +259,6 @@ app.get("/projects/:project/resources/pods/:pod", (req, res) => {
   console.log(overview);
   res.send(overview);
 });
-
-
 
 // Prjects > Resources > Services
 app.get("/projects/:project/resources/services", (req, res) => {
@@ -222,7 +291,6 @@ app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
   console.log(overview);
   res.send(overview);
 });
-
 
 // Prjects > volumes
 app.get("/projects/:project/volumes", (req, res) => {
@@ -279,7 +347,6 @@ app.get("/projects/:project/settings/members", (req, res) => {
   console.log(overview);
   res.send(overview);
 });
-
 
 ///////////////////////
 /* Clusters APIs */
@@ -341,7 +408,9 @@ app.get("/clusters/:cluster/storage_class", (req, res) => {
 
 // Clusters > Storage Class > detail
 app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/clusters_storage_class_detail.json");
+  let rawdata = fs.readFileSync(
+    "./json_data/clusters_storage_class_detail.json"
+  );
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);
@@ -363,7 +432,6 @@ app.get("/nodes/:node", (req, res) => {
   res.send(overview);
 });
 
-
 // Pods
 app.get("/pods", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/pods.json");
@@ -379,8 +447,5 @@ app.get("/pods/:pod", (req, res) => {
   console.log(overview);
   res.send(overview);
 });
-
-
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

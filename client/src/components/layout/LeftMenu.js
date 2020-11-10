@@ -17,7 +17,7 @@ class LeftMenu extends Component {
 
 
   shouldComponentUpdate(prevProps, prevState) {
-    if (this.props.menu !== prevProps.menu) {
+    if (this.props.menu !== prevProps.menu || this.props.title !== prevProps.title) {
       // console.log("true");
        return true;
     } else {
@@ -71,6 +71,7 @@ class LeftMenu extends Component {
         )
       }
     });
+    console.log("this.props.title", this.props.title)
     return (
       <div>
         {this.props.title !== undefined ? 

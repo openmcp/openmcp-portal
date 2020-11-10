@@ -19,7 +19,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "../common/Editor";
+import Editor from "../../common/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
 let apiParams = "";
@@ -55,7 +55,7 @@ class Members extends Component {
     //   title : this.props.match.params.project
     // }
     // this.props.menuData(result);
-    
+    this.props.menuData("none");
     apiParams = 'members';
   }
 
@@ -187,7 +187,7 @@ class Members extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor />,
+                <Editor title="create"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

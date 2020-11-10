@@ -75,8 +75,8 @@ class Cs_NodeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Node Information
-              <small>{ this.props.match.params.node}</small>
+              {this.props.match.params.node} 
+              <small>Node Information</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -211,7 +211,7 @@ class NodeResourceUsage extends Component {
             <PieReChart2 data={this.state.rows.storage} angle={this.angle.half} unit={this.state.rows.storage.unit} colors={colors}></PieReChart2>
           </div>
           <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Storage</div>
+            <div className="cb-sub-title">Pod</div>
             <PieReChart2 data={this.state.rows.pods} angle={this.angle.half} unit={this.state.rows.pods.unit} colors={colors}></PieReChart2>
           </div>
         </div>

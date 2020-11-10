@@ -166,7 +166,7 @@ class Projects extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor />,
+                <Editor title="create project"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

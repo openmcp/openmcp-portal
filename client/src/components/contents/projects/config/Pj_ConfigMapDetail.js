@@ -59,8 +59,8 @@ class Pj_ConfigMapDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Config Map Information
-              <small>{ this.props.match.params.config_map}</small>
+              { this.props.match.params.config_map}
+              <small>Config Map Information</small>
             </h1>
             <ol className="breadcrumb">
               <li>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
-import line_chart_sample from './../../../json/line_chart_sample.json'
+// import line_chart_sample from './../../../json/line_chart_sample.json'
 import {ArrowBackIos, NavigateNext} from '@material-ui/icons';
 
 import {
@@ -20,7 +20,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import LineChart from './../../modules/LineChart';
+import LineReChart from './../../modules/LineReChart';
 import SelectBox from './../../modules/SelectBox';
 
 let apiParams = "";
@@ -276,27 +276,67 @@ class UsageTop5 extends Component {
   }
 }
 
+// class PhysicalResources extends Component {
+//   render(){
+//     return (
+//       <div className="content-box">
+//         <div className="cb-header">Physical Resources</div>
+//         <div className="cb-body">
+//           <div className="cb-body-content" style={{height:"250px"}}>
+//             <LineChart data={line_chart_sample[0].cpu} ></LineChart>
+//           </div>
+//           <div className="cb-body-content" style={{height:"250px"}}>
+//             <LineChart data={line_chart_sample[1].memory} ></LineChart>
+//           </div>
+//           <div className="cb-body-content" style={{height:"250px"}}>
+//             <LineChart data={line_chart_sample[2].network} ></LineChart>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+
+
 class PhysicalResources extends Component {
-  render(){
+  render() {
+    const network_title = ["in", "out"];
     return (
-      <div className="content-box">
+      <div className="content-box line-chart">
         <div className="cb-header">Physical Resources</div>
         <div className="cb-body">
-          <div className="cb-body-content" style={{height:"250px"}}>
-            <LineChart data={line_chart_sample[0].cpu} ></LineChart>
+          <div className="cb-body-content">
+            <LineReChart
+              rowData={this.props.rowData.cpu}
+              unit="m"
+              name="cpu"
+              title="CPU"
+              cardinal={false}
+            ></LineReChart>
           </div>
-          <div className="cb-body-content" style={{height:"250px"}}>
-            <LineChart data={line_chart_sample[1].memory} ></LineChart>
+          <div className="cb-body-content">
+            <LineReChart
+              rowData={this.props.rowData.memory}
+              unit="mib"
+              name="memory"
+              title="Memory"
+              cardinal={false}
+            ></LineReChart>
           </div>
-          <div className="cb-body-content" style={{height:"250px"}}>
-            <LineChart data={line_chart_sample[2].network} ></LineChart>
+          <div className="cb-body-content">
+            <LineReChart
+              rowData={this.props.rowData.network}
+              unit="Bps"
+              name={network_title}
+              title="Network"
+              cardinal={true}
+            ></LineReChart>
           </div>
         </div>
       </div>
     );
   }
 }
-
 
 
 

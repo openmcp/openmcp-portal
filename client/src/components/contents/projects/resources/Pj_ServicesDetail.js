@@ -59,8 +59,8 @@ class Pj_ServicesDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Service Information
-              <small>{ this.props.match.params.service}</small>
+            { this.props.match.params.service}
+              <small>Service Information</small>
             </h1>
             <ol className="breadcrumb">
               <li>
