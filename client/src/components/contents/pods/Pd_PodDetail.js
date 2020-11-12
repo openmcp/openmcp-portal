@@ -244,16 +244,16 @@ class Containers extends Component {
                   <IntegratedFiltering />
                   <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
-
                   {/* Sorting */}
                   <SortingState
                     // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
+
+                  {/* 페이징 */}
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table rowComponent={Row} />
@@ -371,16 +371,16 @@ class PodStatus extends Component {
                   <IntegratedFiltering />
                   <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
-
                   {/* Sorting */}
                   <SortingState
                     defaultSorting={[{ columnName: 'last_update', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
+
+                  {/* 페이징 */}
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table rowComponent={Row} />
@@ -525,16 +525,16 @@ class Events extends Component {
                   <IntegratedFiltering />
                   <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
-
                   {/* Sorting */}
                   <SortingState
                     // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
+
+                  {/* 페이징 */}
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table rowComponent={Row} />

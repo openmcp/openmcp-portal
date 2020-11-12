@@ -7,10 +7,6 @@ import { NavigateNext} from '@material-ui/icons';
 import TreeView from './../modules/TreeView';
 import RefreshButton from './../modules/RefreshButton';
 
-
-
-
-
 class Dashboard extends Component {
   constructor(props) {
     super(props);
@@ -74,7 +70,7 @@ class Dashboard extends Component {
           </h1>
           <ol className="breadcrumb">
             <li>
-              <a href="/dashboard/">
+              <a href="/dashboard">
                 <i className="fa fa-dashboard"></i> Home
               </a>
             </li>
@@ -86,7 +82,6 @@ class Dashboard extends Component {
         </section>
 
         {/* 컨텐츠 내용 */}
-        
         <section className="content" style={{ minWidth: 1160 }}>
           {this.state.rows ? (
             [
@@ -153,7 +148,6 @@ class Dashboard extends Component {
 
 class DashboardCard_1 extends Component {
   render() {
-    // console.log("DashboardCard_1:", this.state.rows);
     const colors = [
       "#0088FE",
       "#00C49F",
@@ -186,8 +180,6 @@ class DashboardCard_1 extends Component {
 
 class DashboardCard_2 extends Component {
   render() {
-    // console.log("BasicInfo:", this.props.data)
-
     return (
       <div className="content-box" style={{ width: this.props.width }}>
       <div className="cb-header">

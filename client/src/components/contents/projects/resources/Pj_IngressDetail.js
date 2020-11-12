@@ -267,6 +267,12 @@ class Rules extends Component {
                   <IntegratedFiltering />
                   <SearchPanel style={{ marginLeft: 0 }} />
 
+                  {/* Sorting */}
+                  <SortingState
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  />
+                  <IntegratedSorting />
+
                   {/* 페이징 */}
                   <PagingState
                     defaultCurrentPage={0}
@@ -274,12 +280,6 @@ class Rules extends Component {
                   />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
-
-                  {/* Sorting */}
-                  <SortingState
-                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
@@ -392,6 +392,12 @@ class Events extends Component {
                   <IntegratedFiltering />
                   <SearchPanel style={{ marginLeft: 0 }} />
 
+                  {/* Sorting */}
+                  <SortingState
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  />
+                  <IntegratedSorting />
+
                   {/* 페이징 */}
                   <PagingState
                     defaultCurrentPage={0}
@@ -399,12 +405,6 @@ class Events extends Component {
                   />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
-
-                  {/* Sorting */}
-                  <SortingState
-                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
 
                   {/* 테이블 */}
                   <Table rowComponent={Row} />
