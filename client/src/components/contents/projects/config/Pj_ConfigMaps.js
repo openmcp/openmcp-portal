@@ -174,7 +174,7 @@ class Pj_ConfigMaps extends Component {
         <section className="content-header">
           <h1>
             Config Maps
-            <small> in {apiParams}</small>
+            <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>

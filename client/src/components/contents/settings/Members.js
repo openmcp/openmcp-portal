@@ -171,7 +171,7 @@ class Members extends Component {
         <section className="content-header">
           <h1>
             Members
-            <small> in Settings</small>
+            <small>Settings</small>
           </h1>
           <ol className="breadcrumb">
             <li>

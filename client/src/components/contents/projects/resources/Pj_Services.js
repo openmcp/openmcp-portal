@@ -175,7 +175,7 @@ class Pj_Services extends Component {
         <section className="content-header">
           <h1>
             Services
-            <small> in {apiParams}</small>
+            <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>

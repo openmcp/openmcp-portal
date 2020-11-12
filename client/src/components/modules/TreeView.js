@@ -1,154 +1,18 @@
 import React, { Component } from "react";
 import Tree from "react-d3-tree";
-import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
-import StorageIcon from "@material-ui/icons/Storage";
-import DnsIcon from "@material-ui/icons/Dns";
-import MapIcon from '@material-ui/icons/Map';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
+// import AccessAlarmIcon from "@material-ui/icons/AccessAlarm";
+// import StorageIcon from "@material-ui/icons/Storage";
+// import DnsIcon from "@material-ui/icons/Dns";
+// import MapIcon from '@material-ui/icons/Map';
+// import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import AmpStoriesIcon from '@material-ui/icons/AmpStories';
-import BallotIcon from '@material-ui/icons/Ballot';
-import LayersIcon from '@material-ui/icons/Layers';
+// import BallotIcon from '@material-ui/icons/Ballot';
+// import LayersIcon from '@material-ui/icons/Layers';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
+import { Link } from 'react-router-dom';
 
 
-const myTreeData = [
-  {
-    name: "ap-northeast-2",
-    attributes: {
-      status: "Healthy",
-    },
-    children: [
-      {
-        name: "cluster_01",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-      {
-        name: "cluster_02",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-      {
-        name: "cluster_03",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-    ],
-  },
-  {
-    name: "ap-northeast-1",
-    attributes: {
-      status: "Healthy",
-    },
-    children: [
-      {
-        name: "cluster_01",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-      {
-        name: "cluster_02",
-        attributes: {
-          status: "unHealthy",
-        },
-      },
-      {
-        name: "cluster_03",
-        attributes: {
-          status: "Healthy",
-        },
-      }
-    ],
-  },
-  {
-    name: "eu-west-2",
-    attributes: {
-      status: "Healthy",
-    },
-    children: [
-      {
-        name: "cluster_01",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-      {
-        name: "cluster_02",
-        attributes: {
-          status: "unHealthy",
-        },
-      },
-      {
-        name: "cluster_03",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-    ],
-  },
-  {
-    name: "us-east-2",
-    attributes: {
-      status: "Healthy",
-    },
-    children: [
-      {
-        name: "cluster_01",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-      {
-        name: "cluster_02",
-        attributes: {
-          status: "unHealthy",
-        },
-      },
-      {
-        name: "cluster_03",
-        attributes: {
-          status: "Healthy",
-        },
-      }
-    ],
-  },
-  {
-    name: "us-east-2",
-    attributes: {
-      status: "Healthy",
-    },
-    children: [
-      {
-        name: "cluster_01",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-      {
-        name: "cluster_02",
-        attributes: {
-          status: "unHealthy",
-        },
-      },
-      {
-        name: "cluster_03",
-        attributes: {
-          status: "Healthy",
-        },
-      },
-      {
-        name: "cluster_03",
-        attributes: {
-          status: "Healthy",
-        },
-      }
-    ],
-  },
-];
+
 
 class NodeLabel extends Component {
   render() {
@@ -168,11 +32,17 @@ class NodeLabel extends Component {
             <HomeWorkIcon style={{position:"relative", fontSize:"43px", color: "#367fa9", background: "#ffffff", stroke: "none" }}/>,
           ] : 
           [
-            <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>,
-            <div class="" style={{fontSize:"14px", fontWeight:"bold"}}>{nodeData.name}</div>,
-            <div class="" style={{fontSize:"14px"}}>
-              <span style={{color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), fontSize:"14px"}}>{nodeData.attributes.status}</span>
-            </div>
+            <Link to={"/clusters/"+nodeData.name+"/overview"}>
+              <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>
+              <div class="" style={{fontSize:"14px", fontWeight:"bold", marginTop:"-8px"}}>
+                {nodeData.name}
+              </div>
+              <div class="" style={{fontSize:"14px", marginTop:"-6px"}}>
+                <span style={{color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), fontSize:"14px", marginRight:0}}>
+                  {nodeData.attributes.status}
+                </span>
+              </div>
+            </Link>
           ]}
 
       </div>
@@ -215,14 +85,14 @@ class TreeView extends React.Component {
       },
     };
 
-    const svgSquare2 = {
-      shape: "image",
-      shapeProps: {
-        href: "https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png",
-        width: 40,
-        height: 40,
-      },
-    };
+    // const svgSquare2 = {
+    //   shape: "image",
+    //   shapeProps: {
+    //     href: "https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png",
+    //     width: 40,
+    //     height: 40,
+    //   },
+    // };
 
     const styles = {
       links: {
@@ -262,11 +132,11 @@ class TreeView extends React.Component {
                   render: <NodeLabel className="myLabelComponentInSvg" />,
                   // <StorageIcon style={{ fontSize:"43px", color: "#367fa9", stroke: "none" }}/>,
                   foreignObjectWrapper: {
-                    width:"250px",
+                    // width:"250px",
                     y: -30,
                     // x: -60,
-                    x: -125,
-                    style: {textAlign:"center"}
+                    x: -58,
+                    style: {textAlign:"center",cursor:"default"}
                   },
                 }}
                 styles={styles}
@@ -295,3 +165,143 @@ class TreeView extends React.Component {
 }
 
 export default TreeView;
+
+
+// const myTreeData = [
+//   {
+//     name: "ap-northeast-2",
+//     attributes: {
+//       status: "Healthy",
+//     },
+//     children: [
+//       {
+//         name: "cluster_01",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//       {
+//         name: "cluster_02",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//       {
+//         name: "cluster_03",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//     ],
+//   },
+//   {
+//     name: "ap-northeast-1",
+//     attributes: {
+//       status: "Healthy",
+//     },
+//     children: [
+//       {
+//         name: "cluster_01",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//       {
+//         name: "cluster_02",
+//         attributes: {
+//           status: "unHealthy",
+//         },
+//       },
+//       {
+//         name: "cluster_03",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       }
+//     ],
+//   },
+//   {
+//     name: "eu-west-2",
+//     attributes: {
+//       status: "Healthy",
+//     },
+//     children: [
+//       {
+//         name: "cluster_01",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//       {
+//         name: "cluster_02",
+//         attributes: {
+//           status: "unHealthy",
+//         },
+//       },
+//       {
+//         name: "cluster_03",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//     ],
+//   },
+//   {
+//     name: "us-east-2",
+//     attributes: {
+//       status: "Healthy",
+//     },
+//     children: [
+//       {
+//         name: "cluster_01",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//       {
+//         name: "cluster_02",
+//         attributes: {
+//           status: "unHealthy",
+//         },
+//       },
+//       {
+//         name: "cluster_03",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       }
+//     ],
+//   },
+//   {
+//     name: "us-east-2",
+//     attributes: {
+//       status: "Healthy",
+//     },
+//     children: [
+//       {
+//         name: "cluster_01",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//       {
+//         name: "cluster_02",
+//         attributes: {
+//           status: "unHealthy",
+//         },
+//       },
+//       {
+//         name: "cluster_03",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       },
+//       {
+//         name: "cluster_03",
+//         attributes: {
+//           status: "Healthy",
+//         },
+//       }
+//     ],
+//   },
+// ];

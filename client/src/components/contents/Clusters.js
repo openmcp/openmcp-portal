@@ -143,7 +143,7 @@ class Clusters extends Component {
         <section className="content-header">
           <h1>
             Cluster
-            <small>List</small>
+            <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>

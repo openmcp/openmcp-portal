@@ -178,7 +178,7 @@ class Pj_Ingress extends Component {
         <section className="content-header">
           <h1>
             Ingress
-            <small> in {apiParams}</small>
+            <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>

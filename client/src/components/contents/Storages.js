@@ -149,7 +149,7 @@ class Storages extends Component {
         <section className="content-header">
           <h1>
           Storages
-            <small>List</small>
+            <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>

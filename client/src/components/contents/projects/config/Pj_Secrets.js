@@ -173,7 +173,7 @@ class Pj_Secrets extends Component {
         <section className="content-header">
           <h1>
             Secrets
-            <small> in {apiParams}</small>
+            <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>

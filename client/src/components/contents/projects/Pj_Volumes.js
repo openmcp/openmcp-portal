@@ -165,7 +165,7 @@ class Pj_Volumes extends Component {
         <section className="content-header">
           <h1>
             Volumes
-            <small>List</small>
+            <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>

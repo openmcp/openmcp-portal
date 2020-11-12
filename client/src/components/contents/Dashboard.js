@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import PieHalfReChart from './../modules/PieHalfReChart';
 import { NavigateNext} from '@material-ui/icons';
 import TreeView from './../modules/TreeView';
+import RefreshButton from './../modules/RefreshButton';
+
 
 
 
@@ -68,7 +70,7 @@ class Dashboard extends Component {
         <section className="content-header">
           <h1>
             Dashboard
-            <small>Info</small>
+            <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -142,7 +144,8 @@ class Dashboard extends Component {
           )}
           
         </section>
-        <input type="button" value="refresh" onClick={this.onRefresh} />
+        <RefreshButton onClick={this.onRefresh}></RefreshButton>
+        {/* <input type="button" value="refresh" onClick={this.onRefresh} /> */}
       </div>
     );
   }

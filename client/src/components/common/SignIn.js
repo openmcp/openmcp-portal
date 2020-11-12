@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+import SignUp from "./SignUp";
+import axios from 'axios';
 
 class SignIn extends Component {
   constructor(props) {
@@ -8,7 +10,6 @@ class SignIn extends Component {
     const token = sessionStorage.getItem("token");
 
     let loggedIn = true;
-    console.log(token);
     if (token == null) {
       loggedIn = false;
     }
@@ -21,6 +22,10 @@ class SignIn extends Component {
     this.onChange = this.onChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
   }
+
+
+  
+
   onChange(e) {
     this.setState({
       [e.target.name]: e.target.value,
@@ -30,31 +35,37 @@ class SignIn extends Component {
   submitForm(e) {
     e.preventDefault();
     const { username, password } = this.state;
-    //login magic
-    if (
-      (username === "admin" && password === "admin123") ||
-      (username === "demo" && password === "demo123")
-    ) {
-      sessionStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
-      sessionStorage.setItem("userName", username);
-      // localStorage.setItem("token","asdlfkasjldkfjlkwejflkawef");
-      this.setState({
-        loggedIn: true,
+      const url = `/user_login`;
+      const data = {
+        userid:username,
+        password:password,
+      };
+      axios.post(url, data)
+      .then((res) => {
+        if(res.data.data.rowCount > 0 ){
+          sessionStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
+          sessionStorage.setItem("userName", username);
+          sessionStorage.setItem("roles", res.data.data.rows[0].roles);
+          this.setState({
+            loggedIn: true,
+          });
+        } else {
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+          alert(err);
       });
-    } else {
-      alert("Please check username & password !!");
-    }
   }
   render() {
     if (this.state.loggedIn) {
-      console.log("SignIn", this.state.loggedIn);
       return <Redirect to="/dashboard"></Redirect>;
     }
     return (
       <div className="login">
         <div className="login-form">
           <h1>OpenMCP-Portal</h1>
-          <form onSubmit={this.submitForm}>
+          <form onSubmit={this.submitForm} style={{ position: "relative" }}>
             <input
               type="text"
               placeholder="Username"
@@ -69,8 +80,9 @@ class SignIn extends Component {
               value={this.state.password}
               onChange={this.onChange}
             />
-            <input className="btn-signIn" type="submit" value="Sign In"/>
+            <input className="btn-signIn" type="submit" value="Sign In" />
           </form>
+          <SignUp></SignUp>
         </div>
       </div>
     );

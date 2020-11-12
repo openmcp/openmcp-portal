@@ -150,7 +150,7 @@ class Projects extends Component {
         <section className="content-header">
           <h1>
             Projects
-            <small>List</small>
+            <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>

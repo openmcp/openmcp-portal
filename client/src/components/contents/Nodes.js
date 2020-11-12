@@ -178,7 +178,7 @@ class Nodes extends Component {
         <section className="content-header">
           <h1>
             Nodes
-            <small>list</small>
+            <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>

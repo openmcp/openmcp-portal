@@ -189,7 +189,7 @@ class Cs_Nodes extends Component {
         <section className="content-header">
           <h1>
             Nodes
-            <small> in {apiParams}</small>
+            <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>

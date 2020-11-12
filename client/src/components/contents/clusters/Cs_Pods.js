@@ -187,7 +187,7 @@ class Cs_Pods extends Component {
         <section className="content-header">
           <h1>
             Pods
-            <small> in {apiParams}</small>
+            <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
