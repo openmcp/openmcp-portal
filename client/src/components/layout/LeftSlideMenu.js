@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "../../css/style.css";
 
 class LeftSlideMenu extends Component {
   render() {

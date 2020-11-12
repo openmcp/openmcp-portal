@@ -44,7 +44,7 @@ class Pjw_Deployments extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5, //화면 리스트 개수
+      pageSize: 5, 
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,

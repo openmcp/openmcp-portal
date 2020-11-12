@@ -1,6 +1,4 @@
-// 각 컨텐츠의 왼쪽 고정 매뉴바
 import React, { Component } from "react";
-import "../../css/style.css";
 // import {ArrowBackIos, NavigateNext} from '@material-ui/icons';
 import { NavLink } from 'react-router-dom';
 import * as fnMenuList from './LeftMenuData.js';
@@ -11,28 +9,21 @@ class LeftMenu extends Component {
     super(props);
     
     this.state = {
-      params : this.props.menu, //프로젝트에 따라서 수정되야함
+      params : this.props.menu,
     }
   }
 
 
   shouldComponentUpdate(prevProps, prevState) {
     if (this.props.menu !== prevProps.menu || this.props.title !== prevProps.title) {
-      // console.log("true");
        return true;
     } else {
-      // console.log("false");
       return false;
     }
   }
 
   render() {
-    // console.log("leftmenu render", this.props);
     const menuList = fnMenuList.getMenu(this.props.title);
-    // console.log(menuList[this.props.menu]);
-    // console.log(ad, this.props.menu);
-    // console.log("leftsubcomp : ", this.props.pathParam)
-
     const lists = [];
     menuList[this.props.menu].map((item) => {
       if(item.type === "single"){

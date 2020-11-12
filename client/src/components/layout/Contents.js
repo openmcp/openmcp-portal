@@ -19,7 +19,6 @@ import Pj_Ingress from "../contents/projects/resources/Pj_Ingress";
 import Pj_Volumes from "../contents/projects/Pj_Volumes";
 import Pj_Secrets from "../contents/projects/config/Pj_Secrets";
 import Pj_ConfigMaps from "./../contents/projects/config/Pj_ConfigMaps";
-// import Pj_Config from "../contents/projects/config/Pj_Config";
 
 import Cs_Overview from "../contents/clusters/Cs_Overview";
 import Cs_Nodes from "../contents/clusters/Cs_Nodes";
@@ -37,7 +36,7 @@ import Pj_VolumeDetail from './../contents/projects/Pj_VolumeDetail';
 import Pj_SecretDetail from './../contents/projects/config/Pj_SecretDetail';
 import Pj_ConfigMapDetail from './../contents/projects/config/Pj_ConfigMapDetail';
 import Pj_Members from './../contents/projects/settings/Pj_Members';
-import Members from './../contents/settings/Members';
+import Accounts from './../contents/settings/Accounts';
 
 
 
@@ -215,8 +214,8 @@ class Contents extends Component {
           {/* Pods contents END*/}
 
           {/* Settings contents */}
-          <Route path="/settings/members" 
-            render={({match,location}) => <Members  match={match} location={location} menuData={this.onMenuData}/>} >
+          <Route path="/settings/accounts" 
+            render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           {/* Settings contents END*/}
         </Switch>

@@ -44,7 +44,7 @@ class Pj_Secrets extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, //화면 리스트 개수
+      pageSize: 10, 
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,

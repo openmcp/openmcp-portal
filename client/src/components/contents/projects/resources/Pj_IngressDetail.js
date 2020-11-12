@@ -179,7 +179,7 @@ class Rules extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, //화면 리스트 개수
+      pageSize: 10, 
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -327,7 +327,7 @@ class Events extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, //화면 리스트 개수
+      pageSize: 10, 
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,

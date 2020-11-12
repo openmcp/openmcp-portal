@@ -39,13 +39,30 @@ connection.connect();
 //   });
 // });
 
-
-function getDateTime(){
+function getDateTime() {
   var d = new Date();
   d = new Date(d.getTime());
-  var date_format_str = d.getFullYear().toString()+"-"+((d.getMonth()+1).toString().length==2?(d.getMonth()+1).toString():"0"+(d.getMonth()+1).toString())+"-"+(d.getDate().toString().length==2?d.getDate().toString():"0"+d.getDate().toString())+" "+(d.getHours().toString().length==2?d.getHours().toString():"0"+d.getHours().toString())+":"+((parseInt(d.getMinutes()/5)*5).toString().length==2?(parseInt(d.getMinutes()/5)*5).toString():"0"+(parseInt(d.getMinutes()/5)*5).toString())+":00";
+  var date_format_str =
+    d.getFullYear().toString() +
+    "-" +
+    ((d.getMonth() + 1).toString().length == 2
+      ? (d.getMonth() + 1).toString()
+      : "0" + (d.getMonth() + 1).toString()) +
+    "-" +
+    (d.getDate().toString().length == 2
+      ? d.getDate().toString()
+      : "0" + d.getDate().toString()) +
+    " " +
+    (d.getHours().toString().length == 2
+      ? d.getHours().toString()
+      : "0" + d.getHours().toString()) +
+    ":" +
+    ((parseInt(d.getMinutes() / 5) * 5).toString().length == 2
+      ? (parseInt(d.getMinutes() / 5) * 5).toString()
+      : "0" + (parseInt(d.getMinutes() / 5) * 5).toString()) +
+    ":00";
   // console.log(date_format_str);
-  return date_format_str
+  return date_format_str;
 }
 
 ///////////////////////
@@ -53,38 +70,36 @@ function getDateTime(){
 ///////////////////////
 
 app.post("/user_login", (req, res) => {
-
-  const bcrypt = require('bcrypt');
+  const bcrypt = require("bcrypt");
 
   connection.query(
     `select * from tb_accounts where user_id = '${req.body.userid}';`,
     (err, result) => {
-      
       var result_set = {
-        data : [],
-        message: "Please check your Password"
-      }
+        data: [],
+        message: "Please check your Password",
+      };
 
       console.log(result.rows.length);
-      if(result.rows.length < 1){
-        console.log("empty")
+      if (result.rows.length < 1) {
+        console.log("empty");
         result_set = {
-          data : [],
-          message: "There is no user, please check your account"
-        }
-        res.send(result_set)
+          data: [],
+          message: "There is no user, please check your account",
+        };
+        res.send(result_set);
       } else {
-        const hashPassword = result.rows[0].user_password
-        bcrypt.compare(req.body.password, hashPassword).then(function(r) {
-          if(r){ 
+        const hashPassword = result.rows[0].user_password;
+        bcrypt.compare(req.body.password, hashPassword).then(function (r) {
+          if (r) {
             // console.log("compare", r, result_set)
             result_set = {
-              data : result,
-              message: "Login Successful !!"
-            }
-            console.log("compare", r, result_set)
-          } 
-          res.send(result_set)
+              data: result,
+              message: "Login Successful !!",
+            };
+            console.log("compare", r, result_set);
+          }
+          res.send(result_set);
         });
       }
     }
@@ -92,38 +107,34 @@ app.post("/user_login", (req, res) => {
 });
 
 app.post("/create_account", (req, res) => {
-
-  const bcrypt = require('bcrypt');
+  const bcrypt = require("bcrypt");
   const saltRounds = 10;
-  var password = ""
+  var password = "";
 
-  bcrypt.genSalt(saltRounds, function(err, salt) {
-    bcrypt.hash(req.body.password, salt, function(err, hash_password) {
-        var create_time = getDateTime();
-        connection.query(
-          `insert into tb_accounts values ('${req.body.userid}', '${hash_password}','${req.body.role}','${create_time}','${create_time}');`,
-          (err, result) => {
-            if (err !== "null"){
-              const result_set = {
-                data : [],
-                message: "Account creation was successful !!"
-              }
-              res.send(result_set);
-            } else {
-              const result_set = {
-                data : [],
-                message: "Account creation was faild, please check account"
-              }
-              res.send(result_set);
-            }
+  bcrypt.genSalt(saltRounds, function (err, salt) {
+    bcrypt.hash(req.body.password, salt, function (err, hash_password) {
+      var create_time = getDateTime();
+      connection.query(
+        `insert into tb_accounts values ('${req.body.userid}', '${hash_password}','${req.body.role}','${create_time}','${create_time}');`,
+        (err, result) => {
+          if (err !== "null") {
+            const result_set = {
+              data: [],
+              message: "Account creation was successful !!",
+            };
+            res.send(result_set);
+          } else {
+            const result_set = {
+              data: [],
+              message: "Account creation was faild, please check account",
+            };
+            res.send(result_set);
           }
-        );
+        }
+      );
     });
   });
 });
-
-
-
 
 ///////////////////////
 /* Dashboard APIs */
@@ -247,24 +258,24 @@ app.get(
   }
 );
 
-
-
 // Prjects > Resources > Workloads > Deployments > detail > replica status
 app.get(
   "/projects/:project/resources/workloads/deployments/:deployment/replica_status",
   (req, res) => {
-    
     connection.query(
       "select * from tb_replica_status order by cluster asc, created_time desc, status desc",
       (err, result) => {
-
         var result2 = result.rows.reduce(
           (obj, { cluster, status, pod, created_time }, index) => {
             if (!obj[cluster]) {
               obj[cluster] = { cluster: cluster, pods: [] };
             }
 
-            obj[cluster].pods.push({ status: status, name: pod, created_time: created_time });
+            obj[cluster].pods.push({
+              status: status,
+              name: pod,
+              created_time: created_time,
+            });
             return obj;
           },
           {}
@@ -287,32 +298,32 @@ app.get(
   }
 );
 
+app.post(
+  "/projects/:project/resources/workloads/deployments/:deployment/replica_status/add_pod",
+  (req, res) => {
+    var create_time = getDateTime();
+    var podName = Math.random().toString(36).substring(10);
+    connection.query(
+      `insert into tb_replica_status values ('${req.body.cluster}', '${podName}','config','${create_time}');`,
+      (err, result) => {
+        res.send(result);
+      }
+    );
+  }
+);
 
-
-
-app.post("/projects/:project/resources/workloads/deployments/:deployment/replica_status/add_pod", (req, res) => {
-
-  var create_time = getDateTime();
-  var podName = Math.random().toString(36).substring(10);
-  connection.query(
-    `insert into tb_replica_status values ('${req.body.cluster}', '${podName}','config','${create_time}');`,
-    (err, result) => {
-      res.send(result);
-    }
-  );
-});
-
-app.delete("/projects/:project/resources/workloads/deployments/:deployment/replica_status/del_pod", (req, res) => {
-
-  console.log('delete', req.body);
-  connection.query(
-    `delete from tb_replica_status where ctid IN (select ctid from tb_replica_status where cluster = '${req.body.cluster}' order by created_time desc limit 1)`,
-    (err, result) => {
-      res.send(result);
-    }
-  );
-});
-
+app.delete(
+  "/projects/:project/resources/workloads/deployments/:deployment/replica_status/del_pod",
+  (req, res) => {
+    console.log("delete", req.body);
+    connection.query(
+      `delete from tb_replica_status where ctid IN (select ctid from tb_replica_status where cluster = '${req.body.cluster}' order by created_time desc limit 1)`,
+      (err, result) => {
+        res.send(result);
+      }
+    );
+  }
+);
 
 // Deployments 상세부터 구현해나가야 함
 
@@ -526,6 +537,22 @@ app.get("/pods/:pod", (req, res) => {
   let overview = JSON.parse(rawdata);
   console.log(overview);
   res.send(overview);
+});
+
+// Pods > detail
+app.get("/settings/accounts", (req, res) => {
+  connection.query(`select
+  user_id, 
+  roles,
+  array(
+      select role_name 
+      from tb_account_roles t 
+      where t.role_id = ANY(u.roles)
+      ) as role_name,
+  last_login_time
+from tb_accounts u`, (err, result) => {
+    res.send(result.rows);
+  });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

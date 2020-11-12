@@ -134,6 +134,7 @@ class Dashboard extends Component {
                 ></DashboardCard_2> */}
                 
               </div>,
+              <RefreshButton onClick={this.onRefresh}></RefreshButton>
             ]
           ) : (
             <CircularProgress
@@ -144,8 +145,7 @@ class Dashboard extends Component {
           )}
           
         </section>
-        <RefreshButton onClick={this.onRefresh}></RefreshButton>
-        {/* <input type="button" value="refresh" onClick={this.onRefresh} /> */}
+        
       </div>
     );
   }
