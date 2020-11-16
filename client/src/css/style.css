@@ -215,16 +215,16 @@ body {
   border: 0;
 }
 
-.login .login-form .btn-join{
+.login .login-form .btn-join {
   float: left;
   margin-top: 20px;
   margin-left: 0px;
-  color:#ffffff;
+  color: #ffffff;
   cursor: pointer;
 }
 
-.login .login-form .btn-join:hover{
-  color:#efefef;
+.login .login-form .btn-join:hover {
+  color: #efefef;
 }
 
 .btn-signIn {
@@ -237,11 +237,9 @@ body {
 }
 
 .signup {
-
 }
 
 .signup form {
-
 }
 
 .signup form input {
@@ -257,12 +255,8 @@ body {
   border-radius: 2px;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-  margin : 12px
+  margin: 12px;
 }
-
-
-
-
 
 .main-header {
   position: fixed;
@@ -331,7 +325,7 @@ body {
   color: #fff;
 }
 
-.skin-blue .main-header .navbar .nav > li > a   {
+.skin-blue .main-header .navbar .nav > li > a {
   color: #fff;
   padding: 8px;
   margin: 5px;
@@ -344,14 +338,11 @@ body {
   padding: 8px;
 }
 
-
 .skin-blue .main-header .navbar .nav > li > div:first-child > span {
   padding: 3px 3px 3px 6px;
   display: block;
   float: right;
 }
-
-
 
 .navbar-static-top {
   z-index: 1000;
@@ -444,7 +435,6 @@ body {
   line-height: 20px;
 }
 
-
 .nav > li > a {
   position: relative;
   display: block;
@@ -494,7 +484,7 @@ body {
     color: inherit;
     background: transparent;
   }
-/* 
+  /* 
   .navbar-custom-menu .navbar-nav > li > a {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -1251,10 +1241,7 @@ g {
   font-size: 14px;
 }
 
-.pod-detail.cluster-overview
-  .cb-kube-status
-  .cb-body-content
-  > div:first-child,
+.pod-detail.cluster-overview .cb-kube-status .cb-body-content > div:first-child,
 .node-detail.cluster-overview
   .cb-kube-status
   .cb-body-content
@@ -1320,12 +1307,14 @@ g {
   width: fit-content;
 }
 
-
 /* deployments detail */
-.pj-deployments {}
-.pj-deployments .content {}
-.pj-deployments .content .replica-set {}
-.pj-deployments .content .replica-set .cb-body{
+.pj-deployments {
+}
+.pj-deployments .content {
+}
+.pj-deployments .content .replica-set {
+}
+.pj-deployments .content .replica-set .cb-body {
   display: inline-block;
 }
 
@@ -1333,61 +1322,77 @@ g {
   /* border: 1px solid #ececed; */
   border-radius: 4px;
   float: left;
-  margin:25px;
-  height:auto;
+  margin: 25px;
+  height: auto;
   min-width: 150px;
   box-shadow: 4px 4px 5px 0px #545f964d;
 }
 
-.pj-deployments .content .replica-set .rs-cluster > div
-{
-  padding : 10px;
+.pj-deployments .content .replica-set .rs-cluster > div {
+  padding: 10px;
   text-align: center;
 }
 
 .pj-deployments .content .replica-set .rs-cluster .cluster-title {
   background-color: #2877a5;
   border-radius: 4px 4px 0px 0px;
-  color:#ffffff;
+  color: #ffffff;
   padding: 10px 20px;
-  font-size:16px;
+  font-size: 16px;
   font-weight: bold;
 }
 
 .pj-deployments .content .replica-set .rs-cluster .cluster-title span {
-  color:#ffffff;
+  color: #ffffff;
 }
 
 .pj-deployments .content .replica-set .rs-cluster .cluster-content {
   display: flow-root;
-  max-width : 200px;
+  max-width: 200px;
   padding: 15px 10px;
   border-left: 1px solid #ececec;
 }
-.pj-deployments .content .replica-set .rs-cluster .cluster-content>div {
-text-align: left;
-margin-bottom: 5px;
-/* font-size:18px; */
-font-weight: bold;
+.pj-deployments .content .replica-set .rs-cluster .cluster-content > div {
+  text-align: left;
+  margin-bottom: 5px;
+  /* font-size:18px; */
+  font-weight: bold;
 }
 
-.pj-deployments .content .replica-set .rs-cluster .cluster-content>div>span {
-  margin-right:4px;
+.pj-deployments
+  .content
+  .replica-set
+  .rs-cluster
+  .cluster-content
+  > div
+  > span {
+  margin-right: 4px;
 }
 
-.pj-deployments .content .replica-set .rs-cluster .cluster-content>div>span:first-child {
+.pj-deployments
+  .content
+  .replica-set
+  .rs-cluster
+  .cluster-content
+  > div
+  > span:first-child {
   font-size: 25px;
 }
 
-.pj-deployments .content .replica-set .rs-cluster .cluster-content>div>span:nth-child(2) {
+.pj-deployments
+  .content
+  .replica-set
+  .rs-cluster
+  .cluster-content
+  > div
+  > span:nth-child(2) {
   font-size: 14px;
 }
-
 
 .pj-deployments .content .replica-set .rs-cluster .cluster-button {
   border-radius: 0px 0px 4px 4px;
   display: flex;
-  padding:0;
+  padding: 0;
 }
 .pj-deployments .content .replica-set .rs-cluster .cluster-button > div {
   width: 50%;
@@ -1396,26 +1401,27 @@ font-weight: bold;
   border-radius: 0px 0px 4px 4px;
   cursor: pointer;
 }
-.pj-deployments .content .replica-set .rs-cluster .cluster-button > div:first-child {
+.pj-deployments
+  .content
+  .replica-set
+  .rs-cluster
+  .cluster-button
+  > div:first-child {
   border-right: 1px solid #ffffff;
 }
 
-
 .pj-deployments .content .replica-set .rs-cluster .cluster-button > div:hover {
-  background-color:#357188;
+  background-color: #357188;
 }
 .pj-deployments .content .replica-set .rs-cluster .cluster-button > div:active {
-  background-color:#2e515f;
+  background-color: #2e515f;
 }
-
-
-
 
 .pj-deployments .content .replica-set .rectangle {
   width: 20px;
   height: 20px;
   border-radius: 4px;
-  margin:1px;
+  margin: 1px;
   float: left;
 }
 
@@ -1424,5 +1430,86 @@ font-weight: bold;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  margin:1px;
+  margin: 1px;
+}
+
+.pd-resource-config {
+  margin: 0 45px;
+  min-width: 640px;
+}
+
+.pd-resource-config .MuiSlider-markLabel {
+  font-size: 12px;
+}
+
+.pd-resource-config .res {
+  margin-top: 70px;
+  position: relative;
+}
+
+.pd-resource-config .res:first-child {
+  margin-top: 40px;
+}
+
+.pd-resource-config .res #range-slider {
+  position: absolute;
+  top: -30px;
+  left: -40px;
+  font-weight: bold;
+  color: #367fa9;
+}
+
+.pd-resource-config .res .sl {
+}
+
+.pd-resource-config .res .txt {
+  display: flex;
+  margin: 15px 0 20px 0;
+}
+
+.pd-resource-config .res .txt > span {
+  margin-top: 8px;
+}
+
+.pd-resource-config .res .txt > .input-txt {
+  position: relative;
+}
+.pd-resource-config .res .txt > .input-txt > span {
+  position: absolute;
+  right: 60px;
+  top: 9px;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.pd-resource-config .res .txt > .input-txt input {
+  min-width: 100px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  margin: 0 50px 0 10px;
+}
+
+.nd-taint-config {
+  min-width: 760px;
+}
+.nd-taint-config .taint {
+  position: relative;
+  margin: 15px 0;
+  padding: 0 20px;
+}
+.nd-taint-config .taint > div > div {
+  top: -4px;
+  right: 20px;
+}
+
+.nd-taint-config .taint > input {
+  width: 250px;
+  margin-right: 20px;
+  font-size: 16px;
+  padding: 5px;
 }

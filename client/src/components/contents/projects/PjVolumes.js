@@ -9,6 +9,7 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  TableColumnResizing,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -18,26 +19,36 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../modules/Editor";
+import Editor from "../../modules/Editor";
+import { NavigateNext} from '@material-ui/icons';
 
-class Storages extends Component {
+let apiParams = "";
+class PjVolumes extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "project_name", title: "Name" },
-        { name: "project_status", title: "Status" },
-        { name: "project_creator", title: "Createor" },
-        { name: "project_created_time", title: "Created Time" },
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status" },
+        { name: "namespace", title: "Namespace" },
+        { name: "capacity", title: "Capacity" },
+        { name: "mount", title: "Mount" },
+        { name: "created_time", title: "Created Time" },
       ],
-      
+      defaultColumnWidths: [
+        { columnName: "name", width: 130 },
+        { columnName: "status", width: 130 },
+        { columnName: "namespace", width: 130 },
+        { columnName: "capacity", width: 150 },
+        { columnName: "mount", width: 150 },
+        { columnName: "created_time", width: 150 },
+      ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5,
-      setPageSize: 5,
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -45,13 +56,19 @@ class Storages extends Component {
   }
 
   componentWillMount() {
-    // this.props.onSelectMenu(false, "");
+    const result = {
+      menu: "projects",
+      title: this.props.match.params.project,
+    };
+    this.props.menuData(result);
+
+    apiParams = this.props.match.params.project;
   }
 
   
 
   callApi = async () => {
-    const response = await fetch("/api/projects");
+    const response = await fetch(`/projects/${apiParams}/volumes`);
     const body = await response.json();
     return body;
   };
@@ -71,20 +88,17 @@ class Storages extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   render() {
+
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
         {...restProps}
         style={{
           backgroundColor:
-            value === "Healthy"
-              ? "white"
-              : value === "Unhealthy"
-              ? "white"
-              : undefined,
+            value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           cursor: "pointer",
           ...style,
         }}
@@ -92,11 +106,7 @@ class Storages extends Component {
         <span
           style={{
             color:
-              value === "Healthy"
-                ? "green"
-                : value === "Unhealthy"
-                ? "red"
-                : undefined,
+              value === "Healthy" ? "green" : value === "Unhealthy" ? "red" : undefined,
           }}
         >
           {value}
@@ -106,22 +116,28 @@ class Storages extends Component {
 
     //셀
     const Cell = (props) => {
-      const { column } = props;
-      if (column.name === "project_status") {
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "project_name") {
+      } else if (column.name === "name") {
         return (
           <Table.Cell
-            component={Link}
-            to={{
-              pathname: `/projects/${props.value}/overview`,
-              state: {
-                test : "testvalue"
-              }
-            }}
+            // component={Link}
+            // to={{
+            //   pathname: `/projects/${props.value}/overview`,
+            //   state: {
+            //     data : row
+            //   }
+            // }}
             {...props}
             style={{ cursor: "pointer" }}
-          ></Table.Cell>
+          ><Link to={{
+            pathname: `/projects/${apiParams}/volumes/${props.value}`,
+            state: {
+              data : row
+            }
+          }}>{props.value}</Link></Table.Cell>
         );
       }
       return <Table.Cell {...props} />;
@@ -138,36 +154,37 @@ class Storages extends Component {
         // onClick={()=> alert(JSON.stringify(row))}
       />
     );
-    // const i = 0;
     const Row = (props) => {
-      return <Table.Row {...props} />;
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-          Storages
+            Volumes
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
-            <li className="active">Storages</li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Projects
+            </li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
               [
-                // <input type="button" value="create"></input>,
                 <Editor title="create"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
-                  style={{ color: "red" }}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -182,12 +199,15 @@ class Storages extends Component {
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -208,4 +228,4 @@ class Storages extends Component {
   }
 }
 
-export default Storages;
+export default PjVolumes;

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Head from "./components/layout/Head";
 import Contents from "./components/layout/Contents";
 import { Redirect } from "react-router-dom";
-import LeftMenu from './components/layout/LeftMenu';
+// import LeftMenu from './components/layout/LeftMenu';
 
 class Main extends Component {
   constructor(props) {

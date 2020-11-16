@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -19,7 +19,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "../../common/Editor";
+import Editor from "../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
 class Accounts extends Component {
@@ -76,7 +76,8 @@ class Accounts extends Component {
   render() {
 
     const Cell = (props) => {
-      const { column, row } = props;
+      // const { column, row } = props;
+      const { column } = props;
 
       const arrayToString = () => {
         const stringData = props.value.reduce((result, item, index, arr) => {

@@ -54,7 +54,7 @@ class SignUp extends Component {
 
   handleRegister = (e) => {
     e.preventDefault();
-    const { userid, password, retype_password } = this.state;
+    const { password, retype_password } = this.state;
     if (password !== retype_password) {
       alert("Password confirmation does not match");
     } else {

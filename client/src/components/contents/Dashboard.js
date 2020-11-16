@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PieReChart from "./../modules/PieReChart";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from 'react-router-dom';
-import PieHalfReChart from './../modules/PieHalfReChart';
+// import PieHalfReChart from './../modules/PieHalfReChart';
 import { NavigateNext} from '@material-ui/icons';
 import TreeView from './../modules/TreeView';
 import RefreshButton from './../modules/RefreshButton';
@@ -86,47 +86,47 @@ class Dashboard extends Component {
           {this.state.rows ? (
             [
               <div style={{ display: "flex" }}>
-                <DashboardCard_1
+                <DashboardCard01
                   title="Clusters"
                   width="25%"
                   data={this.state.rows.clusters}
                   path="/clusters"
                   angle={this.angle.full}
-                ></DashboardCard_1>
-                <DashboardCard_1
+                ></DashboardCard01>
+                <DashboardCard01
                   title="Nodes"
                   width="25%"
                   data={this.state.rows.nodes}
                   path="/nodes"
                   angle={this.angle.full}
-                ></DashboardCard_1>
-                <DashboardCard_1
+                ></DashboardCard01>
+                <DashboardCard01
                   title="Pods"
                   width="25%"
                   data={this.state.rows.pods}
                   path="/pods"
                   angle={this.angle.full}
-                ></DashboardCard_1>
-                <DashboardCard_1
+                ></DashboardCard01>
+                <DashboardCard01
                   title="Projects"
                   width="25%"
                   data={this.state.rows.projects}
                   path="/projects"
                   angle={this.angle.full}
-                ></DashboardCard_1>
+                ></DashboardCard01>
               </div>,
               <div style={{ display: "flex" }}>
-                <DashboardCard_3
+                <DashboardCard03
                   title="Region-Clusters"
                   width="100%"
                   data={this.state.rows.regions}
-                ></DashboardCard_3>
-                {/* <DashboardCard_2
+                ></DashboardCard03>
+                {/* <DashboardCard02
                   title="Resources"
                   width="67.777%"
                   data={this.state.rows.resources}
                   angle={this.angle.half}
-                ></DashboardCard_2> */}
+                ></DashboardCard02> */}
                 
               </div>,
               <RefreshButton onClick={this.onRefresh}></RefreshButton>
@@ -146,7 +146,7 @@ class Dashboard extends Component {
   }
 }
 
-class DashboardCard_1 extends Component {
+class DashboardCard01 extends Component {
   render() {
     const colors = [
       "#0088FE",
@@ -178,31 +178,31 @@ class DashboardCard_1 extends Component {
   }
 }
 
-class DashboardCard_2 extends Component {
-  render() {
-    return (
-      <div className="content-box" style={{ width: this.props.width }}>
-      <div className="cb-header">
-        <span>{this.props.title}</span>
-        {/* <div className="cb-btn">
-          <Link to={this.props.path}>detail</Link>
-        </div> */}
-      </div>
-      <div
-        className="cb-body"
-        style={{ position: "relative", width: "100%", display:"flex"}}
-      >
-        <PieHalfReChart data={this.props.data.cpu} angle={this.props.angle}></PieHalfReChart>
-        <PieHalfReChart data={this.props.data.memory} angle={this.props.angle}></PieHalfReChart>
-        <PieHalfReChart data={this.props.data.storage} angle={this.props.angle}></PieHalfReChart>
-      </div>
-    </div>
-    );
-  }
-}
+// class DashboardCard02 extends Component {
+//   render() {
+//     return (
+//       <div className="content-box" style={{ width: this.props.width }}>
+//       <div className="cb-header">
+//         <span>{this.props.title}</span>
+//         {/* <div className="cb-btn">
+//           <Link to={this.props.path}>detail</Link>
+//         </div> */}
+//       </div>
+//       <div
+//         className="cb-body"
+//         style={{ position: "relative", width: "100%", display:"flex"}}
+//       >
+//         <PieHalfReChart data={this.props.data.cpu} angle={this.props.angle}></PieHalfReChart>
+//         <PieHalfReChart data={this.props.data.memory} angle={this.props.angle}></PieHalfReChart>
+//         <PieHalfReChart data={this.props.data.storage} angle={this.props.angle}></PieHalfReChart>
+//       </div>
+//     </div>
+//     );
+//   }
+// }
 
 
-class DashboardCard_3 extends Component {
+class DashboardCard03 extends Component {
   render() {
     // console.log("BasicInfo:", this.props.data)
 

@@ -19,10 +19,9 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../common/Editor";
+import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 
-let apiParams = "";
 class Nodes extends Component {
   constructor(props) {
     super(props);

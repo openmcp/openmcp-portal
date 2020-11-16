@@ -146,7 +146,7 @@ app.get("/dashboard", (req, res) => {
   // res.send(overview);
   var request = require("request");
   var options = {
-    uri: "http://192.168.0.152:4885/apis/dashboard",
+    uri: "http://192.168.0.34:4885/apis/dashboard",
     // "http://192.168.0.51:4885/apis/dashboard",
     method: "GET",
     // headers: {

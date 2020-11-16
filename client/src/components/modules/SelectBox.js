@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
 import NativeSelect from "@material-ui/core/NativeSelect";
+// import InputLabel from "@material-ui/core/InputLabel";
+// import FormHelperText from "@material-ui/core/FormHelperText";
+// import Select from "@material-ui/core/Select";
 
 const styles = (theme) => ({
   formControl: {
@@ -14,7 +14,7 @@ const styles = (theme) => ({
     float: "right",
     position: "absolute",
     top: "-10px",
-    right: 0,
+    right: 0
   },
   selectEmpty: {
     // marginTop: theme.spacing(2),
@@ -57,11 +57,12 @@ class SelectBox extends Component {
       <div style={{ display: "inline" }}>
         <FormControl className={classes.formControl}>
           <NativeSelect
-            value={this.state.age}
+            // value={this.state.age}
+            defaultValue={this.props.defaultValue}
             onChange={handleChange}
-            name="age"
+            // name="age"
             className={classes.selectEmpty}
-            inputProps={{ "aria-label": "age" }}
+            // inputProps={{ "aria-label": "age" }}
           >
             {this.props.rows.map((i) => {
               return <option value={i.value}>{i.name}</option>;
