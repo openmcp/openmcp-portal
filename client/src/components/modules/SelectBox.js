@@ -27,9 +27,14 @@ class SelectBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      age: "",
+      // age: "",
       name: "hai",
+      selectBoxData : this.props.rows
     };
+  }
+
+  componentWillUnmount(){
+    this.setState({selectBoxData:[]});
   }
 
   render() {
@@ -38,6 +43,8 @@ class SelectBox extends Component {
     //   age: "",
     //   name: "hai",
     // });
+
+    
 
     const handleChange = (event) => {
       //   console.log("handleChange");
@@ -54,7 +61,7 @@ class SelectBox extends Component {
     const { classes } = this.props;
     // console.log("selectBox", this.props);
     return (
-      <div style={{ display: "inline" }}>
+      <div className="select-box">
         <FormControl className={classes.formControl}>
           <NativeSelect
             // value={this.state.age}
@@ -64,7 +71,7 @@ class SelectBox extends Component {
             className={classes.selectEmpty}
             // inputProps={{ "aria-label": "age" }}
           >
-            {this.props.rows.map((i) => {
+            {this.state.selectBoxData.map((i) => {
               return <option value={i.value}>{i.name}</option>;
             })}
             ;

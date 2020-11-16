@@ -74,6 +74,7 @@ class PdPodResourceConfig extends Component {
 
     const userId = sessionStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PD-MD01');
+    this.setState({open:false});
   };
 
   cpu_marks = [

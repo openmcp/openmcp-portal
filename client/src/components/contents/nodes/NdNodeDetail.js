@@ -21,7 +21,7 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import PieReChart2 from '../../modules/PieReChart2';
-import NdTaint from './../common/NdTaint';
+import NdTaint from './../modal/NdTaint';
 import * as utilLog from './../../util/UtLogs.js';
 
 

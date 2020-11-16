@@ -21,6 +21,7 @@ import {
 import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../util/UtLogs.js';
+import PJCreateProject from './modal/PJCreateProject';
 
 
 
@@ -170,10 +171,10 @@ class Projects extends Component {
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
-          <Paper>
+          <Paper style={{position:"absolute"}}>
             {this.state.rows ? (
               [
-                <Editor title="create project"/>,
+                <PJCreateProject/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

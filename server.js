@@ -278,6 +278,16 @@ app.get("/projects/:project/overview", (req, res) => {
   res.send(overview);
 });
 
+// Prjects > get Clusters Names
+app.get("/clusters/name", (req, res) => {
+  let rawdata = fs.readFileSync(
+    "./json_data/clusters_name.json"
+  );
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
 // Prjects > Resources > Workloads > Deployments
 app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
@@ -472,6 +482,8 @@ app.get("/projects/:project/config/config_maps/:config_map", (req, res) => {
   res.send(overview);
 });
 
+
+
 // Prjects > Settings > Members
 app.get("/projects/:project/settings/members", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_members.json");
@@ -479,6 +491,8 @@ app.get("/projects/:project/settings/members", (req, res) => {
   console.log(overview);
   res.send(overview);
 });
+
+
 
 ///////////////////////
 /* Clusters APIs */
@@ -547,6 +561,8 @@ app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
   console.log(overview);
   res.send(overview);
 });
+
+
 
 // Nodes
 app.get("/nodes", (req, res) => {

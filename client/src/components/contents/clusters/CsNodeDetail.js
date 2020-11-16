@@ -20,7 +20,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import NdTaint from './../common/NdTaint';
+import NdTaint from './../modal/NdTaint';
 import PieReChart2 from '../../modules/PieReChart2';
 import * as utilLog from './../../util/UtLogs.js';
 

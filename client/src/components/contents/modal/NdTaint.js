@@ -73,6 +73,7 @@ class NdTaint extends Component {
     const userId = sessionStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-ND-MD01');
     // console.log(this.state.key, this.state.value, this.state.taint)
+    this.setState({open:false});
   };
 
   
