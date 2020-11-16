@@ -20,6 +20,7 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../../modules/Editor";
+import * as utilLog from './../../../util/UtLogs.js';
 // import { NavigateNext} from '@material-ui/icons';
 
 // let apiParams = "";
@@ -82,6 +83,9 @@ class PjwDeployments extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW03');
   };
 
   render() {

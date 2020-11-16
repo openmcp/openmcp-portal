@@ -12,6 +12,9 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import PdPodResourceConfig from '../common/PdPodResourceConfig';
 // import LineChart from './../../modules/LineChart';
+import * as utilLog from './../../util/UtLogs.js';
+
+
 
 // let apiParams = "";
 class CsPodDetail extends Component {
@@ -39,6 +42,8 @@ class CsPodDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-CL-VW06');
   }  
 
   callApi = async () => {

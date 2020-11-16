@@ -22,6 +22,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import SelectBox from '../../modules/SelectBox';
 import PieReChart2 from '../../modules/PieReChart2';
+import * as utilLog from './../../util/UtLogs.js';
 // import LineChart from './../../modules/LineChart';
 // import PieHalfReChart from './../../modules/PieHalfReChart';
 // import PieReChart from './../../modules/PieReChart';
@@ -53,6 +54,11 @@ class CsOverview extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+
+    
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-CL-VW02');
   }  
 
   callApi = async () => {

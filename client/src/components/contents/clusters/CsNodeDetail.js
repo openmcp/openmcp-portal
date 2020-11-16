@@ -20,8 +20,11 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-// import SelectBox from '../../modules/SelectBox';
+import NdTaint from './../common/NdTaint';
 import PieReChart2 from '../../modules/PieReChart2';
+import * as utilLog from './../../util/UtLogs.js';
+
+// import SelectBox from '../../modules/SelectBox';
 // import LineChart from './../../modules/LineChart';
 // import PieHalfReChart from './../../modules/PieHalfReChart';
 // import PieReChart from './../../modules/PieReChart';
@@ -42,6 +45,7 @@ class CsNodeDetail extends Component {
     }
     this.props.menuData(result);
     // apiParams = this.props.match.params.cluster;
+
   }
 
   componentDidMount() {
@@ -53,6 +57,9 @@ class CsNodeDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-CL-VW04');
   }  
 
   callApi = async () => {
@@ -122,7 +129,12 @@ class BasicInfo extends Component {
     
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">
+          <span>
+            Basic Info
+          </span>
+            <NdTaint name={this.props.rowData.name} taint={this.props.rowData.taint}/>
+        </div>
         <div className="cb-body">
           <div>
             <span>Name : </span>

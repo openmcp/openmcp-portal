@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { NavigateNext} from '@material-ui/icons';
 import TreeView from './../modules/TreeView';
 import RefreshButton from './../modules/RefreshButton';
+import * as utilLog from './../util/UtLogs.js';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -25,6 +26,10 @@ class Dashboard extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+    
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-DS-VW01');
   }
 
   callApi = async () => {

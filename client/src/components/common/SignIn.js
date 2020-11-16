@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
-import SignUp from "./SignUp";
+// import SignUp from "./SignUp";
 import axios from 'axios';
+import * as utilLog from './../util/UtLogs.js';
 
 class SignIn extends Component {
   constructor(props) {
@@ -24,7 +25,10 @@ class SignIn extends Component {
   }
 
 
-  
+  componentDidMount(){
+    //log - login page view 
+    utilLog.fn_insertPLogs('beforeLogin', 'log-LG-VW01');
+  }
 
   onChange(e) {
     this.setState({
@@ -49,6 +53,8 @@ class SignIn extends Component {
           this.setState({
             loggedIn: true,
           });
+          // log - logined
+          utilLog.fn_insertPLogs(username, 'log-LG-LG01');
         } else {
           alert(res.data.message);
         }
@@ -82,7 +88,7 @@ class SignIn extends Component {
             />
             <input className="btn-signIn" type="submit" value="Sign In" />
           </form>
-          <SignUp></SignUp>
+          {/* <SignUp></SignUp> */}
         </div>
       </div>
     );

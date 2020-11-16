@@ -11,6 +11,8 @@ import {
 import {
   Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
+import * as utilLog from './../../../util/UtLogs.js';
+
 
 // let apiParams = "";
 class PjServicesDetail extends Component {
@@ -38,6 +40,8 @@ class PjServicesDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW10');
   }  
 
   callApi = async () => {

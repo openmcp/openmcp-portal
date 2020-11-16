@@ -8,8 +8,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-// import axios from 'axios';
 import SelectBox from "../../modules/SelectBox";
+import * as utilLog from './../../util/UtLogs.js';
+// import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
 
 const styles = (theme) => ({
@@ -25,12 +26,6 @@ const styles = (theme) => ({
   },
 });
 
-// function checkTaintValue (taint, arr){
-//   var result = "NoSchedule"
-//   arr.find(taint) > 0 ? result = taint : result = "NoSchedule"
-//   return result;
-// }
-
 class NdTaint extends Component {
   constructor(props){
     super(props)
@@ -42,18 +37,10 @@ class NdTaint extends Component {
       value:this.props.taint.value,
       title : this.props.name,
       open : false,
-      taint : this.props.taint.taint,
-      // taint :this.checkTaintValue(this.props.taint.value, this.taint_list),
+      taint : this.taint_list.find(item => item === this.props.taint.taint) ? this.props.taint.taint : "NoSchedule"
     }
     this.onChange = this.onChange.bind(this);
   }
-
-  // checkTaintValue (taint, arr){
-  //   var result = "NoSchedule"
-  //   arr.find(taint) > 0 ? result = taint : result = "NoSchedule"
-  //   return result;
-  // }
-  
 
   componentWillMount() {
   }
@@ -77,11 +64,15 @@ class NdTaint extends Component {
     //Save Changed Taint
     if (this.state.key === ""){
       alert("Please enter taint key");
+      return
     } else if (this.state.value === ""){
       alert("Please enter taint value");
+      return
     }
 
-    console.log(this.state.key, this.state.value, this.state.taint)
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-ND-MD01');
+    // console.log(this.state.key, this.state.value, this.state.taint)
   };
 
   

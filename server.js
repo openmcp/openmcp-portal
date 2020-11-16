@@ -39,6 +39,9 @@ connection.connect();
 //   });
 // });
 
+
+
+
 function getDateTime() {
   var d = new Date();
   d = new Date(d.getTime());
@@ -57,13 +60,51 @@ function getDateTime() {
       ? d.getHours().toString()
       : "0" + d.getHours().toString()) +
     ":" +
-    ((parseInt(d.getMinutes() / 5) * 5).toString().length == 2
-      ? (parseInt(d.getMinutes() / 5) * 5).toString()
-      : "0" + (parseInt(d.getMinutes() / 5) * 5).toString()) +
-    ":00";
+    // ((parseInt(d.getMinutes() / 5) * 5).toString().length == 2
+    //   ? (parseInt(d.getMinutes() / 5) * 5).toString()
+    //   : "0" + (parseInt(d.getMinutes() / 5) * 5).toString()) +
+    // ":00";
+    (d.getMinutes().toString().length == 2
+      ? d.getMinutes().toString()
+      : "0" +d.getMinutes().toString()) +
+    ":" + 
+    (d.getSeconds().toString().length == 2
+      ? d.getSeconds().toString()
+      : "0" +d.getSeconds().toString());    
   // console.log(date_format_str);
   return date_format_str;
 }
+
+///////////////////////
+// Write Log
+///////////////////////
+app.post("/apimcp/portal-log", (req, res) => {
+  const bcrypt = require("bcrypt");
+  var created_time = getDateTime();
+  // console.log("portal-log");
+
+  connection.query(
+    `insert into tb_portal_logs values ('${req.body.userid}','${req.body.code}','${created_time}');`,
+    (err, result) => {
+      var result_set = {
+        data: [],
+        message: "Update success",
+      };
+
+      if (err !== "null") {
+        console.log(err)
+        const result_set = {
+          data: [],
+          message: "Update log failed : " + err,
+        };
+      } 
+
+      res.send(result_set);
+    }
+  );
+});
+
+
 
 ///////////////////////
 // Create Account
@@ -157,7 +198,7 @@ app.get("/dashboard", (req, res) => {
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log("result", body);
+      // console.log("result", body);
       res.send(body);
     } else {
       console.log("error", error);

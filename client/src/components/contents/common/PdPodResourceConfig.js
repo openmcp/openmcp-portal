@@ -9,6 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Slider from '@material-ui/core/Slider';
+import * as utilLog from './../../util/UtLogs.js';
+
+
 // import axios from 'axios';
 
 
@@ -68,6 +71,9 @@ class PdPodResourceConfig extends Component {
 
   handleSave = (e) => {
     //Save modification data (Resource Changed)
+
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PD-MD01');
   };
 
   cpu_marks = [

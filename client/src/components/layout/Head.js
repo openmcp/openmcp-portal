@@ -9,6 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
+import * as utilLog from './../util/UtLogs.js';
 
 
 class Head extends Component {
@@ -24,6 +25,9 @@ class Head extends Component {
   }
   
   onLogout = (e) => {
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-LG-LG02');
+
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("userName");
     sessionStorage.removeItem("roles");

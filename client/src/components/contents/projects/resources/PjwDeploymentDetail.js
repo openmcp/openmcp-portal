@@ -23,6 +23,8 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
+import * as utilLog from './../../../util/UtLogs.js';
+
 // import { withStyles, makeStyles } from "@material-ui/core/styles";
 // import clsx from "clsx";
 
@@ -53,6 +55,9 @@ class PjwDeploymentDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW04');
   }
 
   callApi = async () => {

@@ -19,8 +19,10 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-// import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
+import * as utilLog from './../util/UtLogs.js';
+
+// import Editor from "./../modules/Editor";
 
 // let apiParams = "";
 class Pods extends Component {
@@ -96,6 +98,9 @@ class Pods extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PD-VW01');
   };
 
   render() {

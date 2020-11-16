@@ -19,8 +19,11 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
+import * as utilLog from './../../util/UtLogs.js';
+import AddMembers from "./AddMembers";
+// import Editor from "../../modules/Editor";
+
 
 class Accounts extends Component {
   constructor(props) {
@@ -71,6 +74,11 @@ class Accounts extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+      
+  const userId = sessionStorage.getItem("userName");
+  utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
+
   };
 
   render() {
@@ -137,7 +145,7 @@ class Accounts extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create"/>,
+                // <AddMembers/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

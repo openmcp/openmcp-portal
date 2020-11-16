@@ -12,6 +12,9 @@ import {
   Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import PdPodResourceConfig from './../../common/PdPodResourceConfig';
+import * as utilLog from './../../../util/UtLogs.js';
+
+
 
 // let apiParams = "";
 class PjPodDetail extends Component {
@@ -39,6 +42,8 @@ class PjPodDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW08');
   }  
 
   callApi = async () => {

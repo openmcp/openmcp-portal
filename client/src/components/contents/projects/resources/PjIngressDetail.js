@@ -22,6 +22,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
+import * as utilLog from './../../../util/UtLogs.js';
 
 // let apiParams = "";
 class PjIngressDetail extends Component {
@@ -49,6 +50,10 @@ class PjIngressDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+      
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW12');
+      
   }
 
   callApi = async () => {

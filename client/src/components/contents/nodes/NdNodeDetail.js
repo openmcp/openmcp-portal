@@ -22,6 +22,8 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import PieReChart2 from '../../modules/PieReChart2';
 import NdTaint from './../common/NdTaint';
+import * as utilLog from './../../util/UtLogs.js';
+
 
 class NdNodeDetail extends Component {
   state = {
@@ -43,6 +45,8 @@ class NdNodeDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-ND-VW02');
   }  
 
   callApi = async () => {

@@ -20,6 +20,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 // import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
+import * as utilLog from './../util/UtLogs.js';
 
 
 class Clusters extends Component {
@@ -73,6 +74,9 @@ class Clusters extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+      
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
   };
 
   render() {

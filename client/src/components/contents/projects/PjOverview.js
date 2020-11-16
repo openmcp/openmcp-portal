@@ -22,6 +22,9 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import LineReChart from './../../modules/LineReChart';
 import SelectBox from './../../modules/SelectBox';
+import * as utilLog from './../../util/UtLogs.js';
+
+
 
 let apiParams = "";
 class PjOverview extends Component {
@@ -50,6 +53,9 @@ class PjOverview extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
+    const userId = sessionStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW02');
   }  
 
   callApi = async () => {
