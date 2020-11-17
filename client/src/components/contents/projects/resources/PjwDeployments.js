@@ -9,7 +9,7 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  EditingState,
+  // EditingState,
   SelectionState,
   IntegratedSelection,
 } from "@devexpress/dx-react-grid";
@@ -21,8 +21,8 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
-  TableEditRow,
-  TableEditColumn,
+  // TableEditRow,
+  // TableEditColumn,
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../../modules/Editor";
@@ -99,9 +99,26 @@ class PjwDeployments extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   }
+
+  onUpdateData = () => {
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        this.setState({ 
+          selection : [],
+          selectedRow : "",
+          rows: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+
+    const userId = localStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
+  };
+
 
   render() {
     // 셀 데이터 스타일 변경
@@ -195,7 +212,7 @@ class PjwDeployments extends Component {
     };
 
     const onSelectionChange = (selection) => {
-      console.log(this.state.rows[selection[0]])
+      // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
       this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
@@ -211,6 +228,7 @@ class PjwDeployments extends Component {
                 <PjDeploymentMigration
                   title="create deployment"
                   rowData={this.state.selectedRow}
+                  onUpdateData = {this.onUpdateData}
                 />,
                 <Editor title="create deployment" />,
                 <Grid rows={this.state.rows} columns={this.state.columns}>

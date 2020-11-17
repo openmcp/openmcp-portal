@@ -5,9 +5,9 @@ class SignOut extends Component {
     constructor(props){
         super(props)
         // localStorage.removeItem("token")
-        sessionStorage.removeItem("token");
-        sessionStorage.removeItem("userName");
-        sessionStorage.removeItem("roles");
+        localStorage.removeItem("token");
+        localStorage.removeItem("userName");
+        localStorage.removeItem("roles");
     }
     render() {
         return (

@@ -62,7 +62,7 @@ class AddMembers extends Component {
       const data = {
         userid:this.state.userid,
         password:this.state.password,
-        role:"{v_admin}",
+        role:"{omcp_monitor}",
       };
       axios.post(url, data)
       .then((res) => {
@@ -96,18 +96,21 @@ class AddMembers extends Component {
     });
     return (
       <div>
-        <div
-          className="btn-join"
+        <Button
+          variant="outlined"
+          color="primary"
           onClick={this.handleClickOpen}
           style={{
             position: "absolute",
-            left: "14px",
-            bottom: "21px",
+            right: "26px",
+            top: "26px",
             zIndex: "10",
+            width: "180px",
+            textTransform: "initial",
           }}
         >
-          Create an account
-        </div>
+          Create an Account
+        </Button>
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"

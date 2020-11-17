@@ -5,7 +5,6 @@ import CloseIcon from "@material-ui/icons/Close";
 import * as utilLog from "../../util/UtLogs.js";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
-  // TextField,
   Button,
   Dialog,
   DialogActions,
@@ -14,29 +13,25 @@ import {
   Typography,
 } from "@material-ui/core";
 import {
-  // SearchState,
   IntegratedFiltering,
   PagingState,
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  // EditingState,
   SelectionState,
   IntegratedSelection,
+  TableColumnVisibility,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
   Table,
-  // Toolbar,
-  // SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
-  // TableEditRow,
-  // TableEditColumn,
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
+import axios from 'axios';
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -59,25 +54,22 @@ const styles = (theme) => ({
   },
 });
 
-class PjDeploymentMigration extends Component {
+class AcChangeRole extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "nodes", title: "nodes" },
-        { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
+        { name: "role_name", title: "Role" },
+        { name: "description", title: "Description" },
+        { name: "role_id", title: "Role id" },
+
         
         // { name: "edit", title: "edit" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "nodes", width: 130 },
-        { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 130 },
+        { columnName: "role_name", width: 200 },
+        { columnName: "description", width: 480 },
+        { columnName: "role_id", width: 200 },
         // { columnName: "edit", width: 170 },
       ],
       currentPage: 0,
@@ -86,11 +78,9 @@ class PjDeploymentMigration extends Component {
       pageSizes: [5, 10, 15, 0],
 
       open: false,
-      dpName : "",
-      dpStatus : "",
-      dpImage : "",
-      dpCluster : "",
-      clusters: "",
+      account : "",
+      account_role : "",
+      rows : "",
 
       selection: [],
       selectedRow : "",
@@ -99,28 +89,9 @@ class PjDeploymentMigration extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch("/clusters");
+    const response = await fetch("/account-roles");
     const body = await response.json();
     return body;
-  };
-
-  handleClickOpen = () => {
-    // console.log("count:",Object.keys(this.props.rowData).length, this.props.rowData);
-    if (Object.keys(this.props.rowData).length === 0) {
-      alert("please select deployment");
-      this.setState({ open: false });
-      return;
-    }
-
-    this.setState({ 
-      open: true,
-      dpName : this.props.rowData.name,
-      dpStatus : this.props.rowData.status,
-      dpImage : this.props.rowData.image,
-      dpCluster : this.props.rowData.cluster,
-      selection : [],
-      clusters : this.state.clusters
-    });
   };
 
   componentWillMount() {
@@ -128,7 +99,8 @@ class PjDeploymentMigration extends Component {
     // cluster list를 가져오는 api 호출
     this.callApi()
       .then((res) => {
-        this.setState({ clusters: res });
+        // console.log(res);
+        this.setState({ rows: res });
         // console.log(res[0])
         // this.setState({ cluster: res[0], firstValue: res[0] });
       })
@@ -142,25 +114,54 @@ class PjDeploymentMigration extends Component {
   //   });
   // }
 
+  handleClickOpen = () => {
+    if (Object.keys(this.props.rowData).length === 0) {
+      alert("please select account");
+      this.setState({ open: false });
+      return;
+    }
+
+    console.log(this.props.rowData)
+
+    this.setState({ 
+      open: true,
+      account : this.props.rowData.user_id,
+      account_role : this.props.rowData.role_name,
+      selection : []
+    });
+  };
+
   handleClose = () => {
     this.setState({
-      project_name: "",
-      project_description: "",
-      cluster: this.state.firstValue,
+      account: "",
+      role_id: "",
       open: false,
     });
   };
 
   handleSave = (e) => {
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select target cluster");
+      alert("Please select account role");
       return;
     } 
 
-    // implement migration workflow
-    // ......
-    this.props.onUpdateData();
-    
+    // Update user role
+    const url = `/update/account-roles`;
+      const data = {
+        userid:this.state.account,
+        role:this.state.selectedRow.role_id,
+      };
+      axios.put(url, data)
+      .then((res) => {
+          alert(res.data.message);
+          this.setState({ open: false });
+          this.props.onUpdateData();
+      })
+      .catch((err) => {
+          alert(err);
+      });
+
+
     // loging deployment migration
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
@@ -204,7 +205,7 @@ class PjDeploymentMigration extends Component {
       // console.log(selection);
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
-      this.setState({ selectedRow: this.state.clusters[selection[0]] ? this.state.clusters[selection[0]] : {} });
+      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
 
     return (
@@ -215,14 +216,14 @@ class PjDeploymentMigration extends Component {
           onClick={this.handleClickOpen}
           style={{
             position: "absolute",
-            right: "200px",
+            right: "215px",
             top: "26px",
             zIndex: "10",
             width: "148px",
             textTransform: "capitalize",
           }}
         >
-          Migration
+          Change Role
         </Button>
         <Dialog
           onClose={this.handleClose}
@@ -232,29 +233,29 @@ class PjDeploymentMigration extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Deployment Migration
+            Change Account Role
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body">
               <section className="md-content">
                 {/* deployment informations */}
-                <p>Target Deployment</p>
+                <p>User Info</p>
                 <div id="dp-info">
                   <div>
-                    <span><strong>Name : </strong></span><span>{this.state.dpName}</span>
-                    <span><strong>Current Cluster : </strong></span><span>{this.state.dpCluster}</span>
+                    <span><strong>UserID : </strong></span><span>{this.state.account}</span>
+                    <span><strong>Current Role : </strong></span><span>{this.state.account_role}</span>
                   </div>
-                  <div>
+                  {/* <div>
                     <span><strong>Status : </strong></span><span>{this.state.dpStatus}</span>
                     <span><strong>Image : </strong></span><span>{this.state.dpImage}</span>
-                  </div>
+                  </div> */}
                 </div>
               </section>
               <section className="md-content">
-                <p>Select Cluster</p>
+                <p>Select Role</p>
                 {/* cluster selector */}
                 <Paper>
-                <Grid rows={this.state.clusters} columns={this.state.columns}>
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   {/* <Toolbar /> */}
                   {/* 검색 */}
                   {/* <SearchState defaultValue="" />
@@ -290,6 +291,9 @@ class PjDeploymentMigration extends Component {
                     showSortingControls
                     rowComponent={HeaderRow}
                   />
+                  <TableColumnVisibility
+                    defaultHiddenColumnNames={['role_id']}
+                  />
                   <TableSelection
                     selectByRowClick
                     highlightRow
@@ -321,7 +325,7 @@ class PjDeploymentMigration extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              migration
+              update
             </Button>
             <Button onClick={this.handleClose} color="primary">
               cancel
@@ -333,4 +337,4 @@ class PjDeploymentMigration extends Component {
   }
 }
 
-export default PjDeploymentMigration;
+export default AcChangeRole;

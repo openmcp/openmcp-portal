@@ -73,7 +73,8 @@ class PieReChart2 extends Component {
             {payload.name}
           </text>
           <text x={cx} y={cy} dy={20} textAnchor="middle" fill={fill}>
-            {`${(percent * 100).toFixed(0)}%`}
+            {/* {`${(percent * 100).toFixed(0)}%`} */}
+            {`${(percent * 100).toFixed(1)}%`}
           </text>
 
           <Sector

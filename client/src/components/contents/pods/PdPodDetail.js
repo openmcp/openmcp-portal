@@ -39,7 +39,7 @@ class PdPodDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PD-VW02');
   }  
 
@@ -165,132 +165,6 @@ class BasicInfo extends Component {
   }
 }
 
-class Containers extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "restart_count", title: "Restart Count" },
-        { name: "port", title: "Port" },
-        { name: "image", title: "Image" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "name", width: 400 },
-        { columnName: "status", width: 150 },
-        { columnName: "restart_count", width: 150 },
-        { columnName: "port", width: 150 },
-        { columnName: "image", width: 280 },
-      ],
-      rows: this.props.rowData,
-
-      // Paging Settings
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 10, 
-      pageSizes: [5, 10, 15, 0],
-
-      completed: 0,
-    };
-  }
-
-  componentWillMount() {
-    // this.props.onSelectMenu(false, "");
-  }
-
-  
-
-  // callApi = async () => {
-  //   const response = await fetch("/clusters");
-  //   const body = await response.json();
-  //   return body;
-  // };
-
-  // progress = () => {
-  //   const { completed } = this.state;
-  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  // };
-
-  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  // componentDidMount() {
-  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-  //   this.timer = setInterval(this.progress, 20);
-  //   this.callApi()
-  //     .then((res) => {
-  //       this.setState({ rows: res });
-  //       clearInterval(this.timer);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
-  render() {
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-    const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
-    };
-
-    return (
-      <div className="content-box">
-        <div className="cb-header">Containers</div>
-        <div className="cb-body">
-        <Paper>
-            {this.state.rows ? (
-              [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
-                  <Toolbar />
-                  {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <IntegratedFiltering />
-                  <SearchPanel style={{ marginLeft: 0 }} />
-
-                  {/* Sorting */}
-                  <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
-
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
-
-                  {/* 테이블 */}
-                  <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
-        </div>
-      </div>
-    );
-  };
-};
 
 class PodStatus extends Component {
   constructor(props) {
@@ -304,11 +178,11 @@ class PodStatus extends Component {
         { name: "message", title: "Message" },
       ],
       defaultColumnWidths: [
-        { columnName: "type", width: 150 },
-        { columnName: "status", width: 150 },
-        { columnName: "last_update", width: 150 },
-        { columnName: "reson", width: 240 },
-        { columnName: "message", width: 280 },
+        { columnName: "type", width: 200 },
+        { columnName: "status", width: 120 },
+        { columnName: "last_update", width: 200 },
+        { columnName: "reson", width: 200 },
+        { columnName: "message", width: 400 },
       ],
       rows: this.props.rowData,
 
@@ -419,6 +293,134 @@ class PodStatus extends Component {
   };
 };
 
+
+class Containers extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status" },
+        { name: "restart_count", title: "Restart Count" },
+        { name: "port", title: "Port" },
+        { name: "image", title: "Image" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 250 },
+        { columnName: "status", width: 130 },
+        { columnName: "restart_count", width: 150 },
+        { columnName: "port", width: 100 },
+        { columnName: "image", width: 200 },
+      ],
+      rows: this.props.rowData,
+
+      // Paging Settings
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 10, 
+      pageSizes: [5, 10, 15, 0],
+
+      completed: 0,
+    };
+  }
+
+  componentWillMount() {
+    // this.props.onSelectMenu(false, "");
+  }
+
+  
+
+  // callApi = async () => {
+  //   const response = await fetch("/clusters");
+  //   const body = await response.json();
+  //   return body;
+  // };
+
+  // progress = () => {
+  //   const { completed } = this.state;
+  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  // };
+
+  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  // componentDidMount() {
+  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+  //   this.timer = setInterval(this.progress, 20);
+  //   this.callApi()
+  //     .then((res) => {
+  //       this.setState({ rows: res });
+  //       clearInterval(this.timer);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  render() {
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
+      />
+    );
+    const Row = (props) => {
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key}/>;
+    };
+
+    return (
+      <div className="content-box">
+        <div className="cb-header">Containers</div>
+        <div className="cb-body">
+        <Paper>
+            {this.state.rows ? (
+              [
+                <Grid
+                  rows={this.state.rows}
+                  columns={this.state.columns}
+                >
+                  <Toolbar />
+                  {/* 검색 */}
+                  <SearchState defaultValue="" />
+                  <IntegratedFiltering />
+                  <SearchPanel style={{ marginLeft: 0 }} />
+
+                  {/* Sorting */}
+                  <SortingState
+                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  />
+                  <IntegratedSorting />
+
+                  {/* 페이징 */}
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  {/* 테이블 */}
+                  <Table rowComponent={Row} />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={HeaderRow}
+                  />
+                </Grid>,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
+          </Paper>
+        </div>
+      </div>
+    );
+  };
+};
+
 class PhysicalResources extends Component {
   render(){
     const network_title = ["in", "out"];
@@ -461,7 +463,7 @@ class Events extends Component {
       defaultColumnWidths: [
         { columnName: "status", width: 150 },
         { columnName: "reason", width: 150 },
-        { columnName: "message", width: 240 },
+        { columnName: "message", width: 600 },
         { columnName: "time", width: 180 },
       ],
       rows: this.props.rowData,

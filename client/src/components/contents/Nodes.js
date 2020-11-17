@@ -39,15 +39,15 @@ class Nodes extends Component {
         { name: "pods", title: "Pods" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
+        { columnName: "name", width: 250 },
         { columnName: "cluster", width: 130},
-        { columnName: "status", width: 150 },
-        { columnName: "region", width: 150 },
-        { columnName: "role", width: 130 },
-        { columnName: "system_version", width: 250 },
-        { columnName: "cpu", width: 150 },
-        { columnName: "memory", width: 170 },
-        { columnName: "pods", width: 150 },
+        { columnName: "status", width: 130 },
+        { columnName: "region", width: 100 },
+        { columnName: "role", width: 100 },
+        { columnName: "system_version", width: 200 },
+        { columnName: "cpu", width: 130 },
+        { columnName: "memory", width: 130 },
+        { columnName: "pods", width: 130 },
       ],
       rows: "",
 
@@ -89,7 +89,7 @@ class Nodes extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-ND-VW01');
   };
 

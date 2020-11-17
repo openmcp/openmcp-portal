@@ -95,7 +95,7 @@ class PjCreateProject extends Component {
       return
     }
 
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PJ-CR01');
 
     this.setState({open:false});

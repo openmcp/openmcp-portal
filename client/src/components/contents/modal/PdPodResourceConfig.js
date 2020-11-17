@@ -72,7 +72,7 @@ class PdPodResourceConfig extends Component {
   handleSave = (e) => {
     //Save modification data (Resource Changed)
 
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PD-MD01');
     this.setState({open:false});
   };

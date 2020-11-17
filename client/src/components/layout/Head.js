@@ -25,12 +25,12 @@ class Head extends Component {
   }
   
   onLogout = (e) => {
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-LG-LG02');
 
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("userName");
-    sessionStorage.removeItem("roles");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("roles");
   }
  
   handleToggle = () => {
@@ -53,7 +53,7 @@ class Head extends Component {
       }
     }
 
-    const userName = sessionStorage.getItem("userName");
+    const userName = localStorage.getItem("userName");
     return (
       <header className="main-header">
         <NavLink to="/dashboard" className="logo">

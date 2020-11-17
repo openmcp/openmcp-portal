@@ -9,6 +9,8 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  IntegratedSelection,
+  SelectionState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -17,13 +19,15 @@ import {
   SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
+  TableSelection,
   PagingPanel,
+  // TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
-
+import AcChangeRole from './../modal/AcChangeRole';
 
 class Accounts extends Component {
   constructor(props) {
@@ -33,11 +37,14 @@ class Accounts extends Component {
         { name: "user_id", title: "User ID"},
         { name: "role_name", title: "Roles" },
         { name: "last_login_time", title: "Last login time"},
+        { name: "created_time", title: "Created time"},
       ],
       defaultColumnWidths: [
         { columnName: "user_id", width: 200 },
-        { columnName: "role_name", width: 400 },
+        { columnName: "role_name", width: 200 },
         { columnName: "last_login_time", width: 200 },
+        { columnName: "created_time", width: 200 },
+        
       ],
       rows: "",
 
@@ -48,6 +55,8 @@ class Accounts extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
+      selection: [],
+      selectedRow: "",
     };
   }
 
@@ -74,11 +83,25 @@ class Accounts extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
       
-  const userId = sessionStorage.getItem("userName");
+  const userId = localStorage.getItem("userName");
   utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
 
+  };
+
+  onUpdateData = () => {
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        this.setState({ 
+          selection : [],
+          selectedRow : "",
+          rows: res 
+        });
+
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
   };
 
   render() {
@@ -89,7 +112,6 @@ class Accounts extends Component {
 
       const arrayToString = () => {
         const stringData = props.value.reduce((result, item, index, arr) => {
-          console.log(arr);
           if (index+1 === arr.length){
             return `${result}${item}`
           } else {
@@ -124,6 +146,13 @@ class Accounts extends Component {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
+    const onSelectionChange = (selection) => {
+      // console.log(this.state.rows[selection[0]])
+      if (selection.length > 1) selection.splice(0, 1);
+      this.setState({ selection: selection });
+      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
+    };
+
     return (
       <div className="content-wrapper full">
         <section className="content-header">
@@ -145,30 +174,44 @@ class Accounts extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                // <AddMembers/>,
+                <AddMembers onUpdateData={this.onUpdateData}/>,
+                <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
                 >
                   <Toolbar />
                   <SearchState defaultValue="" />
-                  <IntegratedFiltering />
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'user_id', direction: 'asc' }]}
                   />
+
+                  <SelectionState
+                    selection={this.state.selection}
+                    onSelectionChange={onSelectionChange}
+                  />
+
+                  <IntegratedFiltering />
+                  <IntegratedSelection />
                   <IntegratedSorting />
+                  <IntegratedPaging />
 
                   <Table cellComponent={Cell} rowComponent={Row} />
                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
+                  />
+                  
+                  <TableSelection
+                    selectByRowClick
+                    highlightRow
+                    // showSelectionColumn={false}
                   />
                 </Grid>,
               ]

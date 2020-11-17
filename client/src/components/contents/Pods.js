@@ -42,15 +42,15 @@ class Pods extends Component {
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "cluster", width: 130 },
+        { columnName: "name", width: 330 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
         { columnName: "project", width: 130 },
-        { columnName: "pod_ip", width: 150 },
-        { columnName: "node", width: 130 },
-        { columnName: "node_ip", width: 150 },
+        { columnName: "pod_ip", width: 120 },
+        { columnName: "node", width: 230 },
+        { columnName: "node_ip", width: 130 },
         { columnName: "cpu", width: 80 },
-        { columnName: "memory", width: 120 },
+        { columnName: "memory", width: 100 },
         { columnName: "created_time", width: 170 },
       ],
       rows: "",
@@ -99,7 +99,7 @@ class Pods extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PD-VW01');
   };
 

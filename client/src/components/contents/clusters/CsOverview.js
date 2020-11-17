@@ -57,7 +57,7 @@ class CsOverview extends Component {
 
 
     
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-CL-VW02');
   }  
 

@@ -4,11 +4,13 @@ import { Redirect } from "react-router-dom";
 import axios from 'axios';
 import * as utilLog from './../util/UtLogs.js';
 
+
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
     // const token = localStorage.getItem("token")
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     let loggedIn = true;
     if (token == null) {
@@ -47,12 +49,13 @@ class SignIn extends Component {
       axios.post(url, data)
       .then((res) => {
         if(res.data.data.rowCount > 0 ){
-          sessionStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
-          sessionStorage.setItem("userName", username);
-          sessionStorage.setItem("roles", res.data.data.rows[0].roles);
+          localStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
+          localStorage.setItem("userName", username);
+          localStorage.setItem("roles", res.data.data.rows[0].roles);
           this.setState({
             loggedIn: true,
           });
+
           // log - logined
           utilLog.fn_insertPLogs(username, 'log-LG-LG01');
         } else {
@@ -64,6 +67,8 @@ class SignIn extends Component {
       });
   }
   render() {
+
+    
     if (this.state.loggedIn) {
       return <Redirect to="/dashboard"></Redirect>;
     }
@@ -94,5 +99,5 @@ class SignIn extends Component {
     );
   }
 }
-
 export default SignIn;
+

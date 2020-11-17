@@ -42,7 +42,7 @@ class CsPodDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-CL-VW06');
   }  
 

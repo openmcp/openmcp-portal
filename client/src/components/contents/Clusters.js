@@ -75,7 +75,7 @@ class Clusters extends Component {
       })
       .catch((err) => console.log(err));
       
-    const userId = sessionStorage.getItem("userName");
+    const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
   };
 

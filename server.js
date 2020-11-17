@@ -7,7 +7,6 @@ var os = require("os");
 var path = require("path");
 
 const port = process.env.PORT || 5000;
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -107,7 +106,7 @@ app.post("/apimcp/portal-log", (req, res) => {
 
 
 ///////////////////////
-// Create Account
+// Account
 ///////////////////////
 
 app.post("/user_login", (req, res) => {
@@ -175,6 +174,58 @@ app.post("/create_account", (req, res) => {
       );
     });
   });
+});
+
+app.get("/account-roles", (req, res) => {
+  connection.query(
+    `select * from tb_account_roles;`,
+    (err, result) => {
+      // var result_set = {
+      //   data: [],
+      //   message: "Update success",
+      // };
+
+      // if (err !== "null") {
+      //   console.log(err)
+      //   const result_set = {
+      //     data: [],
+      //     message: "Update log failed : " + err,
+      //   };
+      // } 
+
+      res.send(result.rows);
+    }
+  );
+});
+
+app.put("/update/account-roles", (req, res) => {
+  console.log(req.body);
+  connection.query(
+    `update tb_accounts set roles = '{"${req.body.role}"}' where user_id = '${req.body.userid}';`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check account : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+
+
+  // bcrypt.genSalt(saltRounds, function (err, salt) {
+  //   bcrypt.hash(req.body.password, salt, function (err, hash_password) {
+  //     var create_time = getDateTime();
+      
+  //   });
+  // });
 });
 
 ///////////////////////
@@ -606,7 +657,8 @@ app.get("/settings/accounts", (req, res) => {
       from tb_account_roles t 
       where t.role_id = ANY(u.roles)
       ) as role_name,
-  last_login_time
+  last_login_time,
+  created_time
 from tb_accounts u`, (err, result) => {
     res.send(result.rows);
   });
