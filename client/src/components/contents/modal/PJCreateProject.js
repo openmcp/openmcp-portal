@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import SelectBox from "../../modules/SelectBox";
-import * as utilLog from './../../util/UtLogs.js';
+import * as utilLog from '../../util/UtLogs.js';
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import { TextField, Button, Dialog, DialogActions, DialogContent, IconButton, Typography} from "@material-ui/core";
 // import Typography from "@material-ui/core/Typography";
@@ -27,7 +27,7 @@ const styles = (theme) => ({
   },
 });
 
-class PJCreateProject extends Component {
+class PjCreateProject extends Component {
   constructor(props){
     super(props)
     this.state={
@@ -209,4 +209,4 @@ class PJCreateProject extends Component {
   }
 }
 
-export default PJCreateProject;
+export default PjCreateProject;

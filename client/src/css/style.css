@@ -1535,7 +1535,6 @@ g {
   margin-top: 28px;
 }
 
-
 .pj-create .create-content > div {
   margin-bottom : 12px;
 }
@@ -1549,11 +1548,54 @@ g {
 .pj-create .create-content > .select-box > div{
   position: relative;
   width: 100%;
+  padding:10px;
   border: 1px solid #c4c4c4;
   border-radius: 4px;
 }
-
-.pj-create .create-content input{
-  /* padding: 12.5px 15px; */
+.pj-create .create-content > .select-box > div > div::before{
+  border:0;
 }
 
+/* Modal Deployment migrations */
+.md-contents-body {
+
+}
+
+.md-contents-body section {
+  margin-bottom:30px;
+}
+
+.md-contents-body section:last-child {
+  margin-bottom:0px;
+}
+
+.md-contents-body section.md-content #dp-info {
+  width: 100%;
+  background-color: #f1f1f1;
+  padding:10px;
+}
+
+.md-contents-body section.md-content #dp-info > div {
+  margin: 10px;
+}
+
+.md-contents-body section.md-content #dp-info > div > span {
+  display: inline-block;
+  min-width: 180px;
+}
+
+.md-contents-body section.md-content #dp-info > div > span > strong {
+  margin-right: 8px;
+}
+
+.md-contents-body section.md-content #dp-info > div > span:first-child,
+.md-contents-body section.md-content #dp-info > div > span:nth-child(3) {
+  min-width: 70px;
+}
+
+
+.md-contents-body section.md-content p {
+  font-weight: bold;
+  color:#367fa9;
+  margin: 10px 0 13px 0;
+}

@@ -203,7 +203,7 @@ class Editor extends Component {
     );
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{position:"absolute", right:"30px", top:"28px", zIndex:"10"}}>
+        <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{position:"absolute", right:"30px", top:"26px", zIndex:"10",textTransform: "capitalize"}}>
           {this.props.title}
         </Button>
         <Dialog

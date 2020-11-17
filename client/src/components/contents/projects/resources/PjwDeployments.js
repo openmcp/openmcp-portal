@@ -9,6 +9,9 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  EditingState,
+  SelectionState,
+  IntegratedSelection,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -18,10 +21,14 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
+  TableEditRow,
+  TableEditColumn,
+  TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../../modules/Editor";
-import * as utilLog from './../../../util/UtLogs.js';
+import * as utilLog from "./../../../util/UtLogs.js";
 // import { NavigateNext} from '@material-ui/icons';
+import PjDeploymentMigration from "./../../modal/PjDeploymentMigration";
 
 // let apiParams = "";
 class PjwDeployments extends Component {
@@ -30,25 +37,31 @@ class PjwDeployments extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "status", title: "Status"},
-        { name: "image", title: "Image"},
+        { name: "status", title: "Status" },
+        { name: "image", title: "Image" },
+        { name: "cluster", title: "Cluster" },
         { name: "updated_time", title: "Updated Time" },
+        // { name: "edit", title: "edit" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
         { columnName: "image", width: 130 },
+        { columnName: "cluster", width: 130 },
         { columnName: "updated_time", width: 170 },
+        // { columnName: "edit", width: 170 },
       ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5, 
+      pageSize: 5,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
+      selection: [],
+      selectedRow: "",
     };
   }
 
@@ -63,7 +76,9 @@ class PjwDeployments extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${this.props.match.params.project}/resources/workloads/deployments`);
+    const response = await fetch(
+      `/projects/${this.props.match.params.project}/resources/workloads/deployments`
+    );
     const body = await response.json();
     return body;
   };
@@ -85,11 +100,10 @@ class PjwDeployments extends Component {
       .catch((err) => console.log(err));
 
     const userId = sessionStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW03');
-  };
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
+  }
 
   render() {
-
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -99,15 +113,22 @@ class PjwDeployments extends Component {
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           cursor: "pointer",
           ...style,
-        }}>
+        }}
+      >
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "green" : "skyblue"
-          }}>
+              value === "Warning"
+                ? "orange"
+                : value === "Unschedulable"
+                ? "red"
+                : value === "Stop"
+                ? "red"
+                : value === "Running"
+                ? "green"
+                : "skyblue",
+          }}
+        >
           {value}
         </span>
       </Table.Cell>
@@ -125,15 +146,14 @@ class PjwDeployments extends Component {
 
       // const fnEnterCheck = () => {
       //   return (
-      //     props.value.indexOf("|") > 0 ? 
+      //     props.value.indexOf("|") > 0 ?
       //       props.value.split("|").map( item => {
       //         return (
       //           <p>{item}</p>
-      //       )}) : 
+      //       )}) :
       //         props.value
       //   )
       // }
-
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
@@ -141,15 +161,18 @@ class PjwDeployments extends Component {
         // console.log("name", props.value);
         // console.log("this.props.match.params", this.props)
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/projects/${this.props.match.params.project}/resources/workloads/deployments/${props.value}`,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/projects/${this.props.match.params.project}/resources/workloads/deployments/${props.value}`,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {props.value}
+            </Link>
+          </Table.Cell>
         );
       }
       return <Table.Cell>{props.value}</Table.Cell>;
@@ -168,7 +191,14 @@ class PjwDeployments extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
+    };
+
+    const onSelectionChange = (selection) => {
+      console.log(this.state.rows[selection[0]])
+      if (selection.length > 1) selection.splice(0, 1);
+      this.setState({ selection: selection });
+      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
 
     return (
@@ -178,34 +208,57 @@ class PjwDeployments extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create deployment"/>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                <PjDeploymentMigration
+                  title="create deployment"
+                  rowData={this.state.selectedRow}
+                />,
+                <Editor title="create deployment" />,
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
-                  <IntegratedFiltering />
+
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   {/* Sorting */}
                   <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
-                  <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
+
                   <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  {/* <EditingState
+                    onCommitChanges={commitChanges}
+                  /> */}
+                  <SelectionState
+                    selection={this.state.selection}
+                    onSelectionChange={onSelectionChange}
+                  />
+
+                  <IntegratedFiltering />
+                  <IntegratedSorting />
+                  <IntegratedSelection />
+                  <IntegratedPaging />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
+                  />
+                  <TableSelection
+                    selectByRowClick
+                    highlightRow
+                    // showSelectionColumn={false}
                   />
                 </Grid>,
               ]
