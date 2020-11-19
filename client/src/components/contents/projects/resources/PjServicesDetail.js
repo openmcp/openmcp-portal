@@ -117,9 +117,9 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Project : </span>
-                {this.props.rowData.project}
-              </div>
+                  <span>Namespace : </span>
+                  {this.props.rowData.namespace}
+                </div>
               <div>
                 <span>Type : </span>
                 {this.props.rowData.type}
@@ -129,39 +129,31 @@ class BasicInfo extends Component {
                 {this.props.rowData.selector}
               </div>
               <div>
-                <span>DNS : </span>
-                {this.props.rowData.dns}
-              </div>
-              <div>
                 <span>Access Type : </span>
                 {this.props.rowData.access_type}
               </div>
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>Published IP Addresses : </span>
-                  {this.props.rowData.published_ip_addresses}
-                </div>
-                <div>
-                  <span>Namespace : </span>
-                  {this.props.rowData.namespace}
-                </div>
-                <div>
-                  <span>Cluster IP : </span>
-                  {this.props.rowData.cluster_iP}
-                </div>
-                <div>
-                  <span>external_ip : </span>
-                  {this.props.rowData.external_ip}
-                </div>
-                <div>
-                  <span>Endpoints : </span>
-                  {this.props.rowData.endpoints}
-                </div>
-                <div>
-                  <span>Created Time : </span>
-                  {this.props.rowData.created_time}
-                </div>
+                <span>Session Affinity : </span>
+                {this.props.rowData.session_affinity}
+              </div>
+              <div>
+                <span>Cluster IP : </span>
+                {this.props.rowData.cluster_ip}
+              </div>
+              <div>
+                <span>Externer IP : </span>
+                {this.props.rowData.external_ip}
+              </div>
+              <div>
+                <span>Endpoints : </span>
+                {this.props.rowData.endpoints}
+              </div>
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
             </div>
           </div>
           
@@ -307,12 +299,12 @@ class Pods extends Component {
         { name: "memory", title: "Memory" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 150 },
-        { columnName: "cluster", width: 150 },
-        { columnName: "nodes", width: 150 },
-        { columnName: "pod_ip", width: 240 },
-        { columnName: "cpu", width: 280 },
-        { columnName: "memory", width: 280 },
+        { columnName: "name", width: 180 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "nodes", width: 240 },
+        { columnName: "pod_ip", width: 150 },
+        { columnName: "cpu", width: 100 },
+        { columnName: "memory", width: 100 },
       ],
       rows: this.props.rowData,
 
@@ -436,7 +428,7 @@ class Events extends Component {
       defaultColumnWidths: [
         { columnName: "status", width: 150 },
         { columnName: "reason", width: 150 },
-        { columnName: "message", width: 240 },
+        { columnName: "message", width: 400 },
         { columnName: "time", width: 180 },
       ],
       rows: this.props.rowData,

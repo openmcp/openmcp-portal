@@ -37,17 +37,17 @@ class PjwDeployments extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "image", title: "Image" },
+        { name: "ready", title: "Ready" },
         { name: "cluster", title: "Cluster" },
+        { name: "image", title: "Image" },
         { name: "updated_time", title: "Updated Time" },
         // { name: "edit", title: "edit" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "image", width: 130 },
+        { columnName: "ready", width: 130 },
         { columnName: "cluster", width: 130 },
+        { columnName: "image", width: 130 },
         { columnName: "updated_time", width: 170 },
         // { columnName: "edit", width: 170 },
       ],
@@ -128,7 +128,7 @@ class PjwDeployments extends Component {
         style={{
           // backgroundColor:
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
+          // cursor: "pointer",
           ...style,
         }}
       >
@@ -142,8 +142,8 @@ class PjwDeployments extends Component {
                 : value === "Stop"
                 ? "red"
                 : value === "Running"
-                ? "green"
-                : "skyblue",
+                ? "#1ab726"
+                : "black",
           }}
         >
           {value}

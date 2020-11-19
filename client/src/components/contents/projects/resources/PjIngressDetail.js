@@ -133,22 +133,22 @@ class BasicInfo extends Component {
                 <span>Name : </span>
                 <strong>{this.props.rowData.name}</strong>
               </div>
-              <div>
+              {/* <div>
                 <span>Project : </span>
-                {this.props.rowData.project}
+                {this.props.rowData.namespace}
+              </div> */}
+              <div>
+                <span>Namespace : </span>
+                {this.props.rowData.namespace}
               </div>
               <div>
-                <span>address : </span>
+                <span>Address : </span>
                 {this.props.rowData.address}
               </div>
             </div>
             <div className="cb-body-right">
               <div>
-                <span>namespace : </span>
-                {this.props.rowData.namespace}
-              </div>
-              <div>
-                <span>created_time : </span>
+                <span>Created Time : </span>
                 {this.props.rowData.created_time}
               </div>
             </div>

@@ -16,6 +16,7 @@ import {
   Toolbar,
   SearchPanel,
   TableHeaderRow,
+  TableColumnResizing,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../modules/Editor";
@@ -33,8 +34,16 @@ class Projects extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "createor", title: "Createor" },
+        { name: "cluster", title: "Cluster" },
         { name: "created_time", title: "Created Time" },
+        { name: "labels", title: "Labels" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 200 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 150 },
+        { columnName: "created_time", width: 200 },
+        { columnName: "labels", width: 300 },
       ],
       rows: "",
 
@@ -87,19 +96,11 @@ class Projects extends Component {
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          backgroundColor:
-            value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
-          ...style,
-        }}
-      >
+      <Table.Cell>
         <span
           style={{
             color:
-              value === "Healthy" ? "green" : value === "Unhealthy" ? "red" : undefined,
+              value === "Active" ? "#1ab726" : value === "Deactive" ? "red" : undefined,
           }}
         >
           {value}
@@ -107,8 +108,35 @@ class Projects extends Component {
       </Table.Cell>
     );
 
-    //셀
+
+    
+    
     const Cell = (props) => {
+
+      const fnEnterCheck = (prop) => {
+        var arr = [];
+        var i;
+        for(i=0; i < Object.keys(prop.value).length; i++){
+          const str = Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i]
+          arr.push(str)
+        }
+        return (
+         arr.map(item => {
+           return (
+             <p>{item}</p>
+           )
+         })
+        )
+        // return (
+          // props.value.indexOf("|") > 0 ? 
+          //   props.value.split("|").map( item => {
+          //     return (
+          //       <p>{item}</p>
+          //   )}) : 
+          //     props.value
+        // )
+      }
+
       const { column, row } = props;
       // console.log("cell : ", props);
       if (column.name === "status") {
@@ -116,13 +144,6 @@ class Projects extends Component {
       } else if (column.name === "name") {
         return (
           <Table.Cell
-            // component={Link}
-            // to={{
-            //   pathname: `/projects/${props.value}/overview`,
-            //   state: {
-            //     data : row
-            //   }
-            // }}
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
@@ -132,6 +153,10 @@ class Projects extends Component {
             }
           }}>{props.value}</Link></Table.Cell>
         );
+      } else if (column.name === "labels"){
+        return (
+        <Table.Cell>{fnEnterCheck(props)}</Table.Cell>
+        )
       }
       return <Table.Cell {...props} />;
     };
@@ -200,6 +225,7 @@ class Projects extends Component {
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}

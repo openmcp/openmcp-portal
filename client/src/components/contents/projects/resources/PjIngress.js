@@ -38,7 +38,7 @@ class PjIngress extends Component {
         { columnName: "name", width: 130 },
         { columnName: "namespace", width: 130 },
         { columnName: "address", width: 130 },
-        { columnName: "created_time", width: 150 },
+        { columnName: "created_time", width: 180 },
       ],
       rows: "",
 
@@ -97,7 +97,7 @@ class PjIngress extends Component {
         style={{
           // backgroundColor:
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
+          // cursor: "pointer",
           ...style,
         }}
       >
@@ -111,8 +111,8 @@ class PjIngress extends Component {
                 : value === "Stop"
                 ? "red"
                 : value === "Running"
-                ? "green"
-                : "skyblue",
+                ? "#1ab726"
+                : "black",
           }}
         >
           {value}

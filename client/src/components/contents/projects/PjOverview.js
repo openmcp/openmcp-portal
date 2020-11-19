@@ -129,17 +129,49 @@ class BasicInfo extends Component {
       <div className="content-box">
         <div className="cb-header">Basic Info</div>
         <div className="cb-body">
-          <div>
-            <span>Name : </span>
-            <strong>{this.props.rowData.name}</strong>
-          </div>
-          <div>
-            <span>Creator : </span>
-            {this.props.rowData.creator}
-          </div>
-          <div>
-            <span>Description : </span>
-            {this.props.rowData.description}
+        <div style={{display:"flex"}}>
+            <div className="cb-body-left">
+              <div>
+                <span>Name : </span>
+                <strong>{this.props.rowData.name}</strong>
+              </div>
+              <div>
+                <span>Cluster : </span>
+                {this.props.rowData.cluster}
+              </div>
+              <div>
+                <span>Status : </span>
+                {this.props.rowData.status}
+              </div>
+              <div>
+                  <span>Labels : </span>
+                  <div style={{margin : "-25px 0px 0px 66px"}}>
+                    {
+                      Object.keys(this.props.rowData.labels).length > 0 ?
+                        (
+                          Object.entries(this.props.rowData.labels).map(i=>{
+                          return (<div>{i.join(" : ")}</div>)
+                        })
+                        ) : 
+                        "-"
+                    }
+                  </div>
+                </div>
+            </div>
+            <div className="cb-body-right">
+              <div>
+                <span>Description : </span>
+                {this.props.rowData.description}
+              </div>
+              <div>
+                <span>UID : </span>
+                {this.props.rowData.UID}
+              </div>
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
+            </div>
           </div>
         </div>
       </div>

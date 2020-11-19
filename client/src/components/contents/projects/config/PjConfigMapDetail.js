@@ -116,15 +116,11 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Project : </span>
-                {this.props.rowData.project}
-              </div>
-            </div>
-            <div className="cb-body-right">
-              <div>
                 <span>Namespace : </span>
                 {this.props.rowData.namespace}
               </div>
+            </div>
+            <div className="cb-body-right">
               <div>
                 <span>Created Time : </span>
                 {this.props.rowData.created_time}
@@ -147,8 +143,8 @@ class Data extends Component {
         { name: "value", title: "Value" },
       ],
       defaultColumnWidths: [
-        { columnName: "key", width: 250 },
-        { columnName: "value", width: 150 },
+        { columnName: "key", width: 150 },
+        { columnName: "value", width: 600 },
       ],
       rows: this.props.rowData,
 
@@ -208,6 +204,22 @@ class Data extends Component {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
+    const Cell = (props) => {
+      const { column, row } = props;
+      if (column.name === "value") {
+        console.log("cell : ", props);
+        return (
+          <Table.Cell
+            {...props}
+            style={{ wordBreak:"break-all", whiteSpace: "inherit" }}
+          ><pre>{props.value}</pre></Table.Cell>
+        );
+      }
+      return <Table.Cell {...props} />;
+    };
+
+
+
     return (
       <div className="content-box">
         <div className="cb-header">Data</div>
@@ -237,7 +249,7 @@ class Data extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
-                  <Table rowComponent={Row} />
+                  <Table cellComponent={Cell} rowComponent={Row} />
                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls

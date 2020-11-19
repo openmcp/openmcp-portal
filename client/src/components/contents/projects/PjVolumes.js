@@ -9,13 +9,13 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  TableColumnResizing,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
   Table,
   Toolbar,
   SearchPanel,
+  TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
@@ -37,7 +37,7 @@ class PjVolumes extends Component {
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
+        { columnName: "name", width: 180 },
         { columnName: "status", width: 130 },
         { columnName: "namespace", width: 130 },
         { columnName: "capacity", width: 150 },
@@ -99,19 +99,13 @@ class PjVolumes extends Component {
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          backgroundColor:
-            value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
-          ...style,
-        }}
-      >
+      <Table.Cell>
         <span
           style={{
             color:
-              value === "Healthy" ? "green" : value === "Unhealthy" ? "red" : undefined,
+             value === "Healthy" ? "#1ab726" : 
+              value === "Unhealthy" ? "red" : 
+                value === "Unknown" ? "#b5b5b5" : "black"
           }}
         >
           {value}

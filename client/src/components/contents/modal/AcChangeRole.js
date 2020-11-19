@@ -240,15 +240,19 @@ class AcChangeRole extends Component {
               <section className="md-content">
                 {/* deployment informations */}
                 <p>User Info</p>
-                <div id="dp-info">
-                  <div>
-                    <span><strong>UserID : </strong></span><span>{this.state.account}</span>
-                    <span><strong>Current Role : </strong></span><span>{this.state.account_role}</span>
+                <div id="md-content-info">
+                  <div class="md-partition">
+                    <div class="md-item">
+                      <span><strong>UserID : </strong></span>
+                      <span>{this.state.account}</span>
+                    </div>
                   </div>
-                  {/* <div>
-                    <span><strong>Status : </strong></span><span>{this.state.dpStatus}</span>
-                    <span><strong>Image : </strong></span><span>{this.state.dpImage}</span>
-                  </div> */}
+                  <div class="md-partition">
+                    <div class="md-item">
+                      <span><strong>Current Role : </strong></span>
+                      <span>{this.state.account_role}</span>
+                    </div>
+                  </div>
                 </div>
               </section>
               <section className="md-content">

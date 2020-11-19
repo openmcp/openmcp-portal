@@ -61,7 +61,7 @@ class PjVolumeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              { this.props.match.params.service}
+              { this.props.match.params.volume}
               <small> Volume Information</small>
             </h1>
             <ol className="breadcrumb">
@@ -110,8 +110,8 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Project : </span>
-                {this.props.rowData.project}
+                <span>Namespace : </span>
+                {this.props.rowData.namespace}
               </div>
               <div>
                 <span>Status : </span>
@@ -121,28 +121,24 @@ class BasicInfo extends Component {
                 <span>Access Mode : </span>
                 {this.props.rowData.access_mode}
               </div>
-              <div>
-                <span>Provisioner : </span>
-                {this.props.rowData.provisioner}
-              </div>
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>Namespace : </span>
-                  {this.props.rowData.namespace}
-                </div>
-                <div>
-                  <span>Capacity : </span>
-                  {this.props.rowData.capacity}
-                </div>
-                <div>
-                  <span>Storage Class : </span>
-                  {this.props.rowData.strage_class}
-                </div>
-                <div>
-                  <span>Created Time : </span>
-                  {this.props.rowData.created_time}
-                </div>
+                <span>Available : </span>
+                {this.props.rowData.available}
+              </div>
+              <div>
+                <span>Capacity : </span>
+                {this.props.rowData.capacity}
+              </div>
+              <div>
+                <span>Storage Class : </span>
+                {this.props.rowData.strage_class}
+              </div>
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
             </div>
           </div>
           
@@ -166,11 +162,11 @@ class MountedBy extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 200 },
-        { columnName: "cluster", width: 150 },
-        { columnName: "node", width: 150 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "node", width: 220 },
         { columnName: "pod_ip", width: 150 },
-        { columnName: "cpu", width: 150 },
-        { columnName: "memory", width: 150 },
+        { columnName: "cpu", width: 100 },
+        { columnName: "memory", width: 100 },
       ],
       rows: this.props.rowData,
 
@@ -232,7 +228,7 @@ class MountedBy extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Workloads</div>
+        <div className="cb-header">Monted By</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (

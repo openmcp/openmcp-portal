@@ -21,8 +21,9 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import PieReChart2 from '../../modules/PieReChart2';
-import NdTaint from './../modal/NdTaint';
+import NdTaintConfig from './../modal/NdTaintConfig';
 import * as utilLog from './../../util/UtLogs.js';
+import NdResourceConfig from './../modal/NdResourceConfig';
 
 
 class NdNodeDetail extends Component {
@@ -61,6 +62,16 @@ class NdNodeDetail extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
+  onUpdateData = () => {
+    console.log("onUpdateData={this.props.onUpdateData}")
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  };
+
   render() {
     // console.log("CsOverview_Render : ",this.state.rows.basic_info);
     return (
@@ -91,7 +102,7 @@ class NdNodeDetail extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
+            <BasicInfo rowData={this.state.rows.basic_info} onUpdateData={this.onUpdateData}/>,
             <KubernetesStatus rowData={this.state.rows.kubernetes_node_status}/>,
             <NodeResourceUsage rowData={this.state.rows.node_resource_usage}/>,
             <Events rowData={this.state.rows.events}/>
@@ -112,15 +123,14 @@ class NdNodeDetail extends Component {
 
 class BasicInfo extends Component {
   render(){
-    // console.log("BasicInfo:", this.props.rowData.name)
-    
     return (
       <div className="content-box">
         <div className="cb-header">
           <span>
             Basic Info
           </span>
-            <NdTaint name={this.props.rowData.name} taint={this.props.rowData.taint}/>
+            <NdResourceConfig rowData={this.props.rowData} onUpdateData={this.props.onUpdateData}/>
+            <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/>
         </div>
         <div className="cb-body">
           <div>
@@ -195,7 +205,12 @@ class NodeResourceUsage extends Component {
     ];
     return (
       <div className="content-box">
-        <div className="cb-header">Node Resource Usage</div>
+        <div className="cb-header">
+        <span>
+          Node Resource Usage
+          </span>
+            {/* <NdResourceConfig rowData={this.props.rowData}/> */}
+        </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">CPU</div>
@@ -256,10 +271,10 @@ class Events extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "project", width: 150 },
-        { columnName: "type", width: 150 },
+        { columnName: "type", width: 100 },
         { columnName: "reason", width: 150 },
-        { columnName: "object", width: 240 },
-        { columnName: "message", width: 280 },
+        { columnName: "object", width: 300 },
+        { columnName: "message", width: 300 },
         { columnName: "time", width: 180 },
       ],
       rows: this.props.rowData,

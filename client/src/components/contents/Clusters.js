@@ -88,15 +88,15 @@ class Clusters extends Component {
         style={{
           // backgroundColor:
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
+          // cursor: "pointer",
           ...style,
         }}>
         <span
           style={{
             color:
-              value === "Provisioning" ? "skyblue" : 
+              value === "Healthy" ? "#1ab726" : 
                 value === "Unhealthy" ? "red" : 
-                  value === "Active" ? "green" : "black"
+                  value === "Unknown" ? "#b5b5b5" : "black"
           }}>
           {value}
         </span>

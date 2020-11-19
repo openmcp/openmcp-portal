@@ -149,24 +149,44 @@ class BasicInfo extends Component {
       <div className="content-box">
         <div className="cb-header">Basic Info</div>
         <div className="cb-body">
-          <div>
-            <span>Name : </span>
-            <strong>{this.props.rowData.name}</strong>
-          </div>
-          <div style={{ display: "flex" }}>
+          <div style={{display:"flex"}}>
             <div className="cb-body-left">
+              <div>
+                <span>Name : </span>
+                <strong>{this.props.rowData.name}</strong>
+              </div>
               <div>
                 <span>Namespace : </span>
                 {this.props.rowData.namespace}
               </div>
+              <div>
+                  <span>Labels : </span>
+                  <div style={{margin : "-25px 0px 0px 66px"}}>
+                    {
+                      Object.keys(this.props.rowData.labels).length > 0 ?
+                        (
+                          Object.entries(this.props.rowData.labels).map(i=>{
+                          return (<div>{i.join(" : ")}</div>)
+                        })
+                        ) : 
+                        "-"
+                    }
+                  </div>
+                </div>
+              
             </div>
             <div className="cb-body-right">
-              <div>
-                <span>Created Time : </span>
-                {this.props.rowData.created_time}
+                <div>
+                  <span>Created Time : </span>
+                  {this.props.rowData.created_time}
+                </div>
+                <div>
+                <span>Uid : </span>
+                {this.props.rowData.uid}
               </div>
             </div>
           </div>
+
         </div>
       </div>
     );
@@ -297,7 +317,9 @@ class ReplicaStatus extends React.Component {
     return (
       <div className="content-box replica-set">
         <div className="cb-header">Replica Status</div>
-        <div className="cb-body">
+        <div className="cb-body" style={{width:"100%"}}>
+          {/* <div style={{margin: "auto", width:"fit-content"}}> */}
+          <div>
           {this.state.rows ? (
 
             this.state.rows.map((i) => {
@@ -338,6 +360,7 @@ class ReplicaStatus extends React.Component {
                 style={{ position: "absolute", left: "50%", marginTop: "20px" }}
               ></CircularProgress>
           )}  
+          </div>
         </div>
       </div>
     );
@@ -357,10 +380,10 @@ class Pods extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 300 },
-        { columnName: "status", width: 150 },
-        { columnName: "node", width: 200 },
-        { columnName: "cpu", width: 150 },
-        { columnName: "memory", width: 150 },
+        { columnName: "status", width: 130 },
+        { columnName: "node", width: 250 },
+        { columnName: "cpu", width: 100 },
+        { columnName: "memory", width: 100 },
       ],
       rows: this.props.rowData,
 

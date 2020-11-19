@@ -37,7 +37,7 @@ function valuetext(value) {
 class PdPodResourceConfig extends Component {
   constructor(props){
     super(props)
-    this.cpu_max = 5;
+    this.cpu_max = 5000;
     this.memory_max = 10000;
     this.state={
       title : this.props.name,
@@ -46,8 +46,8 @@ class PdPodResourceConfig extends Component {
       cpu_limit : "Limitless",
       mem_req : "No Request",
       mem_limit : "Limitless",
-      cpu_value : [this.props.resources.cpu_min,this.props.resources.cpu_max],
-      mem_value : [this.props.resources.memory_min,this.props.resources.memory_max],
+      cpu_value : [this.props.resources.cpu_min.replace('m',''),this.props.resources.cpu_max.replace('m','')],
+      mem_value : [this.props.resources.memory_min.replace('Mi',''),this.props.resources.memory_max.replace('Mi','')],
     }
     this.onChange = this.onChange.bind(this);
   }
@@ -55,7 +55,7 @@ class PdPodResourceConfig extends Component {
   }
 
   onChange(e) {
-    console.log("onChangedd");
+    // console.log("onChangedd");
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -83,23 +83,23 @@ class PdPodResourceConfig extends Component {
       label: 'No Request',
     },
     {
-      value: 1,
-      label: '1',
+      value: 1000,
+      label: '1000',
     },
     {
-      value: 2,
-      label: '2',
+      value: 2000,
+      label: '2000',
     },
     {
-      value: 3,
-      label: '3',
+      value: 3000,
+      label: '3000',
     },
     {
-      value: 4,
-      label: '4',
+      value: 4000,
+      label: '4000',
     },
     {
-      value: 5,
+      value: 5000,
       label: 'Limitless',
     },
   ];
@@ -194,7 +194,7 @@ class PdPodResourceConfig extends Component {
             <div className="pd-resource-config">
               <div className="res">
                 <Typography id="range-slider" gutterBottom>
-                  CPU (Core)
+                  CPU (Milli Core)
                 </Typography>
                 <Slider
                   className="sl"
@@ -204,9 +204,9 @@ class PdPodResourceConfig extends Component {
                   valueLabelDisplay="auto"
                   aria-labelledby="range-slider"
                   getAriaValueText={valuetext}
-                  step={1}
+                  step={10}
                   min={0}
-                  max={5}
+                  max={5000}
                   marks={this.cpu_marks}
                 />
                 <div className="txt">
@@ -217,7 +217,7 @@ class PdPodResourceConfig extends Component {
                           this.state.cpu_value[0] === 0 ? "No Request" : this.state.cpu_value[0]
                       }
                       onChange={this.onChange} />
-                    <span>Core</span>
+                    <span>m</span>
                   </div>
 
 
@@ -228,7 +228,7 @@ class PdPodResourceConfig extends Component {
                         this.state.cpu_value[1] === this.cpu_max ? "Limiteless" : this.state.cpu_value[1]
                       } 
                       onChange={this.onChange} />
-                      <span>Core</span>
+                      <span>m</span>
                   </div>
                 </div>
               </div>

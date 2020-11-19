@@ -20,7 +20,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import NdTaint from './../modal/NdTaint';
+import NdTaintConfig from './../modal/NdTaintConfig';
 import PieReChart2 from '../../modules/PieReChart2';
 import * as utilLog from './../../util/UtLogs.js';
 
@@ -133,7 +133,7 @@ class BasicInfo extends Component {
           <span>
             Basic Info
           </span>
-            <NdTaint name={this.props.rowData.name} taint={this.props.rowData.taint}/>
+            <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/>
         </div>
         <div className="cb-body">
           <div>
@@ -272,7 +272,7 @@ class Events extends Component {
         { columnName: "type", width: 150 },
         { columnName: "reason", width: 150 },
         { columnName: "object", width: 240 },
-        { columnName: "message", width: 280 },
+        { columnName: "message", width: 440 },
         { columnName: "time", width: 180 },
       ],
       rows: this.props.rowData,

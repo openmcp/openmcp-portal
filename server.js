@@ -613,9 +613,36 @@ app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
   res.send(overview);
 });
 
+/////////////////////////
+// Public Cloud Cluster
+//////////////////////////
+app.get("/aws/ec2-type", (req, res) => {
+  connection.query(
+    `select * from tb_codes where kinds='EC2-TYPE';`,
+    (err, result) => {
+      res.send(result.rows);
+    }
+  );
+});
+
+app.get("/aws/clusters", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/aws_clusters.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
+app.get("/gcp/clusters", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/gcp_clusters.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
 
 
+/////////////
 // Nodes
+/////////////
 app.get("/nodes", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/nodes.json");
   let overview = JSON.parse(rawdata);

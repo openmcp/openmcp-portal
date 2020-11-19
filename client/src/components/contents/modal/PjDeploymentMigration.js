@@ -76,8 +76,8 @@ class PjDeploymentMigration extends Component {
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
         { columnName: "nodes", width: 130 },
-        { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 130 },
+        { columnName: "cpu", width: 100 },
+        { columnName: "ram", width: 100 },
         // { columnName: "edit", width: 170 },
       ],
       currentPage: 0,
@@ -239,14 +239,22 @@ class PjDeploymentMigration extends Component {
               <section className="md-content">
                 {/* deployment informations */}
                 <p>Target Deployment</p>
-                <div id="dp-info">
-                  <div>
-                    <span><strong>Name : </strong></span><span>{this.state.dpName}</span>
-                    <span><strong>Current Cluster : </strong></span><span>{this.state.dpCluster}</span>
+                <div id="md-content-info">
+                  <div class="md-partition">
+                    <div class="md-item">
+                      <span><strong>Name : </strong></span>
+                      <span>{this.state.dpName}</span>
+                    </div>
+                    <div class="md-item">
+                      <span><strong>Image : </strong></span>
+                      <span>{this.state.dpImage}</span>
+                    </div>
                   </div>
-                  <div>
-                    <span><strong>Status : </strong></span><span>{this.state.dpStatus}</span>
-                    <span><strong>Image : </strong></span><span>{this.state.dpImage}</span>
+                  <div class="md-partition">
+                    <div class="md-item">
+                      <span><strong>Current Cluster : </strong></span>
+                      <span>{this.state.dpCluster}</span>
+                    </div>
                   </div>
                 </div>
               </section>

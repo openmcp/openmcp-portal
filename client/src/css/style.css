@@ -527,10 +527,31 @@ body {
   overflow: hidden;
 }
 
+
 .user-panel:before,
 .user-panel:after {
   content: " ";
   display: table;
+}
+
+.user-panel:after {
+  clear: both;
+}
+
+.user-panel > .info {
+  /* padding: 5px 5px 5px 15px; */
+  line-height: 1;
+  /* position: absolute; */
+  /* left: 55px; */
+  word-break: break-all;
+  white-space: break-spaces;
+}
+
+.user-panel > .info > a {
+  text-decoration: none;
+  padding-right: 5px;
+  margin-top: 3px;
+  font-size: 11px;
 }
 
 .user-panel > .info > p {
@@ -554,29 +575,8 @@ body {
   border-radius: 50%;
 }
 
-.user-panel > .info {
-  /* padding: 5px 5px 5px 15px; */
-  line-height: 1;
-  /* position: absolute; */
-  /* left: 55px; */
-}
 
-.user-panel > .info > a {
-  text-decoration: none;
-  padding-right: 5px;
-  margin-top: 3px;
-  font-size: 11px;
-}
 
-.user-panel:before,
-.user-panel:after {
-  content: " ";
-  display: table;
-}
-
-.user-panel:after {
-  clear: both;
-}
 
 .skin-blue .user-panel > .info,
 .skin-blue .user-panel > .info > a {
@@ -1065,10 +1065,6 @@ tbody {
   margin-left: 0 !important;
 }
 
-.MuiTableCell-root.MuiTableCell-body {
-  line-height: 0.6 !important;
-}
-
 /* content box */
 .content-box {
   margin: 10px;
@@ -1115,6 +1111,10 @@ tbody {
 
 .content-box .cb-body {
   line-height: 1.5em;
+}
+
+.content-box .cb-body .cb-body-left {
+  margin-right : 100px;
 }
 
 .content-box .cb-body span {
@@ -1164,7 +1164,9 @@ tbody {
 } */
 
 .MuiTabs-indicator {
-  background-color: #ffffff !important;
+  /* background-color: #ffffff !important; */
+  background-color: #41aabf !important;
+  height: 5px !important; 
 }
 
 .tab-panel {
@@ -1254,16 +1256,16 @@ g {
   font-weight: bold;
   font-size: 16px;
 }
-.pod-detail .cb-kube-status .cb-body-content.healthy,
-.node-detail .cb-kube-status .cb-body-content.healthy,
-.cluster-overview .cb-kube-status .cb-body-content.healthy {
+.pod-detail .cb-kube-status .cb-body-content.Healthy,
+.node-detail .cb-kube-status .cb-body-content.Healthy,
+.cluster-overview .cb-kube-status .cb-body-content.Healthy {
   color: green;
   border: 4px solid green;
 }
 
-.pod-detail .cb-kube-status .cb-body-content.unhealthy,
-.node-detail .cb-kube-status .cb-body-content.unhealthy,
-.cluster-overview .cb-kube-status .cb-body-content.unhealthy {
+.pod-detail .cb-kube-status .cb-body-content.Unhealthy,
+.node-detail .cb-kube-status .cb-body-content.Unhealthy,
+.cluster-overview .cb-kube-status .cb-body-content.Unhealthy {
   color: red;
   border: 4px solid red;
 }
@@ -1569,33 +1571,55 @@ g {
   margin-bottom:0px;
 }
 
-.md-contents-body section.md-content #dp-info {
+.md-contents-body section.md-content #md-content-info {
   width: 100%;
   background-color: #f1f1f1;
   padding:10px;
+  display: flex;
 }
 
-.md-contents-body section.md-content #dp-info > div {
-  margin: 10px;
+.md-contents-body section.md-content #md-content-info > .md-partition {
+  width: 50%;
 }
 
-.md-contents-body section.md-content #dp-info > div > span {
+.md-contents-body section.md-content #md-content-info > .md-partition > span {
   display: inline-block;
   min-width: 180px;
 }
 
-.md-contents-body section.md-content #dp-info > div > span > strong {
-  margin-right: 8px;
-}
-
-.md-contents-body section.md-content #dp-info > div > span:first-child,
-.md-contents-body section.md-content #dp-info > div > span:nth-child(3) {
-  min-width: 70px;
+.md-contents-body section.md-content #md-content-info > .md-partition > .md-item{
+  margin:15px 10px 15px 10px;
 }
 
 
 .md-contents-body section.md-content p {
   font-weight: bold;
   color:#367fa9;
-  margin: 10px 0 13px 0;
+  margin: 10px 0;
 }
+
+
+
+/* Add Node */
+.md-contents-body.add-node{
+  min-width: 800px;
+}
+
+.md-contents-body.add-node .app-bar{
+  box-shadow: 0 0 black;
+}
+
+.md-contents-body.add-node section{
+  margin-bottom : 0px;
+}
+
+.md-contents-body.add-node .md-content{
+  padding:0 12px;
+  position: relative;
+}
+
+.md-contents-body.add-node .md-content .select-box > div{
+  position: relative;
+  float:inherit;
+}
+

@@ -110,7 +110,7 @@ class PjPods extends Component {
         style={{
           // backgroundColor:
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
+          // cursor: "pointer",
           ...style,
         }}>
         <span
@@ -119,7 +119,7 @@ class PjPods extends Component {
               value === "Warning" ? "orange" : 
                 value === "Unschedulable" ? "red" : 
                   value === "Stop" ? "red" : 
-                    value === "Running" ? "green" : "skyblue"
+                    value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>

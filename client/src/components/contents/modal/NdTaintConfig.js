@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import SelectBox from "../../modules/SelectBox";
-import * as utilLog from './../../util/UtLogs.js';
+import * as utilLog from '../../util/UtLogs.js';
 // import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
 
@@ -26,7 +26,7 @@ const styles = (theme) => ({
   },
 });
 
-class NdTaint extends Component {
+class NdTaintConfig extends Component {
   constructor(props){
     super(props)
     this.cpu_max = 5;
@@ -46,7 +46,7 @@ class NdTaint extends Component {
   }
 
   onChange(e) {
-    console.log("onChangedd");
+    // console.log("onChangedd");
     this.setState({
       [e.target.name]: e.target.value,
     });
@@ -77,9 +77,14 @@ class NdTaint extends Component {
   };
 
   
+  onSelectBoxChange = (value) => {
+    this.setState({taint : value});
+  }
+
+ 
+  
 
   render() {
-    console.log("render");
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -98,15 +103,12 @@ class NdTaint extends Component {
       );
     });
 
-    const onSelectBoxChange = (value) => {
-      this.setState({taint : value});
-    }
-
     const selectBoxData = [
       {name:"NoSchedule", value:"NoSchedule"},
       {name:"PreferNoSchedule", value:"PreferNoSchedule"},
       {name:"NoExecute", value:"NoExecute"},
     ]; 
+
 
     return (
       <div>
@@ -143,7 +145,7 @@ class NdTaint extends Component {
 
 
 
-                <SelectBox className="selectbox" rows={selectBoxData} onSelectBoxChange={onSelectBoxChange}  defaultValue={this.state.taint}></SelectBox>
+                <SelectBox className="selectbox" rows={selectBoxData} onSelectBoxChange={this.onSelectBoxChange}  defaultValue={this.state.taint}></SelectBox>
               </div>
             </div>
           </DialogContent>
@@ -161,4 +163,4 @@ class NdTaint extends Component {
   }
 }
 
-export default NdTaint;
+export default NdTaintConfig;

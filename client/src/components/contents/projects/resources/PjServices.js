@@ -36,11 +36,11 @@ class PjServices extends Component {
         { name: "port", title: "Port" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
+        { columnName: "name", width: 200 },
         { columnName: "namespace", width: 130 },
         { columnName: "type", width: 130 },
-        { columnName: "selector", width: 150 },
-        { columnName: "port", width: 150 },
+        { columnName: "selector", width: 330 },
+        { columnName: "port", width: 180 },
       ],
       rows: "",
 
@@ -101,7 +101,7 @@ class PjServices extends Component {
         style={{
           // backgroundColor:
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
+          // cursor: "pointer",
           ...style,
         }}>
         <span
@@ -110,7 +110,7 @@ class PjServices extends Component {
               value === "Warning" ? "orange" : 
                 value === "Unschedulable" ? "red" : 
                   value === "Stop" ? "red" : 
-                    value === "Running" ? "green" : "skyblue"
+                    value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>

@@ -22,6 +22,7 @@ import {
 import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../util/UtLogs.js';
+import NdAddNode from './modal/NdAddNode';
 
 class Nodes extends Component {
   constructor(props) {
@@ -93,25 +94,31 @@ class Nodes extends Component {
     utilLog.fn_insertPLogs(userId, 'log-ND-VW01');
   };
 
+  onUpdateData = () => {
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+
+    const userId = localStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
+  };
+
   render() {
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
-          ...style,
-        }}>
+      <Table.Cell>
         <span
           style={{
             color:
               value === "Warning" ? "orange" : 
                 value === "Unschedulable" ? "red" : 
                   value === "Stop" ? "red" : 
-                    value === "Running" ? "green" : "skyblue"
+                    value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>
@@ -197,7 +204,10 @@ class Nodes extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="add node"/>,
+                // <Editor title="add node"/>,
+                <NdAddNode
+                  onUpdateData = {this.onUpdateData}
+                />,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

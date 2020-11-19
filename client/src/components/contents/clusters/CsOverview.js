@@ -407,9 +407,9 @@ class Events extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "project", width: 150 },
-        { columnName: "type", width: 150 },
+        { columnName: "type", width: 100 },
         { columnName: "reason", width: 150 },
-        { columnName: "object", width: 240 },
+        { columnName: "object", width: 280 },
         { columnName: "message", width: 280 },
         { columnName: "time", width: 180 },
       ],

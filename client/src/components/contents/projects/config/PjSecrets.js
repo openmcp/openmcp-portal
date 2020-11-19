@@ -35,10 +35,10 @@ class PjSecrets extends Component {
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
+        { columnName: "name", width: 300 },
         { columnName: "namespace", width: 130 },
-        { columnName: "type", width: 130 },
-        { columnName: "created_time", width: 150 },
+        { columnName: "type", width: 280 },
+        { columnName: "created_time", width: 180 },
       ],
       rows: "",
 
@@ -99,7 +99,7 @@ class PjSecrets extends Component {
         style={{
           // backgroundColor:
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          cursor: "pointer",
+          // cursor: "pointer",
           ...style,
         }}>
         <span
@@ -108,7 +108,7 @@ class PjSecrets extends Component {
               value === "Warning" ? "orange" : 
                 value === "Unschedulable" ? "red" : 
                   value === "Stop" ? "red" : 
-                    value === "Running" ? "green" : "skyblue"
+                    value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>

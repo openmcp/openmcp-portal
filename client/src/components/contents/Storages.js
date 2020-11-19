@@ -76,24 +76,12 @@ class Storages extends Component {
   render() {
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          backgroundColor:
-            value === "Healthy"
-              ? "white"
-              : value === "Unhealthy"
-              ? "white"
-              : undefined,
-          cursor: "pointer",
-          ...style,
-        }}
-      >
+      <Table.Cell>
         <span
           style={{
             color:
               value === "Healthy"
-                ? "green"
+                ? "#1ab726"
                 : value === "Unhealthy"
                 ? "red"
                 : undefined,
