@@ -1,10 +1,42 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-import SelectBox from "../../modules/SelectBox";
+// import SelectBox from "../../modules/SelectBox";
 import * as utilLog from '../../util/UtLogs.js';
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import { TextField, Button, Dialog, DialogActions, DialogContent, IconButton, Typography} from "@material-ui/core";
+import {
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
+import {
+  // SearchState,
+  IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
+  SortingState,
+  IntegratedSorting,
+  // EditingState,
+  SelectionState,
+  IntegratedSelection,
+} from "@devexpress/dx-react-grid";
+import {
+  Grid,
+  Table,
+  // Toolbar,
+  // SearchPanel,
+  TableColumnResizing,
+  TableHeaderRow,
+  PagingPanel,
+  // TableEditRow,
+  // TableEditColumn,
+  TableSelection,
+} from "@devexpress/dx-react-grid-material-ui";
+import Paper from "@material-ui/core/Paper";
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -31,9 +63,27 @@ class PjCreateProject extends Component {
   constructor(props){
     super(props)
     this.state={
-      selectBoxData :[],
-      firstValue : "",
-      cluster : "",
+      columns: [
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status" },
+        { name: "nodes", title: "nodes" },
+        { name: "cpu", title: "CPU(%)" },
+        { name: "ram", title: "Memory(%)" },
+        
+        // { name: "edit", title: "edit" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 180 },
+        { columnName: "status", width: 130 },
+        { columnName: "nodes", width: 100 },
+        { columnName: "cpu", width: 100 },
+        { columnName: "ram", width: 120 },
+        // { columnName: "edit", width: 170 },
+      ],
+      
+      clusters : "",
+      selection : [],
+      selectedRows : [],
       project_name : "",
       project_description : "",
       open : false,
@@ -41,8 +91,17 @@ class PjCreateProject extends Component {
     this.onChange = this.onChange.bind(this);
   }
 
+
+  initState = () => {
+    this.setState({
+      selection : [],
+      selectedRows:[],
+      project_name:"",
+      project_description:"",
+    });
+  }
   callApi = async () => {
-    const response = await fetch("/clusters/name");
+    const response = await fetch("/clusters");
     const body = await response.json();
     return body;
   };
@@ -51,38 +110,26 @@ class PjCreateProject extends Component {
     // cluster list를 가져오는 api 호출
     this.callApi()
       .then((res) => {
-        var data = []
-        
-        res.map((item)=>{
-          data.push({name:item, value:item});
-        })
-        this.setState({ selectBoxData: data });
-        console.log(res[0])
-        this.setState({ cluster: res[0], firstValue:res[0] });
-        clearInterval(this.timer);
+        this.setState({ clusters: res });
       })
       .catch((err) => console.log(err));
   }
 
   onChange(e) {
-    console.log("onChangedd");
+    // console.log("onChangedd");
     this.setState({
       [e.target.name]: e.target.value,
     });
   }
 
   handleClickOpen = () => {
+    this.initState();
     this.setState({ open: true });
-    
   };
 
   handleClose = () => {
-    this.setState({
-      project_name:"",
-      project_description:"",
-      cluster:this.state.firstValue,
-      open: false
-    })
+    this.initState();
+    this.setState({ open: false });
   };
 
   handleSave = (e) => {
@@ -90,10 +137,12 @@ class PjCreateProject extends Component {
     if (this.state.project_name === ""){
       alert("Please insert project name");
       return
-    } else if (this.state.cluster === ""){
-      alert("Please select cluster");
-      return
-    }
+    } else if (Object.keys(this.state.selectedRows).length === 0) {
+      alert("Please select target cluster");
+      return;
+    } 
+
+    console.log(this.state)
 
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PJ-CR01');
@@ -102,7 +151,22 @@ class PjCreateProject extends Component {
     // console.log(this.state.key, this.state.value, this.state.taint)
   };
 
-  
+  onSelectionChange = (selection) => {
+    this.setState({ selection: selection });
+    this.setState({ selectedRows: selection.length > 0 ? this.state.clusters.filter((object, index) => selection.includes(index)) : [] });
+  };
+
+  HeaderRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      style={{
+        cursor: "pointer",
+        backgroundColor: "whitesmoke",
+        // ...styles[row.sector.toLowerCase()],
+      }}
+      // onClick={()=> alert(JSON.stringify(row))}
+    />
+  );
 
   render() {
     const DialogTitle = withStyles(styles)((props) => {
@@ -123,31 +187,8 @@ class PjCreateProject extends Component {
       );
     });
 
-    const onSelectBoxChange = (value) => {
-      this.setState({cluster : value});
-    }
-
-    // const selectBoxData = [
-    //   {name:"NoSchedule", value:"NoSchedule"},
-    //   {name:"PreferNoSchedule", value:"PreferNoSchedule"},
-    //   {name:"NoExecute", value:"NoExecute"},
-    // ]; 
-    
-
     return (
       <div>
-        {/* <div
-          className="btn-join"
-          onClick={this.handleClickOpen}
-          style={{
-            position: "absolute",
-            right: "12px",
-            top: "0px",
-            zIndex: "10",
-          }}
-        >
-          
-        </div> */}
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", right:"16px", top:"16px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
           Create Project
         </Button>
@@ -156,43 +197,93 @@ class PjCreateProject extends Component {
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           fullWidth={false}
-          maxWidth={false}
+          maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             Create Project
           </DialogTitle>
           <DialogContent dividers>
-            <div className="pj-create">
-              <div className="create-content">
-                {/* <input type="text" value={this.state.key} placeholder="key" name="key" onChange={this.onChange}/>
-                <input type="text" value={this.state.value} placeholder="value" name="value" onChange={this.onChange}/> */}
+            {/* <div className="pj-create">
+              <div className="create-content"> */}
+            <div className="md-contents-body">
+            <section className="md-content">
                 <p>Project</p>
-                <TextField
-                  id="outlined-multiline-static"
-                  label="name"
-                  rows={1}
-                  placeholder="project name"
-                  variant="outlined"
-                  value = {this.state.project_name}
-                  fullWidth	={true}
-                  name="project_name"
-                  onChange = {this.onChange}
-                />
-                <TextField
-                  id="outlined-multiline-static"
-                  label="decription"
-                  multiline
-                  rows={2}
-                  placeholder="project description"
-                  variant="outlined"
-                  name="project_description"
-                  onChange = {this.onChange}
-                  value = {this.state.project_description}
-                  fullWidth	={true}
-                />
-                <p className="pj-cluster">Cluster</p>
-                <SelectBox className="selectbox" rows={this.state.selectBoxData} onSelectBoxChange={onSelectBoxChange}  defaultValue={this.state.cluster}></SelectBox>
-              </div>
+                <div style={{marginBottom:"10px"}}>
+                  <TextField
+                    id="outlined-multiline-static"
+                    // label="name"
+                    rows={1}
+                    placeholder="project name"
+                    variant="outlined"
+                    value = {this.state.project_name}
+                    fullWidth	={true}
+                    name="project_name"
+                    onChange = {this.onChange}
+                  />
+                </div>
+                <div style={{marginBottom:"10px"}}>
+                  <TextField
+                    id="outlined-multiline-static"
+                    // label="decription"
+                    multiline
+                    rows={2}
+                    placeholder="project description"
+                    variant="outlined"
+                    name="project_description"
+                    onChange = {this.onChange}
+                    value = {this.state.project_description}
+                    fullWidth	={true}
+                  />
+                </div>
+              </section>
+              <section className="md-content">
+                <p>Select Clusters</p>
+                {/* cluster selector */}
+                <Paper>
+                <Grid rows={this.state.clusters} columns={this.state.columns}>
+                  {/* <Toolbar /> */}
+                  {/* 검색 */}
+                  {/* <SearchState defaultValue="" />
+                  <SearchPanel style={{ marginLeft: 0 }} /> */}
+
+                  {/* Sorting */}
+                  <SortingState
+                    defaultSorting={[{ columnName: "status", direction: "asc" }]}
+                  />
+
+                  {/* 페이징 */}
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
+                  <SelectionState
+                    selection={this.state.selection}
+                    onSelectionChange={this.onSelectionChange}
+                  />
+
+                  <IntegratedFiltering />
+                  <IntegratedSorting />
+                  <IntegratedSelection />
+                  <IntegratedPaging />
+
+                  {/* 테이블 */}
+                  <Table />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={this.HeaderRow}
+                  />
+                  <TableSelection
+                    selectByRowClick
+                    highlightRow
+                    // showSelectionColumn={false}
+                  />
+                </Grid>
+                </Paper>
+              </section>
             </div>
           </DialogContent>
           <DialogActions>

@@ -1520,43 +1520,6 @@ g {
   padding: 5px;
 }
 
-.pj-create {
-  min-width: 500px;
-}
-.pj-create .create-content{
-  position: relative;
-}
-
-.pj-create .create-content p{
-  font-weight: bold;
-  color:#367fa9;
-  margin: 17px 0 13px 0;
-  
-}
-.pj-create .create-content .pj-cluster{
-  margin-top: 28px;
-}
-
-.pj-create .create-content > div {
-  margin-bottom : 12px;
-}
-
-/* select box */
-.pj-create .create-content > .select-box {
-  display: block;
-  margin-top: 20px;
-  margin-bottom: 95px;
-}
-.pj-create .create-content > .select-box > div{
-  position: relative;
-  width: 100%;
-  padding:10px;
-  border: 1px solid #c4c4c4;
-  border-radius: 4px;
-}
-.pj-create .create-content > .select-box > div > div::before{
-  border:0;
-}
 
 /* Modal Deployment migrations */
 .md-contents-body {

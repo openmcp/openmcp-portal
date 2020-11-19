@@ -216,7 +216,7 @@ class NdResourceConfig extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Add Public Cloud Node
+           Node Resource Configration
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body">

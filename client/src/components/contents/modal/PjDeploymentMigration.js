@@ -77,7 +77,7 @@ class PjDeploymentMigration extends Component {
         { columnName: "status", width: 130 },
         { columnName: "nodes", width: 130 },
         { columnName: "cpu", width: 100 },
-        { columnName: "ram", width: 100 },
+        { columnName: "ram", width: 120 },
         // { columnName: "edit", width: 170 },
       ],
       currentPage: 0,

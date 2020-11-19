@@ -124,7 +124,7 @@ class NdAddNode extends Component {
         { columnName: "status", width: 130 },
         { columnName: "nodes", width: 130 },
         { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 130 },
+        { columnName: "ram", width: 120 },
       ],
 
       currentPage: 0,
@@ -254,14 +254,14 @@ class NdAddNode extends Component {
   onSelectionChange = (selection) => {
     if (selection.length > 1) selection.splice(0, 1);
     this.setState({ selection: selection });
-    this.setState({ selectedRow: this.state.clusters[selection[0]] ? this.state.clusters[selection[0]] : {} });
+    this.setState({ selectedRow: selection.length > 0 ? this.state.clusters[selection[0]] : {} });
   };
 
   
   onInstTypeSelectionChange = (selection) => {
     if (selection.length > 1) selection.splice(0, 1);
     this.setState({ instTypeSelection: selection });
-    this.setState({ instTypeSelectedRow: this.state.instTypes[selection[0]] ? this.state.instTypes[selection[0]] : {} });
+    this.setState({ instTypeSelectedRow: selection.length > 0 ? this.state.instTypes[selection[0]] : {} });
   };
 
   render() {
