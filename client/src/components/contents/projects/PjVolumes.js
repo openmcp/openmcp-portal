@@ -60,6 +60,10 @@ class PjVolumes extends Component {
     const result = {
       menu: "projects",
       title: this.props.match.params.project,
+      pathParams : {
+        searchString : this.props.location.search,
+        project : this.props.match.params.project
+      }
     };
     this.props.menuData(result);
 
@@ -133,6 +137,7 @@ class PjVolumes extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/projects/${apiParams}/volumes/${props.value}`,
+            search: this.props.location.search,
             state: {
               data : row
             }

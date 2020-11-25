@@ -37,8 +37,8 @@ class Pods extends Component {
         { name: "pod_ip", title: "Pod IP" },
         { name: "node", title: "Node" },
         { name: "node_ip", title: "Node IP" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
@@ -49,8 +49,8 @@ class Pods extends Component {
         { columnName: "pod_ip", width: 120 },
         { columnName: "node", width: 230 },
         { columnName: "node_ip", width: 130 },
-        { columnName: "cpu", width: 80 },
-        { columnName: "memory", width: 100 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 100 },
         { columnName: "created_time", width: 170 },
       ],
       rows: "",
@@ -118,10 +118,11 @@ class Pods extends Component {
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "#1ab726" : "black"
+              value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "red" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>

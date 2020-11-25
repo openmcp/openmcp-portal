@@ -102,7 +102,11 @@ class PjWorkloads extends Component {
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
       menu : "projects",
-      title : this.props.match.params.project
+      title : this.props.match.params.project,
+      pathParams : {
+        searchString : this.props.location.search,
+        project : this.props.match.params.project
+      }
     }
     this.props.menuData(result);
     // apiParams = this.props.match.params.project;
@@ -172,7 +176,8 @@ class PjWorkloads extends Component {
                     <Tab label={i.label} {...a11yProps(i.index)}
                           component={Link}
                           to={{
-                            pathname: `/projects/${this.props.match.params.project}/resources/workloads/${i.param}`
+                            pathname: `/projects/${this.props.match.params.project}/resources/workloads/${i.param}`,
+                            search : ``
                             // state: {
                             //   data : row
                             // }
@@ -193,10 +198,10 @@ class PjWorkloads extends Component {
                   })} */}
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 <Switch>
-                  <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
+                  <Route path="/projects/:project/resources/workloads/deployments/:deployment:searchParams?" 
                     render={({match,location}) => <PjwDeploymentDetail  match={match} location={location}/>} >
                   </Route>
-                  <Route path="/projects/:project/resources/workloads/deployments" 
+                  <Route path="/projects/:project/resources/workloads/deployments:searchParams?" 
                     render={({match,location}) => <PjwDeployments  match={match} location={location}/>} >
                   </Route>
             
@@ -210,7 +215,7 @@ class PjWorkloads extends Component {
                 {/* <DeploymentsTab pathParam={this.props.match.params.project}></DeploymentsTab> */}
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
-                <Route path="/projects/:project/resources/workloads/statefulsets" 
+                <Route path="/projects/:project/resources/workloads/statefulsets:searchParams?" 
                       render={({match,location}) => <PjwDeployments  match={match} location={location} menuData={this.onMenuData}/>} >
                 </Route>
               </TabPanel>

@@ -189,7 +189,7 @@ class PjCreateProject extends Component {
 
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", right:"16px", top:"16px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
+        <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", right:"26px", top:"26px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
           Create Project
         </Button>
         <Dialog

@@ -37,21 +37,21 @@ class CsPods extends Component {
         { name: "pod_ip", title: "Pod IP" },
         { name: "node", title: "Node" },
         { name: "node_ip", title: "Node IP" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "cluster", width: 130 },
-        { columnName: "project", width: 130 },
-        { columnName: "pod_ip", width: 150 },
-        { columnName: "node", width: 130 },
-        { columnName: "node_ip", width: 150 },
-        { columnName: "cpu", width: 80 },
-        { columnName: "memory", width: 120 },
-        { columnName: "created_time", width: 170 },
+        { columnName: "name", width: 370 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
+        { columnName: "project", width: 110 },
+        { columnName: "pod_ip", width: 100 },
+        { columnName: "node", width: 180 },
+        { columnName: "node_ip", width: 120 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 80 },
+        { columnName: "created_time", width: 160 },
       ],
       rows: "",
 
@@ -118,10 +118,11 @@ class CsPods extends Component {
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "#1ab726" : "black"
+              value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "red" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>

@@ -62,6 +62,7 @@ class PjwDeployments extends Component {
       completed: 0,
       selection: [],
       selectedRow: "",
+      clusterName : ""
     };
   }
 
@@ -182,6 +183,7 @@ class PjwDeployments extends Component {
             <Link
               to={{
                 pathname: `/projects/${this.props.match.params.project}/resources/workloads/deployments/${props.value}`,
+                search: this.props.location.search,
                 state: {
                   data: row,
                 },
@@ -220,6 +222,7 @@ class PjwDeployments extends Component {
 
     return (
       <div className="content-wrapper full">
+        {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
         <section className="content" style={{ position: "relative" }}>
           <Paper>

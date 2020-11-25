@@ -23,7 +23,7 @@ class LeftMenu extends Component {
   }
 
   render() {
-    const menuList = fnMenuList.getMenu(this.props.title);
+    const menuList = fnMenuList.getMenu(this.props.pathParams);
     const lists = [];
     menuList[this.props.menu].map((item) => {
       if(item.type === "single"){
@@ -62,7 +62,7 @@ class LeftMenu extends Component {
         )
       }
     });
-    console.log("this.props.title", this.props.title)
+    // console.log("this.props.title", this.props.title)
     return (
       <div>
         {this.props.title !== undefined ? 

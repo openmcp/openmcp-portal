@@ -315,10 +315,26 @@ app.get("/api/projects", (req, res) => {
 
 // Prjects
 app.get("/projects", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/projects.json");
+  // let overview = JSON.parse(rawdata);
+  // console.log(overview);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: "http://192.168.0.34:4885/apis/projects",
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+
 });
 
 // Prjects > overview
@@ -549,10 +565,35 @@ app.get("/projects/:project/settings/members", (req, res) => {
 /* Clusters APIs */
 ///////////////////////
 app.get("/clusters", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/clusters.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/clusters.json");
+  // let overview = JSON.parse(rawdata);
+  // console.log(overview);
+  // res.send(overview);
+// let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // console.log(overview);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: "http://192.168.0.34:4885/apis/clusters",
+    method: "GET",
+    // headers: {
+    //   Authorization:
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    // },
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+
+
 });
 
 // Clusters > overview
@@ -565,10 +606,24 @@ app.get("/clusters/:cluster/overview", (req, res) => {
 
 // Clusters > nodes
 app.get("/clusters/:cluster/nodes", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/clusters_nodes.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/clusters_nodes.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  const clusterName = req.params.cluster
+  var request = require("request");
+  var options = {
+    uri: `http://192.168.0.34:4885/apis/clusters/${clusterName}/nodes`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Clusters > nodes > detail
@@ -581,10 +636,26 @@ app.get("/clusters/:cluster/nodes/:node", (req, res) => {
 
 // Clusters > pods
 app.get("/clusters/:cluster/pods", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/clusters_pods.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/clusters_pods.json");
+  // let overview = JSON.parse(rawdata);
+  // console.log(overview);
+  // res.send(overview);
+
+  const clusterName = req.params.cluster
+  var request = require("request");
+  var options = {
+    uri: `http://192.168.0.34:4885/apis/clusters/${clusterName}/pods`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Clusters > pods > detail
@@ -644,10 +715,28 @@ app.get("/gcp/clusters", (req, res) => {
 // Nodes
 /////////////
 app.get("/nodes", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/nodes.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/nodes.json");
+  // let overview = JSON.parse(rawdata);
+  // console.log(overview);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: "http://192.168.0.34:4885/apis/nodes",
+    method: "GET",
+    // headers: {
+    //   Authorization:
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    // },
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Nodes > datail
@@ -660,10 +749,24 @@ app.get("/nodes/:node", (req, res) => {
 
 // Pods
 app.get("/pods", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/pods.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/pods.json");
+  // let overview = JSON.parse(rawdata);
+  // console.log(overview);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: "http://192.168.0.34:4885/apis/pods",
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Pods > detail

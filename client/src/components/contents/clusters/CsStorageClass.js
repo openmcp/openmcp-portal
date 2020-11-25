@@ -54,7 +54,10 @@ class CsStorageClass extends Component {
   componentWillMount() {
     const result = {
       menu : "clusters",
-      title : this.props.match.params.cluster
+      title : this.props.match.params.cluster,
+      pathParams : {
+        cluster : this.props.match.params.cluster
+      }
     }
     this.props.menuData(result);
     apiParams = this.props.match.params.cluster;

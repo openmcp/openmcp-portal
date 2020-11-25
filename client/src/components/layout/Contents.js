@@ -37,6 +37,7 @@ import PjSecretDetail from './../contents/projects/config/PjSecretDetail';
 import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
 import Accounts from './../contents/settings/Accounts';
+import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 
 
 
@@ -100,6 +101,7 @@ class Contents extends Component {
           <LeftMenu 
             title={this.state.menuData.title} 
             menu={this.state.menuData.menu}
+            pathParams={this.state.menuData.pathParams}
           />
         }
 
@@ -128,7 +130,7 @@ class Contents extends Component {
 
 
           {/* Projects contents */}
-          <Route path="/projects/:project/overview" 
+          <Route path="/projects/:project/overview:searchParams?" 
             render={({match,location}) => <PjOverview  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           {/* 
@@ -142,63 +144,97 @@ class Contents extends Component {
                   render={({match,location}) => <PjwDeployment_ContainerDetail  match={match} location={location} menuData={this.onMenuData}/>} >
               </Route> 
           */}
-          <Route path="/projects/:project/resources/workloads/statefulsets" 
+          <Route path="/projects/:project/resources/workloads/statefulsets:searchParams?" 
             render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
+          <Route path="/projects/:project/resources/workloads/deployments:searchParams?" 
             render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/workloads/deployments" 
+          <Route path="/projects/:project/resources/workloads/deployments/:deployment:searchParams?" 
             render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Redirect exact from="/projects/:project/resources/workloads" to="/projects/:project/resources/workloads/deployments" />
+          <Route exact path="/projects/:project/resources/workloads:searchParams?"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/projects/${match.params.project}/resources/workloads/deployments`,
+              search :location.search
+            }}  />} >
+          </Route>
+          {/* <Redirect exact 
+            from="/projects/:project/resources/workloads:searchParams?" 
+            to={{
+              pathname : "/projects/:project/resources/workloads/deployments",
+              search : "cluster"
+            }} 
+          /> */}
 
 
-          <Route path="/projects/:project/resources/pods/:pod" 
+          <Route path="/projects/:project/resources/pods/:pod:searchParams?" 
             render={({match,location}) => <PjPodDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/pods" 
+          <Route path="/projects/:project/resources/pods:searchParams?" 
             render={({match,location}) => <PjPods  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/services/:service" 
+          <Route path="/projects/:project/resources/services/:service:searchParams?" 
             render={({match,location}) => <PjServicesDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/services" 
+          <Route path="/projects/:project/resources/services:searchParams?" 
             render={({match,location}) => <PjServices  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/ingress/:ingress" 
+          <Route path="/projects/:project/resources/ingress/:ingress:searchParams?" 
             render={({match,location}) => <PjIngressDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/resources/ingress" 
+          <Route path="/projects/:project/resources/ingress:searchParams?" 
             render={({match,location}) => <PjIngress  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Redirect from="/projects/:project/resources" to="/projects/:project/resources/workloads" />
-         
-          <Route path="/projects/:project/volumes/:volume" 
+          <Route exact path="/projects/:project/resources:searchParams?"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/projects/${match.params.project}/resources/workloads/deployments`,
+              search :location.search
+            }}  />} >
+          </Route>
+
+
+          <Route path="/projects/:project/volumes/:volume:searchParams?" 
             render={({match,location}) => <PjVolumeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/volumes" 
+          <Route path="/projects/:project/volumes:searchParams?" 
             render={({match,location}) => <PjVolumes  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           
-          <Route path="/projects/:project/config/secrets/:secret" 
+          <Route path="/projects/:project/config/secrets/:secret:searchParams?" 
             render={({match,location}) => <PjSecretDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/config/secrets" 
+          <Route path="/projects/:project/config/secrets:searchParams?" 
             render={({match,location}) => <PjSecrets  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/config/config_maps/:config_map" 
+          <Route path="/projects/:project/config/config_maps/:config_map:searchParams?" 
             render={({match,location}) => <PjConfigMapDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/projects/:project/config/config_maps" 
+          <Route path="/projects/:project/config/config_maps:searchParams?" 
             render={({match,location}) => <PjConfigMaps  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Redirect from="/projects/:project/config" to="/projects/:project/config/secrets" />
+          {/* <Redirect 
+            from="/projects/:project/config:searchParams?" 
+            to="/projects/:project/config/secrets:searchParams?" /> */}
+          <Route exact path="/projects/:project/config:searchParams?"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/projects/${match.params.project}/config/secrets`,
+              search :location.search
+            }}  />} >
+          </Route>
 
-          <Route path="/projects/:project/settings/members" 
+          <Route path="/projects/:project/settings/members:searchParams?" 
             render={({match,location}) => <PjMembers  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Redirect from="/projects/:project/settings" to="/projects/:project/settings/members" />
+          {/* <Redirect 
+            from="/projects/:project/settings:searchParams?" 
+            to="/projects/:project/settings/members:searchParams?" /> */}
+          <Route exact path="/projects/:project/settings:searchParams?"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/projects/${match.params.project}/settings/members`,
+              search :location.search
+            }}  />} >
+          </Route>
           {/* Projects contents END*/}
 
 

@@ -67,7 +67,11 @@ class PjwStatefulsets extends Component {
   componentWillMount() {
     const result = {
       menu : "clusters",
-      title : this.props.match.params.cluster
+      title : this.props.match.params.cluster,
+      pathParams : {
+        searchString : this.props.location.search,
+        project : this.props.match.params.project
+      }
     }
     this.props.menuData(result);
     apiParams = this.props.match.params.cluster;
@@ -159,6 +163,7 @@ class PjwStatefulsets extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/projects/${apiParams}/workloads/statefulsets`,
+            search: this.props.location.search,
             state: {
               data : row
             }

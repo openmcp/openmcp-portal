@@ -19,7 +19,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../modules/Editor";
+// import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../util/UtLogs.js';
 import NdAddNode from './modal/NdAddNode';
@@ -30,9 +30,9 @@ class Nodes extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Node" },
-        { name: "cluster", title: "Cluster"},
         { name: "status", title: "Status" },
-        { name: "region", title: "Region" },
+        { name: "cluster", title: "Cluster"},
+        // { name: "region", title: "Region" },
         { name: "role", title: "Role" },
         { name: "system_version", title: "System Version" },
         { name: "cpu", title: "CPU" },
@@ -41,9 +41,9 @@ class Nodes extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
-        { columnName: "cluster", width: 130},
         { columnName: "status", width: 130 },
-        { columnName: "region", width: 100 },
+        { columnName: "cluster", width: 130},
+        // { columnName: "region", width: 100 },
         { columnName: "role", width: 100 },
         { columnName: "system_version", width: 200 },
         { columnName: "cpu", width: 130 },
@@ -115,10 +115,9 @@ class Nodes extends Component {
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "#1ab726" : "black"
+            value === "Healthy" ? "#1ab726" : 
+              value === "Unhealthy" ? "red" : 
+                value === "Unknown" ? "#b5b5b5" : "black"
           }}>
           {value}
         </span>

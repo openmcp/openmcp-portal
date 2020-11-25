@@ -25,7 +25,11 @@ class PjConfigMapDetail extends Component {
   componentWillMount() {
     const result = {
       menu : "projects",
-      title : this.props.match.params.project
+      title : this.props.match.params.project,
+      pathParams : {
+        searchString : this.props.location.search,
+        project : this.props.match.params.project
+      }
     }
     this.props.menuData(result);
     // apiParams = this.props.match.params.project;

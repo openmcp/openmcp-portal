@@ -25,20 +25,23 @@ import SelectBox from './../../modules/SelectBox';
 import * as utilLog from './../../util/UtLogs.js';
 
 
-
 let apiParams = "";
 class PjOverview extends Component {
   state = {
     rows:"",
     completed: 0,
-    reRender : ""
+    reRender : "",
   }
 
   componentWillMount() {
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
       menu : "projects",
-      title : this.props.match.params.project
+      title : this.props.match.params.project,
+      pathParams : {
+        searchString : this.props.location.search,
+        project : this.props.match.params.project
+      }
     }
     this.props.menuData(result);
     apiParams = this.props.match.params.project;

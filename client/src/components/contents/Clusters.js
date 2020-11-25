@@ -15,6 +15,7 @@ import {
   Table,
   Toolbar,
   SearchPanel,
+  TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
@@ -30,10 +31,20 @@ class Clusters extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "provider", title: "Provider" },
-        { name: "nodes", title: "nodes" },
+        { name: "region", title: "Region" },
+        { name: "nodes", title: "Nodes" },
         { name: "cpu", title: "CPU" },
         { name: "ram", title: "Memory" },
+        { name: "provider", title: "Provider" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 180 },
+        { columnName: "status", width: 130},
+        { columnName: "region", width: 130 },
+        { columnName: "nodes", width: 130 },
+        { columnName: "cpu", width: 130 },
+        { columnName: "ram", width: 130 },
+        { columnName: "provider", width: 150 },
       ],
       rows: "",
 
@@ -187,6 +198,7 @@ class Clusters extends Component {
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}

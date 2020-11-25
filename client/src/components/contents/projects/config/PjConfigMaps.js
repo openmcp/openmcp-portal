@@ -55,7 +55,11 @@ class PjConfigMaps extends Component {
   componentWillMount() {
     const result = {
       menu : "projects",
-      title : this.props.match.params.project
+      title : this.props.match.params.project,
+      pathParams : {
+        searchString : this.props.location.search,
+        project : this.props.match.params.project
+      }
     }
     this.props.menuData(result);
     
@@ -147,6 +151,7 @@ class PjConfigMaps extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/projects/${apiParams}/config/config_maps/${props.value}`,
+            search: this.props.location.search,
             state: {
               data : row
             }

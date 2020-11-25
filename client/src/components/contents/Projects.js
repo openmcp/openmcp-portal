@@ -27,6 +27,7 @@ import PjCreateProject from './modal/PjCreateProject';
 
 
 
+
 class Projects extends Component {
   constructor(props) {
     super(props);
@@ -142,12 +143,14 @@ class Projects extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
+        
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/projects/${props.value}/overview`,
+            search: row.cluster,
             state: {
               data : row
             }
@@ -196,7 +199,7 @@ class Projects extends Component {
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
-          <Paper style={{position:"absolute"}}>
+          <Paper>
             {this.state.rows ? (
               [
                 <PjCreateProject/>,

@@ -42,7 +42,7 @@ class PjwDeploymentDetail extends Component {
     //   title : this.props.match.params.project
     // }
     // this.props.menuData(result);
-    console.log("detail", this.props.match.params)
+    // console.log("detail", this.props.match.params)
     apiParams = this.props.match.params;
   }
 

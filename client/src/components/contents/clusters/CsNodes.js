@@ -32,7 +32,7 @@ class CsNodes extends Component {
         { name: "name", title: "Node" },
         { name: "cluster", title: "Cluster"},
         { name: "status", title: "Status" },
-        { name: "region", title: "Region" },
+        // { name: "region", title: "Region" },
         { name: "role", title: "Role" },
         { name: "system_version", title: "System Version" },
         { name: "cpu", title: "CPU" },
@@ -40,15 +40,15 @@ class CsNodes extends Component {
         { name: "pods", title: "Pods" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
+        { columnName: "name", width: 250 },
         { columnName: "cluster", width: 130},
-        { columnName: "status", width: 150 },
-        { columnName: "region", width: "150" },
+        { columnName: "status", width: 130 },
+        // { columnName: "region", width: "150" },
         { columnName: "role", width: 130 },
-        { columnName: "system_version", width: 250 },
-        { columnName: "cpu", width: 150 },
-        { columnName: "memory", width: 170 },
-        { columnName: "pods", width: 150 },
+        { columnName: "system_version", width: 200 },
+        { columnName: "cpu", width: 130 },
+        { columnName: "memory", width: 130 },
+        { columnName: "pods", width: 130 },
       ],
       rows: "",
 
@@ -65,14 +65,14 @@ class CsNodes extends Component {
   componentWillMount() {
     const result = {
       menu : "clusters",
-      title : this.props.match.params.cluster
+      title : this.props.match.params.cluster,
+      pathParams : {
+        cluster : this.props.match.params.cluster
+      }
+      
     }
     this.props.menuData(result);
     apiParams = this.props.match.params.cluster;
-
-    
-   
-
   }
 
 
@@ -80,6 +80,7 @@ class CsNodes extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
+    // console.log(apiParams)
     const response = await fetch(`/clusters/${apiParams}/nodes`);
     const body = await response.json();
     return body;

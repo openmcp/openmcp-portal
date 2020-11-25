@@ -1,20 +1,21 @@
 export function getMenu(pathParams) {
+  console.log("pathParams", pathParams)
   const menuData = {
     clusters : [
       {
         type: "single",
         title : "OverView",
-        path : "/clusters/" + pathParams + "/overview",
+        path : "/clusters/" + pathParams.cluster + "/overview",
       },
       {
         type: "single",
         title : "Nodes",
-        path : "/clusters/" + pathParams + "/nodes",
+        path : "/clusters/" + pathParams.cluster + "/nodes",
       },
       {
         type: "single",
         title : "Pods",
-        path : "/clusters/" + pathParams + "/pods",
+        path : "/clusters/" + pathParams.cluster + "/pods",
       },
       // {
       //   type: "single",
@@ -34,17 +35,17 @@ export function getMenu(pathParams) {
       {
         type: "single",
         title : "OverView",
-        path : "/nodes/" + pathParams + "/overview",
+        path : "/nodes/" + pathParams.node + "/overview",
       },
       {
         type: "multi",
         title : "Resources",
-        path : "/nodes/" + pathParams + "/resources",
+        path : "/nodes/" + pathParams.node + "/resources",
         sub : [
-          { title: "Workloads", path: "/nodes/"+pathParams+"/resources/workloads" },
-          { title: "Pods", path: "/nodes/"+pathParams+"/resources/pods" },
-          { title: "Services", path: "/nodes/"+pathParams+"/resources/services" },
-          { title: "Ingress", path: "/nodes/"+pathParams+"/resources/ingress" },
+          { title: "Workloads", path: "/nodes/"+pathParams.node+"/resources/workloads" },
+          { title: "Pods", path: "/nodes/"+pathParams.node+"/resources/pods" },
+          { title: "Services", path: "/nodes/"+pathParams.node+"/resources/services" },
+          { title: "Ingress", path: "/nodes/"+pathParams.node+"/resources/ingress" },
         ]
       }
     ],
@@ -52,31 +53,31 @@ export function getMenu(pathParams) {
       {
         type: "single",
         title : "OverView",
-        path : "/projects/" + pathParams + "/overview",
+        path : "/projects/"+pathParams.project + "/overview" + pathParams.searchString,
       },
       {
         type: "multi",
         title : "Resources",
-        path : "/projects/" + pathParams + "/resources",
+        path : "/projects/"+pathParams.project + "/resources" + pathParams.searchString,
         sub : [
-          { title: "Workloads", path: "/projects/"+pathParams+"/resources/workloads" },
-          { title: "Pods", path: "/projects/"+pathParams+"/resources/pods" },
-          { title: "Services", path: "/projects/"+pathParams+"/resources/services" },
-          { title: "Ingress", path: "/projects/"+pathParams+"/resources/ingress" },
+          { title: "Workloads", path: "/projects/"+pathParams.project+"/resources/workloads" + pathParams.searchString },
+          { title: "Pods", path: "/projects/"+pathParams.project+"/resources/pods" + pathParams.searchString },
+          { title: "Services", path: "/projects/"+pathParams.project+"/resources/services" + pathParams.searchString },
+          { title: "Ingress", path: "/projects/"+pathParams.project+"/resources/ingress" + pathParams.searchString },
         ]
       },
       {
         type: "single",
         title : "Volumes",
-        path : "/projects/" + pathParams + "/volumes",
+        path : "/projects/"+pathParams.project + "/volumes" + pathParams.searchString,
       },
       {
         type: "multi",
         title : "Config",
-        path : "/projects/" + pathParams + "/config",
+        path : "/projects/"+pathParams.project + "/config" + pathParams.searchString,
         sub : [
-          { title: "Secrets", path: "/projects/" + pathParams + "/config/secrets"},
-          { title: "ConfigMaps", path: "/projects/"+pathParams+"/config/config_maps" },
+          { title: "Secrets", path: "/projects/"+pathParams.project + "/config/secrets" + pathParams.searchString},
+          { title: "ConfigMaps", path: "/projects/"+pathParams.project+"/config/config_maps" + pathParams.searchString},
         ]
       },
       // {
@@ -92,17 +93,17 @@ export function getMenu(pathParams) {
       {
         type: "single",
         title : "OverView",
-        path : "/pods/" + pathParams + "/overview",
+        path : "/pods/" + pathParams.pod + "/overview",
       },
       {
         type: "multi",
         title : "Resources",
-        path : "/nodes/" + pathParams + "/resources",
+        path : "/nodes/" + pathParams.pod + "/resources",
         sub : [
-          { title: "Workloads", path: "/pods/"+pathParams+"/resources/workloads" },
-          { title: "Pods", path: "/pods/"+pathParams+"/resources/pods" },
-          { title: "Services", path: "/pods/"+pathParams+"/resources/services" },
-          { title: "Ingress", path: "/pods/"+pathParams+"/resources/ingress" },
+          { title: "Workloads", path: "/pods/"+pathParams.pod+"/resources/workloads" },
+          { title: "Pods", path: "/pods/"+pathParams.pod+"/resources/pods" },
+          { title: "Services", path: "/pods/"+pathParams.pod+"/resources/services" },
+          { title: "Ingress", path: "/pods/"+pathParams.pod+"/resources/ingress" },
         ]
       }
     ]

@@ -3,7 +3,7 @@ import { Redirect } from "react-router-dom";
 // import SignUp from "./SignUp";
 import axios from 'axios';
 import * as utilLog from './../util/UtLogs.js';
-
+import { AsyncStorage } from 'AsyncStorage';
 
 
 class SignIn extends Component {
@@ -52,6 +52,7 @@ class SignIn extends Component {
           localStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
           localStorage.setItem("userName", username);
           localStorage.setItem("roles", res.data.data.rows[0].roles);
+          // AsyncStorage.setItem('clusterName',row.cluster);
           this.setState({
             loggedIn: true,
           });
