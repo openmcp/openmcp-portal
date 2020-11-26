@@ -68,7 +68,10 @@ class CsPods extends Component {
   componentWillMount() {
     const result = {
       menu : "clusters",
-      title : this.props.match.params.cluster
+      title : this.props.match.params.cluster,
+      pathParams : {
+        cluster : this.props.match.params.cluster
+      }
     }
     this.props.menuData(result);
     apiParams = this.props.match.params.cluster;
@@ -154,7 +157,7 @@ class CsPods extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        console.log("name", props.value);
+        // console.log("name", props.value);
         return (
           <Table.Cell
             {...props}

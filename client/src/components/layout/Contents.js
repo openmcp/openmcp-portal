@@ -93,7 +93,7 @@ class Contents extends Component {
         <Route exact path="/storages" ><Storages /></Route>
       )
     } else {
-      console.log("contents last", this.state.menuData);
+      // console.log("contents last", this.state.menuData);
     return (
       <div>
         {

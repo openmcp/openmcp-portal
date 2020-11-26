@@ -149,7 +149,7 @@ class Nodes extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // console.log("name", props.value);
+        // // console.log("name", props.value);
         return (
           <Table.Cell
             {...props}

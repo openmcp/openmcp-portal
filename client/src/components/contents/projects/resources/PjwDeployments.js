@@ -176,7 +176,7 @@ class PjwDeployments extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // console.log("name", props.value);
+        // // console.log("name", props.value);
         // console.log("this.props.match.params", this.props)
         return (
           <Table.Cell {...props} style={{ cursor: "pointer" }}>

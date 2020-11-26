@@ -143,14 +143,13 @@ class Projects extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/projects/${props.value}/overview`,
-            search: row.cluster,
+            search: "cluster="+row.cluster,
             state: {
               data : row
             }

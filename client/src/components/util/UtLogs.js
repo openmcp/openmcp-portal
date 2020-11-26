@@ -3,7 +3,6 @@
 import axios from 'axios';
 
 export function fn_insertPLogs(userid, code) {
-  console.log("asdfasdfasdfasdf",userid, code)
   const url = `/apimcp/portal-log`;
       const data = {
         userid:userid,
@@ -16,6 +15,4 @@ export function fn_insertPLogs(userid, code) {
       .catch((err) => {
           // console.log()
       });
-
-  
 }

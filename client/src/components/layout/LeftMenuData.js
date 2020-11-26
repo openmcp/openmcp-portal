@@ -1,5 +1,4 @@
 export function getMenu(pathParams) {
-  console.log("pathParams", pathParams)
   const menuData = {
     clusters : [
       {

@@ -346,7 +346,6 @@ class ClusterResourceUsage extends Component {
     }  
   }
   render(){
-    console.log("cluser")
     const colors = [
       "#0088FE",
       "#ecf0f5",

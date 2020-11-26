@@ -4,7 +4,7 @@ import { PieChart, Pie, Sector, Cell, Legend } from "recharts";
 class PieReChart2 extends Component {
   constructor(props) {
     super(props);
-    console.log("pierechar constructor");
+    // console.log("pierechar constructor");
     const result = []
     result.push(this.props.data.status[0])
     result.push({
