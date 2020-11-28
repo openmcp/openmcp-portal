@@ -33,12 +33,12 @@ class NodeLabel extends Component {
           ] : 
           [
             <Link to={"/clusters/"+nodeData.name+"/overview"}>
-              <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>
+              <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>
               <div class="" style={{fontSize:"14px", fontWeight:"bold", marginTop:"-8px"}}>
                 {nodeData.name}
               </div>
               <div class="" style={{fontSize:"14px", marginTop:"-6px"}}>
-                <span style={{color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), fontSize:"14px", marginRight:0}}>
+                <span style={{color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), fontSize:"14px", marginRight:0}}>
                   {nodeData.attributes.status}
                 </span>
               </div>

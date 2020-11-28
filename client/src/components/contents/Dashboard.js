@@ -182,9 +182,10 @@ class DashboardCard01 extends Component {
   render() {
     const colors = [
       "#0088FE",
-      "#00C49F",
+      // "#00C49F",
+      "#ff8042",
       "#FFBB28",
-      "#FF8042",
+      "#cccccc",
       "#00C49F",
       "#FFBB28",
       "#00C49F",

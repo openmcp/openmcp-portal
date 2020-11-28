@@ -29,13 +29,15 @@ class Ingress extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "namespace", title: "Namespace" },
+        { name: "cluster", title: "Cluster" },
+        { name: "project", title: "Project" },
         { name: "address", title: "Address" },
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
-        { columnName: "namespace", width: 130 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "project", width: 130 },
         { columnName: "address", width: 130 },
         { columnName: "created_time", width: 180 },
       ],
@@ -137,7 +139,7 @@ class Ingress extends Component {
           <Table.Cell {...props} style={{ cursor: "pointer" }}>
             <Link
               to={{
-                pathname: `/ingress/${props.value}`,
+                pathname: `/network/ingress/${props.value}`,
                 state: {
                   data: row,
                 },
@@ -182,7 +184,7 @@ class Ingress extends Component {
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
               />
-              Ingress
+              Netowork
             </li>
           </ol>
         </section>

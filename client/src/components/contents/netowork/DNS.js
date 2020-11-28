@@ -30,17 +30,9 @@ class DNS extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name"},
-        { name: "namespace", title: "Namespace" },
-        { name: "type", title: "Type"},
-        { name: "selector", title: "Selector" },
-        { name: "port", title: "Port" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 200 },
-        { columnName: "namespace", width: 130 },
-        { columnName: "type", width: 130 },
-        { columnName: "selector", width: 330 },
-        { columnName: "port", width: 180 },
       ],
       rows: "",
 
@@ -141,7 +133,7 @@ class DNS extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/dns/${props.value}`,
+            pathname: `/network/dns/${props.value}`,
             state: {
               data : row
             }
@@ -181,7 +173,7 @@ class DNS extends Component {
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              DNS
+              Netowork
             </li>
           </ol>
         </section>

@@ -20,9 +20,8 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 // import Editor from "./../modules/Editor";
-import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from '../../util/UtLogs.js';
-
+import { NavigateNext } from "@material-ui/icons";
+import * as utilLog from "../../util/UtLogs.js";
 
 class ClustersJoined extends Component {
   constructor(props) {
@@ -32,37 +31,41 @@ class ClustersJoined extends Component {
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
         { name: "region", title: "Region" },
+        { name: "zone", title: "Zone" },
         { name: "nodes", title: "Nodes" },
         { name: "cpu", title: "CPU" },
         { name: "ram", title: "Memory" },
         { name: "provider", title: "Provider" },
+        // { name: "disk", title: "Disk" },
+        // { name: "network", title: "Network" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 180 },
-        { columnName: "status", width: 130},
+        { columnName: "status", width: 130 },
         { columnName: "region", width: 130 },
+        { columnName: "zone", width: 130 },
         { columnName: "nodes", width: 130 },
         { columnName: "cpu", width: 130 },
         { columnName: "ram", width: 130 },
         { columnName: "provider", width: 150 },
+        // { columnName: "disk", width: 150 },
+        // { columnName: "network", width: 150 },
       ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
-      pageSizes: [5, 10, 15, 0],
+      pageSize: 3,
+      pageSizes: [3, 6, 9, 0],
 
       completed: 0,
     };
   }
-  
+
   componentWillMount() {
     this.props.menuData("none");
   }
-
-  
 
   callApi = async () => {
     const response = await fetch("/clusters");
@@ -85,13 +88,12 @@ class ClustersJoined extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-      
+
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
-  };
+    utilLog.fn_insertPLogs(userId, "log-CL-VW01");
+  }
 
   render() {
-
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -101,14 +103,20 @@ class ClustersJoined extends Component {
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           // cursor: "pointer",
           ...style,
-        }}>
+        }}
+      >
         <span
           style={{
             color:
-              value === "Healthy" ? "#1ab726" : 
-                value === "Unhealthy" ? "red" : 
-                  value === "Unknown" ? "#b5b5b5" : "black"
-          }}>
+              value === "Healthy"
+                ? "#1ab726"
+                : value === "Unhealthy"
+                ? "red"
+                : value === "Unknown"
+                ? "#b5b5b5"
+                : "black",
+          }}
+        >
           {value}
         </span>
       </Table.Cell>
@@ -122,15 +130,18 @@ class ClustersJoined extends Component {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/clusters/${props.value}/overview`,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/clusters/${props.value}/overview`,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {props.value}
+            </Link>
+          </Table.Cell>
         );
       }
       return <Table.Cell {...props} />;
@@ -149,11 +160,11 @@ class ClustersJoined extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper cluster-list full">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
@@ -165,20 +176,19 @@ class ClustersJoined extends Component {
               <NavLink to="/dashboard">Home</NavLink>
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               Clusters
             </li>
           </ol>
         </section>
-        <section className="content" style={{ position: "relative" }}>
-          <Paper>
-            {this.state.rows ? (
-              [
-                // <Editor title="create"/>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+        {this.state.rows ? (
+          [
+            <section className="content" style={{ position: "relative" }}>
+              <Paper>
+                {/* <Editor title="create"/>, */}
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -187,35 +197,91 @@ class ClustersJoined extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[
+                      { columnName: "status", direction: "desc" },
+                    ]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
                   />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
-        </section>
+                </Grid>
+              </Paper>
+            </section>,
+            <section
+              className="content"
+              style={{ position: "relative" }}
+            ><ResourceStatus data={this.state.rows}/>
+            </section>
+          ]
+        ) : (
+          <CircularProgress
+            variant="determinate"
+            value={this.state.completed}
+            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+          ></CircularProgress>
+        )}
       </div>
     );
+  }
+}
+
+class ResourceStatus extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      data : this.props.data
+    }
+  }
+  render(){
+    return(
+      <div>
+      <div className="rs-title">Cluster Resource Status</div>
+        {this.state.data.map((item)=>{
+          return(
+            <Paper className="rs-status">
+              <div className="status-title">
+                <div>{item.name}</div>
+              </div>
+              <div className="status-content">
+                <div>
+                  <span>CPU: </span>
+                  <span>{item.cpu}</span>
+                </div>
+                <div>
+                  <span>Memory: </span>
+                  <span>{item.ram}</span>
+                </div>
+                <div>
+                  <span>Disk: </span>
+                  <span>{item.disk}</span>
+                </div>
+                <div>
+                  <span>Network: </span>
+                  <span>{item.network}</span>
+                </div>
+
+              </div>
+            </Paper>
+          )
+        })}
+      </div>
+    )
   }
 }
 

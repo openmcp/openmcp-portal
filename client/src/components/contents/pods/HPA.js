@@ -30,28 +30,22 @@ class HPA extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Pod" },
-        { name: "status", title: "Status"},
+        { name: "name", title: "Name" },
+        { name: "namespace", title: "Project" },
         { name: "cluster", title: "Cluster"},
-        { name: "project", title: "Project" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "node", title: "Node" },
-        { name: "node_ip", title: "Node IP" },
-        // { name: "cpu", title: "CPU" },
-        // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
+        { name: "reference", title: "Reference"},
+        { name: "min_repl", title: "Min"},
+        { name: "max_repl", title: "Max" },
+        { name: "current_repl", title: "Replicas" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 330 },
-        { columnName: "status", width: 100 },
-        { columnName: "cluster", width: 100 },
-        { columnName: "project", width: 130 },
-        { columnName: "pod_ip", width: 120 },
-        { columnName: "node", width: 230 },
-        { columnName: "node_ip", width: 130 },
-        // { columnName: "cpu", width: 80 },
-        // { columnName: "memory", width: 100 },
-        { columnName: "created_time", width: 170 },
+        { columnName: "name", width: 200 },
+        { columnName: "namespace", width: 130 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "reference", width: 200 },
+        { columnName: "min_repl", width: 80 },
+        { columnName: "max_repl", width: 80 },
+        { columnName: "current_repl", width: 100 },
       ],
       rows: "",
 
@@ -195,7 +189,7 @@ class HPA extends Component {
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              HPA
+              Pods
             </li>
           </ol>
         </section>

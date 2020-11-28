@@ -30,21 +30,17 @@ class ClustersJoinable extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
+        { name: "endpoint", title: "Endpoint" },
+        { name: "platform", title: "Platform" },
         { name: "region", title: "Region" },
-        { name: "nodes", title: "Nodes" },
-        { name: "cpu", title: "CPU" },
-        { name: "ram", title: "Memory" },
-        { name: "provider", title: "Provider" },
+        { name: "zone", title: "Zone" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 180 },
-        { columnName: "status", width: 130},
+        { columnName: "endpoint", width: 200},
+        { columnName: "platform", width: 130 },
         { columnName: "region", width: 130 },
-        { columnName: "nodes", width: 130 },
-        { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 130 },
-        { columnName: "provider", width: 150 },
+        { columnName: "zone", width: 130 },
       ],
       rows: "",
 
@@ -119,18 +115,10 @@ class ClustersJoinable extends Component {
       // console.log("cell : ", props);
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "name") {
-        return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/clusters-joinable/${props.value}/overview`,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
-        );
+      } else if  (column.name === "platform") {
+        if(row.platform == ""){
+          return <Table.Cell>-</Table.Cell>
+        }
       }
       return <Table.Cell {...props} />;
     };

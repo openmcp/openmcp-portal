@@ -1693,3 +1693,30 @@ g {
   float:inherit;
 }
 
+
+.cluster-list .rs-title {
+  font-size:24px;
+  font-weight: bold;
+  border-bottom : 1px solid #cccccc;
+  padding-bottom: 5px;
+  margin: 5px 0 20px 0;
+}
+.cluster-list .rs-status{
+  background-color: #ffffff;
+  max-width: 500px;
+  min-width: 280px;
+  line-height: 1.9em;
+  margin: 0 17px 17px 0;
+  float: left;
+}
+.cluster-list .rs-status .status-title{
+  border-radius: 4px 4px 0 0;
+  background-color:#19476e;
+  color:#ffffff;
+  padding: 3px 10px;
+  font-weight: bold;
+  text-align: center;
+}
+.cluster-list .rs-status .status-content{
+  padding: 10px 20px;
+}

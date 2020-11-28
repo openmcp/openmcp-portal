@@ -27,24 +27,17 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
-import AcChangeRole from './../modal/AcChangeRole';
+import PcSetPolicy from './../modal/PcSetPolicy';
 
 class Policy extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "user_id", title: "User ID"},
-        { name: "role_name", title: "Roles" },
-        { name: "last_login_time", title: "Last login time"},
-        { name: "created_time", title: "Created time"},
+        { name: "name", title: "Policy"},
       ],
       defaultColumnWidths: [
-        { columnName: "user_id", width: 200 },
-        { columnName: "role_name", width: 200 },
-        { columnName: "last_login_time", width: 200 },
-        { columnName: "created_time", width: 200 },
-        
+        { columnName: "name", width: 500 },
       ],
       rows: "",
 
@@ -65,7 +58,7 @@ class Policy extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch(`/settings/accounts`);
+    const response = await fetch(`/settings/policy`);
     const body = await response.json();
     return body;
   };
@@ -79,6 +72,7 @@ class Policy extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
+        console.log(res)
         this.setState({ rows: res });
         clearInterval(this.timer);
       })
@@ -174,8 +168,9 @@ class Policy extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <AddMembers onUpdateData={this.onUpdateData}/>,
-                <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
+                // <PcSetPolicy rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
+                // <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
+                <PcSetPolicy policy={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

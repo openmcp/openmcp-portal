@@ -38,19 +38,19 @@ class Deployments extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "ready", title: "Ready" },
+        { name: "status", title: "Status" },
         { name: "cluster", title: "Cluster" },
+        { name: "project", title: "Project" },
         { name: "image", title: "Image" },
-        { name: "updated_time", title: "Updated Time" },
-        // { name: "edit", title: "edit" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "ready", width: 130 },
+        { columnName: "name", width: 250 },
+        { columnName: "status", width: 100 },
         { columnName: "cluster", width: 130 },
-        { columnName: "image", width: 130 },
-        { columnName: "updated_time", width: 170 },
-        // { columnName: "edit", width: 170 },
+        { columnName: "project", width: 200 },
+        { columnName: "image", width: 370 },
+        { columnName: "created_time", width: 170 },
       ],
       rows: "",
 
@@ -153,23 +153,6 @@ class Deployments extends Component {
     //셀
     const Cell = (props) => {
       const { column, row } = props;
-      // console.log("cell : ", props);
-      // const values = props.value.split("|");
-      // console.log("values", props.value);
-      // debugger;
-      // const values = props.value.replace("|","1");
-      // console.log("values,values", values)
-
-      // const fnEnterCheck = () => {
-      //   return (
-      //     props.value.indexOf("|") > 0 ?
-      //       props.value.split("|").map( item => {
-      //         return (
-      //           <p>{item}</p>
-      //       )}) :
-      //         props.value
-      //   )
-      // }
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
@@ -180,7 +163,7 @@ class Deployments extends Component {
           <Table.Cell {...props} style={{ cursor: "pointer" }}>
             <Link
               to={{
-                pathname: `/deployments`,
+                pathname: `/deployments/${props.value}`,
                 state: {
                   data: row,
                 },

@@ -30,17 +30,21 @@ class Services extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name"},
-        { name: "namespace", title: "Namespace" },
+        { name: "cluster", title: "Cluster" },
+        { name: "project", title: "Project" },
         { name: "type", title: "Type"},
         { name: "selector", title: "Selector" },
-        { name: "port", title: "Port" },
+        // { name: "port", title: "Port" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 200 },
-        { columnName: "namespace", width: 130 },
+        { columnName: "name", width: 300 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "project", width: 130 },
         { columnName: "type", width: 130 },
         { columnName: "selector", width: 330 },
-        { columnName: "port", width: 180 },
+        // { columnName: "port", width: 500 },
+        { columnName: "created_time", width: 180 },
       ],
       rows: "",
 
@@ -141,7 +145,7 @@ class Services extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/services/${props.value}`,
+            pathname: `/network/services/${props.value}`,
             state: {
               data : row
             }
@@ -181,7 +185,7 @@ class Services extends Component {
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Services
+              Netowork
             </li>
           </ol>
         </section>

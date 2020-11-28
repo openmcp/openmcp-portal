@@ -39,9 +39,9 @@ class Head extends Component {
     } else if (menu.indexOf('deployments') >= 0 ) {
       this.setState({selectedMenu:'deployments'})
     } else if (menu.indexOf('pods') >= 0 ) {
-        this.setState({selectedMenu:'pods'})
-      } else if (menu.indexOf('network') >= 0 ) {
-        this.setState({selectedMenu:'network'})
+      this.setState({selectedMenu:'pods'})
+    } else if (menu.indexOf('network') >= 0 ) {
+      this.setState({selectedMenu:'network'})
     } else if (menu.indexOf('settings') >= 0 ){
       this.setState({selectedMenu:'settings'})
     }
@@ -125,19 +125,18 @@ class Head extends Component {
               </div>
             </div>
             <div className={"main-menu " + this.state.selectedMenu} id="network" onClick={this.onSelectMenu}>
-              <Link to="/dns"  onClick={this.onSelectMenu}>Network</Link>
+              <Link to="/network/dns"  onClick={this.onSelectMenu}>Network</Link>
               <div className="sub-menu network">
-                <Link to="/dns"  onClick={this.onSelectMenu}>DNS</Link>
-                <Link to="/services"  onClick={this.onSelectMenu}>Services</Link>
-                <Link to="/ingress"  onClick={this.onSelectMenu} >Ingress</Link>
+                <Link to="/network/dns"  onClick={this.onSelectMenu}>DNS</Link>
+                <Link to="/network/services"  onClick={this.onSelectMenu}>Services</Link>
+                <Link to="/network/ingress"  onClick={this.onSelectMenu} >Ingress</Link>
               </div>
             </div>
           </div>
 
           <div className="top-menu navbar-right">
-            <div className={"main-menu " + this.state.selectedMenu} id="accounts" style={{position: "relative",
-    textAlign: "left"}}>
-              <Link to="/dns"  onClick={this.onClick}>
+            <div className={"main-menu " + this.state.selectedMenu} id="accounts" style={{position: "relative", textAlign: "left"}}>
+              <Link to="/"  onClick={this.onClick}>
                 <AccountCircleIcon/><div style={{position: "absolute", display: "inline-block", right: "15px", top: "18px"}}>{userName}</div>
               </Link>
               <div className="sub-menu accounts" >

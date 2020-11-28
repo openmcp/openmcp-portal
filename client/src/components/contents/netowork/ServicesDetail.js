@@ -3,15 +3,13 @@ import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
 import Paper from "@material-ui/core/Paper";
-// import LineChart from './../../../modules/LineChart';
 import {
   SearchState,IntegratedFiltering,PagingState,IntegratedPaging,SortingState,IntegratedSorting,
 } from "@devexpress/dx-react-grid";
-// import LineReChart from './../../../modules/LineReChart';
 import {
   Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import * as utilLog from './../../../util/UtLogs.js';
+import * as utilLog from './../../util/UtLogs.js';
 
 
 // let apiParams = "";
@@ -63,7 +61,7 @@ class ServicesDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pod-detail">
+        <div className="content-wrapper full">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
@@ -76,11 +74,7 @@ class ServicesDetail extends Component {
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/projects">Projects</NavLink>
-              </li>
-              <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Resources
+                Netowork
               </li>
             </ol>
           </section>

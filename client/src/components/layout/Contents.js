@@ -48,6 +48,10 @@ import PjMembers from './../contents/projects/settings/PjMembers';
 import Accounts from './../contents/settings/Accounts';
 import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 import Policy from './../contents/settings/Policy';
+import DeploymentDetail from './../contents/deployments/DeploymentDetail';
+import ServicesDetail from './../contents/netowork/ServicesDetail';
+import IngressDetail from './../contents/netowork/IngressDetail';
+import DNSDetail from './../contents/netowork/DNSDetail';
 
 
 
@@ -227,10 +231,32 @@ class Contents extends Component {
           </Route>
           {/* Projects contents END*/}
 
+          {/* Deployments contents */}
+          <Route path="/deployments/:deployment"
+              render={({match,location}) => <DeploymentDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* Deployments contents END*/}
+
+          {/* Services contents */}
+          <Route path="/network/services/:service"
+              render={({match,location}) => <ServicesDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* Services contents END*/}
+
+          {/* Ingress contents */}
+          <Route path="/network/ingress/:ingress"
+              render={({match,location}) => <IngressDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* Ingress contents END*/}
+
+          {/* Dns contents */}
+          <Route path="/network/dns/:dns"
+              render={({match,location}) => <DNSDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* Dns contents END*/}
+
+
 
           {/* Nodes contents */}
-            <Route path="/nodes/:node"
-              render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/nodes/:node" 
+            render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           {/* Nodes contents END*/}
           
 
@@ -266,9 +292,9 @@ class Contents extends Component {
           <Route exact path="/pods" ><Pods menuData={this.onMenuData}/></Route>
           <Route exact path="/pods-hpa" ><HPA menuData={this.onMenuData}/></Route>
           <Route exact path="/pods-vpa" ><VPA menuData={this.onMenuData}/></Route>
-          <Route exact path="/services" ><Services menuData={this.onMenuData}/></Route>
-          <Route exact path="/ingress" ><Ingress menuData={this.onMenuData}/></Route>
-          <Route exact path="/dns" ><DNS menuData={this.onMenuData}/></Route>
+          <Route exact path="/network/services" ><Services menuData={this.onMenuData}/></Route>
+          <Route exact path="/network/ingress" ><Ingress menuData={this.onMenuData}/></Route>
+          <Route exact path="/network/dns" ><DNS menuData={this.onMenuData}/></Route>
           <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
           <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
         </Switch>
