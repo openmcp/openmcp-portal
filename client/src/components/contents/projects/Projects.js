@@ -16,28 +16,42 @@ import {
   Toolbar,
   SearchPanel,
   TableHeaderRow,
+  TableColumnResizing,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../modules/Editor";
+import Editor from "./../../modules/Editor";
+import { NavigateNext} from '@material-ui/icons';
+import * as utilLog from './../../util/UtLogs.js';
+import PjCreateProject from './../modal/PjCreateProject';
 
-class Storages extends Component {
+
+
+
+
+class Projects extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "project_name", title: "Name" },
-        { name: "project_status", title: "Status" },
-        { name: "project_creator", title: "Createor" },
-        { name: "project_created_time", title: "Created Time" },
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status" },
+        { name: "cluster", title: "Cluster" },
+        { name: "created_time", title: "Created Time" },
+        { name: "labels", title: "Labels" },
       ],
-      
+      defaultColumnWidths: [
+        { columnName: "name", width: 200 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 150 },
+        { columnName: "created_time", width: 200 },
+        { columnName: "labels", width: 300 },
+      ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5,
-      setPageSize: 5,
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -51,7 +65,7 @@ class Storages extends Component {
   
 
   callApi = async () => {
-    const response = await fetch("/api/projects");
+    const response = await fetch("/projects");
     const body = await response.json();
     return body;
   };
@@ -71,20 +85,23 @@ class Storages extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  }
+
+
+
+    const userId = localStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW01');
+
+  };
 
   render() {
+
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell>
         <span
           style={{
             color:
-              value === "Healthy"
-                ? "#1ab726"
-                : value === "Unhealthy"
-                ? "red"
-                : undefined,
+              value === "Active" ? "#1ab726" : value === "Deactive" ? "red" : undefined,
           }}
         >
           {value}
@@ -92,25 +109,56 @@ class Storages extends Component {
       </Table.Cell>
     );
 
-    //셀
+
+    
+    
     const Cell = (props) => {
-      const { column } = props;
-      if (column.name === "project_status") {
+
+      const fnEnterCheck = (prop) => {
+        var arr = [];
+        var i;
+        for(i=0; i < Object.keys(prop.value).length; i++){
+          const str = Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i]
+          arr.push(str)
+        }
+        return (
+         arr.map(item => {
+           return (
+             <p>{item}</p>
+           )
+         })
+        )
+        // return (
+          // props.value.indexOf("|") > 0 ? 
+          //   props.value.split("|").map( item => {
+          //     return (
+          //       <p>{item}</p>
+          //   )}) : 
+          //     props.value
+        // )
+      }
+
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "project_name") {
+      } else if (column.name === "name") {
         return (
           <Table.Cell
-            component={Link}
-            to={{
-              pathname: `/projects/${props.value}/overview`,
-              state: {
-                test : "testvalue"
-              }
-            }}
             {...props}
             style={{ cursor: "pointer" }}
-          ></Table.Cell>
+          ><Link to={{
+            pathname: `/projects/${props.value}/overview`,
+            search: "cluster="+row.cluster,
+            state: {
+              data : row
+            }
+          }}>{props.value}</Link></Table.Cell>
         );
+      } else if (column.name === "labels"){
+        return (
+        <Table.Cell>{fnEnterCheck(props)}</Table.Cell>
+        )
       }
       return <Table.Cell {...props} />;
     };
@@ -126,9 +174,9 @@ class Storages extends Component {
         // onClick={()=> alert(JSON.stringify(row))}
       />
     );
-    // const i = 0;
     const Row = (props) => {
-      return <Table.Row {...props} />;
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
     return (
@@ -136,26 +184,27 @@ class Storages extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-          Storages
+            Projects
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
-            <li className="active">Storages</li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Projects
+            </li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
               [
-                // <input type="button" value="create"></input>,
-                <Editor title="create"/>,
+                <PjCreateProject/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
-                  style={{ color: "red" }}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -170,12 +219,15 @@ class Storages extends Component {
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
+                  
+
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -196,4 +248,4 @@ class Storages extends Component {
   }
 }
 
-export default Storages;
+export default Projects;

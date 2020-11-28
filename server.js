@@ -14,6 +14,8 @@ app.get("/api/hello", (req, res) => {
   res.send({ messge: "Hello Express!" });
 });
 
+const apiServer = "http://192.168.0.34:4885";
+
 //데이터베이스 접속 설정
 const data = fs.readFileSync("./database.json");
 const conf = JSON.parse(data);
@@ -120,9 +122,7 @@ app.post("/user_login", (req, res) => {
         message: "Please check your Password",
       };
 
-      console.log(result.rows.length);
       if (result.rows.length < 1) {
-        console.log("empty");
         result_set = {
           data: [],
           message: "There is no user, please check your account",
@@ -137,7 +137,7 @@ app.post("/user_login", (req, res) => {
               data: result,
               message: "Login Successful !!",
             };
-            console.log("compare", r, result_set);
+            // console.log("compare", r, result_set);
           }
           res.send(result_set);
         });
@@ -199,7 +199,7 @@ app.get("/account-roles", (req, res) => {
 });
 
 app.put("/update/account-roles", (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   connection.query(
     `update tb_accounts set roles = '{"${req.body.role}"}' where user_id = '${req.body.userid}';`,
     (err, result) => {
@@ -232,34 +232,41 @@ app.put("/update/account-roles", (req, res) => {
 /* Dashboard APIs */
 ///////////////////////
 app.get("/dashboard", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  // let overview = JSON.parse(rawdata);
-  // console.log(overview);
-  // res.send(overview);
-  var request = require("request");
-  var options = {
-    uri: "http://192.168.0.34:4885/apis/dashboard",
-    // "http://192.168.0.51:4885/apis/dashboard",
-    method: "GET",
-    // headers: {
-    //   Authorization:
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-    // },
-  };
+  let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  let overview = JSON.parse(rawdata);
+  //console.log(overview);
+  res.send(overview);
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/dashboard`,
+  //   // "http://192.168.0.51:4885/apis/dashboard",
+  //   method: "GET",
+  //   // headers: {
+  //   //   Authorization:
+  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+  //   // },
+  // };
 
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      // console.log("result", body);
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     // console.log("result", body);
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
 });
 
-let token = "";
 
+app.get("/dashboard-master-cluster", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/dashboard_master_cluster.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+
+let token = "";
 // Projects 리스트 가져오기
 app.get("/api/projects", (req, res) => {
   var request = require("request");
@@ -317,12 +324,12 @@ app.get("/api/projects", (req, res) => {
 app.get("/projects", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/projects.json");
   // let overview = JSON.parse(rawdata);
-  // console.log(overview);
+  // //console.log(overview);
   // res.send(overview);
 
   var request = require("request");
   var options = {
-    uri: "http://192.168.0.34:4885/apis/projects",
+    uri: `${apiServer}/apis/projects`,
     method: "GET",
   };
 
@@ -341,7 +348,7 @@ app.get("/projects", (req, res) => {
 app.get("/projects/:project/overview", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_overview.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -351,27 +358,42 @@ app.get("/clusters/name", (req, res) => {
     "./json_data/clusters_name.json"
   );
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
 // Prjects > Resources > Workloads > Deployments
 app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
-  let overview = JSON.parse(rawdata);
-  console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+
+
+  
 });
 
 // Prjects > Resources > Workloads > Deployments > detail
-app.get(
-  "/projects/:project/resources/workloads/deployments/:deployment",
+app.get("/projects/:project/resources/workloads/deployments/:deployment",
   (req, res) => {
     let rawdata = fs.readFileSync(
       "./json_data/projects_deployment_detail.json"
     );
     let overview = JSON.parse(rawdata);
-    // console.log(overview);
+    // //console.log(overview);
     res.send(overview);
   }
 );
@@ -411,7 +433,7 @@ app.get(
     );
     // let rawdata = fs.readFileSync("./json_data/projects_deployment_detail.json");
     // let overview = JSON.parse(rawdata);
-    // console.log(overview);
+    // //console.log(overview);
     // res.send(overview);
   }
 );
@@ -433,7 +455,7 @@ app.post(
 app.delete(
   "/projects/:project/resources/workloads/deployments/:deployment/replica_status/del_pod",
   (req, res) => {
-    console.log("delete", req.body);
+    // console.log("delete", req.body);
     connection.query(
       `delete from tb_replica_status where ctid IN (select ctid from tb_replica_status where cluster = '${req.body.cluster}' order by created_time desc limit 1)`,
       (err, result) => {
@@ -449,7 +471,7 @@ app.delete(
 // app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
 //   let rawdata = fs.readFileSync("./json_data/projects_statefulsets.json");
 //   let overview = JSON.parse(rawdata);
-//   console.log(overview);
+//   //console.log(overview);
 //   res.send(overview);
 // });
 
@@ -457,7 +479,7 @@ app.delete(
 app.get("/projects/:project/resources/pods", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_pods.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -465,7 +487,7 @@ app.get("/projects/:project/resources/pods", (req, res) => {
 app.get("/projects/:project/resources/pods/:pod", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_pod_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -473,7 +495,7 @@ app.get("/projects/:project/resources/pods/:pod", (req, res) => {
 app.get("/projects/:project/resources/services", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_services.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -481,7 +503,7 @@ app.get("/projects/:project/resources/services", (req, res) => {
 app.get("/projects/:project/resources/services/:service", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_service_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -489,7 +511,7 @@ app.get("/projects/:project/resources/services/:service", (req, res) => {
 app.get("/projects/:project/resources/ingress", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_ingress.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -497,7 +519,7 @@ app.get("/projects/:project/resources/ingress", (req, res) => {
 app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_ingress_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -505,7 +527,7 @@ app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
 app.get("/projects/:project/volumes", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_volumes.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -513,7 +535,7 @@ app.get("/projects/:project/volumes", (req, res) => {
 app.get("/projects/:project/volumes/:volume", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_volume_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -521,7 +543,7 @@ app.get("/projects/:project/volumes/:volume", (req, res) => {
 app.get("/projects/:project/config/secrets", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_secrets.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -529,7 +551,7 @@ app.get("/projects/:project/config/secrets", (req, res) => {
 app.get("/projects/:project/config/secrets/:secret", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_secret_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -537,7 +559,7 @@ app.get("/projects/:project/config/secrets/:secret", (req, res) => {
 app.get("/projects/:project/config/config_maps", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_config_maps.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -545,7 +567,7 @@ app.get("/projects/:project/config/config_maps", (req, res) => {
 app.get("/projects/:project/config/config_maps/:config_map", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_config_map_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -555,10 +577,35 @@ app.get("/projects/:project/config/config_maps/:config_map", (req, res) => {
 app.get("/projects/:project/settings/members", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_members.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
+
+//////////////////////////
+// Deployments
+/////////////////////////
+
+// Deployments
+app.get("/deployments", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments`,
+  //   method: "GET",
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
+});
 
 
 ///////////////////////
@@ -567,16 +614,16 @@ app.get("/projects/:project/settings/members", (req, res) => {
 app.get("/clusters", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters.json");
   // let overview = JSON.parse(rawdata);
-  // console.log(overview);
+  // //console.log(overview);
   // res.send(overview);
 // let rawdata = fs.readFileSync("./json_data/dashboard.json");
   // let overview = JSON.parse(rawdata);
-  // console.log(overview);
+  // //console.log(overview);
   // res.send(overview);
 
   var request = require("request");
   var options = {
-    uri: "http://192.168.0.34:4885/apis/clusters",
+    uri: `${apiServer}/apis/clusters`,
     method: "GET",
     // headers: {
     //   Authorization:
@@ -592,15 +639,51 @@ app.get("/clusters", (req, res) => {
       return error;
     }
   });
+});
 
+app.get("/clusters-joinable", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/clusters.json");
+  // let overview = JSON.parse(rawdata);
+  // //console.log(overview);
+  // res.send(overview);
+// let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // //console.log(overview);
+  // res.send(overview);
 
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clusters`,
+    method: "GET",
+    // headers: {
+    //   Authorization:
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    // },
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Clusters > overview
 app.get("/clusters/:cluster/overview", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/clusters_overview.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
+  res.send(overview);
+});
+
+// Clusters > overview
+app.get("/clusters-joinable/:cluster/overview", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/clusters_joinable_overview.json");
+  let overview = JSON.parse(rawdata);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -630,7 +713,7 @@ app.get("/clusters/:cluster/nodes", (req, res) => {
 app.get("/clusters/:cluster/nodes/:node", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/clusters_node_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -638,7 +721,7 @@ app.get("/clusters/:cluster/nodes/:node", (req, res) => {
 app.get("/clusters/:cluster/pods", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters_pods.json");
   // let overview = JSON.parse(rawdata);
-  // console.log(overview);
+  // //console.log(overview);
   // res.send(overview);
 
   const clusterName = req.params.cluster
@@ -662,7 +745,7 @@ app.get("/clusters/:cluster/pods", (req, res) => {
 app.get("/clusters/:cluster/pods/:pod", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/clusters_pod_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -670,7 +753,7 @@ app.get("/clusters/:cluster/pods/:pod", (req, res) => {
 app.get("/clusters/:cluster/storage_class", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/clusters_storage_class.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -680,7 +763,7 @@ app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
     "./json_data/clusters_storage_class_detail.json"
   );
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -699,14 +782,14 @@ app.get("/aws/ec2-type", (req, res) => {
 app.get("/aws/clusters", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/aws_clusters.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
 app.get("/gcp/clusters", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/gcp_clusters.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -717,11 +800,11 @@ app.get("/gcp/clusters", (req, res) => {
 app.get("/nodes", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/nodes.json");
   // let overview = JSON.parse(rawdata);
-  // console.log(overview);
+  // //console.log(overview);
   // res.send(overview);
   var request = require("request");
   var options = {
-    uri: "http://192.168.0.34:4885/apis/nodes",
+    uri: `${apiServer}/apis/nodes`,
     method: "GET",
     // headers: {
     //   Authorization:
@@ -743,19 +826,25 @@ app.get("/nodes", (req, res) => {
 app.get("/nodes/:node", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/nodes_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
+
+
+
+//////////////////////////
+// Pods
+/////////////////////////
 
 // Pods
 app.get("/pods", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/pods.json");
   // let overview = JSON.parse(rawdata);
-  // console.log(overview);
+  // //console.log(overview);
   // res.send(overview);
   var request = require("request");
   var options = {
-    uri: "http://192.168.0.34:4885/apis/pods",
+    uri: `${apiServer}/apis/pods`,
     method: "GET",
   };
 
@@ -773,7 +862,7 @@ app.get("/pods", (req, res) => {
 app.get("/pods/:pod", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/pods_detail.json");
   let overview = JSON.parse(rawdata);
-  console.log(overview);
+  //console.log(overview);
   res.send(overview);
 });
 
@@ -793,5 +882,102 @@ from tb_accounts u`, (err, result) => {
     res.send(result.rows);
   });
 });
+
+app.get("/hpa", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/hpa.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/pods`,
+  //   method: "GET",
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
+});
+
+app.get("/vpa", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/vpa.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/pods`,
+  //   method: "GET",
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
+});
+
+
+////////////////////////
+// Ingress
+////////////////////////
+
+// Prjects > Resources > Ingress
+app.get("/ingress", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/ingress.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+// Prjects > Resources > Ingress Detail
+app.get("/ingress/:ingress", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/ingress_detail.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+
+////////////////////////
+// Services
+////////////////////////
+
+// Services
+app.get("/services", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/services.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+// Services Detail
+app.get("/services/:service", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/service_detail.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+////////////////////////
+// DNS
+////////////////////////
+
+// DNS > Services
+app.get("/dns", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/dns.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+// DNS > Detail
+app.get("/dns/:dns", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/dns_detail.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

@@ -1,14 +1,23 @@
 import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 // Top menu contents
+import LeftMenu from './LeftMenu';
+
 import Dashboard from "./../contents/Dashboard";
-import Projects from "./../contents/Projects";
-import Pods from "./../contents/Pods";
-import Clusters from "./../contents/Clusters";
+import Projects from "./../contents/projects/Projects";
+import Pods from "../contents/pods/Pods";
+import HPA from '../contents/pods/HPA';
+import VPA from '../contents/pods/VPA';
+import ClustersJoinable from "../contents/clusters/ClustersJoinable";
+import ClustersJoined from "../contents/clusters/ClustersJoined";
 import Storages from "./../contents/Storages";
 
-import LeftMenu from './LeftMenu';
-import Nodes from './../contents/Nodes';
+import Nodes from './../contents/nodes/Nodes';
+import Deployments from '../contents/deployments/Deployments';
+
+import DNS from '../contents/netowork/DNS';
+import Ingress from '../contents/netowork/Ingress';
+import Services from '../contents/netowork/Services';
 
 // Sub menu contents
 import PjOverview from "../contents/projects/PjOverview";
@@ -38,6 +47,9 @@ import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
 import Accounts from './../contents/settings/Accounts';
 import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
+import Policy from './../contents/settings/Policy';
+
+
 
 
 
@@ -54,46 +66,10 @@ class Contents extends Component {
   }
 
   onMenuData = (data) => {
-    // console.log("content", data)
     this.setState({menuData : data});
   }
 
   render() {
-    // if(this.props.path.startsWith('/projects')){
-    //   console.log("check!!!");
-    //   return <Route exact path="/projects"><Projects /></Route>
-    // }
-
-    // console.log("content onMenuData : ",this.state.menuData); 
-    if (this.props.path === "/") {
-      return <Redirect to="/dashboard"></Redirect>;
-    } else if(this.props.path === "/dashboard"){
-      return (
-        <Route exact path="/dashboard"><Dashboard /></Route>
-      )
-    } else if(this.props.path === "/clusters"){
-      return (
-        <Route exact path="/clusters" ><Clusters /></Route>
-      )
-    } else if(this.props.path === "/nodes"){
-      return (
-        <Route exact path="/nodes" ><Nodes /></Route>
-      )
-    } else if(this.props.path === "/projects"){
-      return (
-        <Route exact path="/projects"><Projects /></Route>
-      )
-    } else if(this.props.path === "/pods"){
-      return (
-        <Route exact path="/pods" ><Pods /></Route>
-          
-      )
-    } else if(this.props.path === "/storages"){
-      return (
-        <Route exact path="/storages" ><Storages /></Route>
-      )
-    } else {
-      // console.log("contents last", this.state.menuData);
     return (
       <div>
         {
@@ -104,9 +80,7 @@ class Contents extends Component {
             pathParams={this.state.menuData.pathParams}
           />
         }
-
         <Switch>
-
           {/* Clusters contents */}
           <Route path="/clusters/:cluster/overview" 
             render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData}/>} >
@@ -123,6 +97,22 @@ class Contents extends Component {
             render={({match,location}) => <CsStorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/storage_class" 
             render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters-joinable/:cluster/overview" 
+            render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/clusters-joinable/:cluster/nodes/:node" 
+            render={({match,location}) => <CsNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters-joinable/:cluster/nodes" 
+            render={({match,location}) => <CsNodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters-joinable/:cluster/pods/:pod" 
+            render={({match,location}) => <CsPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters-joinable/:cluster/pods" 
+            render={({match,location}) => <CsPods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters-joinable/:cluster/storage_class/:storage_class" 
+            render={({match,location}) => <CsStorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/clusters-joinable/:cluster/storage_class" 
+            render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            
           {/* <Route path="/clusters/:name/settings/" component={PjSettings} />
           <Redirect from="/clusters/:name/settings" to="/projects/:name/settings/members" /> */}
           {/* Clusters contents END*/}
@@ -247,19 +237,45 @@ class Contents extends Component {
           {/* Pods contents */}
           <Route path="/pods/:pod"
               render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* <Route path="/vpa/:vpa"
+              render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/hpa/:hpa"
+              render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route> */}
           {/* Pods contents END*/}
 
           {/* Settings contents */}
           <Route path="/settings/accounts" 
             render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
+          <Route path="/settings/policy" 
+            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Redirect 
+            from="/settings" 
+            to="/settings/accounts" />
           {/* Settings contents END*/}
+
+          <Route exact path="/"><Dashboard menuData={this.onMenuData}/></Route>
+          <Route exact path="/dashboard"><Dashboard menuData={this.onMenuData}/></Route>
+          <Route exact path="/clusters" ><ClustersJoined menuData={this.onMenuData}/></Route>
+          <Route exact path="/clusters" ><ClustersJoined menuData={this.onMenuData}/></Route>
+          <Route exact path="/clusters-joinable" ><ClustersJoinable menuData={this.onMenuData}/></Route>
+          <Route exact path="/nodes" ><Nodes menuData={this.onMenuData}/></Route>
+          <Route exact path="/projects"><Projects menuData={this.onMenuData}/></Route>
+          <Route exact path="/deployments" ><Deployments menuData={this.onMenuData}/></Route>
+          <Route exact path="/pods" ><Pods menuData={this.onMenuData}/></Route>
+          <Route exact path="/pods-hpa" ><HPA menuData={this.onMenuData}/></Route>
+          <Route exact path="/pods-vpa" ><VPA menuData={this.onMenuData}/></Route>
+          <Route exact path="/services" ><Services menuData={this.onMenuData}/></Route>
+          <Route exact path="/ingress" ><Ingress menuData={this.onMenuData}/></Route>
+          <Route exact path="/dns" ><DNS menuData={this.onMenuData}/></Route>
+          <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
+          <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
         </Switch>
           
       </div>
       );
     }
-  }
 }
 
 export default Contents;

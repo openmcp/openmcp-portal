@@ -29,7 +29,7 @@ import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
 import AcChangeRole from './../modal/AcChangeRole';
 
-class Accounts extends Component {
+class Policy extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -157,7 +157,7 @@ class Accounts extends Component {
       <div className="content-wrapper full">
         <section className="content-header">
           <h1>
-          Accounts
+            Policy
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -229,4 +229,4 @@ class Accounts extends Component {
   }
 }
 
-export default Accounts;
+export default Policy;

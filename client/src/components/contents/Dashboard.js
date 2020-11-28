@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 // import PieHalfReChart from './../modules/PieHalfReChart';
 import { NavigateNext} from '@material-ui/icons';
 import TreeView from './../modules/TreeView';
+import TreeView2 from './../modules/TreeView2';
 import RefreshButton from './../modules/RefreshButton';
 import * as utilLog from './../util/UtLogs.js';
 
@@ -15,8 +16,18 @@ class Dashboard extends Component {
       rows: "",
       completed: 0,
       reRender: "",
+      masterCluster: ""
     };
   }
+
+  componentWillMount() {
+    this.props.menuData("none");
+  }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("componentDidUpdate");
+  // }
+  
   componentDidMount() {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
@@ -26,11 +37,10 @@ class Dashboard extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-    
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-DS-VW01');
   }
+
 
   callApi = async () => {
     const response = await fetch(`/dashboard`);
@@ -38,14 +48,20 @@ class Dashboard extends Component {
     return body;
   };
 
+  
+
   onRefresh = () => {
+    console.log("refresh")
     this.callApi()
       .then((res) => {
         this.setState({ rows: res });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
   };
+
+
 
   progress = () => {
     const { completed } = this.state;
@@ -90,6 +106,8 @@ class Dashboard extends Component {
         <section className="content" style={{ minWidth: 1160 }}>
           {this.state.rows ? (
             [
+              // <div onClick={this.onRefresh}><RefreshButton ></RefreshButton></div>
+              // ,
               <div style={{ display: "flex" }}>
                 <DashboardCard01
                   title="Clusters"
@@ -122,9 +140,9 @@ class Dashboard extends Component {
               </div>,
               <div style={{ display: "flex" }}>
                 <DashboardCard03
-                  title="Region-Clusters"
+                  title="Master Clusters"
                   width="100%"
-                  data={this.state.rows.regions}
+                  // data={this.state.masterCluster}
                 ></DashboardCard03>
                 {/* <DashboardCard02
                   title="Resources"
@@ -134,7 +152,13 @@ class Dashboard extends Component {
                 ></DashboardCard02> */}
                 
               </div>,
-              <RefreshButton onClick={this.onRefresh}></RefreshButton>
+              <div style={{ display: "flex" }}>
+              <DashboardCard04
+                title="Zone-Clusters"
+                width="100%"
+                data={this.state.rows.regions}
+              ></DashboardCard04>
+            </div>
             ]
           ) : (
             <CircularProgress
@@ -152,6 +176,9 @@ class Dashboard extends Component {
 }
 
 class DashboardCard01 extends Component {
+  onClickRf = () =>{
+    this.props.onClickRefresh()
+  }
   render() {
     const colors = [
       "#0088FE",
@@ -166,6 +193,7 @@ class DashboardCard01 extends Component {
     return (
       <div className="content-box" style={{ width: this.props.width }}>
         <div className="cb-header">
+          <div onClick={this.onClickRf}></div>
           <span>{this.props.title}</span>
           <span> : {this.props.data.counts}</span>
           <div className="cb-btn">
@@ -208,6 +236,69 @@ class DashboardCard01 extends Component {
 
 
 class DashboardCard03 extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+      rows:""
+    }
+  }
+  
+
+  componentDidMount() {
+    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  }
+  
+  callApi = async () => {
+    const response = await fetch(`/dashboard-master-cluster`);
+    const body = await response.json();
+    return body;
+  };
+
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  render() {
+    return (
+      <div className="content-box" style={{ width: this.props.width }}>
+      <div className="cb-header">
+        <span style={{cursor:"pointer"}} onClick={this.onRefresh}>{this.props.title}</span>
+        {/* <div className="cb-btn">
+          <Link to={this.props.path}>detail</Link>
+        </div> */}
+      </div>
+      <div
+        className="cb-body"
+        style={{ position: "relative", width: "100%", display:"flex"}}
+        >
+        {this.state.rows ? (
+        <TreeView data={this.state.rows}/>
+        ) : (
+          <CircularProgress
+            variant="determinate"
+            value={this.state.completed}
+            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+          ></CircularProgress>
+        )}
+      </div>
+    </div>
+    
+    );
+  }
+}
+
+class DashboardCard04 extends Component {
   render() {
     // console.log("BasicInfo:", this.props.data)
 
@@ -223,7 +314,7 @@ class DashboardCard03 extends Component {
         className="cb-body"
         style={{ position: "relative", width: "100%", display:"flex"}}
       >
-        <TreeView data={this.props.data}/>
+        <TreeView2 data={this.props.data}/>
       </div>
     </div>
     );

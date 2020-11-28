@@ -15,29 +15,50 @@ import {
   Table,
   Toolbar,
   SearchPanel,
+  TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../modules/Editor";
+import { NavigateNext} from '@material-ui/icons';
+import * as utilLog from '../../util/UtLogs.js';
 
-class Storages extends Component {
+// import Editor from "./../modules/Editor";
+
+// let apiParams = "";
+class VPA extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "project_name", title: "Name" },
-        { name: "project_status", title: "Status" },
-        { name: "project_creator", title: "Createor" },
-        { name: "project_created_time", title: "Created Time" },
+        { name: "name", title: "Pod" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
+        { name: "pod_ip", title: "Pod IP" },
+        { name: "node", title: "Node" },
+        { name: "node_ip", title: "Node IP" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
+        { name: "created_time", title: "Created Time" },
       ],
-      
+      defaultColumnWidths: [
+        { columnName: "name", width: 330 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
+        { columnName: "project", width: 130 },
+        { columnName: "pod_ip", width: 120 },
+        { columnName: "node", width: 230 },
+        { columnName: "node_ip", width: 130 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 100 },
+        { columnName: "created_time", width: 170 },
+      ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 5,
-      setPageSize: 5,
+      pageSize: 10, 
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -48,10 +69,11 @@ class Storages extends Component {
     this.props.menuData("none");
   }
 
+
   
 
   callApi = async () => {
-    const response = await fetch("/api/projects");
+    const response = await fetch(`/vpa`);
     const body = await response.json();
     return body;
   };
@@ -71,22 +93,32 @@ class Storages extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  }
+
+    const userId = localStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, 'log-PD-VW01');
+  };
 
   render() {
+
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell>
+      <Table.Cell
+        {...restProps}
+        style={{
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // cursor: "pointer",
+          ...style,
+        }}>
         <span
           style={{
             color:
-              value === "Healthy"
-                ? "#1ab726"
-                : value === "Unhealthy"
-                ? "red"
-                : undefined,
-          }}
-        >
+              value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "red" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
+          }}>
           {value}
         </span>
       </Table.Cell>
@@ -94,25 +126,43 @@ class Storages extends Component {
 
     //셀
     const Cell = (props) => {
-      const { column } = props;
-      if (column.name === "project_status") {
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      // debugger;
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        return (
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( item => {
+              return (
+                <p>{item}</p>
+            )}) : 
+              props.value
+        )
+      }
+
+
+      if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "project_name") {
+      } else if (column.name === "name") {
+        // console.log("name", props.value);
         return (
           <Table.Cell
-            component={Link}
-            to={{
-              pathname: `/projects/${props.value}/overview`,
-              state: {
-                test : "testvalue"
-              }
-            }}
             {...props}
             style={{ cursor: "pointer" }}
-          ></Table.Cell>
+          ><Link to={{
+            pathname: `/pods/${props.value}`,
+            state: {
+              data : row
+            }
+          }}>{fnEnterCheck()}</Link></Table.Cell>
         );
       }
-      return <Table.Cell {...props} />;
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -126,9 +176,9 @@ class Storages extends Component {
         // onClick={()=> alert(JSON.stringify(row))}
       />
     );
-    // const i = 0;
     const Row = (props) => {
-      return <Table.Row {...props} />;
+      // console.log("row!!!!!! : ",props);
+      return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
     return (
@@ -136,26 +186,27 @@ class Storages extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-          Storages
-            <small></small>
+            VPA
+            <small>(Vertical Pod Autoscaler)</small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
-            <li className="active">Storages</li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              VPA
+            </li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
               [
-                // <input type="button" value="create"></input>,
-                <Editor title="create"/>,
+                // <Editor title="create"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
-                  style={{ color: "red" }}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -165,17 +216,18 @@ class Storages extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={5} />
+                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -196,4 +248,4 @@ class Storages extends Component {
   }
 }
 
-export default Storages;
+export default VPA;

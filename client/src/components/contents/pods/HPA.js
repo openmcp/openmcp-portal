@@ -19,32 +19,39 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-// import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../util/UtLogs.js';
+import * as utilLog from '../../util/UtLogs.js';
 
+// import Editor from "./../modules/Editor";
 
-class Clusters extends Component {
+// let apiParams = "";
+class HPA extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "region", title: "Region" },
-        { name: "nodes", title: "Nodes" },
-        { name: "cpu", title: "CPU" },
-        { name: "ram", title: "Memory" },
-        { name: "provider", title: "Provider" },
+        { name: "name", title: "Pod" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
+        { name: "pod_ip", title: "Pod IP" },
+        { name: "node", title: "Node" },
+        { name: "node_ip", title: "Node IP" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 180 },
-        { columnName: "status", width: 130},
-        { columnName: "region", width: 130 },
-        { columnName: "nodes", width: 130 },
-        { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 130 },
-        { columnName: "provider", width: 150 },
+        { columnName: "name", width: 330 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
+        { columnName: "project", width: 130 },
+        { columnName: "pod_ip", width: 120 },
+        { columnName: "node", width: 230 },
+        { columnName: "node_ip", width: 130 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 100 },
+        { columnName: "created_time", width: 170 },
       ],
       rows: "",
 
@@ -59,13 +66,14 @@ class Clusters extends Component {
   }
 
   componentWillMount() {
-    // this.props.onSelectMenu(false, "");
+    this.props.menuData("none");
   }
+
 
   
 
   callApi = async () => {
-    const response = await fetch("/clusters");
+    const response = await fetch(`/hpa`);
     const body = await response.json();
     return body;
   };
@@ -85,9 +93,9 @@ class Clusters extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-      
+
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
+    utilLog.fn_insertPLogs(userId, 'log-PD-VW01');
   };
 
   render() {
@@ -105,9 +113,11 @@ class Clusters extends Component {
         <span
           style={{
             color:
-              value === "Healthy" ? "#1ab726" : 
-                value === "Unhealthy" ? "red" : 
-                  value === "Unknown" ? "#b5b5b5" : "black"
+              value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "red" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>
@@ -118,22 +128,41 @@ class Clusters extends Component {
     const Cell = (props) => {
       const { column, row } = props;
       // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      // debugger;
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        return (
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( item => {
+              return (
+                <p>{item}</p>
+            )}) : 
+              props.value
+        )
+      }
+
+
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
+        // console.log("name", props.value);
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/clusters/${props.value}/overview`,
+            pathname: `/pods/${props.value}`,
             state: {
               data : row
             }
-          }}>{props.value}</Link></Table.Cell>
+          }}>{fnEnterCheck()}</Link></Table.Cell>
         );
       }
-      return <Table.Cell {...props} />;
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -157,8 +186,8 @@ class Clusters extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Cluster
-            <small></small>
+            HPA
+            <small>(Horizental Pod Autoscaler)</small>
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -166,7 +195,7 @@ class Clusters extends Component {
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Clusters
+              HPA
             </li>
           </ol>
         </section>
@@ -219,4 +248,4 @@ class Clusters extends Component {
   }
 }
 
-export default Clusters;
+export default HPA;

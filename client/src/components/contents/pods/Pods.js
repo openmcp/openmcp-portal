@@ -20,7 +20,7 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../util/UtLogs.js';
+import * as utilLog from '../../util/UtLogs.js';
 
 // import Editor from "./../modules/Editor";
 
@@ -66,12 +66,7 @@ class Pods extends Component {
   }
 
   componentWillMount() {
-    // const result = {
-    //   menu : "clusters",
-    //   title : this.props.match.params.pod
-    // }
-    // this.props.menuData(result);
-    // apiParams = this.props.match.params.pod;
+    this.props.menuData("none");
   }
 
 

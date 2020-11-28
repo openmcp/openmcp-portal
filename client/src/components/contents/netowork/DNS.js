@@ -17,38 +17,30 @@ import {
   SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
-  PagingPanel,
+  PagingPanel,  
 } from "@devexpress/dx-react-grid-material-ui";
-// import Editor from "./../modules/Editor";
+import Editor from "../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../util/UtLogs.js';
-import NdAddNode from './modal/NdAddNode';
+import * as utilLog from '../../util/UtLogs.js';
 
-class Nodes extends Component {
+let apiParams = "";
+class DNS extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Node" },
-        { name: "status", title: "Status" },
-        { name: "cluster", title: "Cluster"},
-        // { name: "region", title: "Region" },
-        { name: "role", title: "Role" },
-        { name: "system_version", title: "System Version" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
-        { name: "pods", title: "Pods" },
+        { name: "name", title: "Name"},
+        { name: "namespace", title: "Namespace" },
+        { name: "type", title: "Type"},
+        { name: "selector", title: "Selector" },
+        { name: "port", title: "Port" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 250 },
-        { columnName: "status", width: 130 },
-        { columnName: "cluster", width: 130},
-        // { columnName: "region", width: 100 },
-        { columnName: "role", width: 100 },
-        { columnName: "system_version", width: 200 },
-        { columnName: "cpu", width: 130 },
-        { columnName: "memory", width: 130 },
-        { columnName: "pods", width: 130 },
+        { columnName: "name", width: 200 },
+        { columnName: "namespace", width: 130 },
+        { columnName: "type", width: 130 },
+        { columnName: "selector", width: 330 },
+        { columnName: "port", width: 180 },
       ],
       rows: "",
 
@@ -63,13 +55,12 @@ class Nodes extends Component {
   }
 
   componentWillMount() {
+    this.props.menuData("none");
   }
 
-
-  
-
   callApi = async () => {
-    const response = await fetch(`/nodes`);
+    // var param = this.props.match.params.cluster;
+    const response = await fetch(`/dns`);
     const body = await response.json();
     return body;
   };
@@ -89,35 +80,31 @@ class Nodes extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
+    
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-ND-VW01');
-  };
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW09');
 
-  onUpdateData = () => {
-    this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        this.setState({ rows: res });
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
-
-    const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
   render() {
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell>
+      <Table.Cell
+        {...restProps}
+        style={{
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // cursor: "pointer",
+          ...style,
+        }}>
         <span
           style={{
             color:
-            value === "Healthy" ? "#1ab726" : 
-              value === "Unhealthy" ? "red" : 
-                value === "Unknown" ? "#b5b5b5" : "black"
+              value === "Warning" ? "orange" : 
+                value === "Unschedulable" ? "red" : 
+                  value === "Stop" ? "red" : 
+                    value === "Running" ? "#1ab726" : "black"
           }}>
           {value}
         </span>
@@ -149,19 +136,18 @@ class Nodes extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // // console.log("name", props.value);
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/nodes/${props.value}`,
+            pathname: `/dns/${props.value}`,
             state: {
               data : row
             }
           }}>{fnEnterCheck()}</Link></Table.Cell>
         );
-      }
+      } 
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
@@ -182,12 +168,12 @@ class Nodes extends Component {
     };
 
     return (
-      <div className="content-wrapper nodes full">
+      <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Nodes
-            <small></small>
+            DNS
+            <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -195,7 +181,7 @@ class Nodes extends Component {
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Nodes
+              DNS
             </li>
           </ol>
         </section>
@@ -203,10 +189,7 @@ class Nodes extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                // <Editor title="add node"/>,
-                <NdAddNode
-                  onUpdateData = {this.onUpdateData}
-                />,
+                <Editor title="create"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
@@ -251,4 +234,4 @@ class Nodes extends Component {
   }
 }
 
-export default Nodes;
+export default DNS;

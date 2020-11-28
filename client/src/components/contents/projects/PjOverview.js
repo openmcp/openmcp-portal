@@ -34,6 +34,7 @@ class PjOverview extends Component {
   }
 
   componentWillMount() {
+    console.log("will")
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
       menu : "projects",

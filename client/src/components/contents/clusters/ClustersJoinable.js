@@ -15,43 +15,43 @@ import {
   Table,
   Toolbar,
   SearchPanel,
-  TableHeaderRow,
   TableColumnResizing,
+  TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../modules/Editor";
+// import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../util/UtLogs.js';
-import PjCreateProject from './modal/PjCreateProject';
+import * as utilLog from '../../util/UtLogs.js';
 
 
-
-
-
-class Projects extends Component {
+class ClustersJoinable extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "cluster", title: "Cluster" },
-        { name: "created_time", title: "Created Time" },
-        { name: "labels", title: "Labels" },
+        { name: "region", title: "Region" },
+        { name: "nodes", title: "Nodes" },
+        { name: "cpu", title: "CPU" },
+        { name: "ram", title: "Memory" },
+        { name: "provider", title: "Provider" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 200 },
-        { columnName: "status", width: 100 },
-        { columnName: "cluster", width: 150 },
-        { columnName: "created_time", width: 200 },
-        { columnName: "labels", width: 300 },
+        { columnName: "name", width: 180 },
+        { columnName: "status", width: 130},
+        { columnName: "region", width: 130 },
+        { columnName: "nodes", width: 130 },
+        { columnName: "cpu", width: 130 },
+        { columnName: "ram", width: 130 },
+        { columnName: "provider", width: 150 },
       ],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10,
+      pageSize: 10, 
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -59,13 +59,12 @@ class Projects extends Component {
   }
 
   componentWillMount() {
-    // this.props.onSelectMenu(false, "");
+    this.props.menuData("none");
   }
-
   
 
   callApi = async () => {
-    const response = await fetch("/projects");
+    const response = await fetch("/clusters-joinable");
     const body = await response.json();
     return body;
   };
@@ -85,59 +84,37 @@ class Projects extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-
-
+      
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW01');
-
+    utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
   };
 
   render() {
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell>
+      <Table.Cell
+        {...restProps}
+        style={{
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // cursor: "pointer",
+          ...style,
+        }}>
         <span
           style={{
             color:
-              value === "Active" ? "#1ab726" : value === "Deactive" ? "red" : undefined,
-          }}
-        >
+              value === "Healthy" ? "#1ab726" : 
+                value === "Unhealthy" ? "red" : 
+                  value === "Unknown" ? "#b5b5b5" : "black"
+          }}>
           {value}
         </span>
       </Table.Cell>
     );
 
-
-    
-    
+    //셀
     const Cell = (props) => {
-
-      const fnEnterCheck = (prop) => {
-        var arr = [];
-        var i;
-        for(i=0; i < Object.keys(prop.value).length; i++){
-          const str = Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i]
-          arr.push(str)
-        }
-        return (
-         arr.map(item => {
-           return (
-             <p>{item}</p>
-           )
-         })
-        )
-        // return (
-          // props.value.indexOf("|") > 0 ? 
-          //   props.value.split("|").map( item => {
-          //     return (
-          //       <p>{item}</p>
-          //   )}) : 
-          //     props.value
-        // )
-      }
-
       const { column, row } = props;
       // console.log("cell : ", props);
       if (column.name === "status") {
@@ -148,17 +125,12 @@ class Projects extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/projects/${props.value}/overview`,
-            search: "cluster="+row.cluster,
+            pathname: `/clusters-joinable/${props.value}/overview`,
             state: {
               data : row
             }
           }}>{props.value}</Link></Table.Cell>
         );
-      } else if (column.name === "labels"){
-        return (
-        <Table.Cell>{fnEnterCheck(props)}</Table.Cell>
-        )
       }
       return <Table.Cell {...props} />;
     };
@@ -184,7 +156,7 @@ class Projects extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Projects
+            Joinable Clusters
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -193,7 +165,7 @@ class Projects extends Component {
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Projects
+              Clusters
             </li>
           </ol>
         </section>
@@ -201,7 +173,7 @@ class Projects extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <PjCreateProject/>,
+                // <Editor title="create"/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
@@ -214,7 +186,7 @@ class Projects extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
@@ -222,8 +194,6 @@ class Projects extends Component {
                   <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
-
-                  
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
@@ -248,4 +218,4 @@ class Projects extends Component {
   }
 }
 
-export default Projects;
+export default ClustersJoinable;

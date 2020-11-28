@@ -32,14 +32,29 @@ class NodeLabel extends Component {
             <HomeWorkIcon style={{position:"relative", fontSize:"43px", color: "#367fa9", background: "#ffffff", stroke: "none" }}/>,
           ] : 
           [
-            <Link to={"/clusters/"+nodeData.name+"/overview"}>
-              <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>
-              <div class="" style={{fontSize:"14px", fontWeight:"bold", marginTop:"-8px"}}>
+            <Link to={"/clusters/"+nodeData.name+"/overview" }>
+              <AmpStoriesIcon 
+                style={{ fontSize:"43px", 
+                  color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), 
+                  stroke: "none", background: "#ffffff" }}/>
+              <div class="" 
+                style={{
+                  color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), 
+                  fontSize:"14px", fontWeight:"bold", marginTop:"-8px"}}>
                 {nodeData.name}
               </div>
               <div class="" style={{fontSize:"14px", marginTop:"-6px"}}>
-                <span style={{color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : "#ff8042"), fontSize:"14px", marginRight:0}}>
-                  {nodeData.attributes.status}
+                <span 
+                  style={{
+                    color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), fontSize:"14px", marginRight:0}}>
+                  {nodeData.attributes.region} - {nodeData.attributes.zone}
+                </span>
+              </div>
+              <div class="" style={{fontSize:"14px", marginTop:"-6px"}}>
+                <span 
+                  style={{
+                    color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), fontSize:"12px", marginRight:0}}>
+                  ({nodeData.attributes.status})
                 </span>
               </div>
             </Link>
@@ -51,28 +66,48 @@ class NodeLabel extends Component {
 }
 
 class TreeView extends React.Component {
-  state = {
-    data: this.props.data
+  constructor(props){
+    super(props);
+    this.state = {
+      data: this.props.data
+    }
   }
+
+  componentWillUpdate(prevProps, prevState){
+    console.log("componentWillUpdate")
+    console.log("this.props.data",prevProps)
+    if (this.props.data !== prevProps.data) {
+        this.setState({
+          data: prevProps.data,
+        });
+      }
+  }
+
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("componentDidUpdate")
+  //   if (this.props.data !== prevProps.data) {
+  //     this.setState({
+  //       data: this.props.data,
+  //     });
+  //   }
+  // }
+  
   componentDidMount() {
-    // console.log("didMount")
+    console.log("componentDidMount")
     const dimensions = this.treeContainer.getBoundingClientRect();
-    // console.log("dimensions.width", dimensions.width, dimensions.height);
+    console.log("dimensions.width", dimensions.width, dimensions.height);
     this.setState({
       translate: {
         x: dimensions.width / 2,
         y: dimensions.height / 4.5,
       },
-      // aa : this.treeContainer
     });
   }
 
-  componentDidUpdate(){
-    // console.log(this.treeContainer.getElementsByTagName("g")[0].getBoundingClientRect().width);
-  }
   
 
   render() {
+    console.log("treeveiw")
     const svgSquare = {
       shape: "rect",
       shapeProps: {
@@ -85,15 +120,6 @@ class TreeView extends React.Component {
       },
     };
 
-    // const svgSquare2 = {
-    //   shape: "image",
-    //   shapeProps: {
-    //     href: "https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png",
-    //     width: 40,
-    //     height: 40,
-    //   },
-    // };
-
     const styles = {
       links: {
         stroke: "black",
@@ -102,14 +128,13 @@ class TreeView extends React.Component {
     };
 
     const containerStyles = {
-      // width: 100/myTreeData.length+"%",
-      width: "20%",
+      width: "100%",
       height: "45vh",
-      // border:"1px solid #000",
       float:"left"
+      // width: 100/myTreeData.length+"%",
+      // border:"1px solid #000",
     };
 
-    // console.log("ddddd");
     return (
       /* <Tree /> will fill width/height of its container; in this case `#treeWrapper` */
       // <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
@@ -123,8 +148,9 @@ class TreeView extends React.Component {
                 nodeSvgShape={svgSquare}
                 collapsible	= {false}
                 zoomable = {false}
-                separation = {{siblings: 0.7, nonSiblings: 2}}
+                separation = {{siblings: 0.9, nonSiblings: 2}}
                 // nodeSvgShape={svgSquare2}
+                transitionDuration="0"
                 translate={this.state.translate}
                 orientation="vertical" //horizontal
                 allowForeignObjects
@@ -144,164 +170,9 @@ class TreeView extends React.Component {
             </div>
           );
         })}
-        
-        {/* <div style={containerStyles} ref={(tc) => (this.treeContainer = tc)}>
-          <Tree
-            data={myTreeData}
-            translate={this.state.translate}
-            orientation="vertical" //horizontal
-            // allowForeignObjects
-            // nodeLabelComponent={{
-            //   render: <NodeLabel className="myLabelComponentInSvg" />,
-            //   foreignObjectWrapper: {
-            //     y: 0,
-            //   },
-            // }}
-          />
-        </div> */}
       </div>
     );
   }
 }
 
 export default TreeView;
-
-
-// const myTreeData = [
-//   {
-//     name: "ap-northeast-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//     ],
-//   },
-//   {
-//     name: "ap-northeast-1",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       }
-//     ],
-//   },
-//   {
-//     name: "eu-west-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//     ],
-//   },
-//   {
-//     name: "us-east-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       }
-//     ],
-//   },
-//   {
-//     name: "us-east-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       }
-//     ],
-//   },
-// ];

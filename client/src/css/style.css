@@ -368,25 +368,132 @@ body {
 .main-header .navbar-right {
   float: right;
 }
-
-.main-header .top-menu {
+.main-header .navbar-left {
   float: left;
+}
+.main-header .top-menu  {
   max-height: 50px;
+  display: flex;
   /* padding: 15px 15px; */
 }
 
 .main-header .top-menu a {
-  float: inherit;
   display: block;
+  color: inherit;
   padding: 15px 30px;
-  color: #19476e;
-  font-weight: bold;
 }
 
-.main-header .top-menu a.active {
+/* .main-header .top-menu a:hover {
+  border-bottom: 2px solid #ffffff;
+  color: #ffffff;
+} */
+
+.main-header .top-menu .main-menu {
+   position: relative;
+   float: inherit;
+  display: block;
+  color: #19476e;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 120px;
+  text-align: center;
+}
+
+.main-header .top-menu.navbar-right .main-menu {
+  color: #ffffff;
+  min-width: 90px;
+}
+.main-header .top-menu.navbar-right .main-menu:hover {
+  color: #d5ecff;
+  border-bottom: 2px solid #d5ecff;
+}
+
+.main-header .top-menu.navbar-right a {
+  padding: 15px 0;
+}
+
+
+.main-header .top-menu .main-menu:hover {
   border-bottom: 2px solid #ffffff;
   color: #ffffff;
 }
+
+.main-header .top-menu .main-menu.main-menu.dashboard#dashboard,
+.main-header .top-menu .main-menu.clusters#clusters,
+.main-header .top-menu .main-menu.nodes#nodes,
+.main-header .top-menu .main-menu.projects#projects,
+.main-header .top-menu .main-menu.deployments#deployments,
+.main-header .top-menu .main-menu.pods#pods,
+.main-header .top-menu .main-menu.network#network
+{
+  color: #ffffff;
+  background: #1b6996;
+  border-bottom: 2px solid #1b6996;
+}
+
+/* .main-header .top-menu .main-menu.accounts#accounts, */
+.main-header .top-menu .main-menu.settings#settings
+{
+  color: #ffffff;
+  /* background: #1b6996; */
+  /* border-bottom: 2px solid #ffffff; */
+}
+
+
+
+.main-header .top-menu .sub-menu{
+  position: absolute;
+    top: 50px;
+    left: 0;
+    margin: auto;
+    background-color: rgb(48 94 130 / 91%);
+    color: #ffffff;
+    display: none;
+    min-width: 122px;
+    text-align: center;
+    box-shadow: 2px 2px 1px 1px #00000040;
+    font-weight: normal;
+    padding: 5px 0px;
+}
+
+.main-header .top-menu .main-menu .sub-menu.accounts
+{
+  left: -15px;
+}
+
+.main-header .top-menu .main-menu .sub-menu.settings
+{
+  left: -31px;
+}
+
+.main-header .top-menu .sub-menu > a{
+  color: #ffffff;
+  padding: 10px;
+}
+
+
+.main-header .top-menu .sub-menu > a:hover{
+  color: #ececec;
+  background-color: #2b4f73;
+}
+
+.main-header .top-menu .main-menu#dashboard:hover .sub-menu.dashboard,
+.main-header .top-menu .main-menu#clusters:hover .sub-menu.clusters,
+.main-header .top-menu .main-menu#nodes:hover .sub-menu.nodes,
+.main-header .top-menu .main-menu#projects:hover .sub-menu.projects,
+.main-header .top-menu .main-menu#deployments:hover .sub-menu.deployments,
+.main-header .top-menu .main-menu#pods:hover .sub-menu.pods,
+.main-header .top-menu .main-menu#network:hover .sub-menu.network
+{
+  display:block;
+}
+
+.main-header .top-menu .main-menu#accounts:hover .sub-menu.accounts,
+.main-header .top-menu .main-menu#settings:hover .sub-menu.settings
+{
+  display:block;
+}
+
 
 .disabled-link {
   pointer-events: none;

@@ -25,15 +25,14 @@ import {
   // TableEditColumn,
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../../../modules/Editor";
-import * as utilLog from "./../../../util/UtLogs.js";
-import PjDeploymentMigration from "./../../modal/PjDeploymentMigration";
-import queryString from 'query-string';
-// import { NavigateNext} from '@material-ui/icons';
+import Editor from "./../../modules/Editor";
+import * as utilLog from "./../../util/UtLogs.js";
+import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
+import { NavigateNext} from '@material-ui/icons';
 
 
 // let apiParams = "";
-class PjwDeployments extends Component {
+class Deployments extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -69,16 +68,7 @@ class PjwDeployments extends Component {
   }
 
   componentWillMount() {
-    // debugger;
-
-    // const query = queryString.parse(this.props.location.search).cluster
-    // console.log(query);
-    // const result = {
-    //   menu : "clusters",
-    //   title : this.props.match.params.cluster
-    // }
-    // this.props.menuData(result);
-    // apiParams = this.props.param;
+    this.props.menuData("none");
   }
 
   callApi = async () => {
@@ -86,7 +76,7 @@ class PjwDeployments extends Component {
     // queryString = queryString.parse(this.props.location.search).cluster
     // console.log(query);
     const response = await fetch(
-      `/projects/${this.props.match.params.project}/resources/workloads/deployments${this.props.location.search}`
+      `/deployments`
     );
     const body = await response.json();
     return body;
@@ -190,8 +180,7 @@ class PjwDeployments extends Component {
           <Table.Cell {...props} style={{ cursor: "pointer" }}>
             <Link
               to={{
-                pathname: `/projects/${this.props.match.params.project}/resources/workloads/deployments/${props.value}`,
-                search: this.props.location.search,
+                pathname: `/deployments`,
                 state: {
                   data: row,
                 },
@@ -232,6 +221,21 @@ class PjwDeployments extends Component {
       <div className="content-wrapper full">
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
+        <section className="content-header">
+          <h1>
+            Deployments
+            <small></small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <Link to="/dashboard">Home</Link>
+            </li>
+            <li className="active">
+             <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Deployments
+            </li>
+          </ol>
+        </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
@@ -305,4 +309,4 @@ class PjwDeployments extends Component {
   }
 }
 
-export default PjwDeployments;
+export default Deployments;
