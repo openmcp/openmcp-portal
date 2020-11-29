@@ -230,7 +230,7 @@ class ProjectUsageTop5 extends Component {
 
             {/* Sorting */}
             <SortingState
-            // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+            defaultSorting={[{ columnName: 'usage', direction: 'desc' }]}
             />
             <IntegratedSorting />
 
@@ -318,7 +318,7 @@ class NodeUsageTop5 extends Component {
 
             {/* Sorting */}
             <SortingState
-            // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+              defaultSorting={[{ columnName: 'usage', direction: 'desc' }]}
             />
             <IntegratedSorting />
 

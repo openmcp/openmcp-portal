@@ -232,30 +232,28 @@ app.put("/update/account-roles", (req, res) => {
 /* Dashboard APIs */
 ///////////////////////
 app.get("/dashboard", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/dashboard`,
-  //   // "http://192.168.0.51:4885/apis/dashboard",
-  //   method: "GET",
-  //   // headers: {
-  //   //   Authorization:
-  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-  //   // },
-  // };
+  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/dashboard`,
+    method: "GET",
+    // headers: {
+    //   Authorization:
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    // },
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     // console.log("result", body);
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      // console.log("result", body);
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 
@@ -324,7 +322,6 @@ app.get("/api/projects", (req, res) => {
 app.get("/projects", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/projects.json");
   // let overview = JSON.parse(rawdata);
-  // //console.log(overview);
   // res.send(overview);
 
   var request = require("request");
@@ -591,6 +588,7 @@ app.get("/deployments", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+  
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/deployments`,
@@ -630,6 +628,27 @@ app.get("/deployments/:deployment", (req, res) => {
   // });
 });
 
+app.post("/deployments/migration", (req, res) => {
+  const YAML = req.body.yaml
+  console.log(YAML)
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/migration`,
+    method: "POST",
+    body: YAML
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body)
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
 
 ///////////////////////
 /* Clusters APIs */
@@ -637,21 +656,12 @@ app.get("/deployments/:deployment", (req, res) => {
 app.get("/clusters", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters.json");
   // let overview = JSON.parse(rawdata);
-  // //console.log(overview);
-  // res.send(overview);
-// let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  // let overview = JSON.parse(rawdata);
-  // //console.log(overview);
   // res.send(overview);
 
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/clusters`,
     method: "GET",
-    // headers: {
-    //   Authorization:
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-    // },
   };
 
   request(options, function (error, response, body) {
@@ -665,24 +675,24 @@ app.get("/clusters", (req, res) => {
 });
 
 app.get("/clusters-joinable", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/clusters_joinable.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/clusters_joinable.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/joinableclusters`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/joinableclusters`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Clusters > overview
@@ -829,16 +839,12 @@ app.get("/gcp/clusters", (req, res) => {
 app.get("/nodes", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/nodes.json");
   // let overview = JSON.parse(rawdata);
-  // //console.log(overview);
   // res.send(overview);
+
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/nodes`,
     method: "GET",
-    // headers: {
-    //   Authorization:
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-    // },
   };
 
   request(options, function (error, response, body) {
@@ -869,8 +875,8 @@ app.get("/nodes/:node", (req, res) => {
 app.get("/pods", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/pods.json");
   // let overview = JSON.parse(rawdata);
-  // //console.log(overview);
   // res.send(overview);
+
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/pods`,
@@ -969,6 +975,7 @@ app.get("/ingress", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/ingress.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/ingress`,

@@ -108,6 +108,14 @@ class Nodes extends Component {
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
   render() {
 
     // 셀 데이터 스타일 변경
@@ -187,7 +195,9 @@ class Nodes extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Nodes
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+              Nodes
+            </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">

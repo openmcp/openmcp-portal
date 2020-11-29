@@ -82,6 +82,14 @@ class Ingress extends Component {
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW11');
   }
+  
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
 
   render() {
     // 셀 데이터 스타일 변경
@@ -174,7 +182,9 @@ class Ingress extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Ingress
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+              Ingress
+            </span>
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -203,7 +213,7 @@ class Ingress extends Component {
                   {/* Sorting */}
                   <SortingState
                     defaultSorting={[
-                      { columnName: "status", direction: "desc" },
+                      { columnName: "created_time", direction: "desc" },
                     ]}
                   />
                   <IntegratedSorting />

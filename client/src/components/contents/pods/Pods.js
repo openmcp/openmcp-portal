@@ -98,6 +98,14 @@ class Pods extends Component {
     utilLog.fn_insertPLogs(userId, 'log-PD-VW01');
   };
 
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
   render() {
 
     // 셀 데이터 스타일 변경
@@ -186,7 +194,9 @@ class Pods extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Pods
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+              Pods
+            </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -216,7 +226,7 @@ class Pods extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 

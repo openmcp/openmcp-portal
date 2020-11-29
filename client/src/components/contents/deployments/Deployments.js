@@ -9,7 +9,6 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  // EditingState,
   SelectionState,
   IntegratedSelection,
 } from "@devexpress/dx-react-grid";
@@ -21,8 +20,6 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
-  // TableEditRow,
-  // TableEditColumn,
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../modules/Editor";
@@ -103,6 +100,7 @@ class Deployments extends Component {
   }
 
   onUpdateData = () => {
+    console.log("onUpdateData")
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -118,6 +116,13 @@ class Deployments extends Component {
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
 
   render() {
     // 셀 데이터 스타일 변경
@@ -206,7 +211,10 @@ class Deployments extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
+          <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
             Deployments
+          </span>
+            
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -238,7 +246,7 @@ class Deployments extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
                   />
 
                   {/* 페이징 */}

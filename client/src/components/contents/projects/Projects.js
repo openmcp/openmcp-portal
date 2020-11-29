@@ -93,6 +93,14 @@ class Projects extends Component {
 
   };
 
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
   render() {
 
     // 셀 데이터 스타일 변경
@@ -184,7 +192,9 @@ class Projects extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Projects
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+              Projects
+            </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -214,7 +224,7 @@ class Projects extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                  // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 

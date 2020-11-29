@@ -9,6 +9,8 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  SelectionState,
+  IntegratedSelection,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -18,10 +20,12 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
+  TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 // import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
+import Confirm from './../../modules/Confirm';
 
 
 class ClustersJoinable extends Component {
@@ -51,6 +55,19 @@ class ClustersJoinable extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
+      selection: [],
+      selectedRow: "",
+
+      confirmInfo : {
+        title :"Cluster Join Confrim",
+        context :"Are you sure you want to Join the Cluster?",
+        button : {
+          open : "JOIN",
+          yes : "JOIN",
+          no : "CANCEL",
+        }  
+      },
+      confrimTarget : "false"
     };
   }
 
@@ -84,6 +101,27 @@ class ClustersJoinable extends Component {
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
   };
+
+  confirmed = (result) => {
+    if(result) {
+      //Unjoin proceed
+      console.log("confirmed")
+
+      // const userId = localStorage.getItem("userName");
+      // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
+    } else {
+      console.log("cancel")
+    }
+  }
+  
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
 
   render() {
 
@@ -139,12 +177,23 @@ class ClustersJoinable extends Component {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
+    const onSelectionChange = (selection) => {
+      if (selection.length > 1) selection.splice(0, 1);
+      this.setState({ selection: selection });
+      this.setState({
+        selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} ,
+        confrimTarget : this.state.rows[selection[0]] ? this.state.rows[selection[0]].name : "false" ,
+      });
+    };
+
     return (
       <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Joinable Clusters
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+              Joinable Clusters
+            </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -157,50 +206,60 @@ class ClustersJoinable extends Component {
             </li>
           </ol>
         </section>
-        <section className="content" style={{ position: "relative" }}>
-          <Paper>
-            {this.state.rows ? (
-              [
-                // <Editor title="create"/>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
-                  <Toolbar />
-                  {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <IntegratedFiltering />
-                  <SearchPanel style={{ marginLeft: 0 }} />
+        {this.state.rows ? (
+          <section className="content" style={{ position: "relative" }}>
+              <Paper>
+                <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
+                    {/* <Editor title="create"/> */}
+                    <Grid
+                      rows={this.state.rows}
+                      columns={this.state.columns}
+                    >
+                      <Toolbar />
+                      {/* 검색 */}
+                      <SearchState defaultValue="" />
+                      <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* Sorting */}
-                  <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
+                      {/* Sorting */}
+                      <SortingState
+                        defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                      />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
+                      {/* 페이징 */}
+                      <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                      <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  {/* 테이블 */}
-                  <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
-        </section>
+                      <SelectionState
+                        selection={this.state.selection}
+                        onSelectionChange={onSelectionChange}
+                      />
+
+                      <IntegratedFiltering />
+                      <IntegratedSorting />
+                      <IntegratedSelection />
+                      <IntegratedPaging />
+
+                      {/* 테이블 */}
+                      <Table cellComponent={Cell} rowComponent={Row} />
+                      <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                      <TableHeaderRow
+                        showSortingControls
+                        rowComponent={HeaderRow}
+                      />
+                      <TableSelection
+                        selectByRowClick
+                        highlightRow
+                      />
+                    </Grid>
+              </Paper>
+          </section>
+          ) : (
+            <CircularProgress
+              variant="determinate"
+              value={this.state.completed}
+              style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+            ></CircularProgress>
+          )}
       </div>
     );
   }

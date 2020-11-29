@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import PieReChart from "./../modules/PieReChart";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from 'react-router-dom';
-// import PieHalfReChart from './../modules/PieHalfReChart';
 import { NavigateNext} from '@material-ui/icons';
 import TreeView from './../modules/TreeView';
 import TreeView2 from './../modules/TreeView2';
-import RefreshButton from './../modules/RefreshButton';
 import * as utilLog from './../util/UtLogs.js';
+// import RefreshButton from './../modules/RefreshButton';
+// import PieHalfReChart from './../modules/PieHalfReChart';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -23,10 +23,6 @@ class Dashboard extends Component {
   componentWillMount() {
     this.props.menuData("none");
   }
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.log("componentDidUpdate");
-  // }
   
   componentDidMount() {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
@@ -51,7 +47,6 @@ class Dashboard extends Component {
   
 
   onRefresh = () => {
-    console.log("refresh")
     this.callApi()
       .then((res) => {
         this.setState({ rows: res });
@@ -60,8 +55,6 @@ class Dashboard extends Component {
       .catch((err) => console.log(err));
 
   };
-
-
 
   progress = () => {
     const { completed } = this.state;
@@ -77,6 +70,7 @@ class Dashboard extends Component {
       endAngle : 180
     }  
   }
+
   render() {
     // let classNam = 'content-wrapper';
     // console.log(this.state.rows);
@@ -86,7 +80,7 @@ class Dashboard extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Dashboard
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>Dashboard</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">

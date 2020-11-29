@@ -9,6 +9,8 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  SelectionState,
+  IntegratedSelection,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -18,10 +20,12 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
+  TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 // import Editor from "./../modules/Editor";
 import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "../../util/UtLogs.js";
+import Confirm from './../../modules/Confirm';
 
 class ClustersJoined extends Component {
   constructor(props) {
@@ -60,9 +64,21 @@ class ClustersJoined extends Component {
       pageSizes: [3, 6, 9, 0],
 
       completed: 0,
+      selection: [],
+      selectedRow: "",
+
+      confirmInfo : {
+        title :"Cluster Unjoin Confrim",
+        context :"Are you sure you want to cancel the Cluster Join?",
+        button : {
+          open : "UNJOIN",
+          yes : "UNJOIN",
+          no : "CANCEL",
+        }  
+      },
+      confrimTarget : "false"
     };
   }
-
   componentWillMount() {
     this.props.menuData("none");
   }
@@ -93,9 +109,34 @@ class ClustersJoined extends Component {
     utilLog.fn_insertPLogs(userId, "log-CL-VW01");
   }
 
+  confirmed = (result) => {
+    if(result) {
+      //Unjoin proceed
+      console.log("confirmed")
+
+      // const userId = localStorage.getItem("userName");
+      // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
+    } else {
+      console.log("cancel")
+    }
+  }
+ 
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+  
   render() {
     // 셀 데이터 스타일 변경
-    const HighlightedCell = ({ value, style, row, ...restProps }) => (
+    const HighlightedCell = ({ value, style, row, ...restProps }) => {
+      var cpuPct = parseFloat(row.cpu.split("/")[0])/parseFloat(row.cpu.split("/")[1].split(" Core")[0]) * 100
+      var memPct = parseFloat(row.ram.split("/")[0])/parseFloat(row.ram.split("/")[1].split(" Gi")[0]) * 100
+      console.log(cpuPct, memPct)
+      var status = cpuPct >= 40 || memPct >= 40 ? "Warning" : value
+      return (
       <Table.Cell
         {...restProps}
         style={{
@@ -108,19 +149,21 @@ class ClustersJoined extends Component {
         <span
           style={{
             color:
-              value === "Healthy"
+            status === "Healthy"
                 ? "#1ab726"
-                : value === "Unhealthy"
+                : status === "Unhealthy"
                 ? "red"
-                : value === "Unknown"
+                : status === "Unknown"
                 ? "#b5b5b5"
+                : status === "Warning"
+                ? "#ff8042"
                 : "black",
           }}
         >
-          {value}
+          {status}
         </span>
       </Table.Cell>
-    );
+    )};
 
     //셀
     const Cell = (props) => {
@@ -163,12 +206,23 @@ class ClustersJoined extends Component {
       return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
+    const onSelectionChange = (selection) => {
+      if (selection.length > 1) selection.splice(0, 1);
+      this.setState({ selection: selection });
+      this.setState({
+        selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} ,
+        confrimTarget : this.state.rows[selection[0]] ? this.state.rows[selection[0]].name : "false" ,
+      });
+    };
+
     return (
       <div className="content-wrapper cluster-list full">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Joined Clusters
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+              Joined Clusters
+            </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -187,12 +241,11 @@ class ClustersJoined extends Component {
           [
             <section className="content" style={{ position: "relative" }}>
               <Paper>
-                {/* <Editor title="create"/>, */}
+                <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
-                  <IntegratedFiltering />
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   {/* Sorting */}
@@ -201,15 +254,23 @@ class ClustersJoined extends Component {
                       { columnName: "status", direction: "desc" },
                     ]}
                   />
-                  <IntegratedSorting />
 
                   {/* 페이징 */}
                   <PagingState
                     defaultCurrentPage={0}
                     defaultPageSize={this.state.pageSize}
                   />
-                  <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  <SelectionState
+                    selection={this.state.selection}
+                    onSelectionChange={onSelectionChange}
+                  />
+
+                  <IntegratedFiltering />
+                  <IntegratedSorting />
+                  <IntegratedSelection />
+                  <IntegratedPaging />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
@@ -219,6 +280,10 @@ class ClustersJoined extends Component {
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
+                  />
+                  <TableSelection
+                    selectByRowClick
+                    highlightRow
                   />
                 </Grid>
               </Paper>

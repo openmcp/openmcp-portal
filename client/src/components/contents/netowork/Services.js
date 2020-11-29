@@ -90,6 +90,14 @@ class Services extends Component {
 
   };
 
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
   render() {
 
     // 셀 데이터 스타일 변경
@@ -176,7 +184,9 @@ class Services extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Services
+            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+              Services
+            </span>
             <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
@@ -206,7 +216,7 @@ class Services extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 

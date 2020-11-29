@@ -366,7 +366,9 @@ body {
 
 .main-header .navbar-custom-menu,
 .main-header .navbar-right {
-  float: right;
+  position: absolute;
+  right: 0;
+  background: #3c8dbcdb;
 }
 .main-header .navbar-left {
   float: left;
