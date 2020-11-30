@@ -15,6 +15,7 @@ app.get("/api/hello", (req, res) => {
 });
 
 const apiServer = "http://192.168.0.34:4885";
+// const apiServer = "http://10.0.3.40:4885";
 
 //데이터베이스 접속 설정
 const data = fs.readFileSync("./database.json");
@@ -649,6 +650,26 @@ app.post("/deployments/migration", (req, res) => {
   });
 });
 
+app.post("/deployments/create", (req, res) => {
+  const YAML = req.body.yaml
+  
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/yamlapply`,
+    method: "POST",
+    body: YAML
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
 
 ///////////////////////
 /* Clusters APIs */
@@ -699,7 +720,6 @@ app.get("/clusters-joinable", (req, res) => {
 app.get("/clusters/:cluster/overview", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters_overview.json");
   // let overview = JSON.parse(rawdata);
-  
   // res.send(overview);
 
   var request = require("request");
@@ -825,6 +845,15 @@ app.get("/aws/clusters", (req, res) => {
   res.send(overview);
 });
 
+app.get("/aws/clusters/workers", (req, res) => {
+  var clusterName = req.query.clustername;
+  console.log(clusterName);
+  let rawdata = fs.readFileSync("./json_data/aws_eks_workers.json");
+  let overview = JSON.parse(rawdata);
+  console.log(overview);
+  res.send(overview);
+});
+
 app.get("/gcp/clusters", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/gcp_clusters.json");
   let overview = JSON.parse(rawdata);
@@ -919,10 +948,46 @@ from tb_accounts u`, (err, result) => {
 });
 
 app.get("/settings/policy", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/settings_policy.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/settings_policy.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  let sql =`select  policy_id, policy_name,
+                    rate, period
+            from tb_policy`
+
+  connection.query(sql, (err, result) => {
+    res.send(result.rows);
+  });
+});
+
+app.put("/settings/policy", (req, res) => {
+  console.log(
+    req.body.rate.start,
+    req.body.rate.end,
+    req.body.period.start,
+    req.body.period.end,
+    req.body.policyName)
+  connection.query(
+    `update tb_policy 
+      set rate='${req.body.rate.start}-${req.body.rate.end}', 
+          period='${req.body.period.start}-${req.body.period.end}'
+      where policy_id = '${req.body.policyId}'`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check policy : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
 });
 
 app.get("/hpa", (req, res) => {

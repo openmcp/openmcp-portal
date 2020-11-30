@@ -21,7 +21,7 @@ import {
   TableHeaderRow,
   TableSelection,
   PagingPanel,
-  // TableColumnVisibility
+  TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
@@ -34,10 +34,19 @@ class Policy extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Policy"},
+        { name: "policy_name", title: "Policy"},
+        { name: "policy_id", title: "policy_id"},
+        { name: "rate", title: "rate"},
+        { name: "period", title: "period"},
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 500 },
+        { columnName: "policy_name", width: 500 },
+        { columnName: "policy_id", width: 100 },
+        { columnName: "rate", width: 100 },
+        { columnName: "period", width: 100 },
+      ],
+      defaultHiddenColumnNames :[
+        "rate", "period", "policy_id"
       ],
       rows: "",
 
@@ -72,7 +81,6 @@ class Policy extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        console.log(res)
         this.setState({ rows: res });
         clearInterval(this.timer);
       })
@@ -84,15 +92,13 @@ class Policy extends Component {
   };
 
   onUpdateData = () => {
-    this.timer = setInterval(this.progress, 20);
+    this.setState({
+      selection : [],
+      selectedRow:"",
+    })
     this.callApi()
       .then((res) => {
-        this.setState({ 
-          selection : [],
-          selectedRow : "",
-          rows: res 
-        });
-
+        this.setState({ rows: res });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -183,7 +189,7 @@ class Policy extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   <SortingState
-                    defaultSorting={[{ columnName: 'user_id', direction: 'asc' }]}
+                    defaultSorting={[{ columnName: 'policy_id', direction: 'asc' }]}
                   />
 
                   <SelectionState
@@ -202,12 +208,16 @@ class Policy extends Component {
                     showSortingControls
                     rowComponent={HeaderRow}
                   />
+                  <TableColumnVisibility
+                    defaultHiddenColumnNames={this.state.defaultHiddenColumnNames}
+                  />
                   
                   <TableSelection
                     selectByRowClick
                     highlightRow
                     // showSelectionColumn={false}
                   />
+                  
                 </Grid>,
               ]
             ) : (

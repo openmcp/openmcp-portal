@@ -74,8 +74,8 @@ class TreeView extends React.Component {
   }
 
   componentWillUpdate(prevProps, prevState){
-    console.log("componentWillUpdate")
-    console.log("this.props.data",prevProps)
+    // console.log("componentWillUpdate")
+    // console.log("this.props.data",prevProps)
     if (this.props.data !== prevProps.data) {
         this.setState({
           data: prevProps.data,
@@ -123,7 +123,7 @@ class TreeView extends React.Component {
     const styles = {
       links: {
         stroke: "black",
-        strokeWidth: 2,
+        strokeWidth: 1,
       },
     };
 

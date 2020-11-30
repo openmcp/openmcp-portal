@@ -30,13 +30,15 @@ class PjIngress extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "namespace", title: "Namespace" },
+        { name: "cluster", title: "Cluster" },
+        { name: "project", title: "Project" },
         { name: "address", title: "Address" },
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
-        { columnName: "namespace", width: 130 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "project", width: 130 },
         { columnName: "address", width: 130 },
         { columnName: "created_time", width: 180 },
       ],
@@ -49,6 +51,7 @@ class PjIngress extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
+      editorContext : ``,
     };
   }
 
@@ -210,7 +213,7 @@ class PjIngress extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create"/>,
+                <Editor title="create" context={this.state.editorContext}/>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}

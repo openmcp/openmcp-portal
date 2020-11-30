@@ -57,9 +57,6 @@ class CsOverview extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-
-    
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-CL-VW02');
   }  
@@ -74,6 +71,16 @@ class CsOverview extends Component {
   progress = () => {
     const { completed } = this.state;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
+
+  onRefresh = () => {
+    console.log("onClick")
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
   };
 
   render() {
@@ -110,7 +117,7 @@ class CsOverview extends Component {
               <ProjectUsageTop5 rowData={this.state.rows.project_usage_top5}/>
               <NodeUsageTop5 rowData={this.state.rows.node_usage_top5}/>
             </div>,
-            <ClusterResourceUsage rowData={this.state.rows.cluster_resource_usage}/>,
+            <ClusterResourceUsage rowData={this.state.rows.cluster_resource_usage} onRefresh={this.onRefresh}/>,
             <KubernetesStatus rowData={this.state.rows.kubernetes_status}/>,
             <Events rowData={this.state.rows.events}/>
             ]
@@ -335,6 +342,8 @@ class ClusterResourceUsage extends Component {
   state = {
     rows : this.props.rowData,
   }
+
+  
   angle = {
     full : {
       startAngle : 0,
@@ -345,6 +354,18 @@ class ClusterResourceUsage extends Component {
       endAngle : 0
     }  
   }
+
+  componentWillUpdate(prevProps, prevState){
+    if (this.props.rowData !== prevProps.rowData) {
+        this.setState({
+          rows: prevProps.rowData,
+        });
+      }
+  }
+
+  onClick = () => {
+    this.props.onRefresh();
+  }
   render(){
     const colors = [
       "#0088FE",
@@ -352,7 +373,11 @@ class ClusterResourceUsage extends Component {
     ];
     return (
       <div className="content-box">
-        <div className="cb-header">Cluster Resource Usage</div>
+        <div className="cb-header">
+          <span onClick={this.onClick} style={{cursor:"pointer"}}>
+            Cluster Resource Usage
+          </span>
+        </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">CPU</div>

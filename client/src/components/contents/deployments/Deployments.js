@@ -26,6 +26,7 @@ import Editor from "./../../modules/Editor";
 import * as utilLog from "./../../util/UtLogs.js";
 import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
 import { NavigateNext} from '@material-ui/icons';
+import axios from 'axios';
 
 
 // let apiParams = "";
@@ -35,7 +36,7 @@ class Deployments extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
+        { name: "status", title: "Ready" },
         { name: "cluster", title: "Cluster" },
         { name: "project", title: "Project" },
         { name: "image", title: "Image" },
@@ -60,7 +61,27 @@ class Deployments extends Component {
       completed: 0,
       selection: [],
       selectedRow: "",
-      clusterName : ""
+      clusterName : "",
+      editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+kind: OpenMCPDeployment
+metadata:
+  name: openmcp-deployment2
+  namespace: openmcp
+spec:
+  replicas: 8
+  labels:
+      app: openmcp-nginx
+  template:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: nginx
+            name: nginx
+      placement:
+        clusters:
+        - name: cluster2
+        - name: cluster1`
     };
   }
 
@@ -100,7 +121,6 @@ class Deployments extends Component {
   }
 
   onUpdateData = () => {
-    console.log("onUpdateData")
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -116,10 +136,30 @@ class Deployments extends Component {
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
+  excuteScript = (context) => {
+    const url = `/deployments/create`;
+    const data = {
+      yaml:context
+    };
+    console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
+  }
+
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        this.setState({ 
+          // selection : [],
+          // selectedRow : "",
+          rows: res });
       })
       .catch((err) => console.log(err));
   };
@@ -236,7 +276,7 @@ class Deployments extends Component {
                   rowData={this.state.selectedRow}
                   onUpdateData = {this.onUpdateData}
                 />,
-                <Editor title="create deployment" />,
+                <Editor title="create" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}

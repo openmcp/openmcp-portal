@@ -8,10 +8,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import Slider from '@material-ui/core/Slider';
-import * as utilLog from './../../util/UtLogs.js';
-// import axios from 'axios';
-
+import Slider from "@material-ui/core/Slider";
+import * as utilLog from "./../../util/UtLogs.js";
+import axios from "axios";
 
 const styles = (theme) => ({
   root: {
@@ -26,39 +25,29 @@ const styles = (theme) => ({
   },
 });
 
-
-
 function valuetext(value) {
   return `${value}°C`;
 }
 
 class PcSetPolicy extends Component {
-  constructor(props){
-    super(props)
-    this.geo_r_max = 10;
+  constructor(props) {
+    super(props);
+    this.g_rate_max = 10;
     this.period_max = 10;
-    this.resource = {
-      geo_r_min: "0",
-      geo_r_max: "2",
-      period_min: "1",
-      period_max: "5"
-    }
-    this.state={
-      title : this.props.policy,
-      open : false,
-      geo_r_req : "No Request",
-      geo_r_limit : "Limitless",
-      period_req : "No Request",
-      period_limit : "Limitless",
-      geo_r_value : [this.resource.geo_r_min,this.resource.geo_r_max],
-      period_value : [this.resource.period_min,this.resource.period_max],
-    }
+    this.state = {
+      title: "",
+      policyId : "",
+      open: false,
+      g_rate_value: [],
+      period_value: [],
+    };
     this.onChange = this.onChange.bind(this);
   }
-  componentWillMount() {
-    console.log(this.props.policy)
-  }
 
+  componentWillMount() {
+    
+  }
+  
   onChange(e) {
     // console.log("onChangedd");
     this.setState({
@@ -68,11 +57,24 @@ class PcSetPolicy extends Component {
 
   handleClickOpen = () => {
     if (Object.keys(this.props.policy).length === 0) {
-      alert("please select account");
+      alert("Please Select Policy");
       this.setState({ open: false });
       return;
     }
-    this.setState({ open: true });
+
+    let g_rate_start = parseInt(this.props.policy.rate.split('-')[0])
+    let g_rate_end = parseInt(this.props.policy.rate.split('-')[1])
+    let period_start = parseInt(this.props.policy.period.split('-')[0])
+    let period_end = parseInt(this.props.policy.period.split('-')[1])
+    
+    this.setState({ 
+      open: true, 
+      title:this.props.policy.policy_name,
+      policyId:this.props.policy.policy_id,
+      g_rate_value: [g_rate_start, g_rate_end],
+      period_value: [period_start, period_end]
+    });
+    
   };
 
   handleClose = () => {
@@ -80,85 +82,121 @@ class PcSetPolicy extends Component {
   };
 
   handleSave = (e) => {
-    // console.log(this.state.geo_r_value)
+    // console.log(this.state.g_rate_value)
     // console.log(this.state.period_value)
-    
+
     //Save modification data (Policy Changed)
-    // YAML SET
+    const url = `/settings/policy`;
+    const data = {
+      policyId: this.state.policyId,
+      rate: {
+        start: this.state.g_rate_value[0],
+        end: this.state.g_rate_value[1],
+      },
+      period: {
+        start: this.state.period_value[0],
+        end: this.state.period_value[1],
+      },
+    };
+
+    axios.put(url, data)
+      .then((res) => {
+        console.log("res",res.data)
+        if (res.data.data.rowCount > 0) {
+          // log - policy update
+          
+        } else {
+          this.props.onUpdateData();
+          // console.log("sdfsdf",this.props)
+          const userId = localStorage.getItem("userName");
+          utilLog.fn_insertPLogs(userId, "log-PO-MD01");
+          alert(res.data.message);
+        }
+      })
+      .catch((err) => {
+        alert(err);
+      });
+
+      // this.props.onUpdateData();
 
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-PD-MD01');
-    this.setState({open:false});
+    utilLog.fn_insertPLogs(userId, "log-PD-MD01");
+    this.setState({ open: false });
   };
 
-  geo_rate_marks = [
+  g_rateate_marks = [
     {
       value: 0,
-      label: '0',
+      label: "0",
     },
     {
       value: 2,
-      label: '2',
+      label: "2",
     },
     {
       value: 4,
-      label: '4',
+      label: "4",
     },
     {
       value: 6,
-      label: '6',
+      label: "6",
     },
     {
       value: 8,
-      label: '8',
+      label: "8",
     },
     {
       value: 10,
-      label: '10',
+      label: "10",
     },
   ];
 
-  period_marks_ = [
+  period_marks = [
     {
       value: 1,
-      label: '1',
+      label: "1",
     },
     {
       value: 5,
-      label: '5',
+      label: "5",
     },
     {
       value: 10,
-      label: '10',
-    }
+      label: "10",
+    },
   ];
 
   render() {
-    console.log("render");
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
-        <MuiDialogTitle disableTypography className={classes.root} {...other}>
-          <Typography variant="h6">{children}</Typography>
-          {onClose ? (
-            <IconButton
-              aria-label="close"
-              className={classes.closeButton}
-              onClick={onClose}
+        <div>
+            <MuiDialogTitle
+              disableTypography
+              className={classes.root}
+              {...other}
             >
-              <CloseIcon />
-            </IconButton>
-          ) : null}
-        </MuiDialogTitle>
+              <Typography variant="h6">{children}</Typography>
+              {onClose ? (
+                <IconButton
+                  aria-label="close"
+                  className={classes.closeButton}
+                  onClick={onClose}
+                >
+                  <CloseIcon />
+                </IconButton>
+              ) : null}
+            </MuiDialogTitle>
+        </div>
       );
     });
 
     const handleChangeCpu = (e, newValue) => {
       this.setState({
-        geo_r_value: newValue,
+        g_rate_value: newValue,
       });
     };
-    
+
     const handleChangePeriod = (e, newValue) => {
       this.setState({
         period_value: newValue,
@@ -179,8 +217,21 @@ class PcSetPolicy extends Component {
         >
           
         </div> */}
-        <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", right:"26px", top:"26px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
-          edit policy 
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.handleClickOpen}
+          style={{
+            position: "absolute",
+            right: "26px",
+            top: "26px",
+            zIndex: "10",
+            width: "148px",
+            height: "31px",
+            textTransform: "capitalize",
+          }}
+        >
+          edit policy
         </Button>
         <Dialog
           onClose={this.handleClose}
@@ -190,7 +241,7 @@ class PcSetPolicy extends Component {
           maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            {this.props.policy.name}
+            {this.state.title}
           </DialogTitle>
           <DialogContent dividers>
             <div className="pd-resource-config">
@@ -200,8 +251,8 @@ class PcSetPolicy extends Component {
                 </Typography>
                 <Slider
                   className="sl"
-                  name="geo_r_value"
-                  value={this.state.geo_r_value}
+                  name="g_rate_value"
+                  value={this.state.g_rate_value}
                   onChange={handleChangeCpu}
                   valueLabelDisplay="auto"
                   aria-labelledby="range-slider"
@@ -209,14 +260,13 @@ class PcSetPolicy extends Component {
                   step={2}
                   min={0}
                   max={10}
-                  marks={this.geo_rate_marks}
+                  marks={this.g_rateate_marks}
                 />
-                <div className="txt">
-                </div>
+                <div className="txt"></div>
               </div>
               <div className="res">
                 <Typography id="range-slider" gutterBottom>
-                    Period
+                  Period
                 </Typography>
                 <Slider
                   className="sl"
@@ -231,8 +281,7 @@ class PcSetPolicy extends Component {
                   max={10}
                   marks={this.period_marks}
                 />
-                <div className="txt">
-                </div>
+                <div className="txt"></div>
               </div>
             </div>
           </DialogContent>

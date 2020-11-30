@@ -133,26 +133,19 @@ class Dashboard extends Component {
                 ></DashboardCard01>
               </div>,
               <div style={{ display: "flex" }}>
+                <DashboardCard04
+                  title="Zone-Clusters"
+                  width="100%"
+                  data={this.state.rows.regions}
+                ></DashboardCard04>
+              </div>,
+              <div style={{ display: "flex" }}>
                 <DashboardCard03
                   title="Master Clusters"
                   width="100%"
                   // data={this.state.masterCluster}
                 ></DashboardCard03>
-                {/* <DashboardCard02
-                  title="Resources"
-                  width="67.777%"
-                  data={this.state.rows.resources}
-                  angle={this.angle.half}
-                ></DashboardCard02> */}
-                
-              </div>,
-              <div style={{ display: "flex" }}>
-              <DashboardCard04
-                title="Zone-Clusters"
-                width="100%"
-                data={this.state.rows.regions}
-              ></DashboardCard04>
-            </div>
+              </div>
             ]
           ) : (
             <CircularProgress

@@ -1722,3 +1722,26 @@ g {
 .cluster-list .rs-status .status-content{
   padding: 10px 20px;
 }
+
+.outer-table{}
+.outer-table table tbody tr td{
+  padding : 0;
+}
+
+.inner-table{
+  padding: 7px;
+}
+.inner-table .table {
+
+}
+
+.inner-table table {
+  border: 1px solid #c7c7c7;
+}
+
+.inner-table table thead tr th{
+  padding : 5px 0;
+}
+.inner-table table tbody tr td{
+  padding : 0;
+}

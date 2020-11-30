@@ -67,10 +67,15 @@ class TreeView2 extends React.Component {
     });
   }
 
-  componentDidUpdate(){
-    // console.log(this.treeContainer.getElementsByTagName("g")[0].getBoundingClientRect().width);
+  componentWillUpdate(prevProps, prevState){
+    // console.log("componentWillUpdate")
+    // console.log("this.props.data",prevProps)
+    if (this.props.data !== prevProps.data) {
+        this.setState({
+          data: prevProps.data,
+        });
+      }
   }
-  
 
   render() {
     const svgSquare = {
@@ -94,10 +99,11 @@ class TreeView2 extends React.Component {
     //   },
     // };
 
+ 
     const styles = {
       links: {
         stroke: "black",
-        strokeWidth: 2,
+        strokeWidth: 1,
       },
     };
 
@@ -125,6 +131,7 @@ class TreeView2 extends React.Component {
                 zoomable = {false}
                 separation = {{siblings: 0.7, nonSiblings: 2}}
                 // nodeSvgShape={svgSquare2}
+                transitionDuration="0"
                 translate={this.state.translate}
                 orientation="vertical" //horizontal
                 allowForeignObjects
@@ -165,143 +172,3 @@ class TreeView2 extends React.Component {
 }
 
 export default TreeView2;
-
-
-// const myTreeData = [
-//   {
-//     name: "ap-northeast-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//     ],
-//   },
-//   {
-//     name: "ap-northeast-1",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       }
-//     ],
-//   },
-//   {
-//     name: "eu-west-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//     ],
-//   },
-//   {
-//     name: "us-east-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       }
-//     ],
-//   },
-//   {
-//     name: "us-east-2",
-//     attributes: {
-//       status: "Healthy",
-//     },
-//     children: [
-//       {
-//         name: "cluster_01",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_02",
-//         attributes: {
-//           status: "unHealthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       },
-//       {
-//         name: "cluster_03",
-//         attributes: {
-//           status: "Healthy",
-//         },
-//       }
-//     ],
-//   },
-// ];

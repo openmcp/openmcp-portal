@@ -15,6 +15,28 @@ import Typography from "@material-ui/core/Typography";
 
 // import Modal from "@material-ui/core/Modal";
 
+
+/*
+<Editor title="create" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
+  
+  excuteScript = (context) => {
+    const url = `/deployments/create`;
+    const data = {
+      yaml:context
+    };
+    console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
+  }
+*/
+
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -28,13 +50,38 @@ const styles = (theme) => ({
   },
 });
 
+var context = ''
+
 class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
+      context : ``,
     };
   }
+
+  componentDidMount(){
+    this.setState({context:this.props.context})
+  }
+
+  onChange = (newValue) => {
+    // this.setState({context: newValue});
+    context = newValue
+  };
+
+  handleExcute= () => {
+    this.props.excuteScript(context)
+    this.setState({ open: false });
+  };
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   render() {
     const DialogTitle = withStyles(styles)((props) => {
@@ -69,17 +116,11 @@ class Editor extends Component {
       },
     }))(MuiDialogActions);
 
-    const onChange = (newValue) => {
-      // console.log("change", newValue);
-    };
 
-    const handleClickOpen = () => {
-      this.setState({ open: true });
-    };
 
-    const handleClose = () => {
-      this.setState({ open: false });
-    };
+
+
+
 
     // const useStyles = makeStyles((theme) => ({
     //     paper: {
@@ -134,96 +175,99 @@ class Editor extends Component {
       <AceEditor
         mode="yaml"
         theme="nord_dark"
-        onChange={onChange}
+        onChange={this.onChange}
         name="UNIQUE_ID_OF_DIV"
         editorProps={{ $blockScrolling: true }}
         width="100%"
         fontSize="0.875rem"
         style={{lineHeight:"1.05rem"}}
-        value={`apiVersion: types.kubefed.io/v1beta1
-          kind: FederatedDeployment
-          metadata:
-            annotations:
-              kubesphere.io/creator: admin
-            labels:
-              app: mapp
-            name: mapp
-            namespace: mpr
-          spec:
-            overrides:
-              - clusterName: host
-                clusterOverrides:
-                  - path: /spec/replicas
-                    value: 3
-              - clusterName: slave
-                clusterOverrides:
-                  - path: /spec/replicas
-                    value: 3
-            placement:
-              clusters:
-                - name: host
-                - name: slave
-            template:
-              metadata:
-                annotations:
-                  kubesphere.io/containerSecrets: null
-                labels:
-                  app: mapp
-                namespace: mpr
-              spec:
-                replicas: 1
-                selector:
-                  matchLabels:
-                    app: mapp
-                strategy:
-                  rollingUpdate:
-                    maxSurge: 25%
-                    maxUnavailable: 25%
-                  type: RollingUpdate
-                template:
-                  metadata:
-                    labels:
-                      app: mapp
-                  spec:
-                    affinity: {}
-                    containers:
-                      - image: 'paulbouwer/hello-kubernetes:1.8'
-                        imagePullPolicy: IfNotPresent
-                        name: container-aft8xf
-                        ports:
-                          - containerPort: 8080
-                            name: http-8080
-                            protocol: TCP
-                    imagePullSecrets: null
-                    initContainers: []
-                    serviceAccount: default
-                    volumes: []
-                    `}
+        value = {this.state.context}
+          /*
+          // value={`apiVersion: types.kubefed.io/v1beta1
+          //   kind: FederatedDeployment
+          //   metadata:
+          //     annotations:
+          //       kubesphere.io/creator: admin
+          //     labels:
+          //       app: mapp
+          //     name: mapp
+          //     namespace: mpr
+          //   spec:
+          //     overrides:
+          //       - clusterName: host
+          //         clusterOverrides:
+          //           - path: /spec/replicas
+          //             value: 3
+          //       - clusterName: slave
+          //         clusterOverrides:
+          //           - path: /spec/replicas
+          //             value: 3
+          //     placement:
+          //       clusters:
+          //         - name: host
+          //         - name: slave
+          //     template:
+          //       metadata:
+          //         annotations:
+          //           kubesphere.io/containerSecrets: null
+          //         labels:
+          //           app: mapp
+          //         namespace: mpr
+          //       spec:
+          //         replicas: 1
+          //         selector:
+          //           matchLabels:
+          //             app: mapp
+          //         strategy:
+          //           rollingUpdate:
+          //             maxSurge: 25%
+          //             maxUnavailable: 25%
+          //           type: RollingUpdate
+          //         template:
+          //           metadata:
+          //             labels:
+          //               app: mapp
+          //           spec:
+          //             affinity: {}
+          //             containers:
+          //               - image: 'paulbouwer/hello-kubernetes:1.8'
+          //                 imagePullPolicy: IfNotPresent
+          //                 name: container-aft8xf
+          //                 ports:
+          //                   - containerPort: 8080
+          //                     name: http-8080
+          //                     protocol: TCP
+          //             imagePullSecrets: null
+          //             initContainers: []
+          //             serviceAccount: default
+          //             volumes: []
+          //             `}
+          */
       />
     );
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={handleClickOpen} style={{position:"absolute", right:"30px", top:"26px", zIndex:"10",textTransform: "capitalize"}}>
+        <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", right:"30px", top:"26px", zIndex:"10",textTransform: "capitalize"}}>
           {this.props.title}
         </Button>
         <Dialog
-          onClose={handleClose}
+          onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           fullWidth={true}
           maxWidth={false}
         >
-          <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             Edit yaml
           </DialogTitle>
           <DialogContent dividers>
           {editor}
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={handleClose} color="primary">
+            <Button autoFocus onClick={this.handleExcute} color="primary">
               update
             </Button>
-            <Button autoFocus onClick={handleClose} color="primary">
+            <Button autoFocus onClick={this.handleClose} color="primary">
               cancel
             </Button>
           </DialogActions>

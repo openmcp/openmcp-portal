@@ -67,7 +67,8 @@ class ClustersJoinable extends Component {
           no : "CANCEL",
         }  
       },
-      confrimTarget : "false"
+      confrimTarget : "false",
+      editorContext : ``,
     };
   }
 
@@ -210,7 +211,7 @@ class ClustersJoinable extends Component {
           <section className="content" style={{ position: "relative" }}>
               <Paper>
                 <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
-                    {/* <Editor title="create"/> */}
+                    {/* <Editor title="create" context={this.state.editorContext}/> */}
                     <Grid
                       rows={this.state.rows}
                       columns={this.state.columns}

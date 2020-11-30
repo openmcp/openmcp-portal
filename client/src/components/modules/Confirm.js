@@ -71,7 +71,7 @@ class Confirm extends Component {
     }
     const handleYes = () => {
       this.props.confirmed(true)
-      this.setState({open:true});
+      this.setState({open:false});
     };
   
     const handleNo = () => {

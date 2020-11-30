@@ -310,7 +310,7 @@ spec:
           onClick={this.handleClickOpen}
           style={{
             position: "absolute",
-            right: "200px",
+            right: "115px",
             top: "26px",
             zIndex: "10",
             width: "148px",

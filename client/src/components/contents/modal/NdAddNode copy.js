@@ -3,7 +3,6 @@ import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import * as utilLog from "../../util/UtLogs.js";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   TextField,
   Button,
@@ -102,7 +101,7 @@ class NdAddNode extends Component {
       secretKey:"",
       accessKey:"",
       nodeName:"",
-      desiredNumber:0,
+      nodeCounts:1,
 
       InstTypeColumns: [
         { name: "code", title: "Type" },
@@ -147,7 +146,6 @@ class NdAddNode extends Component {
 
       value: 0,
       instType : "t2.micro",
-      expandedRowIds : [0],
     };
     // this.onChange = this.onChange.bind(this);
   }
@@ -170,14 +168,13 @@ class NdAddNode extends Component {
   initState = () => {
     this.setState({
       selection : [],
-      selectedRow:"",
       instTypeSelection: [],
+      selectedRow:"",
       instTypeSelectedRow:"",
       secretKey:"",
       accessKey:"",
       nodeName:"",
-      desiredNumber:0,
-      expandedRowIds : [0],
+      nodeCounts:1,
     });
   }
 
@@ -258,7 +255,9 @@ class NdAddNode extends Component {
   );
 
   onSelectionChange = (selection) => {
-    this.setState({desiredNumber:selection.desired})
+    if (selection.length > 1) selection.splice(0, 1);
+    this.setState({ selection: selection });
+    this.setState({ selectedRow: selection.length > 0 ? this.state.clusters[selection[0]] : {} });
   };
 
   
@@ -267,17 +266,6 @@ class NdAddNode extends Component {
     this.setState({ instTypeSelection: selection });
     this.setState({ instTypeSelectedRow: selection.length > 0 ? this.state.instTypes[selection[0]] : {} });
   };
-
-  onExpandedRowIdsChange = (selection) => {
-    if (selection.length > 1) selection.splice(0, 1);
-    return (this.setState({expandedRowIds:selection}))
-  }
-
-  RowDetail = ({ row }) => (
-    <div>
-      <WorkerGroups rowData={row.name} onSelectionChange={this.onSelectionChange}/>
-    </div>
-  );
 
   render() {
     const DialogTitle = withStyles(styles)((props) => {
@@ -298,30 +286,21 @@ class NdAddNode extends Component {
       );
     });
 
-
+    const RowDetail = ({ row }) => (
+      // <WorkerGroups rowData={row}/>
+      <div></div>
+    );
 
     return (
       <div>
         <Button
-          variant="outlined"
-          color="primary"
-          onClick={this.handleClickOpen}
-          style={{
-            position: "absolute",
-            right: "26px",
-            top: "26px",
-            zIndex: "10",
-            width: "148px",
-            textTransform: "capitalize",
+          variant="outlined" color="primary" onClick={this.handleClickOpen}
+          style={{position: "absolute", right: "26px", top: "26px", zIndex: "10", width: "148px", textTransform: "capitalize",
           }}
-        >
-          Add Node
+        > Add Node
         </Button>
         <Dialog
-          onClose={this.handleClose}
-          aria-labelledby="customized-dialog-title"
-          open={this.state.open}
-          fullWidth={false}
+          onClose={this.handleClose} aria-labelledby="customized-dialog-title" open={this.state.open} fullWidth={false}
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
@@ -373,7 +352,7 @@ class NdAddNode extends Component {
                   </div>
                 </section>
                 <section className="md-content">
-                  <div className="outer-table">
+                  <div>
                     <p>Cluster</p>
                     {/* cluster selector */}
                     <Paper>
@@ -397,14 +376,12 @@ class NdAddNode extends Component {
 
                       <IntegratedFiltering />
                       <IntegratedSorting />
-                      {/* <IntegratedSelection /> */}
+                      <IntegratedSelection />
                       <IntegratedPaging />
 
                       {/* 테이블 */}
                       <RowDetailState
-                        // defaultExpandedRowIds={[2, 5]}
-                        expandedRowIds={this.state.expandedRowIds}
-                        onExpandedRowIdsChange={this.onExpandedRowIdsChange}
+                        defaultExpandedRowIds={[2, 5]}
                       />
                       <Table />
                       <TableColumnResizing
@@ -415,7 +392,7 @@ class NdAddNode extends Component {
                         rowComponent={this.HeaderRow}
                       />
                       <TableRowDetail
-                        contentComponent={this.RowDetail}
+                        contentComponent={RowDetail}
                       />
                       {/* <TableSelection
                         selectByRowClick
@@ -429,22 +406,21 @@ class NdAddNode extends Component {
                 <section className="md-content">
                   <div style={{display:"flex"}}>
                     <div className="props" style={{width:"30%"}}>
-                      <p>Selected Desired Number</p>
+                      <p>Counts</p>
                       <TextField
                         id="outlined-multiline-static"
                         rows={1}
                         type="number"
-                        placeholder="workers count"
+                        placeholder="node counts"
                         variant="outlined"
-                        value = {this.state.desiredNumber}
+                        value = {this.state.nodeCounts}
                         fullWidth	={true}
-                        name="desiredNumber"
+                        name="nodeCounts"
                         onChange = {this.onChange}
                       />
                     </div>
                   </div>
                 </section>
-                
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
                 <section className="md-content">
@@ -500,9 +476,9 @@ class NdAddNode extends Component {
                         type="number"
                         placeholder="node counts"
                         variant="outlined"
-                        value = {this.state.desiredNumber}
+                        value = {this.state.nodeCounts}
                         fullWidth	={true}
-                        name="desiredNumber"
+                        name="nodeCounts"
                         onChange = {this.onChange}
                       />
                     </div>
@@ -560,7 +536,7 @@ class NdAddNode extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              update
+              create
             </Button>
             <Button onClick={this.handleClose} color="primary">
               cancel
@@ -572,130 +548,110 @@ class NdAddNode extends Component {
   }
 }
 
-class WorkerGroups extends Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      rows : "",
-      columns: [
-        { name: "worker", title: "Worker" },
-        { name: "cluster", title: "Cluster" },
-        { name: "min", title: "Min" },
-        { name: "max", title: "Max" },
-        { name: "desired", title: "Desired" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "worker", width: 150 },
-        { columnName: "cluster", width: 130 },
-        { columnName: "min", width: 100 },
-        { columnName: "max", width: 100 },
-        { columnName: "desired", width: 130 },
-      ],
 
-      selection: [],
-      selectedRow : "",
-      value: 0,
-    }
-  }
+// class WorkerGroups extends Component {
+//   constructor(props){
+//     super(props);
+//     this.state = {
+//       rows : "",
+//       columns: [
+//         { name: "node_name", title: "Worker" },
+//         { name: "min_counts", title: "Min" },
+//         { name: "max_counts", title: "Max" },
+//         { name: "desired", title: "Desired" },
+//       ],
+//       defaultColumnWidths: [
+//         { columnName: "node_name", width: 200 },
+//         { columnName: "min_counts", width: 480 },
+//         { columnName: "max_counts", width: 200 },
+//         { columnName: "desired", width: 200 },
+//       ],
 
-  componentDidMount() {
-    this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        var result = [];
-        res.map(item=>
-          item.cluster == this.props.rowData ? result.push(item) : ""
-        )
-        this.setState({ rows: result });
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
-  }
+//       selection: [],
+//       selectedRow : "",
+//       value: 0,
+//     }
+//   }
 
-  initState = () => {
-    this.setState({
-      selection : [],
-      selectedRow:"",
-    });
-  }
+//   componentWillMount() {
+//     this.callApi()
+//       .then((res) => {
+//         var result = [];
+//         res.map((item)=>{
+//           return(item.cluster == this.props.rowData.name ? result.push(item) : "")
+//         })
+//         this.setState({ rows: result });
+//       })
+//       .catch((err) => console.log(err));
+//   }
 
-  callApi = async () => {
-    // const response = await fetch("/aws/clusters");
-    const response = await fetch(`/aws/clusters/workers?clustername=${this.props.rowData.name}`);
-    const body = await response.json();
-    return body;
-  };
+//   initState = () => {
+//     this.setState({
+//       selection : [],
+//       selectedRow:"",
+//     });
+//   }
 
-  HeaderRow = ({ row, ...restProps }) => (
-    <Table.Row
-      {...restProps}
-      style={{
-        cursor: "pointer",
-        backgroundColor: "#ffe7e7",
-        // backgroundColor: "whitesmoke",
-        // ...styles[row.sector.toLowerCase()],
-      }}
-      // onClick={()=> alert(JSON.stringify(row))}
-    />
-  );
+//   callApi = async () => {
+//     // const response = await fetch("/aws/clusters");
+//     const response = await fetch(`/aws/clusters/workers?clustername=${this.props.rowData.name}`);
+//     const body = await response.json();
+//     return body;
+//   };
 
-  onSelectionChange = (selection) => {
-    if (selection.length > 1) selection.splice(0, 1);
-    
-    this.setState({ selection: selection });
-    if(selection.length > 0){
-      this.setState({ selectedRow: this.state.rows[selection[0]]})
-      this.props.onSelectionChange(this.state.rows[selection[0]])
-    } else {
-      this.setState({ selectedRow: {} })
-      this.props.onSelectionChange(0)
-    };
-  }
+//   HeaderRow = ({ row, ...restProps }) => (
+//     <Table.Row
+//       {...restProps}
+//       style={{
+//         cursor: "pointer",
+//         backgroundColor: "whitesmoke",
+//         // ...styles[row.sector.toLowerCase()],
+//       }}
+//       // onClick={()=> alert(JSON.stringify(row))}
+//     />
+//   );
 
-  render(){
-    return(
-      <div className="inner-table">
-        {this.state.rows ? (
-        <Grid rows={this.state.rows} columns={this.state.columns}>
-          {/* Sorting */}
-          <SortingState
-            defaultSorting={[{ columnName: "status", direction: "asc" }]}
-          />
+//   onSelectionChange = (selection) => {
+//     if (selection.length > 1) selection.splice(0, 1);
+//     this.setState({ selection: selection });
+//     this.setState({ selectedRow: selection.length > 0 ? this.state.clusters[selection[0]] : {} });
+//   };
 
-          <SelectionState
-            selection={this.state.selection}
-            onSelectionChange={this.onSelectionChange}
-          />
+//   render(){
+//     return(
+//       <div>
+//         <Grid rows={this.state.clusters} columns={this.state.columns}>
+//           {/* Sorting */}
+//           <SortingState
+//             defaultSorting={[{ columnName: "status", direction: "asc" }]}
+//           />
 
-          <IntegratedFiltering />
-          <IntegratedSorting />
+//           <SelectionState
+//             selection={this.state.selection}
+//             onSelectionChange={this.onSelectionChange}
+//           />
 
-          {/* 테이블 */}
-          <Table />
-          <TableColumnResizing
-            defaultColumnWidths={this.state.defaultColumnWidths}
-          />
-          <TableHeaderRow
-            showSortingControls
-            rowComponent={this.HeaderRow}
-          />
-          <TableSelection
-            selectByRowClick
-            highlightRow
-            // showSelectionColumn={false}
-          />
-        </Grid>
-        ) : (
-          <CircularProgress
-            variant="determinate"
-            value={this.state.completed}
-            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-          ></CircularProgress>
-        )}
-      </div>
-    )
-  }
-}
+//           <IntegratedFiltering />
+//           <IntegratedSorting />
 
+//           {/* 테이블 */}
+//           <Table />
+//           <TableColumnResizing
+//             defaultColumnWidths={this.state.defaultColumnWidths}
+//           />
+//           <TableHeaderRow
+//             showSortingControls
+//             rowComponent={this.HeaderRow}
+//           />
+//           <TableSelection
+//             selectByRowClick
+//             highlightRow
+//             // showSelectionColumn={false}
+//           />
+//         </Grid>
+//       </div>
+//     )
+//   }
+// }
 
 export default NdAddNode;

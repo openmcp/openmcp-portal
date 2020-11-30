@@ -43,6 +43,7 @@ class DNS extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
+      editorContext : ``,
     };
   }
 
@@ -181,7 +182,7 @@ class DNS extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create"/>,
+                <Editor title="create" context={this.state.editorContext}/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

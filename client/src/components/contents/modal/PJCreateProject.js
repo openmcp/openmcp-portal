@@ -59,6 +59,8 @@ const styles = (theme) => ({
   },
 });
 
+let project_name = ''
+let project_description = ''
 class PjCreateProject extends Component {
   constructor(props){
     super(props)
@@ -116,10 +118,15 @@ class PjCreateProject extends Component {
   }
 
   onChange(e) {
-    // console.log("onChangedd");
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
+
+    if (e.target.name == "project_name"){
+      project_name = e.target.value
+    } else if(e.target.name == "project_description"){
+      project_description = e.target.value
+    }
+    // this.setState({
+    //   [e.target.name]: e.target.value,
+    // });
   }
 
   handleClickOpen = () => {
@@ -134,7 +141,7 @@ class PjCreateProject extends Component {
 
   handleSave = (e) => {
     //Save Changed Taint
-    if (this.state.project_name === ""){
+    if (project_name === ""){
       alert("Please insert project name");
       return
     } else if (Object.keys(this.state.selectedRows).length === 0) {
@@ -142,7 +149,7 @@ class PjCreateProject extends Component {
       return;
     } 
 
-    console.log(this.state)
+    console.log(project_name, project_description)
 
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PJ-CR01');
@@ -215,7 +222,7 @@ class PjCreateProject extends Component {
                     rows={1}
                     placeholder="project name"
                     variant="outlined"
-                    value = {this.state.project_name}
+                    // value = ''
                     fullWidth	={true}
                     name="project_name"
                     onChange = {this.onChange}
@@ -231,7 +238,7 @@ class PjCreateProject extends Component {
                     variant="outlined"
                     name="project_description"
                     onChange = {this.onChange}
-                    value = {this.state.project_description}
+                    // value = {this.state.project_description}
                     fullWidth	={true}
                   />
                 </div>

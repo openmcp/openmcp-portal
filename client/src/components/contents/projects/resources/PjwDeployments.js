@@ -39,19 +39,19 @@ class PjwDeployments extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "ready", title: "Ready" },
+        { name: "status", title: "Ready" },
         { name: "cluster", title: "Cluster" },
+        { name: "project", title: "Project" },
         { name: "image", title: "Image" },
-        { name: "updated_time", title: "Updated Time" },
-        // { name: "edit", title: "edit" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "ready", width: 130 },
+        { columnName: "name", width: 250 },
+        { columnName: "status", width: 100 },
         { columnName: "cluster", width: 130 },
-        { columnName: "image", width: 130 },
-        { columnName: "updated_time", width: 170 },
-        // { columnName: "edit", width: 170 },
+        { columnName: "project", width: 200 },
+        { columnName: "image", width: 370 },
+        { columnName: "created_time", width: 170 },
       ],
       rows: "",
 
@@ -86,7 +86,8 @@ class PjwDeployments extends Component {
     // queryString = queryString.parse(this.props.location.search).cluster
     // console.log(query);
     const response = await fetch(
-      `/projects/${this.props.match.params.project}/resources/workloads/deployments${this.props.location.search}`
+      // `/projects/${this.props.match.params.project}/resources/workloads/deployments${this.props.location.search}`
+      `/deployments`
     );
     const body = await response.json();
     return body;
@@ -237,11 +238,11 @@ class PjwDeployments extends Component {
             {this.state.rows ? (
               [
                 <PjDeploymentMigration
-                  title="create deployment"
+                  title="migration"
                   rowData={this.state.selectedRow}
                   onUpdateData = {this.onUpdateData}
                 />,
-                <Editor title="create deployment" />,
+                <Editor title="create" />,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
