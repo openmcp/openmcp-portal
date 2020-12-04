@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 // import SelectBox from "../../modules/SelectBox";
+import { Link } from "react-router-dom";
 import * as utilLog from "../../util/UtLogs.js";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
-  // TextField,
   Button,
   Dialog,
   DialogActions,
@@ -14,37 +14,36 @@ import {
   Typography,
 } from "@material-ui/core";
 import {
-  // SearchState,
   IntegratedFiltering,
   PagingState,
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  // EditingState,
   SelectionState,
   IntegratedSelection,
+  TableColumnVisibility,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
   Table,
-  // Toolbar,
-  // SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
-  // TableEditRow,
-  // TableEditColumn,
   TableSelection,
+  TableFixedColumns,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
+import axios from 'axios';
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
 // import Button from "@material-ui/core/Button";
 // import Dialog from "@material-ui/core/Dialog";
 // import IconButton from "@material-ui/core/IconButton";
-import axios from 'axios';
+// import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
+// import Confirm from './../../modules/Confirm';
+import Confirm2 from './../../modules/Confirm2';
 
 const styles = (theme) => ({
   root: {
@@ -59,30 +58,24 @@ const styles = (theme) => ({
   },
 });
 
-class PjDeploymentMigration extends Component {
+class SnapShotControl extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "nodes", title: "nodes" },
-        { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
-        { name: "region", title: "Region" },
-        { name: "zone", title: "Zone" },
-        
-        // { name: "edit", title: "edit" },
+        { name: "name", title: "SnapShot" },
+        { name: "created_time", title: "Created Time" },
+        { name: "control", title: " " },
+      ],
+      tableColumnExtensions: [
+        { columnName: "name", width: "45%" },
+        { columnName: "created_time", width: "30%"},
+        { columnName: "control", align:"center"},
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "nodes", width: 130 },
-        { columnName: "cpu", width: 100 },
-        { columnName: "ram", width: 120 },
-        { columnName: "region", width: 130 },
-        { columnName: "zone", width: 130 },
-        // { columnName: "edit", width: 170 },
+        { columnName: "name", width: 400 },
+        { columnName: "created_time", width: 300 },
+        { columnName: "control", width: 100 },
       ],
       currentPage: 0,
       setCurrentPage: 0,
@@ -90,73 +83,46 @@ class PjDeploymentMigration extends Component {
       pageSizes: [5, 10, 15, 0],
 
       open: false,
-      dpName : "",
-      dpStatus : "",
-      dpImage : "",
-      dpCluster : "",
-      clusters: "",
+      account : "",
+      account_role : "",
+      rows : [],
 
       selection: [],
       selectedRow : "",
-      YAML : `apiVersion: openmcp.k8s.io/v1alpha1
-      kind: Migration
-      metadata:
-        name: migrations8
-      spec:
-        MigrationServiceSource:
-        - SourceCluster: cluster1
-          TargetCluster: cluster2
-          NameSpace: testmig
-          ServiceName: testim
-          MigrationSource:
-          - ResourceName: testim-dp
-            ResourceType: Deployment
-          - ResourceName: testim-sv
-            ResourceType: Service
-          - ResourceName: testim-pv
-            ResourceType: PersistentVolume
-          - ResourceName: testim-pvc
-            ResourceType: PersistentVolumeClaim
-      `
+      rightColumns : ["control"],
+      
+      confirmOpen: false,
+      confirmInfo : {
+        title :"Cluster Join Confrim",
+        context :"Are you sure you want to Join the Cluster?",
+        button : {
+          open : "",
+          yes : "JOIN",
+          no : "CANCEL",
+        }  
+      },
+      confrimTarget : "false",
+      confirmTargetKeyname:"snapshot"
     };
     // this.onChange = this.onChange.bind(this);
   }
 
   callApi = async () => {
-    const response = await fetch("/clusters");
+    const response = await fetch(`/snapshots`);
     const body = await response.json();
     return body;
   };
 
-  handleClickOpen = () => {
-    // console.log("count:",Object.keys(this.props.rowData).length, this.props.rowData);
-    if (Object.keys(this.props.rowData).length === 0) {
-      alert("Please select deployment");
-      this.setState({ open: false });
-      return;
-    }
-
-    this.setState({ 
-      open: true,
-      dpName : this.props.rowData.name,
-      dpStatus : this.props.rowData.status,
-      dpImage : this.props.rowData.image,
-      dpCluster : this.props.rowData.cluster,
-      selection : [],
-      clusters : this.state.clusters
-    });
-  };
-
   componentWillMount() {
-    // console.log("Migration will mount");
-    // cluster list를 가져오는 api 호출
-    this.callApi()
-      .then((res) => {
-        this.setState({ clusters: res });
-        // console.log(res[0])
-        // this.setState({ cluster: res[0], firstValue: res[0] });
-      })
-      .catch((err) => console.log(err));
+    // this.callApi()
+    //   .then((res) => {
+    //     if(res === null) {
+    //       this.setState({ rows: [] });
+    //     } else {
+    //       this.setState({ rows: res });
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   // onChange(e) {
@@ -166,120 +132,118 @@ class PjDeploymentMigration extends Component {
   //   });
   // }
 
+  //snapshot open 버튼
+  handleClickOpen = () => {
+    if (Object.keys(this.props.rowData).length === 0) {
+      alert("Please select deployement");
+      this.setState({ open: false });
+      return;
+    }
+
+    this.setState({ open: true });
+
+    this.callApi()
+    .then((res) => {
+      console.log(res)
+      this.setState({ rows: res });
+    })
+    .catch((err) => console.log(err));
+  };
+
   handleClose = () => {
     this.setState({
-      project_name: "",
-      project_description: "",
-      cluster: this.state.firstValue,
+      account: "",
+      role_id: "",
       open: false,
     });
   };
 
   handleSave = (e) => {
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select target cluster");
+      alert("Please select snapshot");
       return;
-    
     } 
-    let YAML =`apiVersion: openmcp.k8s.io/v1alpha1
-    kind: Migration
-    metadata:
-      name: migrations8
-    spec:
-      MigrationServiceSource:
-      - SourceCluster: cluster1
-        TargetCluster: cluster2
-        NameSpace: testmig
-        ServiceName: testim
-        MigrationSource:
-        - ResourceName: testim-dp
-          ResourceType: Deployment
-        - ResourceName: testim-sv
-          ResourceType: Service
-        - ResourceName: testim-pv
-          ResourceType: PersistentVolume
-        - ResourceName: testim-pvc
-          ResourceType: PersistentVolumeClaim`;
-    let YAML2 = `apiVersion: openmcp.k8s.io/v1alpha1
-    kind: Migration
-    metadata:
-      name: migrations8
-    spec:
-      MigrationServiceSource:
-      - SourceCluster: ${this.state.dpCluster}
-        TargetCluster: ${this.state.selectedRow.name}
-        NameSpace: ${this.state.dpName}
-        ServiceName: testim
-        MigrationSource:
-        - ResourceName: testim-dp
-          ResourceType: Deployment
-        - ResourceName: testim-sv
-          ResourceType: Service
-        - ResourceName: testim-pv
-          ResourceType: PersistentVolume
-        - ResourceName: testim-pvc
-          ResourceType: PersistentVolumeClaim`;
-          
-    const url = `/deployments/migration`;
-//     const data = {
-//       yaml:`apiVersion: openmcp.k8s.io/v1alpha1
-// kind: Migration
-// metadata:
-//   name: migrations9
-// spec:
-//   MigrationServiceSource:
-//   - SourceCluster: cluster1
-//     TargetCluster: cluster2
-//     NameSpace: testmig
-//     ServiceName: testim
-//     MigrationSource:
-//     - ResourceName: testim-dp
-//       ResourceType: Deployment
-//     - ResourceName: testim-sv
-//       ResourceType: Service
-//     - ResourceName: testim-pv
-//       ResourceType: PersistentVolume
-//     - ResourceName: testim-pvc
-//       ResourceType: PersistentVolumeClaim`
-//     };
-    const data = {
-      yaml:`apiVersion: openmcp.k8s.io/v1alpha1
-kind: Migration
-metadata:
-  name: migrations1
-spec:
-  MigrationServiceSource:
-  - SourceCluster: cluster1
-    TargetCluster: cluster2
-    NameSpace: default
-    ServiceName: iotservice
-    MigrationSource:
-    - ResourceName: iot-gateway
-      ResourceType: Deployment
-    - ResourceName: iot-gateway-svc
-      ResourceType: Service`
-    };
-    axios.post(url, data)
-    .then((res) => {
-        alert(res.data.message);
-        this.setState({ open: false });
-        this.props.onUpdateData();
-    })
-    .catch((err) => {
-        alert(err);
-    });
 
-    // implement migration workflow
-    // ......
-    this.props.onUpdateData();
-    
     // loging deployment migration
-    const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
+    // const userId = localStorage.getItem("userName");
+    // utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
 
     //close modal popup
     this.setState({ open: false });
   };
+
+
+  onSnapshotDelete = (data) => {
+    console.log("Delete snapshot",data)
+    // alert("Delete snapshot", data)
+    this.setState({
+      confirmOpen:true,
+      confirmInfo : {
+        title :"Snapshot Delete",
+        context :"Are you sure you want to Snapshot Delete?",
+        button : {
+          open : "",
+          yes : "Delete",
+          no : "Cancel",
+        }  
+      },
+      confrimTarget : data,
+      confirmTargetKeyname:"snapshot"
+    })
+  }
+
+  onSnapshotRevert = (data) => {
+    // console.log("Revert snapshot",data)
+
+    this.setState({
+      confirmOpen:true,
+      confirmInfo : {
+        title :"Snapshot Revert",
+        context :"Are you sure you want to Revert?",
+        button : {
+          open : "",
+          yes : "Revert",
+          no : "Cancel",
+        }  
+      },
+      confrimTarget : data,
+      confirmTargetKeyname:"snapshot"
+    })
+    // alert("Revert snapshot", data)
+  }
+
+  Cell = (props) => {
+    const { column, row } = props;
+    if (column.name === "control") {
+      return (
+        <Table.Cell
+          {...props}
+          style={{ borderRight:"1px solid #e0e0e0", borderLeft:"1px solid #e0e0e0", textAlign:"center",background:"whitesmoke"}}
+        >
+          <div className="snapshot">
+            <span className="revert" style={{cursor:"pointer", display:"inline-block"}} onClick={()=>this.onSnapshotRevert(row.name)}>Revert</span>
+            <span style={{margin:"0 5px"}}> | </span>
+            <span className="delete" style={{cursor:"pointer", display:"inline-block"}} onClick={()=>this.onSnapshotDelete(row.name)}>Delete</span>
+          </div>
+        </Table.Cell>
+      );
+    }
+    return <Table.Cell>{props.value}</Table.Cell>;
+  };
+
+  // callback function
+  confirmed = (result) => {
+    if(result) {
+      //Unjoin proceed
+      console.log("confirmed")
+      // const userId = localStorage.getItem("userName");
+      // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
+      this.setState({open:false})
+    } else {
+      console.log("cancel")
+    }
+    this.setState({confirmOpen:false})
+  }
 
   render() {
     const DialogTitle = withStyles(styles)((props) => {
@@ -312,12 +276,37 @@ spec:
       />
     );
 
+    const Row = (props) => {
+      return <Table.Row {...props} key={props.tableRow.key}/>;
+    };
+    
+    //셀
+    // const Cell = (props) => {
+    //   const { column, row } = props;
+    //   if (column.name === "control") {
+    //     return (
+    //       <Table.Cell
+    //         {...props}
+    //         style={{ borderRight:"1px solid #e0e0e0", borderLeft:"1px solid #e0e0e0", textAlign:"center",background:"whitesmoke"}}
+    //       >
+    //         <div onClick={this.onSnapshotRevert(props)}>
+    //           <span style={{cursor:"pointer", display:"inline-block"}} onClick={this.onSnapshotRevert(props)}>Revert</span>
+    //           <span> | </span>
+    //           <span style={{cursor:"pointer", display:"inline-block"}} onClick={this.onSnapshotDelete(props)}>Delete</span>
+    //         </div>
+    //       </Table.Cell>
+    //     );
+    //   }
+    //   return <Table.Cell>{props.value}</Table.Cell>;
+    // };
     const onSelectionChange = (selection) => {
       // console.log(selection);
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
-      this.setState({ selectedRow: this.state.clusters[selection[0]] ? this.state.clusters[selection[0]] : {} });
+      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
+
+    
 
     return (
       <div>
@@ -327,14 +316,14 @@ spec:
           onClick={this.handleClickOpen}
           style={{
             position: "absolute",
-            right: "115px",
+            right: "272px",
             top: "26px",
             zIndex: "10",
             width: "148px",
             textTransform: "capitalize",
           }}
         >
-          Migration
+          SnapShot
         </Button>
         <Dialog
           onClose={this.handleClose}
@@ -344,37 +333,38 @@ spec:
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Deployment Migration
+            Snapshots
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body">
-              <section className="md-content">
-                {/* deployment informations */}
-                <p>Target Deployment</p>
+              {/* <section className="md-content">
+                <p>User Info</p>
                 <div id="md-content-info">
                   <div class="md-partition">
                     <div class="md-item">
-                      <span><strong>Name : </strong></span>
-                      <span>{this.state.dpName}</span>
-                    </div>
-                    <div class="md-item">
-                      <span><strong>Image : </strong></span>
-                      <span>{this.state.dpImage}</span>
+                      <span><strong>UserID : </strong></span>
+                      <span>{this.state.account}</span>
                     </div>
                   </div>
                   <div class="md-partition">
                     <div class="md-item">
-                      <span><strong>Current Cluster : </strong></span>
-                      <span>{this.state.dpCluster}</span>
+                      <span><strong>Current Role : </strong></span>
+                      <span>{this.state.account_role}</span>
                     </div>
                   </div>
                 </div>
-              </section>
+              </section> */}
               <section className="md-content">
-                <p>Select Cluster</p>
+                <p>Snapshot List</p>
                 {/* cluster selector */}
                 <Paper>
-                <Grid rows={this.state.clusters} columns={this.state.columns}>
+                <Confirm2
+                  confirmInfo={this.state.confirmInfo} 
+                  confrimTarget ={this.state.confrimTarget} 
+                  confirmTargetKeyname = {this.state.confirmTargetKeyname}
+                  confirmed={this.confirmed}
+                  confirmOpen={this.state.confirmOpen}/>
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   {/* <Toolbar /> */}
                   {/* 검색 */}
                   {/* <SearchState defaultValue="" />
@@ -402,19 +392,30 @@ spec:
                   <IntegratedPaging />
 
                   {/* 테이블 */}
-                  <Table />
-                  <TableColumnResizing
-                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  <Table 
+                    cellComponent={this.Cell} 
+                    rowComponent={Row} 
+                    columnExtensions={this.state.tableColumnExtensions}
                   />
+                  {/* <TableColumnResizing
+                    // defaultColumnWidths={this.state.defaultColumnWidths}
+                  /> */}
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
                   />
+                  <TableColumnVisibility
+                    defaultHiddenColumnNames={['role_id']}
+                  />
                   <TableSelection
-                    selectByRowClick
+                    // selectByRowClick
                     highlightRow
                     // showSelectionColumn={false}
                   />
+                  {/* <TableFixedColumns
+                    cellComponent={Cell}
+                    rightColumns={this.state.rightColumns}
+                  /> */}
                 </Grid>
                 </Paper>
               </section>
@@ -440,9 +441,9 @@ spec:
             </div> */}
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleSave} color="primary">
-              excution
-            </Button>
+            {/* <Button onClick={this.handleSave} color="primary">
+              Take a Snapshot
+            </Button> */}
             <Button onClick={this.handleClose} color="primary">
               cancel
             </Button>
@@ -453,4 +454,4 @@ spec:
   }
 }
 
-export default PjDeploymentMigration;
+export default SnapShotControl;

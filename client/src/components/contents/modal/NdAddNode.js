@@ -45,7 +45,8 @@ import Tab from "@material-ui/core/Tab";
 import { Container } from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
-import SelectBox from "../../modules/SelectBox";
+import axios from 'axios';
+// import SelectBox from "../../modules/SelectBox";
 
 const styles = (theme) => ({
   root: {
@@ -205,6 +206,17 @@ class NdAddNode extends Component {
     this.setState({ 
       open: true,
     });
+    this.callApi()
+    .then((res) => {
+      this.setState({ clusters: res });
+    })
+    .catch((err) => console.log(err));
+
+  this.callApi2()
+    .then((res) => {
+      this.setState({ instTypes: res });
+    })
+    .catch((err) => console.log(err));
   };
 
   handleClose = () => {
@@ -215,18 +227,31 @@ class NdAddNode extends Component {
   };
 
   handleSave = (e) => {
-    if (Object.keys(this.state.instTypeSelectedRow).length === 0) {
-      alert("Please select target instance type");
-      return;
-    } 
-    if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select target cluster");
-      return;
-    } 
+    // if (Object.keys(this.state.instTypeSelectedRow).length === 0) {
+    //   alert("Please select target instance type");
+    //   return;
+    // } 
+    // if (Object.keys(this.state.selectedRow).length === 0) {
+    //   alert("Please select target cluster");
+    //   return;
+    // } 
 
 
     // implement migration workflow
     // ......
+    const url = `/nodes/add/eks`;
+    const data = {
+      yaml:""
+    };
+    axios.post(url, data)
+    .then((res) => {
+    })
+    .catch((err) => {
+        alert(err);
+    });
+
+    
+
     this.props.onUpdateData();
     // console.log("save", this.state);
     
@@ -620,7 +645,6 @@ class WorkerGroups extends Component {
   }
 
   callApi = async () => {
-    // const response = await fetch("/aws/clusters");
     const response = await fetch(`/aws/clusters/workers?clustername=${this.props.rowData.name}`);
     const body = await response.json();
     return body;

@@ -47,14 +47,14 @@ class NodeLabel extends Component {
                 <span 
                   style={{
                     color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), fontSize:"14px", marginRight:0}}>
-                  {nodeData.attributes.region} - {nodeData.attributes.zone}
+                  {nodeData.attributes.region}
                 </span>
               </div>
               <div class="" style={{fontSize:"14px", marginTop:"-6px"}}>
                 <span 
                   style={{
                     color:(nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), fontSize:"12px", marginRight:0}}>
-                  ({nodeData.attributes.status})
+                  {nodeData.attributes.zone}
                 </span>
               </div>
             </Link>
@@ -138,7 +138,7 @@ class TreeView extends React.Component {
     return (
       /* <Tree /> will fill width/height of its container; in this case `#treeWrapper` */
       // <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
-      <div style={{ width: "100%"}}>
+      <div style={{ width: "50%"}}>
         {this.state.data.map((c) => {
           return (
             <div style={containerStyles} ref={(tc) => (this.treeContainer = tc)}>
@@ -148,7 +148,7 @@ class TreeView extends React.Component {
                 nodeSvgShape={svgSquare}
                 collapsible	= {false}
                 zoomable = {false}
-                separation = {{siblings: 0.9, nonSiblings: 2}}
+                separation = {{siblings: 0.65, nonSiblings: 2}}
                 // nodeSvgShape={svgSquare2}
                 transitionDuration="0"
                 translate={this.state.translate}

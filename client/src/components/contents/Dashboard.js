@@ -141,8 +141,9 @@ class Dashboard extends Component {
               </div>,
               <div style={{ display: "flex" }}>
                 <DashboardCard03
-                  title="Master Clusters"
-                  width="100%"
+                  title="OpenMCP"
+                  // width="100%"
+                  width="472px"
                   // data={this.state.masterCluster}
                 ></DashboardCard03>
               </div>
@@ -260,15 +261,15 @@ class DashboardCard03 extends Component {
   render() {
     return (
       <div className="content-box" style={{ width: this.props.width }}>
-      <div className="cb-header">
-        <span style={{cursor:"pointer"}} onClick={this.onRefresh}>{this.props.title}</span>
+      <div className="cb-header" onClick={this.onRefresh} style={{paddingTop: "140px", fontSize:"24px"}}>
+        <span style={{cursor:"pointer"}} >{this.props.title}</span>
         {/* <div className="cb-btn">
           <Link to={this.props.path}>detail</Link>
         </div> */}
       </div>
       <div
         className="cb-body"
-        style={{ position: "relative", width: "100%", display:"flex"}}
+        style={{ position: "relative", width: "850px", display:"flex"}}
         >
         {this.state.rows ? (
         <TreeView data={this.state.rows}/>

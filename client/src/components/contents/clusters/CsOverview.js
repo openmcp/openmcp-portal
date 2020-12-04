@@ -338,9 +338,230 @@ class NodeUsageTop5 extends Component {
   }
 }
 
+
+
+
+
+// 갱신전
+
+let normal = {
+    cpu: {
+      counts: 3,
+      unit: "core",
+      status: [
+        { name: "Used", value: 1.2 },
+        { name: "Total", value: 72 }
+      ]
+    },
+    memory: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 42.3 },
+        { name: "Total", value: 197.3 }
+      ]
+    },
+    storage: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 71.3 },
+        { name: "Total", value: 1724.6 }
+      ]
+    }
+  }
+  
+
+  let stress50 = {
+    cpu: {
+      counts: 3,
+      unit: "core",
+      status: [
+        { name: "Used", value: 35.3 },
+        { name: "Total", value: 72 }
+      ]
+    },
+    memory: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 95.3 },
+        { name: "Total", value: 197.3 }
+      ]
+    },
+    storage: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 71.3 },
+        { name: "Total", value: 1724.6 }
+      ]
+    }
+  }
+
+    
+  let stress70 = {
+    cpu: {
+      counts: 3,
+      unit: "core",
+      status: [
+        { name: "Used", value: 55.1 },
+        { name: "Total", value: 72 }
+      ]
+    },
+    memory: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 148.1 },
+        { name: "Total", value: 197.3 }
+      ]
+    },
+    storage: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 71.3 },
+        { name: "Total", value: 1724.6 }
+      ]
+    }
+  }
+
+    
+
+  let stress80 = {
+    cpu: {
+      counts: 3,
+      unit: "core",
+      status: [
+        { name: "Used", value: 63.2 },
+        { name: "Total", value: 72 }
+      ]
+    },
+    memory: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 175.4 },
+        { name: "Total", value: 197.3 }
+      ]
+    },
+    storage: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 71.3 },
+        { name: "Total", value: 1724.6 }
+      ]
+    }
+  }
+
+  let stress0 = {
+    cpu: {
+      counts: 3,
+      unit: "core",
+      status: [
+        { name: "Used", value: 52.2 },
+        { name: "Total", value: 72 }
+      ]
+    },
+    memory: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 101.4 },
+        { name: "Total", value: 197.3 }
+      ]
+    },
+    storage: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 71.3 },
+        { name: "Total", value: 1724.6 }
+      ]
+    }
+  }
+
+  let eks ={
+    cpu: {
+      counts: 3,
+      unit: "core",
+      status: [
+        { name: "Used", value: 3.5 },
+        { name: "Total", value: 6 }
+      ]
+    },
+    memory: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 13.4 },
+        { name: "Total", value: 24.2 }
+      ]
+    },
+    storage: {
+      counts: 3,
+      unit: "Gi",
+      status: [
+        { name: "Used", value: 31.4 },
+        { name: "Total", value: 75.0 }
+      ]
+    }
+  }
+    
+    let gke2 ={
+      cpu: {
+        counts: 3,
+        unit: "core",
+        status: [
+          { name: "Used", value: 1.6 },
+          { name: "Total", value: 8 }
+        ]
+      },
+      memory: {
+        counts: 3,
+        unit: "Gi",
+        status: [
+          { name: "Used", value: 12.5 },
+          { name: "Total", value: 24.2 }
+        ]
+      },
+      storage: {
+        counts: 3,
+        unit: "Gi",
+        status: [
+          { name: "Used", value: 19.3 },
+          { name: "Total", value: 197.0 }
+        ]
+      }
+
+    // 197736896
+    
+}
+
+  let colors3 = [
+    "#0088FE", //파랑
+    "#ecf0f5",
+  ];
+
+  let colors2 = [
+    "#ff8042",// 주황
+    "#ecf0f5",
+  ];
+
+  let count = 1;
 class ClusterResourceUsage extends Component {
   state = {
     rows : this.props.rowData,
+    colors : [
+      "#0088FE",
+      "#ecf0f5"
+    ],
+    unhColors : [
+      "#0088FE",
+      "#ecf0f5"
+    ]
   }
 
   
@@ -364,32 +585,139 @@ class ClusterResourceUsage extends Component {
   }
 
   onClick = () => {
-    this.props.onRefresh();
+    if(count == 1){
+      this.setState({
+        rows:stress50,
+        unhColors:colors3
+      })
+    } else if (count == 2){
+      this.setState({
+        rows:stress70, 
+        unhColors:colors3
+      })
+    } else if (count ==3 ){
+      this.setState({
+        rows:stress80, 
+        unhColors:colors2
+      })
+    }  else if (count ==4 ){
+      this.setState({
+        rows:stress0, 
+        unhColors:colors3
+      })
+    }  else {
+      count = 1
+      this.setState({
+        rows:normal, 
+        unhColors:colors3
+      })
+    }
+    count++
+    
+    // this.props.onRefresh();
   }
+
+  onSelectBoxChange = (data) => {
+    count=1
+    // console.log(eks-cluster1)
+    if(data === "cluster1"){
+      this.setState({
+        rows:normal,
+        unhColors:colors3
+      })} else if(data === "eks-cluster1") {
+        this.setState({
+          rows:eks,
+          unhColors:colors3
+        })
+      } else {
+      this.setState({
+        rows:gke2,
+        unhColors:colors3
+      })
+    }
+    // } 
+    // else if(data === "eks-cluster1"){
+    //   this.setState({
+    //     rows:warning, //addAfter
+    //     unhColors:colors2
+    //   })
+    // } else if(data === "cluster1"){
+    //   this.setState({
+    //     rows:normal,
+    //     unhColors:colors3
+    //   })
+    // } else if(data === "gke-cluster1"){
+    //   this.setState({
+    //     rows:gke,
+    //     unhColors:colors3
+    //   })
+    // }else {
+    //   this.setState({
+    //     rows:gke,
+    //     unhColors:colors3
+    //   })
+    // }
+
+
+    // this.setState({
+    //   rows:warning,
+    //   unhColors:colors2
+    // })
+
+    // this.setState({
+    //   rows:healthy,
+    //   unhColors:colors3
+    // })
+    
+  }
+
+  
+  
   render(){
-    const colors = [
-      "#0088FE",
-      "#ecf0f5",
+    // const colors = [
+    //   "#0088FE",
+    //   "#ecf0f5",
+    // ];
+
+    // const colors2 = [
+    //   "#ff8042", //#0088FE, #ff8042;
+    //   "#ecf0f5",
+    // ];
+
+    const selectBoxData = [
+      {name:"cluster1", value:"cluster1"},
+      {name:"cluster2", value:"cluster2"},
+      {name:"cluster3", value:"cluster2"},
+      {name:"eks-cluster1", value:"eks-cluster1"},
+      {name:"gke-cluster1", value:"gke-cluster1"},
     ];
+
+    
+
     return (
       <div className="content-box">
         <div className="cb-header">
-          <span onClick={this.onClick} style={{cursor:"pointer"}}>
+          
+          <span style={{cursor:"cluster1", paddingTop: "53px", fontSize: "23px"}} onClick={this.onClick} >
             Cluster Resource Usage
+            
           </span>
+          <div className="cb-cloview-select">
+              <SelectBox rows={selectBoxData} defaultValue="" onSelectBoxChange={this.onSelectBoxChange}></SelectBox>
+            </div>
         </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">CPU</div>
-            <PieReChart2 data={this.state.rows.cpu} angle={this.angle.half} unit={this.state.rows.cpu.unit} colors={colors}></PieReChart2>
+            <PieReChart2 data={this.state.rows.cpu} angle={this.angle.half} unit={this.state.rows.cpu.unit} colors={this.state.unhColors}></PieReChart2>
           </div>
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">Memory</div>
-            <PieReChart2 data={this.state.rows.memory} angle={this.angle.half} unit={this.state.rows.memory.unit} colors={colors}></PieReChart2>
+            <PieReChart2 data={this.state.rows.memory} angle={this.angle.half} unit={this.state.rows.memory.unit} colors={this.state.unhColors}></PieReChart2>
           </div>
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">Storage</div>
-            <PieReChart2 data={this.state.rows.storage} angle={this.angle.half} unit={this.state.rows.storage.unit} colors={colors}></PieReChart2>
+            <PieReChart2 data={this.state.rows.storage} angle={this.angle.half} unit={this.state.rows.storage.unit} colors={this.state.colors}></PieReChart2>
           </div>
         </div>
       </div>

@@ -193,9 +193,10 @@ class Nodes extends Component {
     return (
       <div className="content-wrapper nodes full">
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        <section className="content-header" onClick={this.onRefresh}>
           <h1>
-            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+            {/* <span  style={{cursor:"pointer"}}> */}
+            <span>
               Nodes
             </span>
             <small></small>

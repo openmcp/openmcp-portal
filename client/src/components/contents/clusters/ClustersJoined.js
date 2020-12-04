@@ -26,6 +26,7 @@ import {
 import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "../../util/UtLogs.js";
 import Confirm from './../../modules/Confirm';
+import ProgressTemp from './../../modules/ProgressTemp';
 
 class ClustersJoined extends Component {
   constructor(props) {
@@ -44,8 +45,8 @@ class ClustersJoined extends Component {
         // { name: "network", title: "Network" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 180 },
-        { columnName: "status", width: 130 },
+        { columnName: "name", width: 100 },
+        { columnName: "status", width: 100 },
         { columnName: "region", width: 130 },
         { columnName: "zone", width: 130 },
         { columnName: "nodes", width: 130 },
@@ -60,8 +61,8 @@ class ClustersJoined extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 3,
-      pageSizes: [3, 6, 9, 0],
+      pageSize: 1,
+      pageSizes: [5, 10, 15, 0],
 
       completed: 0,
       selection: [],
@@ -76,11 +77,13 @@ class ClustersJoined extends Component {
           no : "CANCEL",
         }  
       },
-      confrimTarget : "false"
+      confrimTarget : "false",
+      openProgress : false
     };
   }
   componentWillMount() {
     this.props.menuData("none");
+    
   }
 
   callApi = async () => {
@@ -94,10 +97,13 @@ class ClustersJoined extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
+
+
   //컴포넌트가 모두 마운트가 되었을때 실행된다.
   componentDidMount() {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
+
     this.callApi()
       .then((res) => {
         this.setState({ rows: res });
@@ -122,20 +128,34 @@ class ClustersJoined extends Component {
   }
  
   onRefresh = () => {
+    // this.timer = setInterval(this.progress2, 20);
+    // clearInterval(this.timer);
+   
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+
     this.callApi()
       .then((res) => {
         this.setState({ rows: res });
+        
       })
       .catch((err) => console.log(err));
   };
+
+  closeProgress = () => {
+    this.setState({openProgress:false})
+  }
   
   render() {
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => {
       var cpuPct = parseFloat(row.cpu.split("/")[0])/parseFloat(row.cpu.split("/")[1].split(" Core")[0]) * 100
       var memPct = parseFloat(row.ram.split("/")[0])/parseFloat(row.ram.split("/")[1].split(" Gi")[0]) * 100
-      console.log(cpuPct, memPct)
-      var status = cpuPct >= 40 || memPct >= 40 ? "Warning" : value
+      // console.log(cpuPct, memPct)
+      var status = cpuPct >= 90 || memPct >= 90 ? "Warning" : value
       return (
       <Table.Cell
         {...restProps}
@@ -186,6 +206,17 @@ class ClustersJoined extends Component {
             </Link>
           </Table.Cell>
         );
+      } else if (column.name === "provider") {
+        if(row.name.indexOf("eks") >= 0) {
+          row.provider = "eks"
+        } else if (row.name.indexOf("gke") >= 0){
+          row.provider = "gke"
+        }
+        return (
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+              {row.provider}
+          </Table.Cell>
+        );
       }
       return <Table.Cell {...props} />;
     };
@@ -215,12 +246,15 @@ class ClustersJoined extends Component {
       });
     };
 
-    return (
+    return ([
       <div className="content-wrapper cluster-list full">
+      {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        <section className="content-header" onClick={this.onRefresh} >
+        {/* <section className="content-header"> */}
           <h1>
-            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+            {/* <span onClick={this.onRefresh} > */}
+            <span>
               Joined Clusters
             </span>
             <small></small>
@@ -302,6 +336,7 @@ class ClustersJoined extends Component {
           ></CircularProgress>
         )}
       </div>
+      ]
     );
   }
 }
@@ -313,10 +348,21 @@ class ResourceStatus extends Component{
       data : this.props.data
     }
   }
+
+  componentWillUpdate(prevProps, prevState){
+    if (this.props.data !== prevProps.data) {
+        this.setState({
+          data: prevProps.data,
+        });
+      }
+  }
+
   render(){
     return(
       <div>
       <div className="rs-title">Cluster Resource Status</div>
+      <div className="rap-contents" style={{display: "flex",
+    overflow: "auto"}}>
         {this.state.data.map((item)=>{
           return(
             <Paper className="rs-status">
@@ -324,11 +370,11 @@ class ResourceStatus extends Component{
                 <div>{item.name}</div>
               </div>
               <div className="status-content">
-                <div>
+                <div style={{color:(item.status === "Warning" ? "#ff8042" : "#000000")}}>
                   <span>CPU: </span>
                   <span>{item.cpu}</span>
                 </div>
-                <div>
+                <div style={{color:(item.status === "Warning" ? "#ff8042" : "#000000")}}>
                   <span>Memory: </span>
                   <span>{item.ram}</span>
                 </div>
@@ -345,9 +391,12 @@ class ResourceStatus extends Component{
             </Paper>
           )
         })}
+        </div>
       </div>
     )
   }
 }
+
+
 
 export default ClustersJoined;

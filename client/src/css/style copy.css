@@ -1243,7 +1243,7 @@ tbody {
 
 /* SelecterBox module */
 .MuiNativeSelect-select:focus {
-  /* border-radius: 0 !important; */
+  border-radius: 0 !important;
   /* background-color: rgba(0, 0, 0, 0.05);  */
   background-color: #ffffff !important;
 }
@@ -1315,9 +1315,9 @@ g {
 .cluster-overview {
 }
 .cluster-overview .pie-chart {
-  height: 242px;
-  width: 33.3%;
-  padding: 16px 32px 0 0;
+  height: 200px;
+  width: 33.3333%;
+  padding: 16px 0 0 32px;
   position: relative;
 }
 
@@ -1325,16 +1325,10 @@ g {
   stroke: rgb(0 0 0 / 0%);
 }
 
-.cluster-overview .pie-chart .recharts-legend-wrapper {
-  position: absolute;
-  top: 140px !important;
-  left: 41px !important;
-}
-
 .cluster-overview .cb-sub-title {
   position: absolute;
   top: 22px;
-  left: 40px;
+  left: 47px;
   font-weight: bold;
   color: #3c8dbc;
 }
@@ -1713,8 +1707,8 @@ g {
 }
 .cluster-list .rs-status{
   background-color: #ffffff;
-  max-width: 240px;
-  min-width: 240px;
+  max-width: 200px;
+  min-width: 200px;
   line-height: 1.9em;
   margin: 0 17px 17px 0;
   /* float: left; */
@@ -1755,52 +1749,3 @@ g {
 .inner-table table tbody tr td{
   padding : 0;
 }
-
-.cb-cloview-select select.MuiNativeSelect-select:focus,
-.cb-cloview-select select.MuiNativeSelect-select{
-  border: 1px solid #d7d7d7;
-  margin-top: 6px;
-  border-radius: 4px;
-  background: #ececec59;
-   box-shadow: inset 0px 0px 1px 0px black;
-}
-
-.cb-cloview-select select.MuiNativeSelect-select:hover{
-  border: 1px solid #d7d7d7;
-  margin-top: 6px;
-  border-radius: 4px;
-  background: #ececec59;
-   box-shadow: inset 0px 0px 1px 0px black;
-}
-
-.cb-cloview-select .select-box .MuiFormControl-root {
-  margin-top: 48px !important;
-}
-
-/* .MuiNativeSelect-select.MuiNativeSelect-select */
-
-.cb-cloview-select .select-box .MuiInput-underline:before {
-  border: 0;
-}
-
-.snapshot{}
-.snapshot .revert,
-.snapshot .delete{
-  margin:0px 6px;
-}
-.snapshot .revert:hover,
-.snapshot .delete:hover{
-  color:#7a8dcf;
-}
-.VPA-TEMP,
-.HPA-TEMP{
-  margin: 10px 10px -16px 10px;
-  font-size: 19px;
-  color: #6a9bb8;
-  width: fit-content;
-  background: #ffffff;
-  box-shadow: 0px 0px 8px 2px #a9c2e84f;
-  padding: 9px 23px 26px 23px;
-  border-radius: 4px;  
-}
-

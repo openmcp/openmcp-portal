@@ -105,8 +105,8 @@ class PieReChart2 extends Component {
             cy={95}
             startAngle={this.props.angle.startAngle}
             endAngle={this.props.angle.endAngle}
-            innerRadius={40}
-            outerRadius={70}
+            innerRadius={50}
+            outerRadius={80}
             fill="#ecf0f5"
             dataKey="value"
             paddingAngle={0}
@@ -122,8 +122,8 @@ class PieReChart2 extends Component {
             cy={95}
             startAngle={this.props.angle.startAngle}
             endAngle={this.props.angle.endAngle}
-            innerRadius={40}
-            outerRadius={70}
+            innerRadius={50}
+            outerRadius={80}
             fill="#367fa9"
             dataKey="value"
             paddingAngle={0}

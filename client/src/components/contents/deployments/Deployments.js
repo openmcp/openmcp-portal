@@ -27,6 +27,8 @@ import * as utilLog from "./../../util/UtLogs.js";
 import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
 import { NavigateNext} from '@material-ui/icons';
 import axios from 'axios';
+import ProgressTemp from './../../modules/ProgressTemp';
+import SnapShotControl from './../modal/SnapShotControl';
 
 
 // let apiParams = "";
@@ -68,7 +70,7 @@ metadata:
   name: openmcp-deployment2
   namespace: openmcp
 spec:
-  replicas: 8
+  replicas: 3
   labels:
       app: openmcp-nginx
   template:
@@ -77,11 +79,8 @@ spec:
         spec:
           containers:
           - image: nginx
-            name: nginx
-      placement:
-        clusters:
-        - name: cluster2
-        - name: cluster1`
+            name: nginx`,
+      openProgress : false
     };
   }
 
@@ -137,23 +136,35 @@ spec:
   };
 
   excuteScript = (context) => {
+
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+
     const url = `/deployments/create`;
     const data = {
       yaml:context
     };
     console.log(context)
-    axios.post(url, data)
-    .then((res) => {
-        // alert(res.data.message);
-        this.setState({ open: false });
-        this.onUpdateData();
-    })
-    .catch((err) => {
-        alert(err);
-    });
+    // axios.post(url, data)
+    // .then((res) => {
+    //     // alert(res.data.message);
+    //     this.setState({ open: false });
+    //     this.onUpdateData();
+    // })
+    // .catch((err) => {
+    //     alert(err);
+    // });
   }
-
+  
   onRefresh = () => {
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
     this.callApi()
       .then((res) => {
         this.setState({ 
@@ -163,6 +174,10 @@ spec:
       })
       .catch((err) => console.log(err));
   };
+
+  closeProgress = () => {
+    this.setState({openProgress:false})
+  }
 
   render() {
     // 셀 데이터 스타일 변경
@@ -247,11 +262,12 @@ spec:
 
     return (
       <div className="content-wrapper full">
+        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        <section className="content-header"  onClick={this.onRefresh}>
           <h1>
-          <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+          <span>
             Deployments
           </span>
             
@@ -271,12 +287,17 @@ spec:
           <Paper>
             {this.state.rows ? (
               [
+                <SnapShotControl
+                  title="create deployment"
+                  rowData={this.state.selectedRow}
+                  onUpdateData = {this.onUpdateData}
+                />,
                 <PjDeploymentMigration
                   title="create deployment"
                   rowData={this.state.selectedRow}
                   onUpdateData = {this.onUpdateData}
                 />,
-                <Editor title="create" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
+                <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}

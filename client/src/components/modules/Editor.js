@@ -248,8 +248,11 @@ class Editor extends Component {
     return (
       <div>
         <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", right:"30px", top:"26px", zIndex:"10",textTransform: "capitalize"}}>
-          {this.props.title}
+          {this.props.btTitle}
         </Button>
+        {/* <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", left:"220px", top:"102px", zIndex:"10",textTransform: "capitalize"}}>
+          {this.props.btTitle}
+        </Button> */}
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
@@ -258,14 +261,14 @@ class Editor extends Component {
           maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Edit yaml
+            {this.props.title}
           </DialogTitle>
           <DialogContent dividers>
           {editor}
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={this.handleExcute} color="primary">
-              update
+              excution
             </Button>
             <Button autoFocus onClick={this.handleClose} color="primary">
               cancel

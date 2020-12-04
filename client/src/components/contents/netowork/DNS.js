@@ -22,6 +22,8 @@ import {
 import Editor from "../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
+import axios from 'axios';
+import ProgressTemp from './../../modules/ProgressTemp';
 
 let apiParams = "";
 class DNS extends Component {
@@ -29,10 +31,16 @@ class DNS extends Component {
     super(props);
     this.state = {
       columns: [
+        { name: "namespace", title: "Project"},
         { name: "name", title: "Name"},
+        { name: "domain", title: "Domain"},
+        { name: "ip", title: "IP"},
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 200 },
+        { columnName: "namespace", width: 120 },
+        { columnName: "name", width: 230 },
+        { columnName: "domain", width: 640 },
+        { columnName: "ip", width: 130 },
       ],
       rows: "",
 
@@ -43,7 +51,23 @@ class DNS extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+kind: OpenMCPDeployment
+metadata:
+  name: openmcp-deployment2
+  namespace: openmcp
+spec:
+  replicas: 3
+  labels:
+      app: openmcp-nginx
+  template:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: nginx
+            name: nginx`,
+      openProgress : false
     };
   }
 
@@ -78,6 +102,49 @@ class DNS extends Component {
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW09');
 
   };
+
+  onRefresh = () => {
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+    this.callApi()
+      .then((res) => {
+        this.setState({ 
+          // selection : [],
+          // selectedRow : "",
+          rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  excuteScript = (context) => {
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+
+    const url = `/deployments/create`;
+    const data = {
+      yaml:context
+    };
+    console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
+  }
+
+  closeProgress = () => {
+    this.setState({openProgress:false})
+  }
 
   render() {
 
@@ -162,10 +229,13 @@ class DNS extends Component {
 
     return (
       <div className="content-wrapper full">
+        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        <section className="content-header"  onClick={this.onRefresh}>
           <h1>
-            DNS
+          <span>
+          DNS
+          </span>
             <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
@@ -182,7 +252,7 @@ class DNS extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create" context={this.state.editorContext}/>,
+                <Editor btTitle="create" title="Create DNS" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

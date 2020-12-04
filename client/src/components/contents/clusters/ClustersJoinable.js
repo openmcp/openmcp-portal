@@ -35,7 +35,7 @@ class ClustersJoinable extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "endpoint", title: "Endpoint" },
-        { name: "platform", title: "Platform" },
+        { name: "platform", title: "Provider" },
         { name: "region", title: "Region" },
         { name: "zone", title: "Zone" },
       ],
@@ -46,7 +46,7 @@ class ClustersJoinable extends Component {
         { columnName: "region", width: 130 },
         { columnName: "zone", width: 130 },
       ],
-      rows: "",
+      rows: [],
 
       // Paging Settings
       currentPage: 0,
@@ -94,8 +94,13 @@ class ClustersJoinable extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
-        clearInterval(this.timer);
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+            clearInterval(this.timer);
+        }
+        
       })
       .catch((err) => console.log(err));
       
@@ -190,7 +195,7 @@ class ClustersJoinable extends Component {
     return (
       <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        <section className="content-header" onClick={this.onRefresh}>
           <h1>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
               Joinable Clusters
@@ -207,11 +212,11 @@ class ClustersJoinable extends Component {
             </li>
           </ol>
         </section>
-        {this.state.rows ? (
           <section className="content" style={{ position: "relative" }}>
               <Paper>
                 <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
-                    {/* <Editor title="create" context={this.state.editorContext}/> */}
+                {/* <Editor title="create" context={this.state.editorContext}/> */}
+        {this.state.rows ? (
                     <Grid
                       rows={this.state.rows}
                       columns={this.state.columns}
@@ -252,15 +257,16 @@ class ClustersJoinable extends Component {
                         highlightRow
                       />
                     </Grid>
+        
+              ) : (
+                <CircularProgress
+                  variant="determinate"
+                  value={this.state.completed}
+                  style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+                ></CircularProgress>
+              )}
               </Paper>
           </section>
-          ) : (
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-              style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-            ></CircularProgress>
-          )}
       </div>
     );
   }

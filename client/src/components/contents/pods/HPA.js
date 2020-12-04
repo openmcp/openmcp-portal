@@ -21,8 +21,9 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
-
-// import Editor from "./../modules/Editor";
+import Editor from "./../../modules/Editor";
+import axios from 'axios';
+import ProgressTemp from './../../modules/ProgressTemp';
 
 // let apiParams = "";
 class HPA extends Component {
@@ -39,7 +40,7 @@ class HPA extends Component {
         { name: "current_repl", title: "Replicas" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 200 },
+        { columnName: "name", width: 300 },
         { columnName: "namespace", width: 130 },
         { columnName: "cluster", width: 130 },
         { columnName: "reference", width: 200 },
@@ -56,7 +57,23 @@ class HPA extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+kind: OpenMCPDeployment
+metadata:
+  name: openmcp-deployment2
+  namespace: openmcp
+spec:
+  replicas: 3
+  labels:
+      app: openmcp-nginx
+  template:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: nginx
+            name: nginx`,
+      openProgress:false,
     };
   }
 
@@ -84,7 +101,11 @@ class HPA extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -92,6 +113,52 @@ class HPA extends Component {
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PD-VW01');
   };
+
+  onRefresh = () => {
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+    this.callApi()
+      .then((res) => {
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  
+  excuteScript = (context) => {
+
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+
+    const url = `/deployments/create`;
+    const data = {
+      yaml:context
+    };
+    console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
+  }
+
+  closeProgress = () => {
+    this.setState({openProgress:false})
+  }
 
   render() {
 
@@ -129,17 +196,7 @@ class HPA extends Component {
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
-      const fnEnterCheck = () => {
-        return (
-          props.value.indexOf("|") > 0 ? 
-            props.value.split("|").map( item => {
-              return (
-                <p>{item}</p>
-            )}) : 
-              props.value
-        )
-      }
-
+    
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
@@ -154,10 +211,10 @@ class HPA extends Component {
             state: {
               data : row
             }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
+          }}>{props.value}</Link></Table.Cell>
         );
       }
-      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
+      return <Table.Cell>{props.value}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -178,11 +235,16 @@ class HPA extends Component {
 
     return (
       <div className="content-wrapper full">
+        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+          <Editor btTitle="create" title="Create HAS" context={this.state.editorContext} excuteScript={this.excuteScript}/>
+        <section className="content-header"  onClick={this.onRefresh} style={{position:"relative"}}>
           <h1>
-            HPA
-            <small>(Horizental Pod Autoscaler)</small>
+          <span>
+          HAS
+          </span>
+            <small>(Hybrid Auto Scaler)</small>
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -195,10 +257,14 @@ class HPA extends Component {
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
+          <div className="HPA-TEMP">
+            HPA
+            <small> (Horizental Pod Autoscaler)</small>
+          </div>
           <Paper>
             {this.state.rows ? (
               [
-                // <Editor title="create" context={this.state.editorContext}/>,
+                
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

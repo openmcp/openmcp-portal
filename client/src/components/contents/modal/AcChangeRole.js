@@ -116,7 +116,7 @@ class AcChangeRole extends Component {
 
   handleClickOpen = () => {
     if (Object.keys(this.props.rowData).length === 0) {
-      alert("please select account");
+      alert("Please select account");
       this.setState({ open: false });
       return;
     }

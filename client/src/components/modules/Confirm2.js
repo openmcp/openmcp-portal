@@ -37,14 +37,15 @@ confirmed = (result) => {
 }
 */
 
-class Confirm extends Component {
+class Confirm2 extends Component {
   constructor(props){
     super(props);
     this.state = {
-      open : false,
+      open : this.props.confirmOpen,
       title : this.props.confirmInfo.title,
       context : this.props.confirmInfo.context,
       confrimTarget : "",
+      confirmTargetKeyname : "",
       button : {
         open : this.props.confirmInfo.button.open,
         yes : this.props.confirmInfo.button.yes,
@@ -56,40 +57,54 @@ class Confirm extends Component {
   componentDidMount(){
   } 
 
-  render() {
-    const handleClickOpen = () => {
-      if (this.props.confrimTarget === "false") {
-        alert("Please select target");
-        this.setState({ open: false });
-        return;
-      }
+  // componentDidUpdate(prevProps, prevState) {
+  //   console.log("pods update");
+  //   if (this.props.rowData !== prevProps.rowData) {
+  //     this.setState({
+  //       ...this.state,
+  //       rows: this.props.rowData,
+  //     });
+  //   }
+  // }
 
+  componentWillUpdate(prevProps, prevState){
+    // console.log("aaaaaaaaaaaaaaaaaaaaaaaa", prevProps.confirmOpen, this.props.confirmOpen)
+    if(prevProps.confirmOpen !== this.props.confirmOpen || prevProps.confirmInfo.title !== this.props.confirmInfo.title){
+      console.log("componentWillUpdate", prevProps.confirmOpen !== this.props.confirmOpen)
+      console.log("componentWillUpdate", prevProps.confirmOpen,this.props.confirmOpen)
+      console.log("componentWillUpdate", prevProps.confirmInfo.title,this.props.confirmInfo.title)
       this.setState({
-        open:true,
-        confrimTarget:this.props.confrimTarget
-      });
+        open:prevProps.confirmOpen,
+        confrimTarget:prevProps.confrimTarget,
+        title : prevProps.confirmInfo.title,
+        context : prevProps.confirmInfo.context,
+        button : {
+          open : prevProps.confirmInfo.button.open,
+          yes : prevProps.confirmInfo.button.yes,
+          no : prevProps.confirmInfo.button.no
+        },
+        confirmTargetKeyname : prevProps.confirmTargetKeyname
+      })
     }
-    const handleYes = () => {
-      this.props.confirmed(true)
-      this.setState({open:false});
-    };
-  
-    const handleNo = () => {
-      this.props.confirmed(false)
-      this.setState({open:false});
-    };
+  }
+
+  handleYes = () => {
+    this.setState({open:false});
+    this.props.confirmed(true)
+  };
+
+  handleNo = () => {
+    this.setState({open:false});
+    this.props.confirmed(false)
+  };
+  render() {
+
 
     return (
       <div>
-      <Button 
-        variant="outlined" color="primary" onClick={handleClickOpen}
-        style={{position:"absolute", right:"26px", top:"26px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}
-      >
-        {this.state.button.open}
-      </Button>
       <Dialog
         open={this.state.open}
-        onClose={handleNo}
+        onClose={this.handleNo}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -101,16 +116,16 @@ class Confirm extends Component {
             <div>{this.state.context}</div>
             {this.state.confrimTarget !== ""
              ? <div style={{fontSize:"16px"}}>
-                <strong> Target : {this.state.confrimTarget}</strong>
+                <strong> {this.state.confirmTargetKeyname} : {this.state.confrimTarget}</strong>
                </div>
              : ""}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleYes} color="primary">
+          <Button onClick={this.handleYes} color="primary">
             {this.state.button.yes}
           </Button>
-          <Button onClick={handleNo} color="primary" autoFocus>
+          <Button onClick={this.handleNo} color="primary" autoFocus>
             {this.state.button.no}
           </Button>
         </DialogActions>
@@ -120,4 +135,4 @@ class Confirm extends Component {
   }
 }
 
-export default Confirm;
+export default Confirm2;

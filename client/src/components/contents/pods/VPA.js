@@ -37,7 +37,7 @@ class VPA extends Component {
       defaultColumnWidths: [
         { columnName: "name", width: 200 },
         { columnName: "namespace", width: 130 },
-        { columnName: "reference", width: 200 },
+        { columnName: "reference", width: 250 },
       ],
       rows: "",
 
@@ -76,7 +76,11 @@ class VPA extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -169,7 +173,10 @@ class VPA extends Component {
     };
 
     return (
+      // background:"rgba(0, 0, 0, 0.77)", 
+      // background:"rgba(0, 0, 0, 0.5)", 
       <div className="content-wrapper full">
+        <div className="loading" style={{height:"109vh", width:"100%", position:"absolute", background:"rgba(0, 0, 0, 0.5)", zIndex:"100", top:"0", left: "0", margin:"auto" }}></div>
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
@@ -187,6 +194,10 @@ class VPA extends Component {
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
+        <div className="VPA-TEMP">
+            VPA 
+            <small> (Vertical Pod Autoscaler)</small>
+          </div>
           <Paper>
             {this.state.rows ? (
               [
