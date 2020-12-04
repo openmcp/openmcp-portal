@@ -22,7 +22,7 @@ import {
 import Editor from "./../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
-import PjCreateProject from './../modal/PjCreateProject';
+import PjCreateProject from '../modal/PjCreateProject';
 
 
 

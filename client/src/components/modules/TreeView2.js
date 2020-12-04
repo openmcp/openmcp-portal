@@ -110,7 +110,7 @@ class TreeView2 extends React.Component {
     const containerStyles = {
       // width: 100/myTreeData.length+"%",
       width: "20%",
-      height: "45vh",
+      height: "40vh",
       // border:"1px solid #000",
       float:"left"
     };

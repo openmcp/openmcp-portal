@@ -684,13 +684,13 @@ class ClusterResourceUsage extends Component {
     //   "#ecf0f5",
     // ];
 
-    const selectBoxData = [
-      {name:"cluster1", value:"cluster1"},
-      {name:"cluster2", value:"cluster2"},
-      {name:"cluster3", value:"cluster2"},
-      {name:"eks-cluster1", value:"eks-cluster1"},
-      {name:"gke-cluster1", value:"gke-cluster1"},
-    ];
+    // const selectBoxData = [
+    //   {name:"cluster1", value:"cluster1"},
+    //   {name:"cluster2", value:"cluster2"},
+    //   {name:"cluster3", value:"cluster2"},
+    //   {name:"eks-cluster1", value:"eks-cluster1"},
+    //   {name:"gke-cluster1", value:"gke-cluster1"},
+    // ];
 
     
 
@@ -698,13 +698,13 @@ class ClusterResourceUsage extends Component {
       <div className="content-box">
         <div className="cb-header">
           
-          <span style={{cursor:"cluster1", paddingTop: "53px", fontSize: "23px"}} onClick={this.onClick} >
+          <span style={{cursor:"cluster1"}} onClick={this.onClick} >
             Cluster Resource Usage
             
           </span>
-          <div className="cb-cloview-select">
+          {/* <div className="cb-cloview-select">
               <SelectBox rows={selectBoxData} defaultValue="" onSelectBoxChange={this.onSelectBoxChange}></SelectBox>
-            </div>
+            </div> */}
         </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">

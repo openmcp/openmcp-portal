@@ -235,16 +235,20 @@ spec:
 
     return (
       <div className="content-wrapper full">
-        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
-          <Editor btTitle="create" title="Create HAS" context={this.state.editorContext} excuteScript={this.excuteScript}/>
+          {/* <Editor btTitle="create" title="Create HAS" context={this.state.editorContext} excuteScript={this.excuteScript}/> */}
         <section className="content-header"  onClick={this.onRefresh} style={{position:"relative"}}>
           <h1>
           <span>
+          HPA
+          </span>
+            <small>(Horizental Pod Autoscaler)</small>
+          {/* <span>
           HAS
           </span>
-            <small>(Hybrid Auto Scaler)</small>
+            <small>(Hybrid Auto Scaler)</small> */}
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -257,10 +261,10 @@ spec:
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
-          <div className="HPA-TEMP">
+          {/* <div className="HPA-TEMP">
             HPA
             <small> (Horizental Pod Autoscaler)</small>
-          </div>
+          </div> */}
           <Paper>
             {this.state.rows ? (
               [

@@ -176,7 +176,7 @@ class VPA extends Component {
       // background:"rgba(0, 0, 0, 0.77)", 
       // background:"rgba(0, 0, 0, 0.5)", 
       <div className="content-wrapper full">
-        <div className="loading" style={{height:"109vh", width:"100%", position:"absolute", background:"rgba(0, 0, 0, 0.5)", zIndex:"100", top:"0", left: "0", margin:"auto" }}></div>
+        {/* <div className="loading" style={{height:"109vh", width:"100%", position:"absolute", background:"rgba(0, 0, 0, 0.5)", zIndex:"100", top:"0", left: "0", margin:"auto" }}></div> */}
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
@@ -194,10 +194,10 @@ class VPA extends Component {
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
-        <div className="VPA-TEMP">
+        {/* <div className="VPA-TEMP">
             VPA 
             <small> (Vertical Pod Autoscaler)</small>
-          </div>
+          </div> */}
           <Paper>
             {this.state.rows ? (
               [

@@ -262,7 +262,7 @@ spec:
 
     return (
       <div className="content-wrapper full">
-        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
         <section className="content-header"  onClick={this.onRefresh}>

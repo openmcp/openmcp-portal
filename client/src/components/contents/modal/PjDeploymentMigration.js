@@ -14,15 +14,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import {
-  // SearchState,
   IntegratedFiltering,
   PagingState,
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  // EditingState,
   SelectionState,
   IntegratedSelection,
+  // SearchState,
+  // EditingState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,

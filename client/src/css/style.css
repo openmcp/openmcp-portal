@@ -910,7 +910,7 @@ body {
   position: relative;
   padding: 15px;
   padding-top: 60px;
-  padding-top: 100px;
+  /* padding-top: 100px; */
   background-color: #ecf0f5;
   box-shadow: 0px 0px 3px 0px #b9b9b9;
 }
@@ -936,7 +936,6 @@ body {
   padding: 7px 5px;
   position: absolute;
   top: 64px;
-  top: 112px;
   right: 20px;
   border-radius: 2px;
 }
@@ -1317,7 +1316,7 @@ g {
 .cluster-overview .pie-chart {
   height: 242px;
   width: 33.3%;
-  padding: 16px 32px 0 0;
+  padding: 16px 0 0 55px;
   position: relative;
 }
 
@@ -1334,7 +1333,7 @@ g {
 .cluster-overview .cb-sub-title {
   position: absolute;
   top: 22px;
-  left: 40px;
+  left: 120px;
   font-weight: bold;
   color: #3c8dbc;
 }
