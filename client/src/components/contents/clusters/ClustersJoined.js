@@ -106,7 +106,11 @@ class ClustersJoined extends Component {
 
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -139,7 +143,11 @@ class ClustersJoined extends Component {
 
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
         
       })
       .catch((err) => console.log(err));

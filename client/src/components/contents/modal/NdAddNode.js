@@ -601,7 +601,7 @@ class WorkerGroups extends Component {
   constructor(props){
     super(props);
     this.state = {
-      rows : "",
+      rows: "",
       columns: [
         { name: "worker", title: "Worker" },
         { name: "cluster", title: "Cluster" },

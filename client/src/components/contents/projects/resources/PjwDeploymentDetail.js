@@ -51,7 +51,11 @@ class PjwDeploymentDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -80,7 +84,11 @@ class PjwDeploymentDetail extends Component {
     // this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
         console.log(res);
         // clearInterval(this.timer);
       })
@@ -197,7 +205,7 @@ class ReplicaStatus extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rows: ""
+      rows: []
       // status,
     };
   }
@@ -233,7 +241,11 @@ class ReplicaStatus extends React.Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        this.setState({ rows: res });
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
