@@ -94,7 +94,7 @@ class PjDeploymentMigration extends Component {
       dpStatus : "",
       dpImage : "",
       dpCluster : "",
-      clusters: "",
+      clusters: [],
 
       selection: [],
       selectedRow : "",
@@ -143,13 +143,8 @@ class PjDeploymentMigration extends Component {
       dpImage : this.props.rowData.image,
       dpCluster : this.props.rowData.cluster,
       selection : [],
-      clusters : this.state.clusters
     });
-  };
 
-  componentWillMount() {
-    // console.log("Migration will mount");
-    // cluster list를 가져오는 api 호출
     this.callApi()
       .then((res) => {
         this.setState({ clusters: res });
@@ -157,6 +152,18 @@ class PjDeploymentMigration extends Component {
         // this.setState({ cluster: res[0], firstValue: res[0] });
       })
       .catch((err) => console.log(err));
+  };
+
+  componentWillMount() {
+    // console.log("Migration will mount");
+    // cluster list를 가져오는 api 호출
+    // this.callApi()
+    //   .then((res) => {
+    //     this.setState({ clusters: res });
+    //     // console.log(res[0])
+    //     // this.setState({ cluster: res[0], firstValue: res[0] });
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   // onChange(e) {

@@ -80,7 +80,7 @@ class AcChangeRole extends Component {
       open: false,
       account : "",
       account_role : "",
-      rows : "",
+      rows : [],
 
       selection: [],
       selectedRow : "",
@@ -97,14 +97,14 @@ class AcChangeRole extends Component {
   componentWillMount() {
     // console.log("Migration will mount");
     // cluster list를 가져오는 api 호출
-    this.callApi()
-      .then((res) => {
-        // console.log(res);
-        this.setState({ rows: res });
-        // console.log(res[0])
-        // this.setState({ cluster: res[0], firstValue: res[0] });
-      })
-      .catch((err) => console.log(err));
+    // this.callApi()
+    //   .then((res) => {
+    //     // console.log(res);
+    //     this.setState({ rows: res });
+    //     // console.log(res[0])
+    //     // this.setState({ cluster: res[0], firstValue: res[0] });
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   // onChange(e) {
@@ -120,15 +120,19 @@ class AcChangeRole extends Component {
       this.setState({ open: false });
       return;
     }
-
-    console.log(this.props.rowData)
-
+    
     this.setState({ 
       open: true,
       account : this.props.rowData.user_id,
       account_role : this.props.rowData.role_name,
       selection : []
     });
+
+    this.callApi()
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
   };
 
   handleClose = () => {

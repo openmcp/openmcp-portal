@@ -83,7 +83,7 @@ class PjCreateProject extends Component {
         // { columnName: "edit", width: 170 },
       ],
       
-      clusters : "",
+      clusters : [],
       selection : [],
       selectedRows : [],
       project_name : "",
@@ -110,11 +110,11 @@ class PjCreateProject extends Component {
 
   componentWillMount() {
     // cluster list를 가져오는 api 호출
-    this.callApi()
-      .then((res) => {
-        this.setState({ clusters: res });
-      })
-      .catch((err) => console.log(err));
+    // this.callApi()
+    //   .then((res) => {
+    //     this.setState({ clusters: res });
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   onChange(e) {
@@ -132,6 +132,11 @@ class PjCreateProject extends Component {
   handleClickOpen = () => {
     this.initState();
     this.setState({ open: true });
+     this.callApi()
+      .then((res) => {
+        this.setState({ clusters: res });
+      })
+      .catch((err) => console.log(err));
   };
 
   handleClose = () => {

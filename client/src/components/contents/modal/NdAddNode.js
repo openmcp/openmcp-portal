@@ -138,8 +138,8 @@ class NdAddNode extends Component {
 
       open: false,
 
-      instTypes: "",
-      clusters: "",
+      instTypes: [],
+      clusters: [],
 
       selection: [],
       selectedRow : "",
@@ -155,17 +155,17 @@ class NdAddNode extends Component {
 
   componentWillMount() {
     // console.log("Migration will mount");
-    this.callApi()
-      .then((res) => {
-        this.setState({ clusters: res });
-      })
-      .catch((err) => console.log(err));
+    // this.callApi()
+    //   .then((res) => {
+    //     this.setState({ clusters: res });
+    //   })
+    //   .catch((err) => console.log(err));
 
-    this.callApi2()
-      .then((res) => {
-        this.setState({ instTypes: res });
-      })
-      .catch((err) => console.log(err));
+    // this.callApi2()
+    //   .then((res) => {
+    //     this.setState({ instTypes: res });
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   initState = () => {

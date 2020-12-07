@@ -22,6 +22,7 @@ import {
 import Editor from "./../../modules/Editor";
 import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from './../../util/UtLogs.js';
+import axios from 'axios';
 
 class Ingress extends Component {
   constructor(props) {
@@ -91,6 +92,29 @@ class Ingress extends Component {
       })
       .catch((err) => console.log(err));
   };
+
+  excuteScript = (context) => {
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+
+    const url = `/ingress/create`;
+    const data = {
+      yaml:context
+    };
+    console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
+  }
 
   render() {
     // 셀 데이터 스타일 변경
@@ -203,7 +227,7 @@ class Ingress extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create" context={this.state.editorContext}/>,
+                <Editor btTitle="create" title="Create Ingress" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}

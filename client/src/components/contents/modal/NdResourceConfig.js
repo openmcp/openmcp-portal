@@ -72,7 +72,7 @@ class NdResourceConfig extends Component {
 
       
       instType: "t2.micro",
-      instTypes: "",
+      instTypes: [],
       selection: [],
       selectedRow: "",
 
@@ -83,11 +83,11 @@ class NdResourceConfig extends Component {
 
   componentWillMount() {
     // console.log("Migration will mount");
-    this.callApi()
-      .then((res) => {
-        this.setState({ instTypes: res });
-      })
-      .catch((err) => console.log(err));
+    // this.callApi()
+    //   .then((res) => {
+    //     this.setState({ instTypes: res });
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
   initState = () => {
@@ -114,6 +114,12 @@ class NdResourceConfig extends Component {
     this.setState({
       open: true,
     });
+
+    this.callApi()
+      .then((res) => {
+        this.setState({ instTypes: res });
+      })
+      .catch((err) => console.log(err));
   };
 
   handleClose = () => {

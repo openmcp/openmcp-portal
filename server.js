@@ -233,28 +233,29 @@ app.put("/update/account-roles", (req, res) => {
 /* Dashboard APIs */
 ///////////////////////
 app.get("/dashboard", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/dashboard`,
-  //   method: "GET",
-  //   // headers: {
-  //   //   Authorization:
-  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-  //   // },
-  // };
+  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     // console.log("result", body);
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/dashboard`,
+    method: "GET",
+    // headers: {
+    //   Authorization:
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    // },
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      // console.log("result", body);
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 
@@ -324,6 +325,8 @@ app.get("/projects", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/projects.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+
+  // console.log("projects")
 
   var request = require("request");
   var options = {
@@ -586,26 +589,24 @@ app.get("/projects/:project/settings/members", (req, res) => {
 
 // Deployments
 app.get("/deployments", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
   
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/deployments`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/deployments`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
-
-  
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 app.get("/deployments/:deployment", (req, res) => {
@@ -699,70 +700,72 @@ app.get("/snapshots", (req, res) => {
 app.get("/clusters", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters.json");
   // let rawdata = fs.readFileSync("./json_data/clusters2_warning.json");
-  let rawdata = fs.readFileSync("./json_data/clusters3-1_normal.json");
+  // let rawdata = fs.readFileSync("./json_data/clusters3-1_normal.json");
   // let rawdata = fs.readFileSync("./json_data/clusters3-1_50.json");
   // let rawdata = fs.readFileSync("./json_data/clusters3-1_70.json");
   // let rawdata = fs.readFileSync("./json_data/clusters3-1_80.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/clusters`,
-  //   method: "GET",
-  // };
+  console.log("cluster")
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clusters`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 app.get("/clusters-joinable", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/clusters_joinable.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/clusters_joinable.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/joinableclusters`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/joinableclusters`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Clusters > overview
 app.get("/clusters/:cluster/overview", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/clusters_overview.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/clusters_overview.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/clusters/overview?clustername=${req.params.cluster}`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clusters/overview?clustername=${req.params.cluster}`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Clusters > overview
@@ -859,24 +862,24 @@ app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
 // Nodes
 /////////////
 app.get("/nodes", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/nodes.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/nodes.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/nodes`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/nodes`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Nodes > datail
@@ -950,24 +953,24 @@ app.get("/gcp/clusters", (req, res) => {
 
 // Pods
 app.get("/pods", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/pods.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/pods.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/pods`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/pods`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Pods > detail
@@ -1039,43 +1042,43 @@ app.put("/settings/policy", (req, res) => {
 });
 
 app.get("/hpa", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/hpa.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/hpa`,
-  //   method: "GET",
-  // };
+  // let rawdata = fs.readFileSync("./json_data/hpa.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/hpa`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 app.get("/vpa", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/vpa.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/vpa`,
-  //   method: "GET",
-  // };
+  // let rawdata = fs.readFileSync("./json_data/vpa.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/vpa`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 
@@ -1144,6 +1147,7 @@ app.get("/services/:service", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/service_detail.json");
   let overview = JSON.parse(rawdata);
   res.send(overview);
+
 });
 
 ////////////////////////
@@ -1155,6 +1159,21 @@ app.get("/dns", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/dns.json");
   let overview = JSON.parse(rawdata);
   res.send(overview);
+
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/dns`,
+  //   method: "GET",
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
 });
 
 // DNS > Detail
