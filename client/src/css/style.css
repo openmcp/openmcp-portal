@@ -1208,9 +1208,6 @@ tbody {
 
 .content-box .cb-header .cb-btn:hover {
   background-color: #006280;
-}
-
-.content-box .cb-header .cb-btn:hover a {
   color: #ecf0f5;
 }
 

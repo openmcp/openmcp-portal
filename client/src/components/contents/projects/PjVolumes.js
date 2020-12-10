@@ -31,17 +31,17 @@ class PjVolumes extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "namespace", title: "Namespace" },
+        { name: "project", title: "Project" },
         { name: "capacity", title: "Capacity" },
-        { name: "mount", title: "Mount" },
+        // { name: "mount", title: "Mount" },
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 180 },
         { columnName: "status", width: 130 },
-        { columnName: "namespace", width: 130 },
+        { columnName: "project", width: 130 },
         { columnName: "capacity", width: 150 },
-        { columnName: "mount", width: 150 },
+        // { columnName: "mount", width: 150 },
         { columnName: "created_time", width: 150 },
       ],
       rows: "",
@@ -74,7 +74,7 @@ class PjVolumes extends Component {
   
 
   callApi = async () => {
-    const response = await fetch(`/projects/${apiParams}/volumes`);
+    const response = await fetch(`/projects/${apiParams}/volumes${this.props.location.search}`);
     const body = await response.json();
     return body;
   };

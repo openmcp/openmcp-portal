@@ -30,7 +30,7 @@ class Pods extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Pod" },
+        { name: "name", title: "Name" },
         { name: "status", title: "Status"},
         { name: "cluster", title: "Cluster"},
         { name: "project", title: "Project" },
@@ -148,7 +148,7 @@ class Pods extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 

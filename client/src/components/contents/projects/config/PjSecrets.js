@@ -30,13 +30,13 @@ class PjSecrets extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name"},
-        { name: "namespace", title: "Namespace" },
+        { name: "project", title: "Project" },
         { name: "type", title: "Type"},
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 300 },
-        { columnName: "namespace", width: 130 },
+        { columnName: "project", width: 130 },
         { columnName: "type", width: 280 },
         { columnName: "created_time", width: 180 },
       ],
@@ -69,7 +69,7 @@ class PjSecrets extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/config/secrets`);
+    const response = await fetch(`/projects/${apiParams}/config/secrets${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -130,7 +130,7 @@ class PjSecrets extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 

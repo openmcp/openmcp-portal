@@ -235,7 +235,7 @@ class Rules extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
@@ -324,15 +324,19 @@ class Events extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "status", title: "Status" },
+        { name: "project", title: "Project" },
+        { name: "type", title: "Type" },
         { name: "reason", title: "Reason" },
+        { name: "object", title: "Object" },
         { name: "message", title: "Message" },
         { name: "time", title: "Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "status", width: 150 },
+        { columnName: "project", width: 150 },
+        { columnName: "type", width: 150 },
         { columnName: "reason", width: 150 },
-        { columnName: "message", width: 240 },
+        { columnName: "object", width: 240 },
+        { columnName: "message", width: 440 },
         { columnName: "time", width: 180 },
       ],
       rows: this.props.rowData,

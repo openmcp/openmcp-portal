@@ -30,8 +30,8 @@ class CsNodes extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Node" },
-        { name: "cluster", title: "Cluster"},
         { name: "status", title: "Status" },
+        { name: "cluster", title: "Cluster"},
         // { name: "region", title: "Region" },
         { name: "role", title: "Role" },
         { name: "system_version", title: "System Version" },
@@ -41,8 +41,8 @@ class CsNodes extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
-        { columnName: "cluster", width: 130},
         { columnName: "status", width: 130 },
+        { columnName: "cluster", width: 130},
         // { columnName: "region", width: "150" },
         { columnName: "role", width: 130 },
         { columnName: "system_version", width: 200 },
@@ -116,34 +116,26 @@ class CsNodes extends Component {
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          // cursor: "pointer",
-          ...style,
-        }}>
+      <Table.Cell>
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "#1ab726" : "black"
+            value === "Healthy" ? "#1ab726" : 
+              value === "Unhealthy" ? "red" : 
+                value === "Unknown" ? "#b5b5b5" : "black"
           }}>
           {value}
         </span>
       </Table.Cell>
     );
-
+    
     //셀
     const Cell = (props) => {
       const { column, row } = props;
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
@@ -169,6 +161,7 @@ class CsNodes extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/clusters/${apiParams}/nodes/${props.value}`,
+            search:`clustername=${row.cluster}`,
             state: {
               data : row
             }

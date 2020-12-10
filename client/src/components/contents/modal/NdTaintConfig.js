@@ -81,9 +81,6 @@ class NdTaintConfig extends Component {
     this.setState({taint : value});
   }
 
- 
-  
-
   render() {
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;

@@ -38,6 +38,8 @@ class NdNodeDetail extends Component {
   }
 
   componentDidMount() {
+    
+    console.log("adasdfas",this.props.location.search)
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
@@ -56,7 +58,7 @@ class NdNodeDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/nodes/${param.node}`);
+    const response = await fetch(`/nodes/${param.node}${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -113,7 +115,7 @@ class NdNodeDetail extends Component {
             <BasicInfo rowData={this.state.rows.basic_info} onUpdateData={this.onUpdateData}/>,
             <KubernetesStatus rowData={this.state.rows.kubernetes_node_status}/>,
             <NodeResourceUsage rowData={this.state.rows.node_resource_usage}/>,
-            <Events rowData={this.state.rows.events}/>
+            // <Events rowData={this.state.rows.events}/>
             ]
           ) : (
             <CircularProgress
@@ -279,10 +281,10 @@ class Events extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "project", width: 150 },
-        { columnName: "type", width: 100 },
+        { columnName: "type", width: 150 },
         { columnName: "reason", width: 150 },
-        { columnName: "object", width: 300 },
-        { columnName: "message", width: 300 },
+        { columnName: "object", width: 240 },
+        { columnName: "message", width: 440 },
         { columnName: "time", width: 180 },
       ],
       rows: this.props.rowData,

@@ -71,7 +71,8 @@ class CsNodeDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/clusters/${param.cluster}/nodes/${param.node}`);
+    // const response = await fetch(`/clusters/${param.cluster}/nodes/${param.node}`);
+    const response = await fetch(`/nodes/${param.node}${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -114,7 +115,7 @@ class CsNodeDetail extends Component {
             <BasicInfo rowData={this.state.rows.basic_info}/>,
             <KubernetesStatus rowData={this.state.rows.kubernetes_node_status}/>,
             <NodeResourceUsage rowData={this.state.rows.node_resource_usage}/>,
-            <Events rowData={this.state.rows.events}/>
+            // <Events rowData={this.state.rows.events}/>
             ]
           ) : (
             <CircularProgress

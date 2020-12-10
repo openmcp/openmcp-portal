@@ -30,17 +30,21 @@ class PjServices extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name"},
-        { name: "namespace", title: "Namespace" },
+        { name: "cluster", title: "Cluster" },
+        { name: "project", title: "Project" },
         { name: "type", title: "Type"},
         { name: "selector", title: "Selector" },
-        { name: "port", title: "Port" },
+        // { name: "port", title: "Port" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 200 },
-        { columnName: "namespace", width: 130 },
+        { columnName: "cluster", width: 130 },
+        { columnName: "project", width: 130 },
         { columnName: "type", width: 130 },
         { columnName: "selector", width: 330 },
-        { columnName: "port", width: 180 },
+        // { columnName: "port", width: 180 },
+        { columnName: "created_time", width: 180 },
       ],
       rows: "",
 
@@ -71,7 +75,7 @@ class PjServices extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/services`);
+    const response = await fetch(`/projects/${apiParams}/resources/services${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -132,7 +136,7 @@ class PjServices extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 

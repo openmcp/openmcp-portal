@@ -12,20 +12,13 @@ class PieReChart extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log("props.data.status", this.props.data.status);
-    // console.log("prevProps.status", prevProps.data.status);
     if (this.props.data.status !== prevProps.data.status) {
-    //   console.log("업뎃?");
       this.setState({
         ...this.state,
         rows: this.props.data.status,
       });
     }
   }
-  //   componentWillMount(){
-  //     console.log("componentWillUnmount",this.props.data.status);
-  //     this.setState({data:this.props.data.status})
-  //   }
 
   onPieEnter = (data, index) => {
     this.setState({

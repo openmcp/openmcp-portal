@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink} from 'react-router-dom';
+import { NavLink, Link} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
 import Paper from "@material-ui/core/Paper";
@@ -52,7 +52,7 @@ class ServicesDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/projects/${param.project}/resources/services/${param.service}`);
+    const response = await fetch(`/projects/${this.props.location.project}/resources/services/${param.service}${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -88,7 +88,7 @@ class ServicesDetail extends Component {
           {this.state.rows ? (
             [
             <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <Workloads rowData={this.state.rows.workloads}/>,
+            // <Workloads rowData={this.state.rows.workloads}/>,
             <Pods rowData={this.state.rows.pods}/>,
             <Events rowData={this.state.rows.events}/>
             ]
@@ -119,26 +119,30 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                  <span>Namespace : </span>
-                  {this.props.rowData.namespace}
+                  <span>Project : </span>
+                  {this.props.rowData.project}
                 </div>
               <div>
                 <span>Type : </span>
                 {this.props.rowData.type}
               </div>
               <div>
+                <span>Session Affinity : </span>
+                {this.props.rowData.session_affinity}
+              </div>
+              <div>
                 <span>Selector : </span>
                 {this.props.rowData.selector}
               </div>
-              <div>
+              {/* <div>
                 <span>Access Type : </span>
                 {this.props.rowData.access_type}
-              </div>
+              </div> */}
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Session Affinity : </span>
-                {this.props.rowData.session_affinity}
+                <span>Cluster : </span>
+                {this.props.rowData.cluster}
               </div>
               <div>
                 <span>Cluster IP : </span>
@@ -293,20 +297,28 @@ class Pods extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Type" },
-        { name: "cluster", title: "Cluster" },
-        { name: "nodes", title: "Nodes" },
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
         { name: "pod_ip", title: "Pod IP" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
+        { name: "node", title: "Node" },
+        { name: "node_ip", title: "Node IP" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 180 },
-        { columnName: "cluster", width: 130 },
-        { columnName: "nodes", width: 240 },
-        { columnName: "pod_ip", width: 150 },
-        { columnName: "cpu", width: 100 },
-        { columnName: "memory", width: 100 },
+        { columnName: "name", width: 330 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
+        { columnName: "project", width: 130 },
+        { columnName: "pod_ip", width: 120 },
+        { columnName: "node", width: 230 },
+        { columnName: "node_ip", width: 130 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 100 },
+        { columnName: "created_time", width: 170 },
       ],
       rows: this.props.rowData,
 
@@ -350,6 +362,71 @@ class Pods extends Component {
   // };
 
   render() {
+
+    const HighlightedCell = ({ value, style, row, ...restProps }) => (
+      <Table.Cell
+        {...restProps}
+        style={{
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // cursor: "pointer",
+          ...style,
+        }}>
+        <span
+          style={{
+            color:
+              value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "red" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
+          }}>
+          {value}
+        </span>
+      </Table.Cell>
+    );
+
+    //셀
+    const Cell = (props) => {
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        return (
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( item => {
+              return (
+                <p>{item}</p>
+            )}) : 
+              props.value
+        )
+      }
+
+
+      if (column.name === "status") {
+        return <HighlightedCell {...props} />;
+      } else if (column.name === "name") {
+        // console.log("name", props.value);
+        return (
+          <Table.Cell
+            {...props}
+            style={{ cursor: "pointer" }}
+          ><Link to={{
+            pathname: `/pods/${props.value}`,
+            state: {
+              data : row
+            }
+          }}>{fnEnterCheck()}</Link></Table.Cell>
+        );
+      }
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
+    };
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -395,7 +472,7 @@ class Pods extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
-                  <Table rowComponent={Row} />
+                  <Table cellComponent={Cell}  rowComponent={Row} />
                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
@@ -422,15 +499,19 @@ class Events extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "status", title: "Status" },
+        { name: "project", title: "Project" },
+        { name: "type", title: "Type" },
         { name: "reason", title: "Reason" },
+        { name: "object", title: "Object" },
         { name: "message", title: "Message" },
         { name: "time", title: "Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "status", width: 150 },
+        { columnName: "project", width: 150 },
+        { columnName: "type", width: 150 },
         { columnName: "reason", width: 150 },
-        { columnName: "message", width: 400 },
+        { columnName: "object", width: 240 },
+        { columnName: "message", width: 440 },
         { columnName: "time", width: 180 },
       ],
       rows: this.props.rowData,

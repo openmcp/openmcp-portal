@@ -163,7 +163,7 @@ class Services extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
@@ -188,6 +188,7 @@ class Services extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/network/services/${props.value}`,
+            search:`cluster=${row.cluster}&project=${row.project}`,
             state: {
               data : row
             }

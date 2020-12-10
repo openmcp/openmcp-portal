@@ -30,15 +30,15 @@ class PjConfigMaps extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name"},
-        { name: "namespace", title: "Namespace" },
+        { name: "project", title: "Project" },
         { name: "keys", title: "Keys"},
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 280 },
-        { columnName: "namespace", width: 130 },
-        { columnName: "keys", width: 130 },
-        { columnName: "created_time", width: 150 },
+        { columnName: "name", width: 300 },
+        { columnName: "project", width: 150 },
+        { columnName: "keys", width: 300 },
+        { columnName: "created_time", width: 180 },
       ],
       rows: "",
 
@@ -69,7 +69,7 @@ class PjConfigMaps extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/config/config_maps`);
+    const response = await fetch(`/projects/${apiParams}/config/config_maps${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -85,6 +85,7 @@ class PjConfigMaps extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
+        console.log(res)
         if(res === null){
           this.setState({ rows: [] });
         } else {
@@ -130,11 +131,12 @@ class PjConfigMaps extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
+        console.log(props.column.title, ":", props.value);
         return (
           props.value.indexOf("|") > 0 ? 
             props.value.split("|").map( item => {
@@ -145,11 +147,9 @@ class PjConfigMaps extends Component {
         )
       }
 
-
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // console.log("name", props.value);
         return (
           <Table.Cell
             {...props}
@@ -163,7 +163,6 @@ class PjConfigMaps extends Component {
           }}>{fnEnterCheck()}</Link></Table.Cell>
         );
       } 
-      console.log("ddd", props.value);
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 

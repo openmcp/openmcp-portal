@@ -152,7 +152,7 @@ class Nodes extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
@@ -178,6 +178,7 @@ class Nodes extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/nodes/${props.value}`,
+            search:`clustername=${row.cluster}`,
             state: {
               data : row
             }

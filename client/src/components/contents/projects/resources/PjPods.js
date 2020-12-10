@@ -30,7 +30,7 @@ class PjPods extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Pod" },
+        { name: "name", title: "Name" },
         { name: "status", title: "Status"},
         { name: "cluster", title: "Cluster"},
         { name: "project", title: "Project" },
@@ -81,7 +81,7 @@ class PjPods extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/pods`);
+    const response = await fetch(`/projects/${apiParams}/resources/pods${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -141,7 +141,7 @@ class PjPods extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 

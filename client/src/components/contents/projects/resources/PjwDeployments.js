@@ -69,8 +69,8 @@ class PjwDeployments extends Component {
   }
 
   componentWillMount() {
-    // debugger;
-
+    
+    // console.log(this.props.match.params.project)
     // const query = queryString.parse(this.props.location.search).cluster
     // console.log(query);
     // const result = {
@@ -82,12 +82,12 @@ class PjwDeployments extends Component {
   }
 
   callApi = async () => {
+
     // var param = this.props.match.params.cluster;
     // queryString = queryString.parse(this.props.location.search).cluster
-    // console.log(query);
+    console.log(this.props.match.params.project, this.props.location.search);
     const response = await fetch(
-      // `/projects/${this.props.match.params.project}/resources/workloads/deployments${this.props.location.search}`
-      `/deployments`
+      `/projects/${this.props.match.params.project}/resources/workloads/deployments${this.props.location.search}`
     );
     const body = await response.json();
     return body;
@@ -171,7 +171,7 @@ class PjwDeployments extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 

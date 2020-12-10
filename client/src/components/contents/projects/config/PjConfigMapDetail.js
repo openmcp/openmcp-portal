@@ -50,12 +50,12 @@ class PjConfigMapDetail extends Component {
       .catch((err) => console.log(err));
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW18');
-
+      
   }  
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/projects/${param.project}/config/config_maps/${param.config_map}`);
+    const response = await fetch(`/projects/${param.project}/config/config_maps/${param.config_map}${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -124,8 +124,8 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Namespace : </span>
-                {this.props.rowData.namespace}
+                <span>Project : </span>
+                {this.props.rowData.project}
               </div>
             </div>
             <div className="cb-body-right">
@@ -151,7 +151,7 @@ class Data extends Component {
         { name: "value", title: "Value" },
       ],
       defaultColumnWidths: [
-        { columnName: "key", width: 150 },
+        { columnName: "key", width: 300 },
         { columnName: "value", width: 600 },
       ],
       rows: this.props.rowData,

@@ -71,7 +71,7 @@ class PjIngress extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/ingress`);
+    const response = await fetch(`/projects/${apiParams}/resources/ingress${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -137,7 +137,7 @@ class PjIngress extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      // debugger;
+      
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 

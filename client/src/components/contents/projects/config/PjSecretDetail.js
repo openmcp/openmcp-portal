@@ -65,7 +65,7 @@ class PjSecretDetail extends Component {
   callApi = async () => {
     var param = this.props.match.params;
     const response = await fetch(
-      `/projects/${param.project}/config/secrets/${param.secret}`
+      `/projects/${param.project}/config/secrets/${param.secret}${this.props.location.search}`
     );
     const body = await response.json();
     return body;
@@ -139,8 +139,8 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Namespace : </span>
-                {this.props.rowData.namespace}
+                <span>Project : </span>
+                {this.props.rowData.project}
               </div>
               
             </div>

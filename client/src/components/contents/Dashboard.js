@@ -194,9 +194,13 @@ class DashboardCard01 extends Component {
           <div onClick={this.onClickRf}></div>
           <span>{this.props.title}</span>
           <span> : {this.props.data.counts}</span>
-          <div className="cb-btn">
-            <Link to={this.props.path}>detail</Link>
-          </div>
+          
+          <Link to={this.props.path}>
+            <div className="cb-btn">
+              detail
+            </div>
+          </Link>
+          
         </div>
         <div
           className="cb-body"
