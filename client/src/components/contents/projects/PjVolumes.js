@@ -89,7 +89,8 @@ class PjVolumes extends Component {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then((res) => {
+    .then((res) => {
+      console.log(res)
         if(res === null){
           this.setState({ rows: [] });
         } else {

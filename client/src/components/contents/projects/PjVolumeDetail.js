@@ -52,7 +52,7 @@ class PjVolumeDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/projects/${param.project}/volumes/${param.volume}`);
+    const response = await fetch(`/projects/${param.project}/volumes/${param.volume}${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -118,8 +118,8 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Namespace : </span>
-                {this.props.rowData.namespace}
+                <span>Project : </span>
+                {this.props.rowData.project}
               </div>
               <div>
                 <span>Status : </span>
@@ -131,17 +131,17 @@ class BasicInfo extends Component {
               </div>
             </div>
             <div className="cb-body-right">
-              <div>
+              {/* <div>
                 <span>Available : </span>
                 {this.props.rowData.available}
-              </div>
+              </div> */}
               <div>
                 <span>Capacity : </span>
                 {this.props.rowData.capacity}
               </div>
               <div>
                 <span>Storage Class : </span>
-                {this.props.rowData.strage_class}
+                {this.props.rowData.storage_class}
               </div>
               <div>
                 <span>Created Time : </span>
@@ -162,19 +162,27 @@ class MountedBy extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "cluster", title: "Cluster" },
-        { name: "node", title: "Node" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
         { name: "pod_ip", title: "Pod IP" },
-        { name: "cpu", title: "Cpu" },
-        { name: "memory", title: "Memory" },
+        { name: "node", title: "Node" },
+        { name: "node_ip", title: "Node IP" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 200 },
-        { columnName: "cluster", width: 130 },
-        { columnName: "node", width: 220 },
-        { columnName: "pod_ip", width: 150 },
-        { columnName: "cpu", width: 100 },
-        { columnName: "memory", width: 100 },
+        { columnName: "name", width: 370 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
+        { columnName: "project", width: 110 },
+        { columnName: "pod_ip", width: 100 },
+        { columnName: "node", width: 180 },
+        { columnName: "node_ip", width: 120 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 80 },
+        { columnName: "created_time", width: 160 },
       ],
       rows: this.props.rowData,
 

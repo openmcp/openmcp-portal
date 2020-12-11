@@ -182,6 +182,7 @@ class Ingress extends Component {
             <Link
               to={{
                 pathname: `/network/ingress/${props.value}`,
+                search: `cluster=${row.cluster}`,
                 state: {
                   data: row,
                 },

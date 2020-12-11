@@ -540,11 +540,11 @@ app.get("/projects/:project/resources/services/:service", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log(`${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.query.project}/services/${req.params.service}`)
+  // console.log(`${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`)
 
   var request = require("request");
   var options = {
-    uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.query.project}/services/${req.params.service}`,
+    uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`,
     method: "GET",
   };
 
@@ -582,10 +582,25 @@ app.get("/projects/:project/resources/ingress", (req, res) => {
 
 // Prjects > Resources > Ingress Detail
 app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects_ingress_detail.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/projects_ingress_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // //console.log(overview);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/ingress/${req.params.ingress}`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Prjects > volumes
@@ -612,10 +627,24 @@ app.get("/projects/:project/volumes", (req, res) => {
 
 // Prjects > volumes Detail
 app.get("/projects/:project/volumes/:volume", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects_volume_detail.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/projects_volume_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/volumes/${req.params.volume}`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Prjects > Config > Secrets

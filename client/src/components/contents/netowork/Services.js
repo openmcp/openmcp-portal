@@ -188,7 +188,7 @@ class Services extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/network/services/${props.value}`,
-            search:`cluster=${row.cluster}&project=${row.project}`,
+            search:`cluster=${row.cluster}`,
             state: {
               data : row
             }

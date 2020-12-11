@@ -48,6 +48,7 @@ class IngressDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
+        console.log(res)
         if(res === null){
           this.setState({ rows: [] });
         } else {
@@ -59,13 +60,12 @@ class IngressDetail extends Component {
       
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW12');
-      
   }
 
   callApi = async () => {
     var param = this.props.match.params;
     const response = await fetch(
-      `/projects/${param.project}/resources/ingress/${param.ingress}`
+      `/projects/${this.props.location.state.data.project}/resources/ingress/${param.ingress}${this.props.location.search}`
     );
     const body = await response.json();
     return body;
@@ -137,16 +137,17 @@ class BasicInfo extends Component {
                 <span>Project : </span>
                 {this.props.rowData.namespace}
               </div> */}
-              <div>
-                <span>Namespace : </span>
-                {this.props.rowData.namespace}
-              </div>
+
               <div>
                 <span>Address : </span>
                 {this.props.rowData.address}
               </div>
             </div>
             <div className="cb-body-right">
+              <div>
+                <span>Project : </span>
+                {this.props.rowData.project}
+              </div>
               <div>
                 <span>Created Time : </span>
                 {this.props.rowData.created_time}

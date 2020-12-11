@@ -52,7 +52,7 @@ class ServicesDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/projects/${this.props.location.project}/resources/services/${param.service}${this.props.location.search}`);
+    const response = await fetch(`/projects/${this.props.location.state.data.project}/resources/services/${param.service}${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
