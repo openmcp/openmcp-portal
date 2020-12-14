@@ -1152,10 +1152,49 @@ app.get("/pods", (req, res) => {
 
 // Pods > detail
 app.get("/pods/:pod", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/pods_detail.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/pods_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/pods/${req.params.pod}?cluster=${req.query.cluster}&project=${req.query.project}`,
+    method: "GET",
+  };
+
+  console.log(options.uri)
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.get("/pods/:pod/physicalResPerMin", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/pods_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/pods/${req.params.pod}/physicalResPerMin?cluster=${req.query.cluster}&project=${req.query.project}`,
+    method: "GET",
+  };
+
+  console.log(options.uri)
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Pods > detail

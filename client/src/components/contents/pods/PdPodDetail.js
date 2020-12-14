@@ -14,6 +14,15 @@ import {
 import PdPodResourceConfig from './../modal/PdPodResourceConfig';
 import * as utilLog from './../../util/UtLogs.js';
 
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
+import PauseIcon from '@material-ui/icons/Pause';
+import PauseRoundedIcon from '@material-ui/icons/PauseRounded';
+
+import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
+import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
+import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
+
 
 // let apiParams = "";
 class PdPodDetail extends Component {
@@ -49,7 +58,10 @@ class PdPodDetail extends Component {
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/pods/${param.pod}`);
+    const response = await fetch(`/pods/${param.pod}${this.props.location.search}`);
+    // const response = await fetch(
+    //   `/projects/${this.props.location.state.data.project}/resources/pods/${param.pod}${this.props.location.search}`
+    // );
     const body = await response.json();
     return body;
   };
@@ -89,7 +101,7 @@ class PdPodDetail extends Component {
             <BasicInfo rowData={this.state.rows.basic_info} />,
             <PodStatus rowData={this.state.rows.pod_status}/>,
             <Containers rowData={this.state.rows.containers}/>,
-            <PhysicalResources rowData={this.state.rows.physical_resources}/>,
+            <PhysicalResources rowData={this.state.rows.physical_resources} parentsProps={this.props}/>,
             <Events rowData={this.state.rows.events}/>
             ]
           ) : (
@@ -113,7 +125,7 @@ class BasicInfo extends Component {
         <div className="cb-header" style={{position:"relative"}}>
         <span>Basic Info</span>
           
-          <PdPodResourceConfig name={this.props.rowData.name} resources={this.props.rowData.resources}/>
+          <PdPodResourceConfig name={this.props.rowData.name}/>
         </div>
         <div className="cb-body">
           <div>
@@ -169,7 +181,6 @@ class BasicInfo extends Component {
   }
 }
 
-
 class PodStatus extends Component {
   constructor(props) {
     super(props);
@@ -178,14 +189,14 @@ class PodStatus extends Component {
         { name: "type", title: "Type" },
         { name: "status", title: "Status" },
         { name: "last_update", title: "Last Update" },
-        { name: "reson", title: "Reson" },
+        { name: "reason", title: "Reason" },
         { name: "message", title: "Message" },
       ],
       defaultColumnWidths: [
         { columnName: "type", width: 200 },
         { columnName: "status", width: 120 },
         { columnName: "last_update", width: 200 },
-        { columnName: "reson", width: 200 },
+        { columnName: "reason", width: 200 },
         { columnName: "message", width: 400 },
       ],
       rows: this.props.rowData,
@@ -296,7 +307,6 @@ class PodStatus extends Component {
     );
   };
 };
-
 
 class Containers extends Component {
   constructor(props) {
@@ -426,15 +436,71 @@ class Containers extends Component {
 };
 
 class PhysicalResources extends Component {
+  constructor(props){
+    super(props)
+    this.state={
+      rowData : this.props.rowData,
+      isPlay : false
+    }
+  }
+  componentDidMount() {
+    
+  }  
+
+  componentWillUnmount(){
+    console.log("willUnmount")
+    clearInterval(this.timer);
+  }
+
+  callApi = async () => {
+    var param = this.props.parentsProps;
+    const response = await fetch(`/pods/${param.match.params.pod}/physicalResPerMin${param.location.search}`);
+
+    // this.props.parentsProps.location.search 
+    // this.props.parentsProps.match.params.pod
+
+    const body = await response.json();
+    return body;
+  };
+
+  onStart = () => {
+    console.log("onStart")
+    this.callApi()
+    .then((res) => {
+      console.log("res: ", res.network)
+        this.setState({ rowData: res });
+    })
+    .catch((err) => console.log(err));
+  }
+
+  onPlay = (play) => {
+    if (play) {
+      this.setState({isPlay : false})
+      console.log("stop")
+      clearInterval(this.timer);
+    } else {
+      this.setState({isPlay : true})
+      console.log("play")
+      this.onStart()
+      this.timer = setInterval(this.onStart, 5000);
+    }
+ 
+    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+    
+  }
   render(){
     const network_title = ["in", "out"];
     return (
       <div className="content-box line-chart">
-        <div className="cb-header">Physical Resources</div>
+        <div className="cb-header" >Physical Resources
+      {this.state.isPlay 
+       ? <PauseCircleFilledIcon style={{position:"absolute", top: "-3px", marginLeft: "14px"}} onClick={()=>this.onPlay(this.state.isPlay)}/>
+       : <PlayCircleOutlineIcon style={{position:"absolute", top: "-3px", marginLeft: "14px"}}onClick={()=>this.onPlay(this.state.isPlay)}/> }
+        </div>
         <div className="cb-body">
           <div className="cb-body-content">
             <LineReChart 
-              rowData={this.props.rowData.cpu}
+              rowData={this.state.rowData.cpu}
               unit="m"
               name="cpu"
               title="CPU"
@@ -443,10 +509,10 @@ class PhysicalResources extends Component {
             </LineReChart>
           </div>
           <div className="cb-body-content">
-            <LineReChart rowData={this.props.rowData.memory} unit="mib" name="memory" title="Memory" cardinal={false}></LineReChart>
+            <LineReChart rowData={this.state.rowData.memory} unit="mib" name="memory" title="Memory" cardinal={false}></LineReChart>
           </div>
           <div className="cb-body-content">
-            <LineReChart rowData={this.props.rowData.network} unit="Bps" name={network_title} title="Network" cardinal={true}></LineReChart>
+            <LineReChart rowData={this.state.rowData.network} unit="Bps" name={network_title} title="Network" cardinal={true}></LineReChart>
           </div>
         </div>
       </div>

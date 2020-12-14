@@ -46,8 +46,10 @@ class PdPodResourceConfig extends Component {
       cpu_limit : "Limitless",
       mem_req : "No Request",
       mem_limit : "Limitless",
-      cpu_value : [this.props.resources.cpu_min.replace('m',''),this.props.resources.cpu_max.replace('m','')],
-      mem_value : [this.props.resources.memory_min.replace('Mi',''),this.props.resources.memory_max.replace('Mi','')],
+      // cpu_value : [this.props.resources.cpu_min.replace('m',''),this.props.resources.cpu_max.replace('m','')],
+      // mem_value : [this.props.resources.memory_min.replace('Mi',''),this.props.resources.memory_max.replace('Mi','')],
+      cpu_value : [0, 0],
+       mem_value : [0, 0]
     }
     this.onChange = this.onChange.bind(this);
   }
@@ -62,7 +64,12 @@ class PdPodResourceConfig extends Component {
   }
 
   handleClickOpen = () => {
-    this.setState({ open: true });
+    this.setState({
+       open: true,
+       cpu_value : [0, 0],
+       mem_value : [0, 0]
+      });
+    
   };
 
   handleClose = () => {

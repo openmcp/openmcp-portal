@@ -106,9 +106,9 @@ class DeploymentDetail extends Component {
                 <ReplicaStatus refresh={this.refresh} />,
                 <Pods rowData={this.state.rows.pods} />,
                 <Ports rowData={this.state.rows.ports} />,
-                <PhysicalResources
-                  rowData={this.state.rows.physical_resources}
-                />,
+                // <PhysicalResources
+                //   rowData={this.state.rows.physical_resources}
+                // />,
                 <Events rowData={this.state.rows.events} />,
               ]
             ) : (

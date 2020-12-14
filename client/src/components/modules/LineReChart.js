@@ -12,6 +12,16 @@ class LineReChart extends Component {
   state = {
     rows: this.props.rowData,
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    console.log("componentDidUpdate")
+    if (this.props.rowData !== prevProps.rowData) {
+      this.setState({
+        ...this.state,
+        rows: this.props.rowData,
+      });
+    }
+  }
   render() {
     // console.log(this.state.rows, this.props.name);
     const color = ["#367fa9", "#3cb0bc"];
@@ -99,7 +109,7 @@ class LineReChart extends Component {
                     </linearGradient>
                   </defs>,
                   <Area
-                    type="monotone"
+                    type="linear" //basis, linear, natural, monotone, step
                     dataKey={this.props.name[index]}
                     stroke={color[index % this.props.name.length]}
                     fill={"url(#colorNetwork" + index + ")"}
@@ -122,7 +132,7 @@ class LineReChart extends Component {
                   </linearGradient>
                 </defs>,
                 <Area
-                  type="monotone"
+                  type="linear" //basis, linear, natural, monotone, step
                   dataKey={this.props.name}
                   stroke="#367fa9"
                   fill="url(#colorCpuMemory)"

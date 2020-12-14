@@ -23,6 +23,7 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 
 // import Editor from "./../modules/Editor";
+import Projects from './../projects/Projects';
 
 // let apiParams = "";
 class Pods extends Component {
@@ -174,6 +175,7 @@ class Pods extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/pods/${props.value}`,
+            search:`cluster=${row.cluster}&project=${row.project}`,
             state: {
               data : row
             }
