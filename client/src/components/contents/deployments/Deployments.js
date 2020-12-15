@@ -228,6 +228,7 @@ spec:
             <Link
               to={{
                 pathname: `/deployments/${props.value}`,
+                search: `cluster=${row.cluster}&project=${row.project}`,
                 state: {
                   data: row,
                 },

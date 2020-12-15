@@ -775,24 +775,26 @@ app.get("/deployments", (req, res) => {
 });
 
 app.get("/deployments/:deployment", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/deployment_detail.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/deployment_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.query.project}/deployments/${req.params.deployment}`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  console.log(`${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.query.project}/deployments/${req.params.deployment}`)
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 app.post("/deployments/migration", (req, res) => {

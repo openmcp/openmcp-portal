@@ -182,6 +182,7 @@ class Pods extends Component {
           }}>{fnEnterCheck()}</Link></Table.Cell>
         );
       }
+      
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 

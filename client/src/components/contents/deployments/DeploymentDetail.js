@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext } from "@material-ui/icons";
+import { Link } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import {
@@ -57,7 +58,7 @@ class DeploymentDetail extends Component {
   callApi = async () => {
     var param = this.props.match.params;
     const response = await fetch(
-      `/projects/${param.project}/resources/workloads/deployments/${param.deployment}`
+      `/deployments/${param.deployment}${this.props.location.search}`
     );
     const body = await response.json();
     return body;
@@ -138,8 +139,8 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Namespace : </span>
-                {this.props.rowData.namespace}
+                <span>Project : </span>
+                {this.props.rowData.project}
               </div>
               <div>
                   <span>Labels : </span>
@@ -339,17 +340,27 @@ class Pods extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
+        { name: "status", title: "Status"},
+        { name: "cluster", title: "Cluster"},
+        { name: "project", title: "Project" },
+        { name: "pod_ip", title: "Pod IP" },
         { name: "node", title: "Node" },
-        { name: "cpu", title: "Cpu" },
-        { name: "memory", title: "Memory" },
+        { name: "node_ip", title: "Node IP" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
+        { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 300 },
-        { columnName: "status", width: 130 },
-        { columnName: "node", width: 250 },
-        { columnName: "cpu", width: 100 },
-        { columnName: "memory", width: 100 },
+        { columnName: "name", width: 330 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
+        { columnName: "project", width: 130 },
+        { columnName: "pod_ip", width: 120 },
+        { columnName: "node", width: 230 },
+        { columnName: "node_ip", width: 130 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 100 },
+        { columnName: "created_time", width: 170 },
       ],
       rows: this.props.rowData,
 
@@ -451,13 +462,13 @@ class Ports extends Component {
       columns: [
         { name: "port_name", title: "Port Name" },
         { name: "port", title: "Port" },
-        { name: "listening_port", title: "Listening Port" },
+        // { name: "listening_port", title: "Listening Port" },
         { name: "protocol", title: "Protocol" },
       ],
       defaultColumnWidths: [
         { columnName: "port_name", width: 200 },
         { columnName: "port", width: 150 },
-        { columnName: "listening_port", width: 150 },
+        // { columnName: "listening_port", width: 150 },
         { columnName: "protocol", width: 150 },
       ],
       rows: this.props.rowData,
@@ -476,6 +487,74 @@ class Ports extends Component {
   }
 
   render() {
+
+    // 셀 데이터 스타일 변경
+    const HighlightedCell = ({ value, style, row, ...restProps }) => (
+      <Table.Cell
+        {...restProps}
+        style={{
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // cursor: "pointer",
+          ...style,
+        }}>
+        <span
+          style={{
+            color:
+              value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "red" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
+          }}>
+          {value}
+        </span>
+      </Table.Cell>
+    );
+
+    //셀
+    const Cell = (props) => {
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        return (
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( item => {
+              return (
+                <p>{item}</p>
+            )}) : 
+              props.value
+        )
+      }
+
+
+      if (column.name === "status") {
+        return <HighlightedCell {...props} />;
+      } else if (column.name === "name") {
+        // console.log("name", props.value);
+        return (
+          <Table.Cell
+            {...props}
+            style={{ cursor: "pointer" }}
+          ><Link to={{
+            pathname: `/pods/${props.value}`,
+            search:`cluster=${row.cluster}&project=${row.project}`,
+            state: {
+              data : row
+            }
+          }}>{fnEnterCheck()}</Link></Table.Cell>
+        );
+      }
+
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
+    };
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -521,7 +600,7 @@ class Ports extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
-                  <Table rowComponent={Row} />
+                  <Table cellComponent={Cell} rowComponent={Row} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
                   />
