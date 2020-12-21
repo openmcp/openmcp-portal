@@ -68,7 +68,7 @@ class PjOverview extends Component {
 
   callApi = async () => {
     var param = this.props.match.params.project;
-    const response = await fetch(`/projects/${param}/overview`);
+    const response = await fetch(`/projects/${param}/overview${this.props.location.search}`);
     const body = await response.json();
     return body;
   };
@@ -148,10 +148,6 @@ class BasicInfo extends Component {
                 {this.props.rowData.cluster}
               </div>
               <div>
-                <span>Status : </span>
-                {this.props.rowData.status}
-              </div>
-              <div>
                   <span>Labels : </span>
                   <div style={{margin : "-25px 0px 0px 66px"}}>
                     {
@@ -168,12 +164,12 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Description : </span>
-                {this.props.rowData.description}
+                <span>Status : </span>
+                {this.props.rowData.status}
               </div>
               <div>
                 <span>UID : </span>
-                {this.props.rowData.UID}
+                {this.props.rowData.uid}
               </div>
               <div>
                 <span>Created Time : </span>
@@ -238,7 +234,7 @@ class UsageTop5 extends Component {
   state = {
     columns: [
       { name: "name", title: "Name" },
-      { name: "type", title: "Type" },
+      // { name: "type", title: "Type" },
       { name: "usage", title: "Usage" },
     ],
     rows : this.props.rowData.cpu,

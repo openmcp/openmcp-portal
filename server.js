@@ -347,10 +347,26 @@ app.get("/projects", (req, res) => {
 
 // Prjects > overview
 app.get("/projects/:project/overview", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects_overview.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/projects_overview.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}`,
+    method: "GET",
+  };
+
+  console.log(options.uri)
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // // Prjects > get Clusters Names
