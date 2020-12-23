@@ -29,7 +29,7 @@ import * as utilLog from './../../../util/UtLogs.js';
 // import clsx from "clsx";
 
 let apiParams = "";
-class PjwDeploymentDetail extends Component {
+class PjwStatefulSetDetail extends Component {
   state = {
     rows: "",
     completed: 0,
@@ -61,13 +61,13 @@ class PjwDeploymentDetail extends Component {
       .catch((err) => console.log(err));
 
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW04');
+    utilLog.fn_insertPLogs(userId, 'log-PJ-VW06');
   }
 
   callApi = async () => {
     var param = this.props.match.params;
     const response = await fetch(
-      `/projects/${param.project}/resources/workloads/deployments/${param.deployment}${this.props.location.search}`
+      `/projects/${param.project}/resources/workloads/statefulsets/${param.statefulset}${this.props.location.search}`
     );
     const body = await response.json();
     return body;
@@ -555,6 +555,7 @@ class Ports extends Component {
   }
 
   componentWillMount() {
+    console.log(this.props.rowData)
     // this.props.onSelectMenu(false, "");
   }
 
@@ -582,6 +583,34 @@ class Ports extends Component {
   // };
 
   render() {
+
+    const Cell = (props) => {
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        if(props.value == undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
+      }
+
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
+    };
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -627,7 +656,7 @@ class Ports extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
-                  <Table rowComponent={Row} />
+                  <Table cellComponent={Cell} rowComponent={Row} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
                   />
@@ -820,4 +849,4 @@ class Events extends Component {
   }
 }
 
-export default PjwDeploymentDetail;
+export default PjwStatefulSetDetail;

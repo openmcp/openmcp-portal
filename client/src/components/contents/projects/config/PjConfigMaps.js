@@ -136,15 +136,18 @@ class PjConfigMaps extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        console.log(props.column.title, ":", props.value);
-        return (
-          props.value.indexOf("|") > 0 ? 
-            props.value.split("|").map( item => {
-              return (
-                <p>{item}</p>
-            )}) : 
-              props.value
-        )
+        if(props.value == undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
       }
 
       if (column.name === "status") {

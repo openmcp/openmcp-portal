@@ -67,7 +67,7 @@ class PjIngressDetail extends Component {
   callApi = async () => {
     var param = this.props.match.params;
     const response = await fetch(
-      `/projects/${param.project}/resources/ingress/${param.ingress}`
+      `/projects/${this.props.location.state.data.project}/resources/ingress/${param.ingress}${this.props.location.search}`
     );
     const body = await response.json();
     return body;
@@ -240,11 +240,18 @@ class Rules extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        return props.value.indexOf("|") > 0
-          ? props.value.split("|").map((item) => {
-              return <p>{item}</p>;
-            })
-          : props.value;
+        if(props.value == undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
       };
 
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;

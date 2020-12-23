@@ -124,15 +124,18 @@ class CsStorageClass extends Component {
     const Cell = (props) => {
       const { column, row } = props;
       const fnEnterCheck = () => {
-        // console.log("value", props.value, props.value.indexOf("|"));
-        return (
-          props.value.indexOf("|") > 0 ? 
-            props.value.split("|").map( item => {
-              return (
-                <p>{item}</p>
-            )}) : 
-              props.value
-        )
+        if(props.value == undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
       }
 
 

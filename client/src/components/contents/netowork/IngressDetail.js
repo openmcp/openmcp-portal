@@ -233,11 +233,18 @@ class Rules extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        return props.value.indexOf("|") > 0
-          ? props.value.split("|").map((item) => {
-              return <p>{item}</p>;
-            })
-          : props.value;
+        if(props.value == undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
       };
 
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;

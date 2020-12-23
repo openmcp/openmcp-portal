@@ -407,12 +407,31 @@ app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
 // Prjects > Resources > Workloads > Deployments > detail
 app.get("/projects/:project/resources/workloads/deployments/:deployment",
   (req, res) => {
-    let rawdata = fs.readFileSync(
-      "./json_data/projects_deployment_detail.json"
-    );
-    let overview = JSON.parse(rawdata);
-    // //console.log(overview);
-    res.send(overview);
+    // let rawdata = fs.readFileSync(
+    //   "./json_data/projects_deployment_detail.json"
+    // );
+    // let overview = JSON.parse(rawdata);
+    // // //console.log(overview);
+    // res.send(overview);
+
+
+    var request = require("request");
+    var options = {
+      uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}`,
+    };
+
+    console.log(options.uri)
+
+
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        res.send(body);
+      } else {
+        console.log("error", error);
+        return error;
+      }
+    });
+
   }
 );
 
@@ -484,14 +503,55 @@ app.delete(
 );
 
 // Deployments 상세부터 구현해나가야 함
+// Prjects > Resources > Workloads > Statefulsets
+app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/projects_statefulsets.json");
+  // let overview = JSON.parse(rawdata);
+  // //console.log(overview);
+  // res.send(overview);
 
-// // Prjects > Resources > Workloads > Statefulsets
-// app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
-//   let rawdata = fs.readFileSync("./json_data/projects_statefulsets.json");
-//   let overview = JSON.parse(rawdata);
-//   //console.log(overview);
-//   res.send(overview);
-// });
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/statefulsets`,
+    method: "GET",
+  };
+
+
+
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.get("/projects/:project/resources/workloads/statefulsets/:statefulset", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/projects_statefulsets.json");
+  // let overview = JSON.parse(rawdata);
+  // //console.log(overview);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/statefulsets/${req.params.statefulset}`,
+    method: "GET",
+  };
+
+  console.log(options.uri)
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
 
 // Prjects > Resources > pods
 app.get("/projects/:project/resources/pods", (req, res) => {
@@ -520,10 +580,26 @@ app.get("/projects/:project/resources/pods", (req, res) => {
 
 // Prjects > Resources > Pods Detail
 app.get("/projects/:project/resources/pods/:pod", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/projects_pod_detail.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/projects_pod_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // //console.log(overview);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/pods/${req.params.pod}?cluster=${req.query.cluster}&project=${req.query.project}`,
+    method: "GET",
+  };
+
+  // console.log(options.uri)
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // Prjects > Resources > Services
@@ -801,7 +877,7 @@ app.get("/deployments/:deployment", (req, res) => {
     method: "GET",
   };
 
-  console.log(`${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.query.project}/deployments/${req.params.deployment}`)
+  // console.log(`${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.query.project}/deployments/${req.params.deployment}`)
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {

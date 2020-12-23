@@ -29,7 +29,10 @@ import Editor from "./../../../modules/Editor";
 import * as utilLog from "./../../../util/UtLogs.js";
 import PjDeploymentMigration from "./../../modal/PjDeploymentMigration";
 import queryString from 'query-string';
-// import { NavigateNext} from '@material-ui/icons';
+import axios from 'axios';
+import ProgressTemp from './../../../modules/ProgressTemp';
+import { NavigateNext} from '@material-ui/icons';
+import SnapShotControl from './../../modal/SnapShotControl';
 
 
 // let apiParams = "";
@@ -64,7 +67,24 @@ class PjwDeployments extends Component {
       completed: 0,
       selection: [],
       selectedRow: "",
-      clusterName : ""
+      clusterName : "",
+      editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+kind: OpenMCPDeployment
+metadata:
+  name: openmcp-deployment2
+  namespace: openmcp
+spec:
+  replicas: 3
+  labels:
+      app: openmcp-nginx
+  template:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: nginx
+            name: nginx`,
+      openProgress : false
     };
   }
 
@@ -85,7 +105,7 @@ class PjwDeployments extends Component {
 
     // var param = this.props.match.params.cluster;
     // queryString = queryString.parse(this.props.location.search).cluster
-    console.log(this.props.match.params.project, this.props.location.search);
+    // console.log(this.props.match.params.project, this.props.location.search);
     const response = await fetch(
       `/projects/${this.props.match.params.project}/resources/workloads/deployments${this.props.location.search}`
     );
@@ -133,6 +153,49 @@ class PjwDeployments extends Component {
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
+  excuteScript = (context) => {
+
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+
+    const url = `/deployments/create`;
+    const data = {
+      yaml:context
+    };
+    // console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
+  }
+  
+  onRefresh = () => {
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+    this.callApi()
+      .then((res) => {
+        this.setState({ 
+          // selection : [],
+          // selectedRow : "",
+          rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  closeProgress = () => {
+    this.setState({openProgress:false})
+  }
 
   render() {
     // 셀 데이터 스타일 변경
@@ -168,23 +231,6 @@ class PjwDeployments extends Component {
     //셀
     const Cell = (props) => {
       const { column, row } = props;
-      // console.log("cell : ", props);
-      // const values = props.value.split("|");
-      // console.log("values", props.value);
-      
-      // const values = props.value.replace("|","1");
-      // console.log("values,values", values)
-
-      // const fnEnterCheck = () => {
-      //   return (
-      //     props.value.indexOf("|") > 0 ?
-      //       props.value.split("|").map( item => {
-      //         return (
-      //           <p>{item}</p>
-      //       )}) :
-      //         props.value
-      //   )
-      // }
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
@@ -196,7 +242,7 @@ class PjwDeployments extends Component {
             <Link
               to={{
                 pathname: `/projects/${this.props.match.params.project}/resources/workloads/deployments/${props.value}`,
-                search: this.props.location.search,
+                search: `cluster=${row.cluster}&project=${row.project}`,
                 state: {
                   data: row,
                 },
@@ -241,12 +287,17 @@ class PjwDeployments extends Component {
           <Paper>
             {this.state.rows ? (
               [
+                <SnapShotControl
+                  title="create deployment"
+                  rowData={this.state.selectedRow}
+                  onUpdateData = {this.onUpdateData}
+                />,
                 <PjDeploymentMigration
                   title="migration"
                   rowData={this.state.selectedRow}
                   onUpdateData = {this.onUpdateData}
                 />,
-                <Editor title="create" />,
+                <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
@@ -256,7 +307,7 @@ class PjwDeployments extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
                   />
 
                   {/* 페이징 */}

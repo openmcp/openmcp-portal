@@ -151,16 +151,16 @@ spec:
     const data = {
       yaml:context
     };
-    console.log(context)
-    // axios.post(url, data)
-    // .then((res) => {
-    //     // alert(res.data.message);
-    //     this.setState({ open: false });
-    //     this.onUpdateData();
-    // })
-    // .catch((err) => {
-    //     alert(err);
-    // });
+    // console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
   }
   
   onRefresh = () => {

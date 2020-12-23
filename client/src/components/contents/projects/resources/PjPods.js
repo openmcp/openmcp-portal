@@ -37,20 +37,20 @@ class PjPods extends Component {
         { name: "pod_ip", title: "Pod IP" },
         { name: "node", title: "Node" },
         { name: "node_ip", title: "Node IP" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
+        // { name: "cpu", title: "CPU" },
+        // { name: "memory", title: "Memory" },
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "cluster", width: 130 },
+        { columnName: "name", width: 330 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
         { columnName: "project", width: 130 },
-        { columnName: "pod_ip", width: 150 },
-        { columnName: "node", width: 130 },
-        { columnName: "node_ip", width: 150 },
-        { columnName: "cpu", width: 80 },
-        { columnName: "memory", width: 120 },
+        { columnName: "pod_ip", width: 120 },
+        { columnName: "node", width: 230 },
+        { columnName: "node_ip", width: 130 },
+        // { columnName: "cpu", width: 80 },
+        // { columnName: "memory", width: 100 },
         { columnName: "created_time", width: 170 },
       ],
       rows: "",
@@ -123,13 +123,14 @@ class PjPods extends Component {
           ...style,
         }}>
         <span
-          style={{
-            color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
+         style={{
+          color:
+            value === "Pending" ? "orange" : 
+              value === "Failed" ? "red" : 
+                value === "Unknown" ? "red" : 
+                  value === "Succeeded" ? "skyblue" : 
                     value === "Running" ? "#1ab726" : "black"
-          }}>
+        }}>
           {value}
         </span>
       </Table.Cell>
@@ -146,14 +147,18 @@ class PjPods extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        return (
-          props.value.indexOf("|") > 0 ? 
-            props.value.split("|").map( item => {
-              return (
-                <p>{item}</p>
-            )}) : 
-              props.value
-        )
+        if(props.value == undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
       }
 
 
@@ -166,7 +171,7 @@ class PjPods extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/projects/${apiParams}/resources/pods/${props.value}`,
-            search: this.props.location.search,
+            search:`cluster=${row.cluster}&project=${row.project}`,
             state: {
               data : row
             }

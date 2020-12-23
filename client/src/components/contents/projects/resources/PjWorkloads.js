@@ -31,6 +31,8 @@ import { Container } from "@material-ui/core";
 import PjwDeployments from './PjwDeployments';
 import PjwDeploymentDetail from './PjwDeploymentDetail';
 import { NavigateNext } from '@material-ui/icons';
+import PjwStatefulsets from './PjwStatefulsets';
+import PjwStatefulSetDetail from './PjwStatefulSetDetail';
 
 const styles = (theme) => ({
   root: {
@@ -90,8 +92,9 @@ class PjWorkloads extends Component {
     // completed: 0,
     reRender: "",
     value: 0,
-    tabHeader: [{ label: "Deployments", index: 1, param:"deployments" },
-    { label: "StatefulSets", index: 2, param:"statefulsets" },
+    tabHeader: [
+      { label: "Deployments", index: 1, param:"deployments" },
+      { label: "StatefulSets", index: 2, param:"statefulsets" },
     // { label: "DaemonSets", index: 3 },
     // { label: "CronJobs", index: 4 },
     // { label: "Jobs", index: 5 }
@@ -100,6 +103,7 @@ class PjWorkloads extends Component {
 
   componentWillMount() {
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
+
     const result = {
       menu : "projects",
       title : this.props.match.params.project,
@@ -109,11 +113,17 @@ class PjWorkloads extends Component {
       }
     }
     this.props.menuData(result);
+     if(this.props.match.url.indexOf("statefulsets") > 0 ){
+       this.setState({ value: 1 });
+     } else {
+      this.setState({ value: 0 });
+     }
     // apiParams = this.props.match.params.project;
   }
 
   render() {
     const handleChange = (event, newValue) => {
+      console.log("ddd",newValue)
       this.setState({ value: newValue });
     };
 
@@ -177,7 +187,7 @@ class PjWorkloads extends Component {
                           component={Link}
                           to={{
                             pathname: `/projects/${this.props.match.params.project}/resources/workloads/${i.param}`,
-                            search : ``
+                            search : this.props.location.search
                             // state: {
                             //   data : row
                             // }
@@ -198,10 +208,10 @@ class PjWorkloads extends Component {
                   })} */}
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 <Switch>
-                  <Route path="/projects/:project/resources/workloads/deployments/:deployment:searchParams?" 
+                  <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
                     render={({match,location}) => <PjwDeploymentDetail  match={match} location={location}/>} >
                   </Route>
-                  <Route path="/projects/:project/resources/workloads/deployments:searchParams?" 
+                  <Route path="/projects/:project/resources/workloads/deployments" 
                     render={({match,location}) => <PjwDeployments  match={match} location={location}/>} >
                   </Route>
             
@@ -215,9 +225,13 @@ class PjWorkloads extends Component {
                 {/* <DeploymentsTab pathParam={this.props.match.params.project}></DeploymentsTab> */}
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
-                <Route path="/projects/:project/resources/workloads/statefulsets:searchParams?" 
-                      render={({match,location}) => <PjwDeployments  match={match} location={location} menuData={this.onMenuData}/>} >
+                <Route path="/projects/:project/resources/workloads/statefulsets/:statefulset" 
+                  render={({match,location}) => <PjwStatefulSetDetail  match={match} location={location}/>} >
                 </Route>
+                <Route path="/projects/:project/resources/workloads/statefulsets" 
+                      render={({match,location}) => <PjwStatefulsets  match={match} location={location}/>} >
+                </Route>
+                
               </TabPanel>
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
                 Item Three

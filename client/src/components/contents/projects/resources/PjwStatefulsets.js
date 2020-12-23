@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -9,6 +9,9 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  // EditingState,
+  SelectionState,
+  IntegratedSelection,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -18,38 +21,39 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
+  // TableEditRow,
+  // TableEditColumn,
+  TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "../../../modules/Editor";
+import Editor from "./../../../modules/Editor";
+import * as utilLog from "./../../../util/UtLogs.js";
+import PjDeploymentMigration from "./../../modal/PjDeploymentMigration";
+import queryString from 'query-string';
+import axios from 'axios';
+import ProgressTemp from './../../../modules/ProgressTemp';
 import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../../../util/UtLogs.js';
+import SnapShotControl from './../../modal/SnapShotControl';
 
-let apiParams = "";
+
+// let apiParams = "";
 class PjwStatefulsets extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Pod" },
-        { name: "status", title: "Status"},
-        { name: "cluster", title: "Cluster"},
+        { name: "name", title: "Name" },
+        { name: "status", title: "Ready" },
+        { name: "cluster", title: "Cluster" },
         { name: "project", title: "Project" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "node", title: "Node" },
-        { name: "node_ip", title: "Node IP" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
+        { name: "image", title: "Image" },
         { name: "created_time", title: "Created Time" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
+        { columnName: "name", width: 250 },
+        { columnName: "status", width: 100 },
         { columnName: "cluster", width: 130 },
-        { columnName: "project", width: 130 },
-        { columnName: "pod_ip", width: 150 },
-        { columnName: "node", width: 130 },
-        { columnName: "node_ip", width: 150 },
-        { columnName: "cpu", width: 80 },
-        { columnName: "memory", width: 120 },
+        { columnName: "project", width: 200 },
+        { columnName: "image", width: 370 },
         { columnName: "created_time", width: 170 },
       ],
       rows: "",
@@ -57,33 +61,54 @@ class PjwStatefulsets extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 5,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      selection: [],
+      selectedRow: "",
+      clusterName : "",
+      editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+kind: OpenMCPDeployment
+metadata:
+  name: openmcp-deployment2
+  namespace: openmcp
+spec:
+  replicas: 3
+  labels:
+      app: openmcp-nginx
+  template:
+    spec:
+      template:
+        spec:
+          containers:
+          - image: nginx
+            name: nginx`,
+      openProgress : false
     };
   }
 
   componentWillMount() {
-    const result = {
-      menu : "clusters",
-      title : this.props.match.params.cluster,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
-    }
-    this.props.menuData(result);
-    apiParams = this.props.match.params.cluster;
+    
+    // console.log(this.props.match.params.project)
+    // const query = queryString.parse(this.props.location.search).cluster
+    // console.log(query);
+    // const result = {
+    //   menu : "clusters",
+    //   title : this.props.match.params.cluster
+    // }
+    // this.props.menuData(result);
+    // apiParams = this.props.param;
   }
 
-
-  
-
   callApi = async () => {
-    var param = this.props.match.params.cluster;
-    const response = await fetch(`/clusters/${apiParams}/pods`);
+
+    // var param = this.props.match.params.cluster;
+    // queryString = queryString.parse(this.props.location.search).cluster
+    // console.log(this.props.match.params.project, this.props.location.search);
+    const response = await fetch(
+      `/projects/${this.props.match.params.project}/resources/workloads/statefulsets${this.props.location.search}`
+    );
     const body = await response.json();
     return body;
   };
@@ -107,12 +132,72 @@ class PjwStatefulsets extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
+
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW05');
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW05");
+  }
+
+  onUpdateData = () => {
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        this.setState({ 
+          selection : [],
+          selectedRow : "",
+          rows: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+
+    const userId = localStorage.getItem("userName");
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW05");
   };
 
-  render() {
+  excuteScript = (context) => {
 
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+
+    const url = `/deployments/create`;
+    const data = {
+      yaml:context
+    };
+    // console.log(context)
+    axios.post(url, data)
+    .then((res) => {
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.onUpdateData();
+    })
+    .catch((err) => {
+        alert(err);
+    });
+  }
+  
+  onRefresh = () => {
+    if(this.state.openProgress){
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:true})
+    }
+    this.callApi()
+      .then((res) => {
+        this.setState({ 
+          // selection : [],
+          // selectedRow : "",
+          rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  closeProgress = () => {
+    this.setState({openProgress:false})
+  }
+
+  render() {
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -122,15 +207,22 @@ class PjwStatefulsets extends Component {
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           // cursor: "pointer",
           ...style,
-        }}>
+        }}
+      >
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "#1ab726" : "black"
-          }}>
+              value === "Warning"
+                ? "orange"
+                : value === "Unschedulable"
+                ? "red"
+                : value === "Stop"
+                ? "red"
+                : value === "Running"
+                ? "#1ab726"
+                : "black",
+          }}
+        >
           {value}
         </span>
       </Table.Cell>
@@ -139,47 +231,29 @@ class PjwStatefulsets extends Component {
     //셀
     const Cell = (props) => {
       const { column, row } = props;
-      // console.log("cell : ", props);
-      // const values = props.value.split("|");
-      // console.log("values", props.value);
-      
-      // const values = props.value.replace("|","1");
-      // console.log("values,values", values)
-
-      const fnEnterCheck = () => {
-        return (
-          props.value.indexOf("|") > 0 ? 
-            props.value.split("|").map( item => {
-              return (
-                <p>{item}</p>
-            )}) : 
-              props.value
-        )
-      }
-
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // console.log("name", props.value);
+        // // console.log("name", props.value);
+        // console.log("this.props.match.params", this.props)
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/projects/${apiParams}/workloads/statefulsets`,
-            search: this.props.location.search,
-            state: {
-              data : row
-            }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/projects/${this.props.match.params.project}/resources/workloads/statefulsets/${props.value}`,
+                search: `cluster=${row.cluster}&project=${row.project}`,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {props.value}
+            </Link>
+          </Table.Cell>
         );
-      } else if (column.name === "cluster"){
-        return(
-        <Table.Cell>{apiParams}</Table.Cell>
-        );
-      } 
-      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
+      }
+      return <Table.Cell>{props.value}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -195,59 +269,81 @@ class PjwStatefulsets extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
+    };
+
+    const onSelectionChange = (selection) => {
+      // console.log(this.state.rows[selection[0]])
+      if (selection.length > 1) selection.splice(0, 1);
+      this.setState({ selection: selection });
+      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
 
     return (
-      <div className="content-wrapper cluster-nodes">
+      <div className="content-wrapper full">
+        {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
-          <h1>
-            Pods
-            <small>{apiParams}</small>
-          </h1>
-          <ol className="breadcrumb">
-            <li>
-              <NavLink to="/dashboard">Home</NavLink>
-            </li>
-            <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Clusters
-            </li>
-          </ol>
-        </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create" context={this.state.editorContext}/>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                // <SnapShotControl
+                //   title="create deployment"
+                //   rowData={this.state.selectedRow}
+                //   onUpdateData = {this.onUpdateData}
+                // />,
+                // <PjDeploymentMigration
+                //   title="migration"
+                //   rowData={this.state.selectedRow}
+                //   onUpdateData = {this.onUpdateData}
+                // />,
+                <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
-                  <IntegratedFiltering />
+
                   <SearchPanel style={{ marginLeft: 0 }} />
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
                   />
-                  <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
+
                   <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  {/* <EditingState
+                    onCommitChanges={commitChanges}
+                  /> */}
+                  <SelectionState
+                    selection={this.state.selection}
+                    onSelectionChange={onSelectionChange}
+                  />
+
+                  <IntegratedFiltering />
+                  <IntegratedSorting />
+                  <IntegratedSelection />
+                  <IntegratedPaging />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
+                  />
+                  <TableSelection
+                    selectByRowClick
+                    highlightRow
+                    // showSelectionColumn={false}
                   />
                 </Grid>,
               ]
