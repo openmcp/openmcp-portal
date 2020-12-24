@@ -46,8 +46,8 @@ import PjSecretDetail from './../contents/projects/config/PjSecretDetail';
 import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
 import Accounts from './../contents/settings/Accounts';
-import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 import Policy from './../contents/settings/Policy';
+import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 import DeploymentDetail from './../contents/deployments/DeploymentDetail';
 import ServicesDetail from './../contents/netowork/ServicesDetail';
 import IngressDetail from './../contents/netowork/IngressDetail';
@@ -273,8 +273,16 @@ class Contents extends Component {
           <Route path="/settings/accounts" 
             render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/settings/policy" 
+          <Route path="/settings/policy/project-policy"
             render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/settings/policy/openmcp-policy"
+            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route exact path="/settings/policy"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/policy/openmcp-policy`,
+            }}  />} >
           </Route>
           <Redirect 
             from="/settings" 

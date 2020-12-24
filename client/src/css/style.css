@@ -1800,3 +1800,14 @@ g {
   border-radius: 4px;  
 }
 
+.pj-pc-textfield {
+  position: relative;
+}
+.pj-pc-textfield > span{
+  position: absolute;
+  right: 40px;
+  bottom: 18px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #808080;
+}

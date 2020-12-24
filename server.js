@@ -1308,7 +1308,7 @@ from tb_accounts u`, (err, result) => {
   });
 });
 
-app.get("/settings/policy", (req, res) => {
+app.get("/settings/policy/openmcp-policy", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/settings_policy.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
@@ -1321,7 +1321,7 @@ app.get("/settings/policy", (req, res) => {
   });
 });
 
-app.put("/settings/policy", (req, res) => {
+app.put("/settings/policy/openmcp-policy", (req, res) => {
   connection.query(
     `update tb_policy 
       set rate='${req.body.rate.start}-${req.body.rate.end}', 
@@ -1338,6 +1338,50 @@ app.put("/settings/policy", (req, res) => {
         const result_set = {
           data: [],
           message: "Update was faild, please check policy : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
+
+app.get("/settings/policy/project-policy", (req, res) => {
+  let sql =`select  project, cluster, cls_cpu_trh_r, cls_mem_trh_r,
+            pod_cpu_trh_r, pod_mem_trh_r, updated_time
+            from tb_policy_projects`
+
+  connection.query(sql, (err, result) => {
+    res.send(result.rows);
+  });
+});
+
+app.put("/settings/policy/project-policy", (req, res) => {
+  var updated_time = getDateTime();
+
+  let sql = `
+  INSERT INTO tb_policy_projects (project, cluster, cls_cpu_trh_r, cls_mem_trh_r, pod_cpu_trh_r, pod_mem_trh_r, updated_time)
+  VALUES ('${req.body.project}', '${req.body.cluster}', ${req.body.cls_cpu_trh_r}, ${req.body.cls_mem_trh_r}, ${req.body.pod_cpu_trh_r}, ${req.body.pod_mem_trh_r}, '${updated_time}')
+  ON CONFLICT (project, cluster) DO
+  UPDATE 
+    SET project='${req.body.project}',
+    cluster='${req.body.cluster}',
+    cls_cpu_trh_r=${req.body.cls_cpu_trh_r},
+    cls_mem_trh_r=${req.body.cls_mem_trh_r},
+    pod_cpu_trh_r=${req.body.pod_cpu_trh_r},
+    pod_mem_trh_r=${req.body.pod_mem_trh_r},
+    updated_time='${updated_time}'
+  `
+  connection.query(sql, (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check data : " + err,
         };
         res.send(result_set);
       }

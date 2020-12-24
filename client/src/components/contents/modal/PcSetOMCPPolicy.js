@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Slider from "@material-ui/core/Slider";
-import * as utilLog from "./../../util/UtLogs.js";
+import * as utilLog from "../../util/UtLogs.js";
 import axios from "axios";
 
 const styles = (theme) => ({
@@ -29,7 +29,7 @@ function valuetext(value) {
   return `${value}°C`;
 }
 
-class PcSetPolicy extends Component {
+class PcSetOMCPPolicy extends Component {
   constructor(props) {
     super(props);
     this.g_rate_max = 10;
@@ -86,7 +86,7 @@ class PcSetPolicy extends Component {
     // console.log(this.state.period_value)
 
     //Save modification data (Policy Changed)
-    const url = `/settings/policy`;
+    const url = `/settings/policy/openmcp-policy`;
     const data = {
       policyId: this.state.policyId,
       rate: {
@@ -299,4 +299,4 @@ class PcSetPolicy extends Component {
   }
 }
 
-export default PcSetPolicy;
+export default PcSetOMCPPolicy;

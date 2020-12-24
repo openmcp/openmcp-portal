@@ -27,7 +27,7 @@ class Head extends Component {
 
   componentWillMount(){
     var menu = window.location.pathname
-    console.log(menu)
+    // console.log(menu)
     if (menu.indexOf('dashboard') >= 0 ){
       this.setState({selectedMenu:'dashboard'})
     } else if (menu.indexOf('clusters') >= 0 ) {

@@ -227,14 +227,14 @@ class NdAddNode extends Component {
   };
 
   handleSave = (e) => {
-    // if (Object.keys(this.state.instTypeSelectedRow).length === 0) {
-    //   alert("Please select target instance type");
-    //   return;
-    // } 
-    // if (Object.keys(this.state.selectedRow).length === 0) {
-    //   alert("Please select target cluster");
-    //   return;
-    // } 
+    if (Object.keys(this.state.instTypeSelectedRow).length === 0) {
+      alert("Please select target instance type");
+      return;
+    } 
+    if (Object.keys(this.state.selectedRow).length === 0) {
+      alert("Please select target cluster");
+      return;
+    } 
 
 
     // implement migration workflow
