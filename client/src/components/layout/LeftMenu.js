@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import {ArrowBackIos, NavigateNext} from '@material-ui/icons';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import * as fnMenuList from './LeftMenuData.js';
 // import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
@@ -33,7 +33,14 @@ class LeftMenu extends Component {
       if(item.type === "single"){
         lists.push(
           <li className="" >
-            <NavLink to={item.path} activeClassName="active">
+            {/* <NavLink to={item.path} activeClassName="active"> */}
+            <NavLink to={{
+              pathname: `${item.path}`,
+              search: item.searchString,
+              state: {
+                data: item.state,
+              },
+            }} activeClassName="active">
               <i className="fa fa-dashboard"></i>
               <span>{item.title}</span>
             </NavLink>
@@ -42,7 +49,13 @@ class LeftMenu extends Component {
       } else {
         lists.push(
           <li className="treeview">
-            <NavLink to={item.path} activeClassName="active">
+            <NavLink to={{
+              pathname: `${item.path}`,
+              search: item.searchString,
+              state: {
+                data: item.state,
+              },
+            }} activeClassName="active">
               <i className="fa fa-dashboard"></i>
               <span>{item.title}</span>
               <span className="pull-right-container">
@@ -54,7 +67,13 @@ class LeftMenu extends Component {
                 item.sub.map((subItem)=>{
                   return(
                     <li>
-                      <NavLink to={subItem.path} activeClassName="active">
+                      <NavLink to={{
+                        pathname: `${subItem.path}`,
+                        search: subItem.searchString,
+                        state: {
+                          data: item.state,
+                        },
+                      }} activeClassName="active">
                         <i className="fa fa-circle-o"></i> <span>{subItem.title}</span>
                       </NavLink>
                     </li>

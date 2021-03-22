@@ -1272,7 +1272,7 @@ tbody {
 
 .MuiTabs-indicator {
   /* background-color: #ffffff !important; */
-  background-color: #41aabf !important;
+  /* background-color: #41aabf !important; */
   height: 5px !important; 
 }
 
@@ -1811,3 +1811,41 @@ g {
   font-weight: bold;
   color: #808080;
 }
+
+/* Loading Progress full */
+.loading-full {
+  height:100%;
+  width:100%;
+  position:fixed;
+  background:rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  top:0;
+  left: 0;
+  margin:auto;
+}
+
+.loading-full > div {
+  position:absolute;
+  left: 50%;
+  top:213px;
+  margin:auto;
+  color:#ffffff;
+}
+
+/* public cloud auth */
+.pca-tab{
+  margin-top: 10px;
+}
+
+.pca-tab .MuiTabs-root .MuiTab-root{
+  background-color: #257790;
+  border-radius: 8px 8px 0px 0px;
+  margin-right: 4px;
+  box-shadow: 2px 2px 4px 0px #b9b9b9;
+}
+
+.pca-tab .MuiTabs-root .MuiTabs-indicator {
+  background-color: rgba(156, 206, 230, 0) !important;
+}
+
+  

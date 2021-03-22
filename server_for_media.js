@@ -936,8 +936,8 @@
 //   res.send(overview);
 // });
 
-// app.get("/gcp/clusters", (req, res) => {
-//   let rawdata = fs.readFileSync("./json_data/gcp_clusters.json");
+// app.get("/gke/clusters", (req, res) => {
+//   let rawdata = fs.readFileSync("./json_data/gke_clusters.json");
 //   let overview = JSON.parse(rawdata);
 //   //console.log(overview);
 //   res.send(overview);

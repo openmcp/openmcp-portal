@@ -14,7 +14,8 @@ app.get("/api/hello", (req, res) => {
   res.send({ messge: "Hello Express!" });
 });
 
-const apiServer = "http://192.168.0.34:4885";
+const apiServer = "http://192.168.0.48:4885"; //로컬 API 서버
+// const apiServer = "http://192.168.0.4:4885"; //kvm API 서버
 // const apiServer = "http://10.0.3.40:4885";
 
 //데이터베이스 접속 설정
@@ -83,7 +84,6 @@ function getDateTime() {
 app.post("/apimcp/portal-log", (req, res) => {
   const bcrypt = require("bcrypt");
   var created_time = getDateTime();
-  // console.log("portal-log");
 
   connection.query(
     `insert into tb_portal_logs values ('${req.body.userid}','${req.body.code}','${created_time}');`,
@@ -93,9 +93,9 @@ app.post("/apimcp/portal-log", (req, res) => {
         message: "Update success",
       };
 
-      if (err !== "null") {
+      if (err !== null) {
         console.log(err)
-        const result_set = {
+        result_set = {
           data: [],
           message: "Update log failed : " + err,
         };
@@ -105,8 +105,6 @@ app.post("/apimcp/portal-log", (req, res) => {
     }
   );
 });
-
-
 
 ///////////////////////
 // Account
@@ -357,7 +355,7 @@ app.get("/projects/:project/overview", (req, res) => {
     method: "GET",
   };
 
-  console.log(options.uri)
+  // console.log(options.uri)
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -1141,7 +1139,254 @@ app.get("/nodes", (req, res) => {
   });
 });
 
+//asdasd
+app.post("/nodes/add/eks", (req, res) => {
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_eks
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > EKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        region : req.body.region,
+        cluster:req.body.cluster,
+        nodePool: req.body.nodePool,
+        desiredCnt:req.body.desiredCnt,
+        accessKey : result.rows[0].accessKey,
+        secretKey : result.rows[0].secretKey,
+      }
+
+      var data = JSON.stringify(req.body);
+
+      var request = require("request");
+      var options = {
+        // uri: `${apiServer}/apis/addeksnode`,
+        uri: `${apiServer}/apis/changeeksnode`,
+        method: "POST",
+        body: data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+          console.log(body)
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+  
+});
+
+app.post("/nodes/add/aks", (req, res) => {
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_aks
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > AKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        cluster : req.body.cluster,
+        desiredCnt : req.body.desiredCnt,
+        nodePool : req.body.nodePool,
+        clientId : result.rows[0].clientId,
+        clientSec : result.rows[0].clientSec,
+        tenantId : result.rows[0].tenantId,
+        subId : result.rows[0].subId
+      }
+
+      var data = JSON.stringify(req.body);
+      // console.log("aks/addnode",data)
+
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/addaksnode`,
+        method: "POST",
+        body: data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+          console.log(body)
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+
+    }
+  );
+});
+
+
+app.post("/nodes/add/gke", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_gke
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the GKE Auth Informations.\n
+          Settings > Config > Public cloud Auth > GKE`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        projectId: result.rows[0].projectID,
+        clientEmail: result.rows[0].clientEmail,
+        privateKey: result.rows[0].privateKey,
+
+        cluster : req.body.cluster,
+        nodePool: req.body.nodePool,
+        desiredCnt : req.body.desiredCnt,
+      }
+
+     
+      var data = JSON.stringify(req.body);
+      // console.log("gke/addnode",data)
+
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/gkechangenodecount`,
+        method: "POST",
+        body: data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+          console.log("body",body)
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+app.post("/nodes/add/kvm", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_kvm
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
+          Settings > Config > Public cloud Auth > KVM`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        agentURL : result.rows[0].agentURL,
+        newvm: req.body.newVmName,
+        template : req.body.template,
+        wPass : req.body.newVmPassword,
+        cluster : req.body.selectedRow.name,
+        clusterMaster : result.rows[0].mClusterName,
+        mPass : result.rows[0].mClusterPwd,
+      }
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/createkvmnode`,
+        method: "POST",
+        body: data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log(response);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+
+app.post("/nodes/delete/kvm", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_kvm
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
+          Settings > Config > Public cloud Auth > KVM`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        agentURL : result.rows[0].agentURL,
+        targetvm : req.body.node,
+      }
+
+      // console.log(requestData, result.rows[0])
+
+      // res.send(result.rows);
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/deletekvmnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+
+//////////////////
 // Nodes > datail
+//////////////////
 app.get("/nodes/:node", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/nodes_detail.json");
   // let overview = JSON.parse(rawdata);
@@ -1149,7 +1394,7 @@ app.get("/nodes/:node", (req, res) => {
 
   var request = require("request");
   var options = {
-    uri: `${apiServer}/apis/nodes/${req.params.node}?clustername=${req.query.clustername}`,
+    uri: `${apiServer}/apis/nodes/${req.params.node}?clustername=${req.query.clustername}&provider=${req.query.provider}`,
     method: "GET",
   };
 
@@ -1163,26 +1408,276 @@ app.get("/nodes/:node", (req, res) => {
   });
 });
 
-app.post("/nodes/add/eks", (req, res) => {
-  // const YAML = req.body.yaml
-  // console.log(YAML)
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/addeksnode`,
-    method: "POST",
-    // body: YAML
-  };
+app.post("/nodes/eks/start", (req, res) => {
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_eks
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > EKS`,
+        };
+        return res.send(result_set);
+      }
 
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-      console.log(body)
-    } else {
-      console.log("error", error);
-      return error;
+      requestData = {
+        akid : result.rows[0].accessKey,
+        secretKey : result.rows[0].secretKey,
+        region : req.body.region,
+        node : req.body.node,
+      }
+
+      // console.log(requestData, result.rows[0])
+
+      // res.send(result.rows);
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/starteksnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
     }
-  });
+  );
 });
+
+app.post("/nodes/eks/stop", (req, res) => {
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_eks
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > EKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        akid : result.rows[0].accessKey,
+        secretKey : result.rows[0].secretKey,
+        region : req.body.region,
+        node : req.body.node,
+      }
+
+      console.log(requestData, result.rows[0])
+
+      // res.send(result.rows);
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/stopeksnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+app.post("/nodes/aks/start", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_aks
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > AKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        cluster : req.body.cluster,
+        node : req.body.node,
+        clientId : result.rows[0].clientId,
+        clientSec : result.rows[0].clientSec,
+        tenantId : result.rows[0].tenantId,
+        subId : result.rows[0].subId
+      }
+
+      
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/startaksnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+app.post("/nodes/aks/stop", (req, res) => {
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_aks
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > AKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        cluster : req.body.cluster,
+        node : req.body.node,
+        clientId : result.rows[0].clientId,
+        clientSec : result.rows[0].clientSec,
+        tenantId : result.rows[0].tenantId,
+        subId : result.rows[0].subId
+      }
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/stopaksnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+app.post("/nodes/kvm/start", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_kvm
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
+          Settings > Config > Public cloud Auth > KVM`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        node : req.body.node,
+        agentURL : result.rows[0].agentURL
+      }
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/startkvmnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+app.post("/nodes/kvm/stop", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_kvm
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
+          Settings > Config > Public cloud Auth > KVM`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        node : req.body.node,
+        agentURL : result.rows[0].agentURL
+      }
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/stopkvmnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
 
 /////////////////////////
 // Public Cloud Cluster
@@ -1196,27 +1691,50 @@ app.get("/aws/ec2-type", (req, res) => {
   );
 });
 
-app.get("/aws/clusters", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/aws_clusters.json");
+app.get("/eks/clusters", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/eks_clusters.json");
   let overview = JSON.parse(rawdata);
   //console.log(overview);
   res.send(overview);
 });
 
-app.get("/aws/clusters/workers", (req, res) => {
+app.get("/eks/clusters/workers", (req, res) => {
   var clusterName = req.query.clustername;
-  let rawdata = fs.readFileSync("./json_data/aws_eks_workers.json");
+  let rawdata = fs.readFileSync("./json_data/eks_workers.json");
   let overview = JSON.parse(rawdata);
   res.send(overview);
 });
 
-app.get("/gcp/clusters", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/gcp_clusters.json");
+app.get("/gke/clusters", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/gke_clusters.json");
   let overview = JSON.parse(rawdata);
-  //console.log(overview);
   res.send(overview);
 });
 
+app.get("/gke/clusters/pools", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/gke_node_pools.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+app.get("/aks/clusters", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/aks_clusters.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+app.get("/aks/clusters/pools", (req, res) => {
+  var clusterName = req.query.clustername;
+  let rawdata = fs.readFileSync("./json_data/aks_node_pools.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+app.get("/kvm/clusters", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/kvm_clusters.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
 
 //////////////////////////
 // Pods
@@ -1534,4 +2052,275 @@ app.get("/dns/:dns", (req, res) => {
 });
 
 
+
+// Settings > Config > Public Cloud Auth
+app.get("/settings/config/pca/eks", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  connection.query(
+    // tb_auth_eks > seq,cluster,type,accessKey,secretKey
+    `select * from tb_config_eks;`,
+    (err, result) => {
+      res.send(result.rows);
+    }
+  );
+});
+
+app.post("/settings/config/pca/eks", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  connection.query(
+    `insert into tb_config_eks (cluster,"accessKey","secretKey") values ('${req.body.cluster}','${req.body.accessKey}','${req.body.secretKey}');`,
+    (err, result) => {
+      var result_set = {
+        data: [],
+        message: "Insert success",
+      };
+
+      if (err !== null) {
+        console.log(err)
+        result_set = {
+          data: [],
+          message: "Insert log failed : " + err,
+        };
+      } 
+
+      res.send(result_set);
+    }
+  );
+});
+
+
+app.put("/settings/config/pca/eks", (req, res) => {
+  connection.query(
+    `update tb_config_eks set 
+      "cluster" = '${req.body.cluster}',
+      "accessKey" = '${req.body.accessKey}',
+      "secretKey" = '${req.body.secretKey}'
+    where seq = ${req.body.seq};`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
+
+app.get("/settings/config/pca/gke", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  connection.query(
+    // tb_auth_eks > seq,cluster,type,accessKey,secretKey
+    `select * from tb_config_gke;`,
+    (err, result) => {
+      res.send(result.rows);
+    }
+  );
+});
+
+app.post("/settings/config/pca/gke", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  connection.query(
+    `insert into tb_config_gke (cluster,"type","clientEmail","projectID","privateKey") values ('${req.body.cluster}','${req.body.type}','${req.body.clientEmail}','${req.body.projectID}','${req.body.privateKey}');`,
+    (err, result) => {
+      var result_set = {
+        data: [],
+        message: "Insert success",
+      };
+
+      if (err !== null) {
+        console.log(err)
+        result_set = {
+          data: [],
+          message: "Insert log failed : " + err,
+        };
+      } 
+
+      res.send(result_set);
+    }
+  );
+});
+
+
+app.put("/settings/config/pca/gke", (req, res) => {
+  connection.query(
+    `update tb_config_gke set 
+      "cluster" = '${req.body.cluster}',
+      "type" = '${req.body.type}',
+      "clientEmail" = '${req.body.clientEmail}',
+      "projectID" = '${req.body.projectID}',
+      "privateKey" = '${req.body.privateKey}'
+    where seq = ${req.body.seq};`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
+
+
+
+// tb_auth_aks > seq,cluster,clientId,clientSec,tenantId,subId
+app.get("/settings/config/pca/aks", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  connection.query(
+    // tb_auth_eks > seq,cluster,type,accessKey,secretKey
+    `select * from tb_config_aks;`,
+    (err, result) => {
+      res.send(result.rows);
+    }
+  );
+});
+
+app.post("/settings/config/pca/aks", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  connection.query(
+    `insert into tb_config_aks (cluster,"clientId","clientSec","tenantId","subId") values ('${req.body.cluster}','${req.body.clientId}','${req.body.clientSec}','${req.body.tenantId}','${req.body.subId}');`,
+    (err, result) => {
+      var result_set = {
+        data: [],
+        message: "Insert success",
+      };
+
+      if (err !== null) {
+        console.log(err)
+        result_set = {
+          data: [],
+          message: "Insert log failed : " + err,
+        };
+      } 
+
+      res.send(result_set);
+    }
+  );
+});
+
+
+app.put("/settings/config/pca/aks", (req, res) => {
+  connection.query(
+    `update tb_config_aks set 
+      "cluster" = '${req.body.cluster}',
+      "clientId" = '${req.body.clientId}',
+      "clientSec" = '${req.body.clientSec}',
+      "tenantId" = '${req.body.tenantId}',
+      "subId" = '${req.body.subId}'
+    where seq = ${req.body.seq};`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
+
+
+app.get("/settings/config/pca/kvm", (req, res) => {
+  connection.query(
+    // tb_auth_kvm > seq,cluster,
+    `select * from tb_config_kvm;`,
+    (err, result) => {
+      res.send(result.rows);
+    }
+  );
+});
+
+app.post("/settings/config/pca/kvm", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  connection.query(
+    `insert into tb_config_kvm (cluster,"agentURL","mClusterName","mClusterPwd") values ('${req.body.cluster}','${req.body.agentURL}','${req.body.mClusterName}','${req.body.mClusterPwd}');`,
+    (err, result) => {
+      var result_set = {
+        data: [],
+        message: "Insert success",
+      };
+
+      if (err !== null) {
+        console.log(err)
+        result_set = {
+          data: [],
+          message: "Insert log failed : " + err,
+        };
+      } 
+
+      res.send(result_set);
+    }
+  );
+});
+
+
+app.put("/settings/config/pca/kvm", (req, res) => {
+  connection.query(
+    `update tb_config_kvm set 
+      "cluster" = '${req.body.cluster}',
+      "agentURL" = '${req.body.agentURL}',
+      "mClusterName" = '${req.body.mClusterName}',
+      "mClusterPwd" = '${req.body.mClusterPwd}'
+    where seq = ${req.body.seq};`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
+
+
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+

@@ -5,12 +5,22 @@ import axios from 'axios';
 import * as utilLog from './../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 
+// AsyncStorage 사용방법
+// var username = "test"
+// AsyncStorage.setItem("userName", username)
+// var userId = ""
+// AsyncStorage.getItem("userName",(err, result) => {
+//   userId = result
+// })
+
 
 class SignIn extends Component {
   constructor(props) {
     super(props);
     // const token = localStorage.getItem("token")
     const token = localStorage.getItem("token");
+    
+    
 
     let loggedIn = true;
     if (token == null) {

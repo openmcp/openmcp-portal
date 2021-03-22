@@ -123,7 +123,6 @@ class PjWorkloads extends Component {
 
   render() {
     const handleChange = (event, newValue) => {
-      console.log("ddd",newValue)
       this.setState({ value: newValue });
     };
 
@@ -177,9 +176,8 @@ class PjWorkloads extends Component {
                   onChange={handleChange}
                   aria-label="simple tabs example"
                   style={{ backgroundColor: "#16586c" }}
-                  indicatorColor="primary"
-                  // indicator={{backgroundColor:"#ffffff"}}
-                  // TabIndicatorProps ={{ ind:"#635ee7"}}
+                  // indicatorColor="primary"
+                  TabIndicatorProps ={{ style:{backgroundColor:"#41aabf"}}}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (

@@ -142,7 +142,7 @@ class NdResourceConfig extends Component {
     } 
 
     if (window.confirm(confirmText) == true){
-      // implement migration workflow
+      // implement migration api call
       // ......
       console.log(this.state);
 

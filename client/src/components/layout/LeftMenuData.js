@@ -5,16 +5,19 @@ export function getMenu(pathParams) {
         type: "single",
         title : "OverView",
         path : "/clusters/" + pathParams.cluster + "/overview",
+        state : pathParams.state
       },
       {
         type: "single",
         title : "Nodes",
         path : "/clusters/" + pathParams.cluster + "/nodes",
+        state : pathParams.state
       },
       {
         type: "single",
         title : "Pods",
         path : "/clusters/" + pathParams.cluster + "/pods",
+        state : pathParams.state
       },
       // {
       //   type: "single",
@@ -35,11 +38,13 @@ export function getMenu(pathParams) {
         type: "single",
         title : "OverView",
         path : "/nodes/" + pathParams.node + "/overview",
+        state : pathParams.state
       },
       {
         type: "multi",
         title : "Resources",
         path : "/nodes/" + pathParams.node + "/resources",
+        state : pathParams.state,
         sub : [
           { title: "Workloads", path: "/nodes/"+pathParams.node+"/resources/workloads" },
           { title: "Pods", path: "/nodes/"+pathParams.node+"/resources/pods" },
@@ -52,31 +57,37 @@ export function getMenu(pathParams) {
       {
         type: "single",
         title : "OverView",
-        path : "/projects/"+pathParams.project + "/overview" + pathParams.searchString,
+        path : "/projects/"+pathParams.project + "/overview",
+        searchString: pathParams.searchString,
+        state : pathParams.state,
       },
       {
         type: "multi",
         title : "Resources",
-        path : "/projects/"+pathParams.project + "/resources" + pathParams.searchString,
+        path : "/projects/"+pathParams.project + "/resources",
+        searchString: pathParams.searchString,
+        state : pathParams.state,
         sub : [
-          { title: "Workloads", path: "/projects/"+pathParams.project+"/resources/workloads" + pathParams.searchString },
-          { title: "Pods", path: "/projects/"+pathParams.project+"/resources/pods" + pathParams.searchString },
-          { title: "Services", path: "/projects/"+pathParams.project+"/resources/services" + pathParams.searchString },
-          { title: "Ingress", path: "/projects/"+pathParams.project+"/resources/ingress" + pathParams.searchString },
+          { title: "Workloads", path: "/projects/"+pathParams.project+"/resources/workloads", searchString: pathParams.searchString },
+          { title: "Pods", path: "/projects/"+pathParams.project+"/resources/pods", searchString: pathParams.searchString },
+          { title: "Services", path: "/projects/"+pathParams.project+"/resources/services", searchString: pathParams.searchString },
+          { title: "Ingress", path: "/projects/"+pathParams.project+"/resources/ingress", searchString: pathParams.searchString },
         ]
       },
       {
         type: "single",
         title : "Volumes",
-        path : "/projects/"+pathParams.project + "/volumes" + pathParams.searchString,
+        path : "/projects/"+pathParams.project + "/volumes", searchString: pathParams.searchString,
+        state : pathParams.state,
       },
       {
         type: "multi",
         title : "Config",
-        path : "/projects/"+pathParams.project + "/config" + pathParams.searchString,
+        path : "/projects/"+pathParams.project + "/config", searchString: pathParams.searchString,
+        state : pathParams.state,
         sub : [
-          { title: "Secrets", path: "/projects/"+pathParams.project + "/config/secrets" + pathParams.searchString},
-          { title: "ConfigMaps", path: "/projects/"+pathParams.project+"/config/config_maps" + pathParams.searchString},
+          { title: "Secrets", path: "/projects/"+pathParams.project + "/config/secrets", searchString: pathParams.searchString},
+          { title: "ConfigMaps", path: "/projects/"+pathParams.project+"/config/config_maps", searchString: pathParams.searchString},
         ]
       },
       // {
@@ -93,11 +104,13 @@ export function getMenu(pathParams) {
         type: "single",
         title : "OverView",
         path : "/pods/" + pathParams.pod + "/overview",
+        state : pathParams.state,
       },
       {
         type: "multi",
         title : "Resources",
         path : "/nodes/" + pathParams.pod + "/resources",
+        state : pathParams.state,
         sub : [
           { title: "Workloads", path: "/pods/"+pathParams.pod+"/resources/workloads" },
           { title: "Pods", path: "/pods/"+pathParams.pod+"/resources/pods" },

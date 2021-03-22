@@ -9,8 +9,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from '@material-ui/icons';
-import ProjectsPolicy from './ProjectsPolicy';
-import OpenMCPPolicy from './OpenMCPPolicy';
+import PublicCloud from './public-cloud/PublicCloud';
 
 const styles = (theme) => ({
   root: {
@@ -64,15 +63,14 @@ function a11yProps(index) {
   };
 }
 
-class Policy extends Component {
+class Config extends Component {
   state = {
     // rows: "",
     // completed: 0,
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "OMCP Policy", index: 1, param:"openmcp-policy" },
-      { label: "Project Policy", index: 2, param:"project-policy" },
+      { label: "Public Cloud Auth", index: 1, param:"public-cloud" },
     // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -96,7 +94,7 @@ class Policy extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              Policy
+              Config
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
@@ -109,7 +107,7 @@ class Policy extends Component {
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Policy
+                Config
               </li>
             </ol>
           </section>
@@ -132,7 +130,7 @@ class Policy extends Component {
                     <Tab label={i.label} {...a11yProps(i.index)}
                           component={Link}
                           to={{
-                            pathname: `/settings/policy/${i.param}`
+                            pathname: `/settings/config/${i.param}`
                           }}
                     />
                     );
@@ -141,15 +139,8 @@ class Policy extends Component {
               </AppBar>
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 <Switch>
-                <Route path="/settings/policy/openmcp-policy"
-                    render={({match,location}) => <OpenMCPPolicy  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
-                </Switch>
-              </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={1}>
-               <Switch>
-                  <Route path="/settings/policy/project-policy"
-                    render={({match,location}) => <ProjectsPolicy  match={match} location={location} menuData={this.onMenuData}/>} >
+                  <Route path="/settings/config/public-cloud"
+                      render={({match,location}) => <PublicCloud  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>
@@ -164,4 +155,4 @@ class Policy extends Component {
   }
 }
 
-export default withStyles(styles)(Policy);
+export default withStyles(styles)(Config);

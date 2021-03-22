@@ -231,7 +231,7 @@ class Data extends Component {
     const Cell = (props) => {
       const { column, row } = props;
       if (column.name === "value") {
-        console.log("cell : ", props);
+        // console.log("cell : ", props);
         return (
           <Table.Cell
             {...props}

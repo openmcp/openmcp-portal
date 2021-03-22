@@ -29,8 +29,8 @@ class ProgressTemp extends Component {
     return(
       <div onClick={this.closeProcess}>
         {this.props.openProgress ? 
-        <div className="loading" style={{height:"109vh", width:"100%", position:"absolute", background:"rgba(0, 0, 0, 0.5)", zIndex:"100", top:"0", left: "0", margin:"auto" }}>
-          <div style={{ position: "absolute", left: "50%", top:"213px", margin:"auto", color:"#ffffff"}}>
+        <div className="loading-full">
+          <div>
           Loading...
           <CircularProgress
             variant="determinate"

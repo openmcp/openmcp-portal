@@ -9,8 +9,10 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from '@material-ui/icons';
-import ProjectsPolicy from './ProjectsPolicy';
-import OpenMCPPolicy from './OpenMCPPolicy';
+import ConfigEKS from './ConfigEKS';
+import ConfigGKE from './ConfigGKE';
+import ConfigAKS from './ConfigAKS';
+import ConfigKVM from './ConfigKVM';
 
 const styles = (theme) => ({
   root: {
@@ -64,15 +66,17 @@ function a11yProps(index) {
   };
 }
 
-class Policy extends Component {
+class PublicCloud extends Component {
   state = {
     // rows: "",
     // completed: 0,
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "OMCP Policy", index: 1, param:"openmcp-policy" },
-      { label: "Project Policy", index: 2, param:"project-policy" },
+      { label: "EKS", index: 1, param:"eks" },
+      { label: "GKE", index: 2, param:"gke" },
+      { label: "AKS", index: 3, param:"aks" },
+      { label: "KVM", index: 3, param:"kvm" },
     // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -93,29 +97,8 @@ class Policy extends Component {
     return (
       <div>
         <div className="content-wrapper full">
-          {/* 컨텐츠 헤더 */}
-          <section className="content-header">
-            <h1>
-              Policy
-              <small>{this.props.match.params.project}</small>
-            </h1>
-            <ol className="breadcrumb">
-              <li>
-                <NavLink to="/dashboard">Home</NavLink>
-              </li>
-              <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/settings">Settings</NavLink>
-              </li>
-              <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Policy
-              </li>
-            </ol>
-          </section>
-
           {/* 내용부분 */}
-          <section>
+          <section class="pca-tab">
             {/* 탭매뉴가 들어간다. */}
             <div className={classes.root}>
               <AppBar position="static" className="app-bar">
@@ -123,16 +106,20 @@ class Policy extends Component {
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
-                  style={{ backgroundColor: "#16586c" }}
+                  // style={{ backgroundColor: "#257790" }}
+                  style={{ backgroundColor: "#ecf0f5",
+                    padding: "14px 12px 0px 12px"
+                  }}
+                  indicatorColor="primary"
                   // indicatorColor="primary"
-                  TabIndicatorProps ={{ style:{backgroundColor:"#41aabf"}}}
+                  TabIndicatorProps ={{ style:{backgroundColor:"#9ccee6"}}}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
                     <Tab label={i.label} {...a11yProps(i.index)}
                           component={Link}
                           to={{
-                            pathname: `/settings/policy/${i.param}`
+                            pathname: `/settings/config/public-cloud/${i.param}`
                           }}
                     />
                     );
@@ -141,15 +128,29 @@ class Policy extends Component {
               </AppBar>
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 <Switch>
-                <Route path="/settings/policy/openmcp-policy"
-                    render={({match,location}) => <OpenMCPPolicy  match={match} location={location} menuData={this.onMenuData}/>} >
+                  <Route path="/settings/config/public-cloud/eks"
+                    render={({match,location}) => <ConfigEKS  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
-               <Switch>
-                  <Route path="/settings/policy/project-policy"
-                    render={({match,location}) => <ProjectsPolicy  match={match} location={location} menuData={this.onMenuData}/>} >
+                <Switch>
+                  <Route path="/settings/config/public-cloud/gke"
+                    render={({match,location}) => <ConfigGKE  match={match} location={location} menuData={this.onMenuData}/>} >
+                  </Route>
+                </Switch>
+              </TabPanel>
+              <TabPanel className="tab-panel" value={this.state.value} index={2}>
+                <Switch>
+                  <Route path="/settings/config/public-cloud/aks"
+                    render={({match,location}) => <ConfigAKS  match={match} location={location} menuData={this.onMenuData}/>} >
+                  </Route>
+                </Switch>
+              </TabPanel>
+              <TabPanel className="tab-panel" value={this.state.value} index={3}>
+                <Switch>
+                  <Route path="/settings/config/public-cloud/kvm"
+                    render={({match,location}) => <ConfigKVM  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>
@@ -164,4 +165,4 @@ class Policy extends Component {
   }
 }
 
-export default withStyles(styles)(Policy);
+export default withStyles(styles)(PublicCloud);

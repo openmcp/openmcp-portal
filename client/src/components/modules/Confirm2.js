@@ -70,9 +70,9 @@ class Confirm2 extends Component {
   componentWillUpdate(prevProps, prevState){
     // console.log("aaaaaaaaaaaaaaaaaaaaaaaa", prevProps.confirmOpen, this.props.confirmOpen)
     if(prevProps.confirmOpen !== this.props.confirmOpen || prevProps.confirmInfo.title !== this.props.confirmInfo.title){
-      console.log("componentWillUpdate", prevProps.confirmOpen !== this.props.confirmOpen)
-      console.log("componentWillUpdate", prevProps.confirmOpen,this.props.confirmOpen)
-      console.log("componentWillUpdate", prevProps.confirmInfo.title,this.props.confirmInfo.title)
+      // console.log("componentWillUpdate", prevProps.confirmOpen !== this.props.confirmOpen)
+      // console.log("componentWillUpdate", prevProps.confirmOpen,this.props.confirmOpen)
+      // console.log("componentWillUpdate", prevProps.confirmInfo.title,this.props.confirmInfo.title)
       this.setState({
         open:prevProps.confirmOpen,
         confrimTarget:prevProps.confrimTarget,
@@ -89,12 +89,12 @@ class Confirm2 extends Component {
   }
 
   handleYes = () => {
-    this.setState({open:false});
+    // this.setState({open:false});
     this.props.confirmed(true)
   };
 
   handleNo = () => {
-    this.setState({open:false});
+    // this.setState({open:false});
     this.props.confirmed(false)
   };
   render() {

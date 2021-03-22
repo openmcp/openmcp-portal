@@ -41,8 +41,9 @@ class PjOverview extends Component {
       title : this.props.match.params.project,
       pathParams : {
         searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
+        project : this.props.match.params.project,
+        state : this.props.location.state.data
+      },
     }
     this.props.menuData(result);
     apiParams = this.props.match.params.project;

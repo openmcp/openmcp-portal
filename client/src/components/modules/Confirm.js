@@ -16,7 +16,7 @@ confirmInfo : {
     open : "JOIN",
     yes : "JOIN",
     no : "CANCEL",
-  }  
+  }
 },
 confrimTarget : "false" // "false" : must have target, "" : 
 
@@ -83,7 +83,7 @@ class Confirm extends Component {
       <div>
       <Button 
         variant="outlined" color="primary" onClick={handleClickOpen}
-        style={{position:"absolute", right:"26px", top:"26px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}
+        style={{position:"absolute", right:"26px", marginTop:"15px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}
       >
         {this.state.button.open}
       </Button>

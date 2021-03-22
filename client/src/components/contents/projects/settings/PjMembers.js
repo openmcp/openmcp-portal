@@ -160,7 +160,6 @@ class PjMembers extends Component {
           }}>{fnEnterCheck()}</Link></Table.Cell>
         );
       } 
-      console.log("ddd", props.value);
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 

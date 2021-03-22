@@ -41,8 +41,9 @@ class CsOverview extends Component {
       menu : "clusters",
       title : this.props.match.params.cluster,
       pathParams : {
-        cluster : this.props.match.params.cluster
-      }
+        cluster : this.props.match.params.cluster,
+        state : this.props.location.state.data
+      },
     }
     this.props.menuData(result);
     apiParams = this.props.match.params.cluster;

@@ -33,7 +33,7 @@ import {
   TableFixedColumns,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios';
+import axios from "axios";
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -43,7 +43,7 @@ import axios from 'axios';
 // import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
 // import Confirm from './../../modules/Confirm';
-import Confirm2 from './../../modules/Confirm2';
+import Confirm2 from "./../../modules/Confirm2";
 
 const styles = (theme) => ({
   root: {
@@ -69,8 +69,8 @@ class SnapShotControl extends Component {
       ],
       tableColumnExtensions: [
         { columnName: "name", width: "45%" },
-        { columnName: "created_time", width: "30%"},
-        { columnName: "control", align:"center"},
+        { columnName: "created_time", width: "30%" },
+        { columnName: "control", align: "center" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 400 },
@@ -83,26 +83,26 @@ class SnapShotControl extends Component {
       pageSizes: [5, 10, 15, 0],
 
       open: false,
-      account : "",
-      account_role : "",
-      rows : [],
+      account: "",
+      account_role: "",
+      rows: [],
 
       selection: [],
-      selectedRow : "",
-      rightColumns : ["control"],
-      
+      selectedRow: "",
+      rightColumns: ["control"],
+
       confirmOpen: false,
-      confirmInfo : {
-        title :"Cluster Join Confrim",
-        context :"Are you sure you want to Join the Cluster?",
-        button : {
-          open : "",
-          yes : "JOIN",
-          no : "CANCEL",
-        }  
+      confirmInfo: {
+        title: "Cluster Join Confrim",
+        context: "Are you sure you want to Join the Cluster?",
+        button: {
+          open: "",
+          yes: "JOIN",
+          no: "CANCEL",
+        },
       },
-      confrimTarget : "false",
-      confirmTargetKeyname:"snapshot"
+      confrimTarget: "false",
+      confirmTargetKeyname: "snapshot",
     };
     // this.onChange = this.onChange.bind(this);
   }
@@ -143,11 +143,11 @@ class SnapShotControl extends Component {
     this.setState({ open: true });
 
     this.callApi()
-    .then((res) => {
-      console.log(res)
-      this.setState({ rows: res });
-    })
-    .catch((err) => console.log(err));
+      .then((res) => {
+        console.log(res);
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
   };
 
   handleClose = () => {
@@ -162,7 +162,7 @@ class SnapShotControl extends Component {
     if (Object.keys(this.state.selectedRow).length === 0) {
       alert("Please select snapshot");
       return;
-    } 
+    }
 
     // loging deployment migration
     // const userId = localStorage.getItem("userName");
@@ -172,45 +172,44 @@ class SnapShotControl extends Component {
     this.setState({ open: false });
   };
 
-
   onSnapshotDelete = (data) => {
-    console.log("Delete snapshot",data)
+    console.log("Delete snapshot", data);
     // alert("Delete snapshot", data)
     this.setState({
-      confirmOpen:true,
-      confirmInfo : {
-        title :"Snapshot Delete",
-        context :"Are you sure you want to Snapshot Delete?",
-        button : {
-          open : "",
-          yes : "Delete",
-          no : "Cancel",
-        }  
+      confirmOpen: true,
+      confirmInfo: {
+        title: "Snapshot Delete",
+        context: "Are you sure you want to Snapshot Delete?",
+        button: {
+          open: "",
+          yes: "Delete",
+          no: "Cancel",
+        },
       },
-      confrimTarget : data,
-      confirmTargetKeyname:"snapshot"
-    })
-  }
+      confrimTarget: data,
+      confirmTargetKeyname: "snapshot",
+    });
+  };
 
   onSnapshotRevert = (data) => {
     // console.log("Revert snapshot",data)
 
     this.setState({
-      confirmOpen:true,
-      confirmInfo : {
-        title :"Snapshot Revert",
-        context :"Are you sure you want to Revert?",
-        button : {
-          open : "",
-          yes : "Revert",
-          no : "Cancel",
-        }  
+      confirmOpen: true,
+      confirmInfo: {
+        title: "Snapshot Revert",
+        context: "Are you sure you want to Revert?",
+        button: {
+          open: "",
+          yes: "Revert",
+          no: "Cancel",
+        },
       },
-      confrimTarget : data,
-      confirmTargetKeyname:"snapshot"
-    })
+      confrimTarget: data,
+      confirmTargetKeyname: "snapshot",
+    });
     // alert("Revert snapshot", data)
-  }
+  };
 
   Cell = (props) => {
     const { column, row } = props;
@@ -218,12 +217,29 @@ class SnapShotControl extends Component {
       return (
         <Table.Cell
           {...props}
-          style={{ borderRight:"1px solid #e0e0e0", borderLeft:"1px solid #e0e0e0", textAlign:"center",background:"whitesmoke"}}
+          style={{
+            borderRight: "1px solid #e0e0e0",
+            borderLeft: "1px solid #e0e0e0",
+            textAlign: "center",
+            background: "whitesmoke",
+          }}
         >
           <div className="snapshot">
-            <span className="revert" style={{cursor:"pointer", display:"inline-block"}} onClick={()=>this.onSnapshotRevert(row.name)}>Revert</span>
-            <span style={{margin:"0 5px"}}> | </span>
-            <span className="delete" style={{cursor:"pointer", display:"inline-block"}} onClick={()=>this.onSnapshotDelete(row.name)}>Delete</span>
+            <span
+              className="revert"
+              style={{ cursor: "pointer", display: "inline-block" }}
+              onClick={() => this.onSnapshotRevert(row.name)}
+            >
+              Revert
+            </span>
+            <span style={{ margin: "0 5px" }}> | </span>
+            <span
+              className="delete"
+              style={{ cursor: "pointer", display: "inline-block" }}
+              onClick={() => this.onSnapshotDelete(row.name)}
+            >
+              Delete
+            </span>
           </div>
         </Table.Cell>
       );
@@ -233,17 +249,18 @@ class SnapShotControl extends Component {
 
   // callback function
   confirmed = (result) => {
-    if(result) {
+    if (result) {
       //Unjoin proceed
-      console.log("confirmed")
+      console.log("confirmed");
       // const userId = localStorage.getItem("userName");
       // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
-      this.setState({open:false})
+      // this.setState({open:false})
     } else {
-      console.log("cancel")
+      console.log("cancel");
+      this.setState({ open: false });
     }
-    this.setState({confirmOpen:false})
-  }
+    this.setState({ confirmOpen: false });
+  };
 
   render() {
     const DialogTitle = withStyles(styles)((props) => {
@@ -277,9 +294,9 @@ class SnapShotControl extends Component {
     );
 
     const Row = (props) => {
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
-    
+
     //셀
     // const Cell = (props) => {
     //   const { column, row } = props;
@@ -303,10 +320,12 @@ class SnapShotControl extends Component {
       // console.log(selection);
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
-      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
+      this.setState({
+        selectedRow: this.state.rows[selection[0]]
+          ? this.state.rows[selection[0]]
+          : {},
+      });
     };
-
-    
 
     return (
       <div>
@@ -358,65 +377,68 @@ class SnapShotControl extends Component {
                 <p>Snapshot List</p>
                 {/* cluster selector */}
                 <Paper>
-                <Confirm2
-                  confirmInfo={this.state.confirmInfo} 
-                  confrimTarget ={this.state.confrimTarget} 
-                  confirmTargetKeyname = {this.state.confirmTargetKeyname}
-                  confirmed={this.confirmed}
-                  confirmOpen={this.state.confirmOpen}/>
-                <Grid rows={this.state.rows} columns={this.state.columns}>
-                  {/* <Toolbar /> */}
-                  {/* 검색 */}
-                  {/* <SearchState defaultValue="" />
+                  <Confirm2
+                    confirmInfo={this.state.confirmInfo}
+                    confrimTarget={this.state.confrimTarget}
+                    confirmTargetKeyname={this.state.confirmTargetKeyname}
+                    confirmed={this.confirmed}
+                    confirmOpen={this.state.confirmOpen}
+                  />
+                  <Grid rows={this.state.rows} columns={this.state.columns}>
+                    {/* <Toolbar /> */}
+                    {/* 검색 */}
+                    {/* <SearchState defaultValue="" />
                   <SearchPanel style={{ marginLeft: 0 }} /> */}
 
-                  {/* Sorting */}
-                  <SortingState
-                    defaultSorting={[{ columnName: "status", direction: "asc" }]}
-                  />
+                    {/* Sorting */}
+                    <SortingState
+                      defaultSorting={[
+                        { columnName: "status", direction: "asc" },
+                      ]}
+                    />
 
-                  {/* 페이징 */}
-                  <PagingState
-                    defaultCurrentPage={0}
-                    defaultPageSize={this.state.pageSize}
-                  />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
-                  <SelectionState
-                    selection={this.state.selection}
-                    onSelectionChange={onSelectionChange}
-                  />
+                    {/* 페이징 */}
+                    <PagingState
+                      defaultCurrentPage={0}
+                      defaultPageSize={this.state.pageSize}
+                    />
+                    <PagingPanel pageSizes={this.state.pageSizes} />
+                    <SelectionState
+                      selection={this.state.selection}
+                      onSelectionChange={onSelectionChange}
+                    />
 
-                  <IntegratedFiltering />
-                  <IntegratedSorting />
-                  <IntegratedSelection />
-                  <IntegratedPaging />
+                    <IntegratedFiltering />
+                    <IntegratedSorting />
+                    <IntegratedSelection />
+                    <IntegratedPaging />
 
-                  {/* 테이블 */}
-                  <Table 
-                    cellComponent={this.Cell} 
-                    rowComponent={Row} 
-                    columnExtensions={this.state.tableColumnExtensions}
-                  />
-                  {/* <TableColumnResizing
+                    {/* 테이블 */}
+                    <Table
+                      cellComponent={this.Cell}
+                      rowComponent={Row}
+                      columnExtensions={this.state.tableColumnExtensions}
+                    />
+                    {/* <TableColumnResizing
                     // defaultColumnWidths={this.state.defaultColumnWidths}
                   /> */}
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                  <TableColumnVisibility
-                    defaultHiddenColumnNames={['role_id']}
-                  />
-                  <TableSelection
-                    // selectByRowClick
-                    highlightRow
-                    // showSelectionColumn={false}
-                  />
-                  {/* <TableFixedColumns
+                    <TableHeaderRow
+                      showSortingControls
+                      rowComponent={HeaderRow}
+                    />
+                    <TableColumnVisibility
+                      defaultHiddenColumnNames={["role_id"]}
+                    />
+                    <TableSelection
+                      // selectByRowClick
+                      highlightRow
+                      // showSelectionColumn={false}
+                    />
+                    {/* <TableFixedColumns
                     cellComponent={Cell}
                     rightColumns={this.state.rightColumns}
                   /> */}
-                </Grid>
+                  </Grid>
                 </Paper>
               </section>
             </div>

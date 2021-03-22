@@ -52,6 +52,7 @@ import DeploymentDetail from './../contents/deployments/DeploymentDetail';
 import ServicesDetail from './../contents/netowork/ServicesDetail';
 import IngressDetail from './../contents/netowork/IngressDetail';
 import DNSDetail from './../contents/netowork/DNSDetail';
+import Config from "../contents/settings/config/Config";
 
 
 
@@ -82,6 +83,7 @@ class Contents extends Component {
             title={this.state.menuData.title} 
             menu={this.state.menuData.menu}
             pathParams={this.state.menuData.pathParams}
+            state={this.state.menuData.state}
           />
         }
         <Switch>
@@ -273,6 +275,7 @@ class Contents extends Component {
           <Route path="/settings/accounts" 
             render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
+          
           <Route path="/settings/policy/project-policy"
             render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
@@ -282,6 +285,29 @@ class Contents extends Component {
           <Route exact path="/settings/policy"
             render={({match,location}) => <Redirect to={{
               pathname : `/settings/policy/openmcp-policy`,
+            }}  />} >
+          </Route>
+          
+          <Route path="/settings/config/public-cloud/eks"
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/settings/config/public-cloud/gke"
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/settings/config/public-cloud/aks"
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/settings/config/public-cloud/kvm"
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route exact path="/settings/config/public-cloud"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/config/public-cloud/eks`,
+            }}  />} >
+          </Route>
+          <Route exact path="/settings/config"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/config/public-cloud/eks`,
             }}  />} >
           </Route>
           <Redirect 

@@ -38,6 +38,8 @@ class Nodes extends Component {
         { name: "cpu", title: "CPU" },
         { name: "memory", title: "Memory" },
         { name: "pods", title: "Pods" },
+        { name: "provider", title: "Provider" },
+        { name: "region", title: "Region" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
@@ -49,6 +51,8 @@ class Nodes extends Component {
         { columnName: "cpu", width: 130 },
         { columnName: "memory", width: 130 },
         { columnName: "pods", width: 130 },
+        { columnName: "provider", width: 130 },
+        { columnName: "region", width: 130 },
       ],
       rows: "",
 
@@ -65,9 +69,6 @@ class Nodes extends Component {
   componentWillMount() {
     this.props.menuData("none");
   }
-
-
-  
 
   callApi = async () => {
     const response = await fetch(`/nodes`);
@@ -130,7 +131,6 @@ class Nodes extends Component {
   };
 
   render() {
-
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell>
@@ -182,6 +182,7 @@ class Nodes extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/nodes/${props.value}`,
+            // search:`clustername=${row.cluster}&provider=${row.provider}`,
             search:`clustername=${row.cluster}`,
             state: {
               data : row

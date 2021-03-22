@@ -38,6 +38,7 @@ class CsNodes extends Component {
         { name: "cpu", title: "CPU" },
         { name: "memory", title: "Memory" },
         { name: "pods", title: "Pods" },
+        { name: "provider", title: "Provider" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
@@ -49,6 +50,7 @@ class CsNodes extends Component {
         { columnName: "cpu", width: 130 },
         { columnName: "memory", width: 130 },
         { columnName: "pods", width: 130 },
+        { columnName: "provider", width: 130 },
       ],
       rows: "",
 
@@ -165,7 +167,7 @@ class CsNodes extends Component {
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/clusters/${apiParams}/nodes/${props.value}`,
-            search:`clustername=${row.cluster}`,
+            search:`clustername=${row.cluster}&provider=${row.provider}`,
             state: {
               data : row
             }
