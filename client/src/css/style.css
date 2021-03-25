@@ -1848,4 +1848,16 @@ g {
   background-color: rgba(156, 206, 230, 0) !important;
 }
 
-  
+/* Resource Change (Modal) */
+.cpu-range, .mem-range{
+  width: 48%;
+  float: left;
+  display:flex;
+}
+
+
+.cpu-range .MuiFormControl-root, .mem-range .MuiFormControl-root{
+  position:relative !important;
+  float:none;
+  margin: 11px 0px 0px 22px;
+}

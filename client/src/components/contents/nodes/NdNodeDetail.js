@@ -124,7 +124,7 @@ class NdNodeDetail extends Component {
               [
               <BasicInfo rowData={this.state.rows.basic_info} onUpdateData={this.onUpdateData} propsRow={this.state.propsRow}/>,
               <KubernetesStatus rowData={this.state.rows.kubernetes_node_status} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
-              <NodeResourceUsage rowData={this.state.rows.node_resource_usage}/>,
+              <NodeResourceUsage rowData={this.state.rows.node_resource_usage} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
               // <Events rowData={this.state.rows.events}/>
               ]
             ) : (
@@ -149,8 +149,6 @@ class BasicInfo extends Component {
           <span>
             Basic Info
           </span>
-            {this.props.propsRow.provider == "aks" ? 
-            <NdResourceConfig rowData={this.props.rowData} onUpdateData={this.props.onUpdateData}/> : ""}
             <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/>
         </div>
         <div className="cb-body">
@@ -215,6 +213,7 @@ class BasicInfo extends Component {
 class NodeResourceUsage extends Component {
   state = {
     rows : this.props.rowData,
+    nodeData : this.props.nodeData
   }
   angle = {
     full : {
@@ -237,7 +236,13 @@ class NodeResourceUsage extends Component {
         <span>
           Node Resource Usage
           </span>
-            {/* <NdResourceConfig rowData={this.props.rowData}/> */}
+          {this.props.propsRow.provider == "eks" || this.props.propsRow.provider == "kvm" ? 
+            <NdResourceConfig 
+              rows = {this.state.rows}
+              rowData={this.props.rowData}
+              nodeData={this.props.nodeData}
+              onUpdateData={this.props.onUpdateData}
+              propsRow={this.props.propsRow}/> : ""}
         </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">

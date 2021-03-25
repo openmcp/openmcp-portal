@@ -103,7 +103,7 @@ class AddAKSNode extends Component {
   }
 
   handleSaveClick = () => {
-    console.log(this.state.selectedRow)
+    // console.log(this.state.selectedRow)
     // if (this.state.clientId == "") {
     //   alert("Please enter Client Id");
     //   return;

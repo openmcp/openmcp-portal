@@ -27,6 +27,7 @@ import * as utilLog from './../../util/UtLogs.js';
 // import PieHalfReChart from './../../modules/PieHalfReChart';
 // import PieReChart from './../../modules/PieReChart';
 // import line_chart_sample from './../../../json/line_chart_sample.json'
+import ChangeAKSReource from '../modal/chageResource/ChangeAKSReource';
 
 let apiParams = "";
 class CsOverview extends Component {
@@ -122,12 +123,12 @@ class CsOverview extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
+            <BasicInfo rowData={this.state.rows.basic_info} provider={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider } region={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region}/>,
             <div style={{display:"flex"}}>
               <ProjectUsageTop5 rowData={this.state.rows.project_usage_top5}/>
               <NodeUsageTop5 rowData={this.state.rows.node_usage_top5}/>
             </div>,
-            <ClusterResourceUsage rowData={this.state.rows.cluster_resource_usage} onRefresh={this.onRefresh}/>,
+            <ClusterResourceUsage rowData={this.state.rows.cluster_resource_usage} onRefresh={this.onRefresh} provider={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider } region={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region} clusterInfo = {this.state.rows.basic_info}/>,
             <KubernetesStatus rowData={this.state.rows.kubernetes_status}/>,
             <Events rowData={this.state.rows.events}/>
             ]
@@ -157,7 +158,7 @@ class BasicInfo extends Component {
           </div>
           <div>
             <span>Provider : </span>
-            {this.props.rowData.provider}
+            {this.props.provider}
           </div>
           <div>
             <span>Kubernetes Version : </span>
@@ -166,6 +167,10 @@ class BasicInfo extends Component {
           <div>
             <span>Status : </span>
             {this.props.rowData.status}
+          </div>
+          <div>
+            <span>Region : </span>
+            {this.props.region}
           </div>
         </div>
       </div>
@@ -545,9 +550,6 @@ let normal = {
           { name: "Total", value: 197.0 }
         ]
       }
-
-    // 197736896
-    
 }
 
   let colors3 = [
@@ -710,11 +712,9 @@ class ClusterResourceUsage extends Component {
           
           <span style={{cursor:"cluster1"}} onClick={this.onClick} >
             Cluster Resource Usage
-            
           </span>
-          {/* <div className="cb-cloview-select">
-              <SelectBox rows={selectBoxData} defaultValue="" onSelectBoxChange={this.onSelectBoxChange}></SelectBox>
-            </div> */}
+          {this.props.provider == "aks" ? 
+          <ChangeAKSReource clusterInfo={this.props.clusterInfo} provider={this.props.provider} region={this.props.region}/> : "" }
         </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">
@@ -886,10 +886,6 @@ class Events extends Component {
     );
   };
 };
-
-
-
-
 
 export default CsOverview;
 

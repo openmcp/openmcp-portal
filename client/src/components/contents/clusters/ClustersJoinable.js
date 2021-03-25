@@ -35,14 +35,14 @@ class ClustersJoinable extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "endpoint", title: "Endpoint" },
-        { name: "platform", title: "Provider" },
+        { name: "provider", title: "Provider" },
         { name: "region", title: "Region" },
         { name: "zone", title: "Zone" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 180 },
         { columnName: "endpoint", width: 200},
-        { columnName: "platform", width: 130 },
+        { columnName: "provider", width: 130 },
         { columnName: "region", width: 130 },
         { columnName: "zone", width: 130 },
       ],
@@ -164,8 +164,8 @@ class ClustersJoinable extends Component {
       // console.log("cell : ", props);
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if  (column.name === "platform") {
-        if(row.platform == ""){
+      } else if  (column.name === "provider") {
+        if(row.provider == ""){
           return <Table.Cell>-</Table.Cell>
         }
       }

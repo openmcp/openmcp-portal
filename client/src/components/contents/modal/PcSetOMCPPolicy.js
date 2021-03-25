@@ -25,9 +25,9 @@ const styles = (theme) => ({
   },
 });
 
-function valuetext(value) {
-  return `${value}°C`;
-}
+// function valuetext(value) {
+//   return `${value}°C`;
+// }
 
 class PcSetOMCPPolicy extends Component {
   constructor(props) {
@@ -256,8 +256,8 @@ class PcSetOMCPPolicy extends Component {
                   onChange={handleChangeCpu}
                   valueLabelDisplay="auto"
                   aria-labelledby="range-slider"
-                  getAriaValueText={valuetext}
-                  step={2}
+                  // getAriaValueText={valuetext}
+                  step={null}
                   min={0}
                   max={10}
                   marks={this.g_rateate_marks}
@@ -275,8 +275,8 @@ class PcSetOMCPPolicy extends Component {
                   onChange={handleChangePeriod}
                   valueLabelDisplay="auto"
                   aria-labelledby="range-slider"
-                  getAriaValueText={valuetext}
-                  step={5}
+                  // getAriaValueText={valuetext}
+                  step={null}
                   min={1}
                   max={10}
                   marks={this.period_marks}

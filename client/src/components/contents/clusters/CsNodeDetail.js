@@ -20,22 +20,25 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import NdTaintConfig from './../modal/NdTaintConfig';
 import PieReChart2 from '../../modules/PieReChart2';
+import NdTaintConfig from './../modal/NdTaintConfig';
 import * as utilLog from './../../util/UtLogs.js';
+import NdResourceConfig from './../modal/NdResourceConfig';
+import Confirm2 from './../../modules/Confirm2';
+import Button from "@material-ui/core/Button";
+import ProgressTemp from './../../modules/ProgressTemp';
+import axios from "axios";
 
-// import SelectBox from '../../modules/SelectBox';
-// import LineChart from './../../modules/LineChart';
-// import PieHalfReChart from './../../modules/PieHalfReChart';
-// import PieReChart from './../../modules/PieReChart';
-// import line_chart_sample from './../../../json/line_chart_sample.json'
 
-// let apiParams = "";
 class CsNodeDetail extends Component {
-  state = {
-    rows:"",
-    completed: 0,
-    reRender : ""
+  constructor(props){
+    super(props);
+    this.state = {
+      rows:"",
+      completed: 0,
+      reRender : "",
+      propsRow : ""
+    }
   }
 
   componentWillMount() {
@@ -47,8 +50,10 @@ class CsNodeDetail extends Component {
       }
     }
     this.props.menuData(result);
+    if(this.props.location.state != undefined){
+      this.setState({propsRow:this.props.location.state.data})
+    }
     // apiParams = this.props.match.params.cluster;
-
   }
 
   componentDidMount() {
@@ -56,6 +61,7 @@ class CsNodeDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
+        console.log(res);
         if(res === null){
           this.setState({ rows: [] });
         } else {
@@ -64,14 +70,12 @@ class CsNodeDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-CL-VW04');
+    utilLog.fn_insertPLogs(userId, 'log-ND-VW02');
   }  
 
   callApi = async () => {
     var param = this.props.match.params;
-    // const response = await fetch(`/clusters/${param.cluster}/nodes/${param.node}`);
     const response = await fetch(`/nodes/${param.node}${this.props.location.search}`);
     const body = await response.json();
     return body;
@@ -82,6 +86,20 @@ class CsNodeDetail extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
+  onUpdateData = () => {
+    console.log("onUpdateData={this.props.onUpdateData}")
+    this.callApi()
+      .then((res) => {
+        if(res === null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  };
+
   render() {
     // console.log("CsOverview_Render : ",this.state.rows.basic_info);
     return (
@@ -90,7 +108,7 @@ class CsNodeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              {this.props.match.params.node} 
+            { this.props.match.params.node}
               <small>Node Information</small>
             </h1>
             <ol className="breadcrumb">
@@ -110,20 +128,20 @@ class CsNodeDetail extends Component {
 
           {/* 내용부분 */}
           <section className="content">
-          {this.state.rows ? (
-            [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <KubernetesStatus rowData={this.state.rows.kubernetes_node_status}/>,
-            <NodeResourceUsage rowData={this.state.rows.node_resource_usage}/>,
-            // <Events rowData={this.state.rows.events}/>
-            ]
-          ) : (
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-              style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-            ></CircularProgress>
-          )}
+            {this.state.rows ? (
+              [
+              <BasicInfo rowData={this.state.rows.basic_info} onUpdateData={this.onUpdateData} propsRow={this.state.propsRow}/>,
+              <KubernetesStatus rowData={this.state.rows.kubernetes_node_status} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
+              <NodeResourceUsage rowData={this.state.rows.node_resource_usage} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
+              // <Events rowData={this.state.rows.events}/>
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
           </section>
         </div>
       </div>
@@ -133,8 +151,6 @@ class CsNodeDetail extends Component {
 
 class BasicInfo extends Component {
   render(){
-    // console.log("BasicInfo:", this.props.rowData.name)
-    
     return (
       <div className="content-box">
         <div className="cb-header">
@@ -158,6 +174,10 @@ class BasicInfo extends Component {
               <div>
                 <span>Role : </span>
                 {this.props.rowData.role}
+              </div>
+              <div>
+                <span>Cluster : </span>
+                {this.props.rowData.cluster}
               </div>
               <div>
                 <span>Kubernetes : </span>
@@ -185,6 +205,10 @@ class BasicInfo extends Component {
                   <span>Created Time : </span>
                   {this.props.rowData.created_time}
                 </div>
+                <div>
+                  <span>Provider : </span>
+                  {this.props.propsRow.provider}
+                </div>
             </div>
           </div>
           
@@ -194,10 +218,10 @@ class BasicInfo extends Component {
   }
 }
 
-
 class NodeResourceUsage extends Component {
   state = {
     rows : this.props.rowData,
+    nodeData : this.props.nodeData
   }
   angle = {
     full : {
@@ -216,7 +240,18 @@ class NodeResourceUsage extends Component {
     ];
     return (
       <div className="content-box">
-        <div className="cb-header">Node Resource Usage</div>
+        <div className="cb-header">
+        <span>
+          Node Resource Usage
+          </span>
+          {this.props.propsRow.provider == "eks" || this.props.propsRow.provider == "kvm" ? 
+            <NdResourceConfig 
+              rows = {this.state.rows}
+              rowData={this.props.rowData}
+              nodeData={this.props.nodeData}
+              onUpdateData={this.props.onUpdateData}
+              propsRow={this.props.propsRow}/> : ""}
+        </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">CPU</div>
@@ -241,14 +276,178 @@ class NodeResourceUsage extends Component {
 }
 
 class KubernetesStatus extends Component {
-  state = {
-    rows : this.props.rowData
+  constructor(props){
+    super(props);
+    this.state={
+      rows : this.props.rowData,
+      confirmType : "",
+      confirmOpen: false,
+      confirmInfo : {
+        title :"Confirm Stop Node",
+        context :"Are you sure you want to stop Node?",
+        button : {
+          open : "",
+          yes : "CONFIRM",
+          no : "CANCEL",
+        }
+      },
+      confrimTarget : "",
+      confirmTargetKeyname:"",
+      powerflag:"on",
+    }
   }
+
+  handleClickStart = () => {
+    this.setState({
+      confirmType: "power",
+      confirmOpen: true,
+      powerFlag : "on",
+      confirmInfo : {
+        title :"Confirm Start Node",
+        context :"Are you sure you want to Start Node?",
+        button : {
+          open : "",
+          yes : "CONFIRM",
+          no : "CANCEL",
+        }
+      }
+    })
+  }
+
+  handleClickStop = () => {
+    this.setState({
+      confirmType: "power",
+      confirmOpen: true,
+      powerFlag : "off",
+      confirmInfo : {
+        title :"Confirm Stop Node",
+        context :"Are you sure you want to stop Node?",
+        button : {
+          open : "",
+          yes : "CONFIRM",
+          no : "CANCEL",
+        }
+      }
+    })
+  }
+
+  handleClickDelete = () => {
+    this.setState({
+      confirmType: "delete",
+      confirmOpen: true,
+      confirmInfo : {
+        title :"Confirm Delete KVM VM",
+        context :"Are you sure you want to delete vm(node)?",
+        button : {
+          open : "",
+          yes : "CONFIRM",
+          no : "CANCEL",
+        }
+      }
+    })
+  }
+
+  //callback
+  confirmed = (result) => {
+    this.setState({confirmOpen:false});
+
+    //show progress loading...
+    this.setState({openProgress:true});
+    const provider = this.props.propsRow.provider;
+    let data = {};
+    let url = "";
+
+    if(result) {
+      // const userId = localStorage.getItem("userName");
+      if(this.state.confirmType == "power"){
+        if(this.state.powerFlag == "on"){
+          console.log("poweron")
+          url = `/nodes/${provider}/start`;
+          // utilLog.fn_insertPLogs(userId, "log-ND-PO01"); //poweron log
+        } else if (this.state.powerFlag == "off"){
+          console.log("poweroff")
+          url = `/nodes/${provider}/stop`;
+          // utilLog.fn_insertPLogs(userId, "log-ND-PO02"); //poweroff log
+        }
+       
+        if(provider == "eks"){
+          //eks
+          data = {
+            region: this.props.propsRow.region,
+            node: this.props.propsRow.name,
+            cluster : this.props.propsRow.cluster
+          };
+        } else if (provider == "aks"){
+          data = {
+            cluster : this.props.propsRow.cluster,
+            node : this.props.propsRow.name,
+          };
+        } else if (provider == "kvm"){
+          data = {
+            cluster : this.props.propsRow.cluster,
+            node : this.props.propsRow.name,
+          };
+        } else {
+          alert(provider + " is not supported Type");
+          this.setState({openProgress:false})
+          return;
+        }
+      } else if (this.state.confirmType == "delete"){
+        url = `/nodes/delete/kvm`;
+        data = {
+          cluster : this.props.propsRow.cluster,
+          node: this.props.propsRow.name,
+        };
+      }
+      
+
+      axios.post(url, data)
+      .then((res) => {
+        if(res.data.error){
+          alert(res.data.message)
+        }
+      })
+      .catch((err) => {
+          console.log(err)
+      });
+
+      this.setState({openProgress:false})
+    } else {
+      this.setState({openProgress:false})
+    }
+  }
+
   render(){
-    
     return(
       <div className="content-box cb-kube-status">
-        <div className="cb-header">Kubernetes Node Status</div>
+        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        <Confirm2
+          confirmInfo={this.state.confirmInfo} 
+          confrimTarget ={this.state.confrimTarget} 
+          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmed={this.confirmed}
+          confirmOpen={this.state.confirmOpen}/>
+
+        <div className="cb-header">
+          <span>Kubernetes Node Status</span>
+          {this.props.propsRow.provider !== "gke" ?
+            <div style={{position:"absolute", top:"0px", right:"0px"}}>
+              <Button variant="outlined" color="primary" onClick={this.handleClickStart} style={{marginRight:"10px",zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
+                Start Node
+              </Button>
+
+              <Button variant="outlined" color="primary" onClick={this.handleClickStop} style={{zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
+                Stop Node
+              </Button>
+
+              {this.props.propsRow.provider == "kvm" ? 
+                <Button variant="outlined" color="primary" onClick={this.handleClickDelete} style={{marginLeft:"10px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
+                  Delete Node
+                </Button> : ""
+              }
+            </div> : ""
+          }
+        </div>
         <div className="cb-body flex">
           {this.state.rows.map((item)=>{
             return (

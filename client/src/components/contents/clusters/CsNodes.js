@@ -39,6 +39,7 @@ class CsNodes extends Component {
         { name: "memory", title: "Memory" },
         { name: "pods", title: "Pods" },
         { name: "provider", title: "Provider" },
+        { name: "region", title: "Region" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
@@ -51,6 +52,7 @@ class CsNodes extends Component {
         { columnName: "memory", width: 130 },
         { columnName: "pods", width: 130 },
         { columnName: "provider", width: 130 },
+        { columnName: "region", width: 130 },
       ],
       rows: "",
 
@@ -141,6 +143,9 @@ class CsNodes extends Component {
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
+
+      row.provider = this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider
+      row.region = this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region
       const fnEnterCheck = () => {
         if(props.value == undefined){
           return ""
@@ -161,13 +166,14 @@ class CsNodes extends Component {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
         // console.log("name", props.value);
+        
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
             pathname: `/clusters/${apiParams}/nodes/${props.value}`,
-            search:`clustername=${row.cluster}&provider=${row.provider}`,
+            search:`clustername=${row.cluster}`,
             state: {
               data : row
             }
@@ -177,7 +183,7 @@ class CsNodes extends Component {
         return(
         <Table.Cell>{apiParams}</Table.Cell>
         );
-      } 
+      }
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 

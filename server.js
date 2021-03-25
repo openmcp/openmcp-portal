@@ -1504,6 +1504,51 @@ app.post("/nodes/eks/stop", (req, res) => {
   );
 });
 
+app.post("/nodes/eks/change", (req, res) => {
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_eks
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > EKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        akid : result.rows[0].accessKey,
+        secretKey : result.rows[0].secretKey,
+        region : req.body.region,
+        type : req.body.type,
+        node : req.body.node,
+      }
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/changeekstype`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
 app.post("/nodes/aks/start", (req, res) => {
   connection.query(
     `select * 
@@ -1596,30 +1641,36 @@ app.post("/nodes/aks/stop", (req, res) => {
   );
 });
 
-app.post("/nodes/kvm/start", (req, res) => {
+app.post("/clusters/aks/change", (req, res) => {
   connection.query(
     `select * 
-     from tb_config_kvm
+     from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
       if (result.rows.length == 0){
         const result_set = {
           error : true,
-          message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
-          Settings > Config > Public cloud Auth > KVM`,
+          message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > AKS`,
         };
         return res.send(result_set);
       }
 
       requestData = {
-        node : req.body.node,
-        agentURL : result.rows[0].agentURL
+        clientId : result.rows[0].clientId,
+        clientSec : result.rows[0].clientSec,
+        tenantId : result.rows[0].tenantId,
+        subId : result.rows[0].subId,
+        cluster : req.body.cluster,
+        poolName : req.body.poolName,
+        skuTierStr : req.body.tier,
+        skuNameStr : req.body.type,
       }
 
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
-        uri: `${apiServer}/apis/startkvmnode`,
+        uri: `${apiServer}/apis/akschangevmss`,
         method: "POST",
         body : data
       };
@@ -1678,15 +1729,161 @@ app.post("/nodes/kvm/stop", (req, res) => {
   );
 });
 
+app.post("/nodes/kvm/start", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_kvm
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
+          Settings > Config > Public cloud Auth > KVM`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        node : req.body.node,
+        agentURL : result.rows[0].agentURL
+      }
+
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/startkvmnode`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+});
+
+app.post("/nodes/kvm/change", (req, res) => {
+  connection.query(
+    `select * 
+     from tb_config_kvm
+     where cluster='${req.body.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
+          Settings > Config > Public cloud Auth > KVM`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        agentURL : result.rows[0].agentURL,
+        node : req.body.node,
+        cpu : req.body.cpu,
+        memory : req.body.memory,
+      }
+
+      console.log(requestData)
+      // var data = JSON.stringify(requestData);
+      // var request = require("request");
+      // var options = {
+      //   uri: `${apiServer}/apis/changekvmnode`,
+      //   method: "POST",
+      //   body : data
+      // };
+
+      // request(options, function (error, response, body) {
+      //   if (!error && response.statusCode == 200) {
+      //     res.send(body);
+      //   } else {
+      //     console.log("error", error);
+      //     return error;
+      //   }
+      // });
+      
+    }
+  );
+});
+
 
 /////////////////////////
 // Public Cloud Cluster
 //////////////////////////
-app.get("/aws/ec2-type", (req, res) => {
+app.get("/aws/eks-type", (req, res) => {
   connection.query(
-    `select * from tb_codes where kinds='EC2-TYPE';`,
+    `select * from tb_codes where kinds='EKS-TYPE' order by etc;`,
     (err, result) => {
       res.send(result.rows);
+    }
+  );
+});
+
+app.get("/azure/aks-type", (req, res) => {
+  connection.query(
+    `select * from tb_codes where kinds='AKS-TYPE' order by etc;`,
+    (err, result) => {
+
+      res.send(result.rows);
+    }
+  );
+});
+
+app.get("/azure/pool/:cluster", (req, res) => {
+  var cluster = req.params.cluster
+  connection.query(
+    `select * 
+     from tb_config_aks
+     where cluster='${req.params.cluster}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > AKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        clientId : result.rows[0].clientId,
+        clientSec : result.rows[0].clientSec,
+        tenantId : result.rows[0].tenantId,
+        subId : result.rows[0].subId
+      }
+      
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/aksgetallres`,
+        method: "POST",
+        body : data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          var clusterInfo = {};
+          for (let value of JSON.parse(body)){
+            // if(value.name == cluster){ //임시로 막음(일치하는 클러스터가 없음)
+            if(value.name == "azure-cluster-2"){ //임시로 하드코딩함
+              clusterInfo = value;
+            }
+          }
+          res.send(clusterInfo);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
     }
   );
 });
