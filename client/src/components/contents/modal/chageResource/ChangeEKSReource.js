@@ -132,10 +132,13 @@ class ChangeEKSReource extends Component {
     if(result) {
       const url = `/nodes/eks/change`;
       const data = {
-        cluster : this.props.nodeData.cluster,
+        cluster : "eks-cluster1",
+        region : "ap-northeast-2",
+        node : "ip-172-31-0-123.ap-northeast-2.compute.internal",
+        // cluster : this.props.nodeData.cluster,
         type :  this.state.selectedRow.code,
-        region : this.props.propsRow.region,
-        node : this.props.nodeData.name,
+        // region : this.props.propsRow.region,
+        // node : this.props.nodeData.name,
       };
 
       axios.post(url, data)

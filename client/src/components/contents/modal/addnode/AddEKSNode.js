@@ -37,14 +37,14 @@ class AddEKSNode extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "pools", title: "Pools" },
+        // { name: "pools", title: "Pools" },
         { name: "cpu", title: "CPU(%)" },
         { name: "ram", title: "Memory(%)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
-        { columnName: "pools", width: 130 },
+        // { columnName: "pools", width: 130 },
         { columnName: "cpu", width: 130 },
         { columnName: "ram", width: 120 },
       ],
@@ -125,15 +125,20 @@ class AddEKSNode extends Component {
 
     //show progress loading...
     this.setState({openProgress:true})
+
+    
     
     if(result) {
+      var selectedRowId = this.state.expandedRowIds;
+
       //Add Node excution
       const url = `/nodes/add/eks`;
       const data = {
         // accessKey:this.state.accessKey,
         // secretkey:this.state.secretKey,
-        desiredCnt:this.state.desiredNumber,
-        cluster:this.state.selectedRow.cluster,
+        desiredCnt: this.state.desiredNumber,
+        // cluster:this.state.selectedRow.cluster,
+        cluster: this.state.clusters[selectedRowId].name,
         nodePool: this.state.selectedRow.worker,
         region : "ap-northeast-2"
       };
@@ -142,23 +147,23 @@ class AddEKSNode extends Component {
 
       axios.post(url, data)
         .then((res) => {
-          this.setState({confirmOpen:false})
-          this.setState({openProgress:false})
+          if(res.data.error){
+            alert(res.data.message);
+          } else {
+            this.props.handleClose();
+            //write log
+            const userId = localStorage.getItem("userName");
+            utilLog.fn_insertPLogs(userId, "log-ND-CR01");
+          }
+          this.setState({openProgress:false});
         })
         .catch((err) => {
           this.setState({openProgress:false})
           this.props.handleClose()
         });
-
-      const userId = localStorage.getItem("userName");
-      utilLog.fn_insertPLogs(userId, "log-ND-CR01");
-
-      this.setState({openProgress:false})
-      this.props.handleClose()
     } else {
       this.setState({confirmOpen:false})
       this.setState({openProgress:false})
-      console.log("cancel")
     }
   }
 
@@ -190,7 +195,7 @@ class AddEKSNode extends Component {
 
   onSelectionChange = (selection) => {
     this.setState({ 
-      desiredNumber: selection.desired.toString(),
+      desiredNumber: selection.desired_size == undefined ? "0" : selection.desired_size.toString(),
       selectedRow: selection
     });
   };
@@ -203,7 +208,7 @@ class AddEKSNode extends Component {
   RowDetail = ({ row }) => (
     <div>
       <EKSWorkerGroups
-        rowData={row.name}
+        cluster={row.name}
         onSelectionChange={this.onSelectionChange}
       />
     </div>
@@ -333,19 +338,33 @@ class EKSWorkerGroups extends Component {
     super(props);
     this.state = {
       rows: "",
+      // columns: [
+      //   { name: "worker", title: "NodePool" },
+      //   { name: "cluster", title: "Cluster" },
+      //   { name: "min", title: "Min" },
+      //   { name: "max", title: "Max" },
+      //   { name: "desired", title: "Desired" },
+      // ],
+      // defaultColumnWidths: [
+      //   { columnName: "worker", width: 150 },
+      //   { columnName: "cluster", width: 130 },
+      //   { columnName: "min", width: 100 },
+      //   { columnName: "max", width: 100 },
+      //   { columnName: "desired", width: 130 },
+      // ],
       columns: [
-        { name: "worker", title: "NodePool" },
-        { name: "cluster", title: "Cluster" },
-        { name: "min", title: "Min" },
-        { name: "max", title: "Max" },
-        { name: "desired", title: "Desired" },
+        { name: "name", title: "NodeGroup" },
+        { name: "instance_type", title: "InstanceType" },
+        { name: "min_size", title: "Min" },
+        { name: "max_size", title: "Max" },
+        { name: "desired_size", title: "Desired" },
       ],
       defaultColumnWidths: [
-        { columnName: "worker", width: 150 },
-        { columnName: "cluster", width: 130 },
-        { columnName: "min", width: 100 },
-        { columnName: "max", width: 100 },
-        { columnName: "desired", width: 130 },
+        { columnName: "name", width: 150 },
+        { columnName: "instance_type", width: 130 },
+        { columnName: "min_size", width: 100 },
+        { columnName: "max_size", width: 100 },
+        { columnName: "desired_size", width: 130 },
       ],
 
       selection: [],
@@ -376,8 +395,9 @@ class EKSWorkerGroups extends Component {
   };
 
   callApi = async () => {
+    console.log(this.props.cluster)
     const response = await fetch(
-      `/eks/clusters/workers?clustername=${this.props.rowData.name}`
+      `/eks/clusters/workers?clustername=${this.props.cluster}`
     );
     const body = await response.json();
     return body;

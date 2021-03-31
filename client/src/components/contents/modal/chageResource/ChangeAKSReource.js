@@ -140,8 +140,8 @@ class ChangeAKSReource extends Component {
   };
 
   callApi2 = async () => {
-    const response = await fetch(`/azure/pool/${this.props.clusterInfo.name}`);
-    // const response = await fetch(`/azure/pool/azure-cluster-2`);
+    // const response = await fetch(`/azure/pool/${this.props.clusterInfo.name}`);
+    const response = await fetch(`/azure/pool/aks-cluster-01`);
     const body = await response.json();
     return body;
   }
@@ -164,7 +164,11 @@ class ChangeAKSReource extends Component {
     if (Object.keys(this.state.selectedRow).length === 0) {
       alert("Please select Instance Type");
       return;
-    } else {
+    } else if(Object.keys(this.state.selectedRow2).length === 0) {
+      alert("Please select Agent Pool");
+      return;
+    }
+    else {
       this.setState({
         confirmOpen: true,
       })
@@ -181,7 +185,8 @@ class ChangeAKSReource extends Component {
     if(result) {
       const url = `/clusters/aks/change`;
       const data = {
-        cluster : this.props.clusterInfo.name,
+        // cluster : this.props.clusterInfo.name,
+        cluster : "aks-cluster-01",
         type :  this.state.selectedRow.code,
         tier :  this.state.selectedRow.description,
         poolName : this.state.selectedRow2.name,
@@ -322,58 +327,7 @@ class ChangeAKSReource extends Component {
                     </div>
                   </div>
                 </section>
-                <section className="md-content">
-                  <div>
-                    <p>Instance Type</p>
-                    {/* cluster selector */}
-                    <Paper>
-                      <Grid
-                        rows={this.state.instTypes}
-                        columns={this.state.columns}
-                      >
-                        {/* Sorting */}
-                        <SortingState
-                          defaultSorting={[
-                            { columnName: "code", direction: "asc" },
-                          ]}
-                        />
-
-                        {/* 페이징 */}
-                        <PagingState
-                          defaultCurrentPage={0}
-                          defaultPageSize={this.state.pageSize}
-                        />
-                        <PagingPanel pageSizes={this.state.pageSizes} />
-                        <SelectionState
-                          selection={this.state.selection}
-                          onSelectionChange={this.onSelectionChange}
-                        />
-
-                        <IntegratedFiltering />
-                        <IntegratedSorting />
-                        <IntegratedSelection />
-                        <IntegratedPaging />
-
-                        {/* 테이블 */}
-                        <Table />
-                        <TableColumnResizing
-                          defaultColumnWidths={
-                            this.state.defaultColumnWidths
-                          }
-                        />
-                        <TableHeaderRow
-                          showSortingControls
-                          rowComponent={this.HeaderRow}
-                        />
-                        <TableSelection
-                          selectByRowClick
-                          highlightRow
-                          // showSelectionColumn={false}
-                        />
-                      </Grid>
-                    </Paper>
-                  </div>
-                </section>
+                
                 <section className="md-content">
                   <div>
                     <p>Agents Pool</p>
@@ -411,6 +365,58 @@ class ChangeAKSReource extends Component {
                         <TableColumnResizing
                           defaultColumnWidths={
                             this.state.defaultColumnWidths2
+                          }
+                        />
+                        <TableHeaderRow
+                          showSortingControls
+                          rowComponent={this.HeaderRow}
+                        />
+                        <TableSelection
+                          selectByRowClick
+                          highlightRow
+                          // showSelectionColumn={false}
+                        />
+                      </Grid>
+                    </Paper>
+                  </div>
+                </section>
+                <section className="md-content">
+                  <div>
+                    <p>Instance Type</p>
+                    {/* cluster selector */}
+                    <Paper>
+                      <Grid
+                        rows={this.state.instTypes}
+                        columns={this.state.columns}
+                      >
+                        {/* Sorting */}
+                        <SortingState
+                          defaultSorting={[
+                            { columnName: "code", direction: "asc" },
+                          ]}
+                        />
+
+                        {/* 페이징 */}
+                        <PagingState
+                          defaultCurrentPage={0}
+                          defaultPageSize={this.state.pageSize}
+                        />
+                        <PagingPanel pageSizes={this.state.pageSizes} />
+                        <SelectionState
+                          selection={this.state.selection}
+                          onSelectionChange={this.onSelectionChange}
+                        />
+
+                        <IntegratedFiltering />
+                        <IntegratedSorting />
+                        <IntegratedSelection />
+                        <IntegratedPaging />
+
+                        {/* 테이블 */}
+                        <Table />
+                        <TableColumnResizing
+                          defaultColumnWidths={
+                            this.state.defaultColumnWidths
                           }
                         />
                         <TableHeaderRow

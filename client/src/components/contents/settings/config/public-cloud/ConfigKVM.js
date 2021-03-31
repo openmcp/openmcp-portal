@@ -25,6 +25,8 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
 import EditKVMAuth from "../../../modal/public-cloud-auth/EditKVMAuth.js";
+import axios from 'axios';
+import Confirm2 from './../../../../modules/Confirm2';
 
 class ConfigKVM extends Component {
   constructor(props) {
@@ -58,6 +60,19 @@ class ConfigKVM extends Component {
       selection: [],
       selectedRow: "",
       popTitle:"",
+
+      confirmOpen: false,
+      confirmInfo : {
+        title :"Delete KVM PCA Info",
+        context :"Are you sure you want to delete KVM PCA config?",
+        button : {
+          open : "",
+          yes : "CONFIRM",
+          no : "CANCEL",
+        }
+      },
+      confrimTarget : "",
+      confirmTargetKeyname:""
     };
   }
 
@@ -125,6 +140,41 @@ class ConfigKVM extends Component {
     });
   };
 
+  handleClickDelete = () => {
+    if (Object.keys(this.state.selectedRow).length === 0) {
+      alert("Please select a authentication data row");
+      this.setState({ open: false });
+      return;
+    } else {
+      this.setState({
+        confirmOpen: true,
+      })
+    }
+  }
+
+  //callback
+  confirmed = (result) => {
+    this.setState({confirmOpen:false})
+
+    if(result) {
+      const data = {
+        seq : this.state.selectedRow.seq,
+        cluster : this.state.selectedRow.cluster
+      };
+  
+      const url = `/settings/config/pca/kvm`;
+      axios.delete(url, {data:data})
+      .then((res) => {
+        this.callBackClosed();
+      })
+      .catch((err) => {
+        console.log("Error : ",err);
+      });
+    } else {
+      this.setState({confirmOpen:false})
+    }
+  }
+
   callBackClosed = () => {
     this.setState({
       open : false,
@@ -166,6 +216,14 @@ class ConfigKVM extends Component {
 
     return (
       <div>
+
+        <Confirm2
+          confirmInfo={this.state.confirmInfo} 
+          confrimTarget ={this.state.confrimTarget} 
+          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmed={this.confirmed}
+          confirmOpen={this.state.confirmOpen}/>
+          
         <EditKVMAuth 
           open={this.state.open}
           new={this.state.new}
@@ -209,10 +267,22 @@ class ConfigKVM extends Component {
                       onClick={this.handleClickEdit}
                       style={{
                         width: "120px",
+                        marginRight:"10px",
                         textTransform: "capitalize",
                       }}
                     >
                       Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={this.handleClickDelete}
+                      style={{
+                        width: "120px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      Delete
                     </Button>
                   </div>
                 </div>

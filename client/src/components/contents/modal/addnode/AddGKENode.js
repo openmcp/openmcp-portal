@@ -29,23 +29,19 @@ class AddGKENode extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // projectId:"",
-      // clientEmail:"",
-      // privateKey:"",
-
       nodeName: "",
       desiredNumber: 0,
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "pools", title: "Pools" },
+        // { name: "pools", title: "Pools" },
         { name: "cpu", title: "CPU(%)" },
         { name: "ram", title: "Memory(%)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
-        { columnName: "pools", width: 130 },
+        // { columnName: "pools", width: 130 },
         { columnName: "cpu", width: 130 },
         { columnName: "ram", width: 120 },
       ],
@@ -91,8 +87,6 @@ class AddGKENode extends Component {
     this.setState({
       selection : [],
       selectedRow:"",
-      // projectID:"", 
-      // clientEmail:"", 
       // privateKey:"", 
       nodeName:"",
       desiredNumber:0,
@@ -101,16 +95,6 @@ class AddGKENode extends Component {
   }
 
   handleSaveClick = () => {
-    // if (this.state.projectId == ""){
-    //   alert("Please enter Project ID");
-    //   return;
-    // } else if (this.state.clientEmail == ""){
-    //   alert("Please enter Client Email");
-    //   return;
-    // } else if (this.state.privateKey == ""){
-    //   alert("Please enter PrivateKey");
-    //   return;
-    // } else if (Object.keys(this.state.selectedRow).length === 0){
     if (Object.keys(this.state.selectedRow).length === 0){
       alert("Please select target Cluster");
       return;
@@ -121,9 +105,6 @@ class AddGKENode extends Component {
       this.setState({
         confirmOpen: true,
       })
-
-      
-      
     }
     // alert("GKE SAVE");
   };
@@ -136,38 +117,36 @@ class AddGKENode extends Component {
     this.setState({openProgress:true})
 
     if(result) {
+      var selectedRowId = this.state.expandedRowIds;
       //Add Node excution
       const url = `/nodes/add/gke`;
       const data = {
-        // projectId: this.state.projectId,
-        // clientEmail: this.state.clientEmail,
-        // privateKey: this.state.privateKey,
-        cluster:this.state.selectedRow.cluster,
-        nodePool: this.state.selectedRow.pool,
+        // cluster:this.state.selectedRow.cluster,
+        cluster: this.state.clusters[selectedRowId].name,
+        nodePool: this.state.selectedRow.nodePoolName,
         desiredCnt:this.state.desiredNumber,
       };
 
-      // credType = "service_account"
-      // projectID = "just-advice-302807"
-      // clientEmail = "gkeadmin@just-advice-302807.iam.gserviceaccount.com"
-      // privateKey = "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDWdGxXcM+cRb39\nN6fbCBpibF+EIVFkKGjsuuuGJxEoTQIKp2dnl5FlBFKKSa0cSIz4duwgxc5+25KS\neR5cBB6MjSxBC62qK6VeyNUT2KzyIrQfp/zGmxkBVpXFZ13u0JopiwSH5Kvp4vU1\nOJn4wLA3aLs3QMzUC4rXl6IW0yuyMeClooJLFqxjW7ihry2Y0MjMLuSWeHpqCQCK\n0IntRpqhPoKEkWUjonJnQo7Lem5/iqp8rL80vMDPHuDTPLcQt3pI7Ak6z2qk7etm\ng5jkUS1cVU9Xne2jffEMOjTXPrEgozoHWxN0QLwzrA/7vW6zAt3nfOdO9C6wBzh9\n4GgUeTDDAgMBAAECggEAAlWPaFQ+A5bEE/bVyOM0W6Xk/uyDP50rpzKm+vV/O6UQ\nRKAV1rbQ9PyFuXjxKBb8vHzu4lxvfEn/imtEZ/6o0SF9kyesDZIetq1mRFUIwjSb\n0/cMH/fy3w+GNHkvjeM6ClcNBuhM8WVwWH1JOmqT1caPYxvoHta7/XoVCufkLd2q\nqpFcod8LISW3HN7wSgzB5lpDry+Zk8KoXtxn2bAJyRYeky7tkXQbkCwrE10oUkAs\nivgR27wGF0nowoSvs8KwxWME3zW836fVALyF+dGCBlYVtIMvx6T4cu868dI5JANj\nY6U4H3xjB98MQ/zp7uH6w4kj1/cMxvbfAT7jBTiqAQKBgQD9Q/9bEVxPBc+gKEMo\ncXYCJTCT5XsdAgdw/kXHdR463z70sUbLhvHjt/6xwlNCS5j2jkTbN7InLI6xIwY/\nzdfppXsoW4qyEqrgMHjG1af3AlslEA3GLnkLEIx/VM6zoDKlBlI3uz2PMf4wJiFK\nli3X/5tcpYlyc0pCkIJBQ+o2QQKBgQDYxSf8b2/WW87+L3l6/VlbyWMG9aw5RP2v\nitP0cIqoFj/LkD1pJWtJre0Lnlzgz8JJDcRsbrqDZFuIiWnTc8dy8YM1Pv1kz7xZ\nANvpJGEDr5cZjopOoq+w5zfNDrLf/SPB2g6u9/33Ukds3F0++14901b/f7SjHFN2\nH+OPFwMOAwKBgQDPugrird2Rbwm5qexTaqRI5Cnw1ELjKvvhgJzJGNV/ogXn+tM/\nMeKKTSqYr/NMJ+dBKrVtPERh/xjWTwzcHkBegfz+v/6FSexfT0Jwi2NlpMgPIRi7\nGPjsy1kBQxT6nYWMdx/OWEQIhA+hfFTH8V+OjzbliVyvw8H/0LkVQNgEQQKBgBJr\nhn9T9NvxR0CgRiFmX+6FyW1w+OaQ70G4eVRfL9kist8Yba9+p4RGTEtddKUB4o+U\npOlV63F42LJcguqd/wfMcArZRG0JngauJQHFvpyykhNw4l3WQzm0HDDHm/meqCgz\n4GWL2z/l9P3SJ/ZPI+37BHyHnJDzuj/ia9Lf8LmDAoGBAOm92Sp7qFkrwogzIBfp\nU9PtDc2GeiSj7WJctIakuxQ+bSWtOoPq6CPd8OAWmpgZA8SzCfkWMnBQJhB7A6RQ\nZOA50xvE07ybQ397NLkDKAB56zdQ9hDAYpgkzCFWL1AvIouM8OLU48LLIh3KJLxG\nSUwFrPzKIQz4RKj3em+M+iQP\n-----END PRIVATE KEY-----\n"
-
       axios.post(url, data)
           .then((res) => {
-            // console.log()
+            if(res.data.error){
+              alert(res.data.message);
+            } else {
+              this.props.handleClose();
+              //write log
+              const userId = localStorage.getItem("userName");
+              utilLog.fn_insertPLogs(userId, "log-ND-CR02");
+            }
+            this.setState({openProgress:false});
           })
           .catch((err) => {
-              // console.log()
+            this.setState({openProgress:false})
+            this.props.handleClose()
           });
-      const userId = localStorage.getItem("userName");
-      utilLog.fn_insertPLogs(userId, "log-ND-CR01");
 
-      this.setState({openProgress:false})
-      this.props.handleClose()
-    } else {
+    } else { // confirm cancel
       this.setState({confirmOpen:false})
       this.setState({openProgress:false})
-      console.log("cancel")
     }
   }
 
@@ -198,7 +177,7 @@ class AddGKENode extends Component {
 
   onSelectionChange = (selection) => {
     this.setState({
-      desiredNumber: selection.desired.toString(),
+      desiredNumber: selection.initialNodeCount == undefined ? "0" : selection.initialNodeCount.toString(),
       selectedRow: selection
     })
   };
@@ -210,7 +189,7 @@ class AddGKENode extends Component {
 
   RowDetail = ({ row }) => (
     <div>
-      <GKENodePools rowData={row.name} onSelectionChange={this.onSelectionChange}/>
+      <GKENodePools cluster={row.name} onSelectionChange={this.onSelectionChange}/>
     </div>
   );
 
@@ -225,68 +204,6 @@ class AddGKENode extends Component {
           confirmTargetKeyname = {this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
           confirmOpen={this.state.confirmOpen}/>
-        {/* <section className="md-content">
-          <div style={{display:"flex"}}>
-            <div className="props" style={{width:"50%", marginRight:"10px"}}>
-              <p>Authentication Type</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                placeholder="credetial type"
-                variant="outlined"
-                value = {this.state.clientId}
-                fullWidth	={true}
-                name="credType"
-                onChange = {this.onChange}
-              />
-            </div>
-            <div className="props" style={{width:"50%"}}>
-              <p>Project ID</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                placeholder="project Id"
-                variant="outlined"
-                value = {this.state.clientSec}
-                fullWidth	={true}
-                name="projectId"
-                onChange = {this.onChange}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="props">
-              <p>Client Email</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                placeholder="client Email"
-                variant="outlined"
-                value = {this.state.tenantID}
-                fullWidth	={true}
-                name="clientEmail"
-                onChange = {this.onChange}
-              />
-            </div>
-            
-          </div>
-          <div>
-            <div className="props">
-              <p>PrivateKey</p>
-              <TextField
-                id="outlined-multiline-static"
-                // rows={1}
-                multiline = {true}
-                placeholder="privateKey"
-                variant="outlined"
-                value = {this.state.subID}
-                fullWidth	={true}
-                name="privateKey"
-                onChange = {this.onChange}
-              />
-            </div>
-          </div>
-        </section> */}
         <section className="md-content">
           <div className="outer-table">
             <p>Clusters</p>
@@ -370,16 +287,14 @@ class GKENodePools extends Component {
     this.state = {
       rows: "",
       columns: [
-        { name: "pool", title: "NodePool" },
-        { name: "cluster", title: "Cluster" },
-        { name: "machine_type", title: "Machine Type" },
-        { name: "desired", title: "Desired" },
+        { name: "nodePoolName", title: "NodePoolName" },
+        { name: "machineType", title: "Machine Type" },
+        { name: "initialNodeCount", title: "Desired" },
       ],
       defaultColumnWidths: [
-        { columnName: "pool", width: 150 },
-        { columnName: "cluster", width: 130 },
-        { columnName: "machine_type", width: 130 },
-        { columnName: "desired", width: 130 },
+        { columnName: "nodePoolName", width: 150 },
+        { columnName: "machineType", width: 130 },
+        { columnName: "initialNodeCount", width: 130 },
       ],
 
       selection: [],
@@ -394,10 +309,10 @@ class GKENodePools extends Component {
       .then((res) => {
         var result = [];
         console.log(res);
-        res.map(item=>
-          item.cluster == this.props.rowData ? result.push(item) : ""
-        )
-        this.setState({ rows: result });
+        // res.map(item=>
+        //   item.cluster == this.props.rowData ? result.push(item) : ""
+        // )
+        this.setState({ rows: res });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -411,7 +326,7 @@ class GKENodePools extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch(`/gke/clusters/pools?clustername=${this.props.rowData.name}`);
+    const response = await fetch(`/gke/clusters/pools?clustername=${this.props.cluster}`);
     const body = await response.json();
     return body;
   };

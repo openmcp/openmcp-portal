@@ -118,9 +118,9 @@ class PcUpdateProjectPolicy extends Component {
     });
 
     
-    // loging Add Node
+    // loging Edit Project Policy
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, "log-ND-CR01");
+    utilLog.fn_insertPLogs(userId, "log-PO-MD02");
 
     //close modal popup
     this.props.onCloseUpdatePolicy(false);
@@ -155,7 +155,7 @@ class PcUpdateProjectPolicy extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Add Project Policy
+            Edit Project Policy
           </DialogTitle>
           <DialogContent dividers>
 

@@ -168,8 +168,8 @@ class ChangeKVMReource extends Component {
       const data = {
         cluster : this.props.nodeData.cluster,
         node : this.props.nodeData.name,
-        cpu : this.state.cpu,
-        memory : this.state.memory,
+        cpu : this.state.cpu.toString(),
+        memory : this.state.memory.toString(),
       };
 
       axios.post(url, data)

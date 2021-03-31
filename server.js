@@ -14,7 +14,8 @@ app.get("/api/hello", (req, res) => {
   res.send({ messge: "Hello Express!" });
 });
 
-const apiServer = "http://192.168.0.48:4885"; //로컬 API 서버
+const apiServer = "http://192.168.0.51:4885"; //로컬 API 서버
+// const apiServer = "http://192.168.0.48:4885"; //로컬 API 서버
 // const apiServer = "http://192.168.0.4:4885"; //kvm API 서버
 // const apiServer = "http://10.0.3.40:4885";
 
@@ -120,6 +121,7 @@ app.post("/user_login", (req, res) => {
         data: [],
         message: "Please check your Password",
       };
+      console.log(result)
 
       if (result.rows.length < 1) {
         result_set = {
@@ -1153,6 +1155,7 @@ app.post("/nodes/add/eks", (req, res) => {
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
           Settings > Config > Public cloud Auth > EKS`,
         };
+        console.log(result_set);
         return res.send(result_set);
       }
 
@@ -1165,7 +1168,8 @@ app.post("/nodes/add/eks", (req, res) => {
         secretKey : result.rows[0].secretKey,
       }
 
-      var data = JSON.stringify(req.body);
+      console.log(requestData)
+      var data = JSON.stringify(requestData);
 
       var request = require("request");
       var options = {
@@ -1216,8 +1220,8 @@ app.post("/nodes/add/aks", (req, res) => {
         subId : result.rows[0].subId
       }
 
-      var data = JSON.stringify(req.body);
-      // console.log("aks/addnode",data)
+      console.log("addNodeAKS : ", requestData);
+      var data = JSON.stringify(requestData);
 
       var request = require("request");
       var options = {
@@ -1240,7 +1244,6 @@ app.post("/nodes/add/aks", (req, res) => {
   );
 });
 
-
 app.post("/nodes/add/gke", (req, res) => {
   connection.query(
     `select * 
@@ -1260,15 +1263,13 @@ app.post("/nodes/add/gke", (req, res) => {
         projectId: result.rows[0].projectID,
         clientEmail: result.rows[0].clientEmail,
         privateKey: result.rows[0].privateKey,
-
         cluster : req.body.cluster,
         nodePool: req.body.nodePool,
         desiredCnt : req.body.desiredCnt,
       }
-
      
-      var data = JSON.stringify(req.body);
-      // console.log("gke/addnode",data)
+      // console.log("gke/addnode",requestData)
+      var data = JSON.stringify(requestData);
 
       var request = require("request");
       var options = {
@@ -1308,13 +1309,15 @@ app.post("/nodes/add/kvm", (req, res) => {
 
       requestData = {
         agentURL : result.rows[0].agentURL,
-        newvm: req.body.newVmName,
+        master : result.rows[0].mClusterName,
+        mpass : result.rows[0].mClusterPwd,
+        newvm: req.body.newvm,
         template : req.body.template,
-        wPass : req.body.newVmPassword,
-        cluster : req.body.selectedRow.name,
-        clusterMaster : result.rows[0].mClusterName,
-        mPass : result.rows[0].mClusterPwd,
+        wpass : req.body.newVmPassword,
+        cluster : req.body.cluster,
       }
+
+      // console.log(requestData);
 
       var data = JSON.stringify(requestData);
       var request = require("request");
@@ -1336,7 +1339,6 @@ app.post("/nodes/add/kvm", (req, res) => {
     }
   );
 });
-
 
 app.post("/nodes/delete/kvm", (req, res) => {
   connection.query(
@@ -1479,7 +1481,7 @@ app.post("/nodes/eks/stop", (req, res) => {
         node : req.body.node,
       }
 
-      console.log(requestData, result.rows[0])
+      console.log(requestData)
 
       // res.send(result.rows);
 
@@ -1493,6 +1495,7 @@ app.post("/nodes/eks/stop", (req, res) => {
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
+          console.log(body);
           res.send(body);
         } else {
           console.log("error", error);
@@ -1538,6 +1541,7 @@ app.post("/nodes/eks/change", (req, res) => {
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
+          console.log(body);
           res.send(body);
         } else {
           console.log("error", error);
@@ -1793,22 +1797,22 @@ app.post("/nodes/kvm/change", (req, res) => {
       }
 
       console.log(requestData)
-      // var data = JSON.stringify(requestData);
-      // var request = require("request");
-      // var options = {
-      //   uri: `${apiServer}/apis/changekvmnode`,
-      //   method: "POST",
-      //   body : data
-      // };
+      var data = JSON.stringify(requestData);
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/changekvmnode`,
+        method: "POST",
+        body : data
+      };
 
-      // request(options, function (error, response, body) {
-      //   if (!error && response.statusCode == 200) {
-      //     res.send(body);
-      //   } else {
-      //     console.log("error", error);
-      //     return error;
-      //   }
-      // });
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
       
     }
   );
@@ -1839,6 +1843,7 @@ app.get("/azure/aks-type", (req, res) => {
 
 app.get("/azure/pool/:cluster", (req, res) => {
   var cluster = req.params.cluster
+  console.log(req.params.cluster);
   connection.query(
     `select * 
      from tb_config_aks
@@ -1852,6 +1857,8 @@ app.get("/azure/pool/:cluster", (req, res) => {
         };
         return res.send(result_set);
       }
+
+      console.log(result.rows[0].clientId)
 
       requestData = {
         clientId : result.rows[0].clientId,
@@ -1871,9 +1878,10 @@ app.get("/azure/pool/:cluster", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var clusterInfo = {};
+          console.log(body)
           for (let value of JSON.parse(body)){
             // if(value.name == cluster){ //임시로 막음(일치하는 클러스터가 없음)
-            if(value.name == "azure-cluster-2"){ //임시로 하드코딩함
+            if(value.name == "aks-cluster-01"){ //임시로 하드코딩함
               clusterInfo = value;
             }
           }
@@ -1897,9 +1905,62 @@ app.get("/eks/clusters", (req, res) => {
 
 app.get("/eks/clusters/workers", (req, res) => {
   var clusterName = req.query.clustername;
-  let rawdata = fs.readFileSync("./json_data/eks_workers.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  console.log(req.query)
+  // let rawdata = fs.readFileSync("./json_data/eks_workers.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_eks
+     where cluster='${clusterName}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > EKS`,
+        };
+        console.log(result_set);
+        return res.send(result_set);
+      }
+
+      requestData = {
+        region : result.rows[0].region,
+        accessKey : result.rows[0].accessKey,
+        secretKey : result.rows[0].secretKey,
+      }
+
+      var data = JSON.stringify(requestData);
+
+      var request = require("request");
+      var options = {
+        // uri: `${apiServer}/apis/addeksnode`,
+        uri: `${apiServer}/apis/geteksclusterinfo`,
+        method: "POST",
+        body: data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          var result = JSON.parse(body)
+          result.map((item)=> {
+            if(item.name == clusterName){
+              res.send(item.nodegroups);
+            }
+          })
+
+          // res.send(body);
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
+
 });
 
 app.get("/gke/clusters", (req, res) => {
@@ -1909,9 +1970,58 @@ app.get("/gke/clusters", (req, res) => {
 });
 
 app.get("/gke/clusters/pools", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/gke_node_pools.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  var clusterName = req.query.clustername;
+  console.log(clusterName)
+  // let rawdata = fs.readFileSync("./json_data/gke_node_pools.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  connection.query(
+    `select * 
+     from tb_config_gke
+     where cluster='${clusterName}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the GKE Auth Informations.\n
+          Settings > Config > Public cloud Auth > GKE`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        projectId: result.rows[0].projectID,
+        clientEmail: result.rows[0].clientEmail,
+        privateKey: result.rows[0].privateKey,
+      }
+     
+      var data = JSON.stringify(requestData);
+      // console.log("gke/addnode",data)
+
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/getgkeclusters`,
+        method: "POST",
+        body: data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          var result = JSON.parse(body)
+          result.map((item)=> {
+            if(item.clusterName == clusterName){
+              res.send(item.nodePools);
+            }
+          })
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+      
+    }
+  );
 });
 
 app.get("/aks/clusters", (req, res) => {
@@ -1922,9 +2032,62 @@ app.get("/aks/clusters", (req, res) => {
 
 app.get("/aks/clusters/pools", (req, res) => {
   var clusterName = req.query.clustername;
-  let rawdata = fs.readFileSync("./json_data/aks_node_pools.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/aks_node_pools.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  connection.query(
+    // tb_auth_eks > seq,cluster,accessKey,secretKey
+    `select * 
+     from tb_config_aks
+     where cluster='${clusterName}';`,
+    (err, result) => {
+      if (result.rows.length == 0){
+        const result_set = {
+          error : true,
+          message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
+          Settings > Config > Public cloud Auth > AKS`,
+        };
+        return res.send(result_set);
+      }
+
+      requestData = {
+        clientId : result.rows[0].clientId,
+        clientSec : result.rows[0].clientSec,
+        tenantId : result.rows[0].tenantId,
+        subId : result.rows[0].subId
+      }
+
+      console.log("addNodeAKS : ", requestData);
+
+      var data = JSON.stringify(requestData);
+      // console.log("aks/addnode",data)
+
+      var request = require("request");
+      var options = {
+        uri: `${apiServer}/apis/aksgetallres`,
+        method: "POST",
+        body: data
+      };
+
+      request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          var result = JSON.parse(body)
+          result.map((item)=> {
+            if(item.name == clusterName){
+              res.send(item.agentpools);
+            }
+          })
+        } else {
+          console.log("error", error);
+          return error;
+        }
+      });
+
+    }
+  );
+
+
 });
 
 app.get("/kvm/clusters", (req, res) => {
@@ -2270,7 +2433,7 @@ app.post("/settings/config/pca/eks", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
   connection.query(
-    `insert into tb_config_eks (cluster,"accessKey","secretKey") values ('${req.body.cluster}','${req.body.accessKey}','${req.body.secretKey}');`,
+    `insert into tb_config_eks (cluster,"accessKey","secretKey","region") values ('${req.body.cluster}','${req.body.accessKey}','${req.body.secretKey}','${req.body.region}');`,
     (err, result) => {
       var result_set = {
         data: [],
@@ -2290,13 +2453,13 @@ app.post("/settings/config/pca/eks", (req, res) => {
   );
 });
 
-
 app.put("/settings/config/pca/eks", (req, res) => {
   connection.query(
     `update tb_config_eks set 
       "cluster" = '${req.body.cluster}',
       "accessKey" = '${req.body.accessKey}',
-      "secretKey" = '${req.body.secretKey}'
+      "secretKey" = '${req.body.secretKey}',
+      "region" = '${req.body.region}'
     where seq = ${req.body.seq};`,
     (err, result) => {
       if (err !== "null") {
@@ -2309,6 +2472,29 @@ app.put("/settings/config/pca/eks", (req, res) => {
         const result_set = {
           data: [],
           message: "Update was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
+
+app.delete("/settings/config/pca/eks", (req, res) => {
+  connection.query(
+    `delete from tb_config_eks 
+      where "seq" = '${req.body.seq}' and
+            "cluster" = '${req.body.cluster}'`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Delete was successful!!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Delete was faild, please check error : " + err,
         };
         res.send(result_set);
       }
@@ -2355,7 +2541,6 @@ app.post("/settings/config/pca/gke", (req, res) => {
   );
 });
 
-
 app.put("/settings/config/pca/gke", (req, res) => {
   connection.query(
     `update tb_config_gke set 
@@ -2383,7 +2568,28 @@ app.put("/settings/config/pca/gke", (req, res) => {
   );
 });
 
-
+app.delete("/settings/config/pca/gke", (req, res) => {
+  connection.query(
+    `delete from tb_config_gke 
+      where "seq" = '${req.body.seq}' and
+            "cluster" = '${req.body.cluster}'`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Delete was successful!!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Delete was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
 
 // tb_auth_aks > seq,cluster,clientId,clientSec,tenantId,subId
 app.get("/settings/config/pca/aks", (req, res) => {
@@ -2453,6 +2659,29 @@ app.put("/settings/config/pca/aks", (req, res) => {
   );
 });
 
+app.delete("/settings/config/pca/aks", (req, res) => {
+  console.log("ddd",req.body);
+  connection.query(
+    `delete from tb_config_aks
+      where "seq" = '${req.body.seq}' and
+            "cluster" = '${req.body.cluster}'`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Delete was successful!!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Delete was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
 
 app.get("/settings/config/pca/kvm", (req, res) => {
   connection.query(
@@ -2489,7 +2718,6 @@ app.post("/settings/config/pca/kvm", (req, res) => {
   );
 });
 
-
 app.put("/settings/config/pca/kvm", (req, res) => {
   connection.query(
     `update tb_config_kvm set 
@@ -2516,7 +2744,28 @@ app.put("/settings/config/pca/kvm", (req, res) => {
   );
 });
 
-
+app.delete("/settings/config/pca/kvm", (req, res) => {
+  connection.query(
+    `delete from tb_config_kvm 
+      where "seq" = '${req.body.seq}' and
+            "cluster" = '${req.body.cluster}'`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Delete was successful!!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Delete was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

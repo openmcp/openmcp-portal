@@ -176,9 +176,9 @@ class PcAddProjectPolicy extends Component {
     });
 
     
-    // loging Add Node
+    // loging Add Project Policy
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, "log-ND-CR01");
+    utilLog.fn_insertPLogs(userId, "log-PO-CR01");
 
     //close modal popup
     this.setState({ open: false });

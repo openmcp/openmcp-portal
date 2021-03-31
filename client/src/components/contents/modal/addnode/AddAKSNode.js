@@ -137,16 +137,15 @@ class AddAKSNode extends Component {
     this.setState({openProgress:true});
 
     if(result) {
+      var selectedRowId = this.state.expandedRowIds;
+
       //Add Node excution
       const url = `/nodes/add/aks`;
       const data = {
-        // clientId: this.state.clientId,
-        // clientSec: this.state.clientSec,
-        // tenantId: this.state.tenantId,
-        // subId: this.state.subId,
         desiredCnt:this.state.desiredNumber,
-        cluster:this.state.selectedRow.cluster,
-        nodePool:this.state.selectedRow.pool
+        // cluster:this.state.selectedRow.cluster,
+        cluster:this.state.clusters[selectedRowId].name,
+        nodePool:this.state.selectedRow.name
       };
 
       // clientID = "1edadbd7-d466-43b1-ad73-15a2ee9080ff"
@@ -155,17 +154,21 @@ class AddAKSNode extends Component {
       // subID := "dc80d3cf-4e1a-4b9a-8785-65c4b739e8d2"
 
       axios.post(url, data)
-          .then((res) => {
-            // console.log()
-          })
-          .catch((err) => {
-              // console.log()
-          });
-      // const userId = localStorage.getItem("userName");
-      // utilLog.fn_insertPLogs(userId, "log-ND-CR01");
-
-      this.setState({openProgress:false})
-      this.props.handleClose()
+        .then((res) => {
+          if(res.data.error){
+            alert(res.data.message);
+          } else {
+            this.props.handleClose();
+            //write log
+            const userId = localStorage.getItem("userName");
+            utilLog.fn_insertPLogs(userId, "log-ND-CR02");
+          }
+          this.setState({openProgress:false});
+        })
+        .catch((err) => {
+          this.setState({openProgress:false})
+          this.props.handleClose()
+        });
     } else {
       this.setState({openProgress:false})
       console.log("cancel")
@@ -199,7 +202,7 @@ class AddAKSNode extends Component {
 
   onSelectionChange = (selection) => {
     this.setState({
-      desiredNumber: selection.desired.toString(),
+      desiredNumber: selection.nodecount == undefined ? "0" : selection.nodecount.toString(),
       selectedRow: selection
     })
   };
@@ -211,7 +214,7 @@ class AddAKSNode extends Component {
 
   RowDetail = ({ row }) => (
     <div>
-      <AKSNodePools rowData={row.name} onSelectionChange={this.onSelectionChange}/>
+      <AKSNodePools cluster={row.name} onSelectionChange={this.onSelectionChange}/>
     </div>
   );
 
@@ -231,64 +234,6 @@ class AddAKSNode extends Component {
           confirmTargetKeyname = {this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
           confirmOpen={this.state.confirmOpen}/>
-        {/* <section className="md-content">
-          <div style={{display:"flex"}}>
-            <div className="props" style={{width:"50%", marginRight:"10px"}}>
-              <p>Client ID</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                placeholder="client Id"
-                variant="outlined"
-                value = {this.state.clientId}
-                fullWidth	={true}
-                name="clientId"
-                onChange = {this.onChange}
-              />
-            </div>
-            <div className="props" style={{width:"50%"}}>
-              <p>Client SEC</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                placeholder="client sec"
-                variant="outlined"
-                value = {this.state.clientSec}
-                fullWidth	={true}
-                name="clientSec"
-                onChange = {this.onChange}
-              />
-            </div>
-          </div>
-          <div style={{display:"flex"}}>
-            <div className="props" style={{width:"50%", marginRight:"10px"}}>
-              <p>Tenant ID</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                placeholder="tenant Id"
-                variant="outlined"
-                value = {this.state.tenantID}
-                fullWidth	={true}
-                name="tenantId"
-                onChange = {this.onChange}
-              />
-            </div>
-            <div className="props" style={{width:"50%"}}>
-              <p>Sub ID</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                placeholder="sub Id"
-                variant="outlined"
-                value = {this.state.subID}
-                fullWidth	={true}
-                name="subId"
-                onChange = {this.onChange}
-              />
-            </div>
-          </div>
-        </section> */}
         <section className="md-content">
           <div className="outer-table">
             <p>Clusters</p>
@@ -372,18 +317,18 @@ class AKSNodePools extends Component {
     this.state = {
       rows: "",
       columns: [
-        { name: "pool", title: "NodePool" },
-        { name: "cluster", title: "Cluster" },
+        { name: "name", title: "AgentPool" },
+        { name: "vmssname", title: "VmssName" },
         // { name: "min", title: "Min" },
         // { name: "max", title: "Max" },
-        { name: "desired", title: "Desired" },
+        { name: "nodecount", title: "Desired" },
       ],
       defaultColumnWidths: [
-        { columnName: "pool", width: 150 },
-        { columnName: "cluster", width: 130 },
+        { columnName: "name", width: 130 },
+        { columnName: "vmssname", width: 250 },
         // { columnName: "min", width: 100 },
         // { columnName: "max", width: 100 },
-        { columnName: "desired", width: 130 },
+        { columnName: "nodecount", width: 130 },
       ],
 
       selection: [],
@@ -396,12 +341,12 @@ class AKSNodePools extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        var result = [];
-        console.log(res);
-        res.map(item=>
-          item.cluster == this.props.rowData ? result.push(item) : ""
-        )
-        this.setState({ rows: result });
+        // var result = [];
+        // console.log(res);
+        // res.map(item=>
+        //   item.cluster == this.props.rowData ? result.push(item) : ""
+        // )
+        this.setState({ rows: res });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -415,7 +360,7 @@ class AKSNodePools extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch(`/aks/clusters/pools?clustername=${this.props.rowData.name}`);
+    const response = await fetch(`/aks/clusters/pools?clustername=${this.props.cluster}`);
     const body = await response.json();
     return body;
   };

@@ -25,6 +25,8 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
 import EditEKSAuth from "../../../modal/public-cloud-auth/EditEKSAuth.js";
+import axios from 'axios';
+import Confirm2 from './../../../../modules/Confirm2';
 
 class ConfigEKS extends Component {
   constructor(props) {
@@ -37,12 +39,14 @@ class ConfigEKS extends Component {
         { name: "cluster", title: "Cluster" },
         { name: "accessKey", title: "Access Key" },
         { name: "secretKey", title: "Secret Key" },
+        { name: "region", title: "Region" },
       ],
       defaultColumnWidths: [
         { columnName: "seq", width: 100 },
         { columnName: "cluster", width: 200 },
         { columnName: "accessKey", width: 300 },
         { columnName: "secretKey", width: 400 },
+        { columnName: "region", width: 400 },
       ],
       currentPage: 0,
       setCurrentPage: 0,
@@ -57,6 +61,19 @@ class ConfigEKS extends Component {
       selection: [],
       selectedRow: "",
       popTitle:"",
+
+      confirmOpen: false,
+      confirmInfo : {
+        title :"Delete EKS PCA Info",
+        context :"Are you sure you want to delete EKS PCA config?",
+        button : {
+          open : "",
+          yes : "CONFIRM",
+          no : "CANCEL",
+        }
+      },
+      confrimTarget : "",
+      confirmTargetKeyname:""
     };
   }
 
@@ -119,9 +136,45 @@ class ConfigEKS extends Component {
         cluster: this.state.selectedRow.cluster,
         accessKey: this.state.selectedRow.accessKey,
         secretKey: this.state.selectedRow.secretKey,
+        region: this.state.selectedRow.region,
       }
     });
   };
+
+  handleClickDelete = () => {
+    if (Object.keys(this.state.selectedRow).length === 0) {
+      alert("Please select a authentication data row");
+      this.setState({ open: false });
+      return;
+    } else {
+      this.setState({
+        confirmOpen: true,
+      })
+    }
+  }
+
+  //callback
+  confirmed = (result) => {
+    this.setState({confirmOpen:false})
+
+    if(result) {
+      const data = {
+        seq : this.state.selectedRow.seq,
+        cluster : this.state.selectedRow.cluster
+      };
+  
+      const url = `/settings/config/pca/eks`;
+      axios.delete(url, {data:data})
+      .then((res) => {
+        this.callBackClosed();
+      })
+      .catch((err) => {
+        console.log("Error : ",err);
+      });
+    } else {
+      this.setState({confirmOpen:false})
+    }
+  }
 
   callBackClosed = () => {
     this.setState({
@@ -164,6 +217,13 @@ class ConfigEKS extends Component {
 
     return (
       <div>
+        <Confirm2
+          confirmInfo={this.state.confirmInfo} 
+          confrimTarget ={this.state.confrimTarget} 
+          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmed={this.confirmed}
+          confirmOpen={this.state.confirmOpen}/>
+          
         <EditEKSAuth 
           open={this.state.open}
           new={this.state.new}
@@ -207,10 +267,22 @@ class ConfigEKS extends Component {
                       onClick={this.handleClickEdit}
                       style={{
                         width: "120px",
+                        marginRight:"10px",
                         textTransform: "capitalize",
                       }}
                     >
                       Edit
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={this.handleClickDelete}
+                      style={{
+                        width: "120px",
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      Delete
                     </Button>
                   </div>
                 </div>

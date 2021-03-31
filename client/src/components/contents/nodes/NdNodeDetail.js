@@ -365,14 +365,20 @@ class KubernetesStatus extends Component {
         if(provider == "eks"){
           //eks
           data = {
-            region: this.props.propsRow.region,
-            node: this.props.propsRow.name,
-            cluster : this.props.propsRow.cluster
+            region: "ap-northeast-2",
+            node: "ip-172-31-0-123.ap-northeast-2.compute.internal",
+            cluster : "eks-cluster1"
+
+            // region: this.props.propsRow.region,
+            // node: this.props.propsRow.name,
+            // cluster : this.props.propsRow.cluster
           };
         } else if (provider == "aks"){
           data = {
-            cluster : this.props.propsRow.cluster,
-            node : this.props.propsRow.name,
+            // cluster : this.props.propsRow.cluster,
+            // node : this.props.propsRow.name,
+            cluster : "aks-cluster-01",
+            node : "aks-np01-47695231-vmss_4",
           };
         } else if (provider == "kvm"){
           data = {

@@ -37,6 +37,7 @@ class EditEKSAuth extends Component {
       cluster : "",
       accessKey : "",
       secretKey : "",
+      region : "",
     };
   }
 
@@ -52,7 +53,8 @@ class EditEKSAuth extends Component {
           seq : this.props.data.seq,
           cluster : this.props.data.cluster,
           accessKey : this.props.data.accessKey,
-          secretKey : this.props.data.secretKey
+          secretKey : this.props.data.secretKey,
+          region : this.props.data.region
         });
       } else {
         this.setState({
@@ -61,6 +63,7 @@ class EditEKSAuth extends Component {
           cluster : "",
           accessKey : "",
           secretKey : "",
+          region : "",
         });
       }
     }
@@ -86,7 +89,10 @@ class EditEKSAuth extends Component {
     } else if (this.state.accessKey == ""){
       alert("Please enter Access Key");
       return;
-    } 
+    } else if (this.state.region == ""){
+      alert("Please enter Region");
+      return;
+    }
 
     //post 호출
     const url = `/settings/config/pca/eks`;
@@ -96,6 +102,7 @@ class EditEKSAuth extends Component {
         cluster : this.state.cluster,
         accessKey : this.state.accessKey,
         secretKey : this.state.secretKey,
+        region : this.state.region,
       };
 
       // cluster := cluster1
@@ -116,6 +123,7 @@ class EditEKSAuth extends Component {
         cluster : this.state.cluster,
         accessKey : this.state.accessKey,
         secretKey : this.state.secretKey,
+        region : this.state.region,
       };
 
       axios.put(url, data)
@@ -216,6 +224,19 @@ class EditEKSAuth extends Component {
                     value={this.state.accessKey}
                     fullWidth={true}
                     name="accessKey"
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div className="props">
+                  <p>Region</p>
+                  <TextField
+                    id="outlined-multiline-static"
+                    rows={1}
+                    placeholder="region"
+                    variant="outlined"
+                    value={this.state.region}
+                    fullWidth={true}
+                    name="region"
                     onChange={this.onChange}
                   />
                 </div>
