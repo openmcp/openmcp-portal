@@ -14,8 +14,8 @@ app.get("/api/hello", (req, res) => {
   res.send({ messge: "Hello Express!" });
 });
 
-const apiServer = "http://192.168.0.51:4885"; //로컬 API 서버
-// const apiServer = "http://192.168.0.48:4885"; //로컬 API 서버
+// const apiServer = "http://192.168.0.51:4885"; //로컬 API 서버
+const apiServer = "http://192.168.0.48:4885"; //로컬 API 서버
 // const apiServer = "http://192.168.0.4:4885"; //kvm API 서버
 // const apiServer = "http://10.0.3.40:4885";
 
@@ -633,7 +633,7 @@ app.get("/projects/:project/resources/services/:service", (req, res) => {
   // res.send(overview);
 
   // console.log(`${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`)
-
+  console.log("aldfjalskdjflskdfj");
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`,
@@ -1149,7 +1149,7 @@ app.post("/nodes/add/eks", (req, res) => {
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
@@ -1201,7 +1201,7 @@ app.post("/nodes/add/aks", (req, res) => {
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
@@ -1250,7 +1250,7 @@ app.post("/nodes/add/gke", (req, res) => {
      from tb_config_gke
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the GKE Auth Informations.\n
@@ -1298,7 +1298,7 @@ app.post("/nodes/add/kvm", (req, res) => {
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
@@ -1346,7 +1346,7 @@ app.post("/nodes/delete/kvm", (req, res) => {
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
@@ -1358,6 +1358,8 @@ app.post("/nodes/delete/kvm", (req, res) => {
       requestData = {
         agentURL : result.rows[0].agentURL,
         targetvm : req.body.node,
+        mastervm : result.rows[0].mClusterName,
+        mastervmpwd : result.rows[0].mClusterPwd
       }
 
       // console.log(requestData, result.rows[0])
@@ -1417,7 +1419,7 @@ app.post("/nodes/eks/start", (req, res) => {
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
@@ -1465,7 +1467,7 @@ app.post("/nodes/eks/stop", (req, res) => {
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
@@ -1514,7 +1516,7 @@ app.post("/nodes/eks/change", (req, res) => {
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
@@ -1559,7 +1561,7 @@ app.post("/nodes/aks/start", (req, res) => {
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
@@ -1606,7 +1608,7 @@ app.post("/nodes/aks/stop", (req, res) => {
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
@@ -1651,7 +1653,7 @@ app.post("/clusters/aks/change", (req, res) => {
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
@@ -1698,7 +1700,7 @@ app.post("/nodes/kvm/stop", (req, res) => {
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
@@ -1739,7 +1741,7 @@ app.post("/nodes/kvm/start", (req, res) => {
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
@@ -1780,7 +1782,7 @@ app.post("/nodes/kvm/change", (req, res) => {
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
@@ -1849,7 +1851,7 @@ app.get("/azure/pool/:cluster", (req, res) => {
      from tb_config_aks
      where cluster='${req.params.cluster}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
@@ -1881,7 +1883,7 @@ app.get("/azure/pool/:cluster", (req, res) => {
           console.log(body)
           for (let value of JSON.parse(body)){
             // if(value.name == cluster){ //임시로 막음(일치하는 클러스터가 없음)
-            if(value.name == "aks-cluster-01"){ //임시로 하드코딩함
+            if(value.name === "aks-cluster-01"){ //임시로 하드코딩함
               clusterInfo = value;
             }
           }
@@ -1916,7 +1918,7 @@ app.get("/eks/clusters/workers", (req, res) => {
      from tb_config_eks
      where cluster='${clusterName}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
@@ -1981,7 +1983,7 @@ app.get("/gke/clusters/pools", (req, res) => {
      from tb_config_gke
      where cluster='${clusterName}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the GKE Auth Informations.\n
@@ -2042,7 +2044,7 @@ app.get("/aks/clusters/pools", (req, res) => {
      from tb_config_aks
      where cluster='${clusterName}';`,
     (err, result) => {
-      if (result.rows.length == 0){
+      if (result.rows.length  === 0){
         const result_set = {
           error : true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n

@@ -12,8 +12,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import axios from "axios";
-import * as utilLog from "../../../util/UtLogs.js";
-import Confirm2 from "../../../modules/Confirm2";
+// import * as utilLog from "../../../util/UtLogs.js";
+// import Confirm2 from "../../../modules/Confirm2";
 
 const styles = (theme) => ({
   root: {
@@ -47,7 +47,7 @@ class EditAKSAuth extends Component {
   
   componentDidUpdate(prevProps, prevState) {
     if (this.props.open !== prevProps.open) {
-      if(this.props.new == false){
+      if(this.props.new === false){
         this.setState({
           ...this.state,
           open: this.props.open,
@@ -83,19 +83,19 @@ class EditAKSAuth extends Component {
   };
 
   handleSave = (e) => {
-    if (this.state.cluster == ""){
+    if (this.state.cluster === ""){
       alert("Please enter Cluster Name");
       return;
-    } else if (this.state.clientId == ""){
+    } else if (this.state.clientId === ""){
       alert("Please enter Client ID");
       return;
-    } else if (this.state.clientSec == ""){
+    } else if (this.state.clientSec === ""){
       alert("Please enter Client Sec");
       return;
-    } else if (this.state.tenantId == ""){
+    } else if (this.state.tenantId === ""){
       alert("Please enter Tenant ID");
       return;
-    } else if (this.state.subId == ""){
+    } else if (this.state.subId === ""){
       alert("Please enter Sub ID");
       return;
     } 

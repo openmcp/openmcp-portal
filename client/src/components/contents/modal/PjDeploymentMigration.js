@@ -188,44 +188,44 @@ class PjDeploymentMigration extends Component {
       return;
     
     } 
-    let YAML =`apiVersion: openmcp.k8s.io/v1alpha1
-    kind: Migration
-    metadata:
-      name: migrations8
-    spec:
-      MigrationServiceSource:
-      - SourceCluster: cluster1
-        TargetCluster: cluster2
-        NameSpace: testmig
-        ServiceName: testim
-        MigrationSource:
-        - ResourceName: testim-dp
-          ResourceType: Deployment
-        - ResourceName: testim-sv
-          ResourceType: Service
-        - ResourceName: testim-pv
-          ResourceType: PersistentVolume
-        - ResourceName: testim-pvc
-          ResourceType: PersistentVolumeClaim`;
-    let YAML2 = `apiVersion: openmcp.k8s.io/v1alpha1
-    kind: Migration
-    metadata:
-      name: migrations8
-    spec:
-      MigrationServiceSource:
-      - SourceCluster: ${this.state.dpCluster}
-        TargetCluster: ${this.state.selectedRow.name}
-        NameSpace: ${this.state.dpName}
-        ServiceName: testim
-        MigrationSource:
-        - ResourceName: testim-dp
-          ResourceType: Deployment
-        - ResourceName: testim-sv
-          ResourceType: Service
-        - ResourceName: testim-pv
-          ResourceType: PersistentVolume
-        - ResourceName: testim-pvc
-          ResourceType: PersistentVolumeClaim`;
+    // let YAML =`apiVersion: openmcp.k8s.io/v1alpha1
+    // kind: Migration
+    // metadata:
+    //   name: migrations8
+    // spec:
+    //   MigrationServiceSource:
+    //   - SourceCluster: cluster1
+    //     TargetCluster: cluster2
+    //     NameSpace: testmig
+    //     ServiceName: testim
+    //     MigrationSource:
+    //     - ResourceName: testim-dp
+    //       ResourceType: Deployment
+    //     - ResourceName: testim-sv
+    //       ResourceType: Service
+    //     - ResourceName: testim-pv
+    //       ResourceType: PersistentVolume
+    //     - ResourceName: testim-pvc
+    //       ResourceType: PersistentVolumeClaim`;
+    // let YAML2 = `apiVersion: openmcp.k8s.io/v1alpha1
+    // kind: Migration
+    // metadata:
+    //   name: migrations8
+    // spec:
+    //   MigrationServiceSource:
+    //   - SourceCluster: ${this.state.dpCluster}
+    //     TargetCluster: ${this.state.selectedRow.name}
+    //     NameSpace: ${this.state.dpName}
+    //     ServiceName: testim
+    //     MigrationSource:
+    //     - ResourceName: testim-dp
+    //       ResourceType: Deployment
+    //     - ResourceName: testim-sv
+    //       ResourceType: Service
+    //     - ResourceName: testim-pv
+    //       ResourceType: PersistentVolume
+    //     - ResourceName: testim-pvc
+    //       ResourceType: PersistentVolumeClaim`;
           
     const url = `/deployments/migration`;
 //     const data = {

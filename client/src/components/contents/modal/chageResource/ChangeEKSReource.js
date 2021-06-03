@@ -21,18 +21,18 @@ import axios from 'axios';
 import ProgressTemp from './../../../modules/ProgressTemp';
 import Confirm2 from './../../../modules/Confirm2';
 
-const styles = (theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
-});
+// const styles = (theme) => ({
+//   root: {
+//     margin: 0,
+//     padding: theme.spacing(2),
+//   },
+//   closeButton: {
+//     position: "absolute",
+//     right: theme.spacing(1),
+//     top: theme.spacing(1),
+//     color: theme.palette.grey[500],
+//   },
+// });
 
 class ChangeEKSReource extends Component {
   constructor(props) {
@@ -113,7 +113,7 @@ class ChangeEKSReource extends Component {
   };
 
   handleSaveClick = (e) => {
-    if (Object.keys(this.state.selectedRow).length === 0) {
+    if (Object.keys(this.state.selectedRow).length  === 0) {
       alert("Please select Instance Type");
       return;
     } else {

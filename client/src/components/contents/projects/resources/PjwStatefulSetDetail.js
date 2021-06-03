@@ -13,7 +13,7 @@ import {
   SortingState,
   IntegratedSorting,
 } from "@devexpress/dx-react-grid";
-import LineReChart from "./../../../modules/LineReChart";
+// import LineReChart from "./../../../modules/LineReChart";
 import {
   Grid,
   Table,
@@ -51,7 +51,7 @@ class PjwStatefulSetDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -84,7 +84,7 @@ class PjwStatefulSetDetail extends Component {
     // this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -241,7 +241,7 @@ class ReplicaStatus extends React.Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -585,7 +585,8 @@ class Ports extends Component {
   render() {
 
     const Cell = (props) => {
-      const { column, row } = props;
+      // const { column, row } = props;
+
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
@@ -594,7 +595,7 @@ class Ports extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (
@@ -680,45 +681,45 @@ class Ports extends Component {
   }
 }
 
-class PhysicalResources extends Component {
-  render() {
-    const network_title = ["in", "out"];
-    return (
-      <div className="content-box line-chart">
-        <div className="cb-header">Physical Resources</div>
-        <div className="cb-body">
-          <div className="cb-body-content">
-            <LineReChart
-              rowData={this.props.rowData.cpu}
-              unit="m"
-              name="cpu"
-              title="CPU"
-              cardinal={false}
-            ></LineReChart>
-          </div>
-          <div className="cb-body-content">
-            <LineReChart
-              rowData={this.props.rowData.memory}
-              unit="mib"
-              name="memory"
-              title="Memory"
-              cardinal={false}
-            ></LineReChart>
-          </div>
-          <div className="cb-body-content">
-            <LineReChart
-              rowData={this.props.rowData.network}
-              unit="Bps"
-              name={network_title}
-              title="Network"
-              cardinal={true}
-            ></LineReChart>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+// class PhysicalResources extends Component {
+//   render() {
+//     const network_title = ["in", "out"];
+//     return (
+//       <div className="content-box line-chart">
+//         <div className="cb-header">Physical Resources</div>
+//         <div className="cb-body">
+//           <div className="cb-body-content">
+//             <LineReChart
+//               rowData={this.props.rowData.cpu}
+//               unit="m"
+//               name="cpu"
+//               title="CPU"
+//               cardinal={false}
+//             ></LineReChart>
+//           </div>
+//           <div className="cb-body-content">
+//             <LineReChart
+//               rowData={this.props.rowData.memory}
+//               unit="mib"
+//               name="memory"
+//               title="Memory"
+//               cardinal={false}
+//             ></LineReChart>
+//           </div>
+//           <div className="cb-body-content">
+//             <LineReChart
+//               rowData={this.props.rowData.network}
+//               unit="Bps"
+//               name={network_title}
+//               title="Network"
+//               cardinal={true}
+//             ></LineReChart>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 class Events extends Component {
   constructor(props) {

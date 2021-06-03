@@ -1,30 +1,30 @@
 import React, { Component } from "react";
+// import {
+//   PagingState,
+//   SortingState,
+//   SelectionState,
+//   IntegratedFiltering,
+//   IntegratedPaging,
+//   IntegratedSorting,
+//   IntegratedSelection,
+// } from "@devexpress/dx-react-grid";
 import {
-  PagingState,
-  SortingState,
-  SelectionState,
-  IntegratedFiltering,
-  IntegratedPaging,
-  IntegratedSorting,
-  IntegratedSelection,
-} from "@devexpress/dx-react-grid";
-import {
-  Grid,
+  // Grid,
   Table,
-  TableColumnResizing,
-  TableHeaderRow,
-  PagingPanel,
-  TableSelection,
+  // TableColumnResizing,
+  // TableHeaderRow,
+  // PagingPanel,
+  // TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
-import Paper from "@material-ui/core/Paper";
+// import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import ProgressTemp from './../../../modules/ProgressTemp';
 import Confirm2 from './../../../modules/Confirm2';
-import SelectBox from "../../../modules/SelectBox";
-import InputLabel from '@material-ui/core/InputLabel';
+// import SelectBox from "../../../modules/SelectBox";
+// import InputLabel from '@material-ui/core/InputLabel';
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+// import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 // const styles = (theme) => ({
 //   root: {
@@ -147,7 +147,7 @@ class ChangeKVMReource extends Component {
   };
 
   handleSaveClick = (e) => {
-    // if (Object.keys(this.state.selectedRow).length === 0) {
+    // if (Object.keys(this.state.selectedRow).length  === 0) {
     //   alert("Please select Instance Type");
     //   return;
     // } else {

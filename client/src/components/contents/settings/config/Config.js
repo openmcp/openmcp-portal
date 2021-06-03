@@ -76,11 +76,7 @@ class Config extends Component {
   };
 
   componentWillMount() {
-     if(this.props.match.url.indexOf("project") > 0 ){
-       this.setState({ value: 1 });
-     } else {
-      this.setState({ value: 0 });
-     }
+    this.props.menuData("none");
   }
 
   render() {

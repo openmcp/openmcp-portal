@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink, Link, Route, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
@@ -8,7 +8,7 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
-import { NavigateNext } from '@material-ui/icons';
+// import { NavigateNext } from '@material-ui/icons';
 import ConfigEKS from './ConfigEKS';
 import ConfigGKE from './ConfigGKE';
 import ConfigAKS from './ConfigAKS';
@@ -82,11 +82,7 @@ class PublicCloud extends Component {
   };
 
   componentWillMount() {
-     if(this.props.match.url.indexOf("project") > 0 ){
-       this.setState({ value: 1 });
-     } else {
-      this.setState({ value: 0 });
-     }
+
   }
 
   render() {

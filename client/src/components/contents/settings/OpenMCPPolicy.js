@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -23,9 +23,9 @@ import {
   PagingPanel,
   TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
-import { NavigateNext} from '@material-ui/icons';
+// import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
-import AddMembers from "./AddMembers";
+// import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
 import PcSetOMCPPolicy from '../modal/PcSetOMCPPolicy';
 
@@ -81,7 +81,7 @@ class OpenMCPPolicy extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -102,7 +102,7 @@ class OpenMCPPolicy extends Component {
     })
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });

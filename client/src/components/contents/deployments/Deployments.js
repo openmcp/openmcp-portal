@@ -27,7 +27,7 @@ import * as utilLog from "./../../util/UtLogs.js";
 import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
 import { NavigateNext} from '@material-ui/icons';
 import axios from 'axios';
-import ProgressTemp from './../../modules/ProgressTemp';
+// import ProgressTemp from './../../modules/ProgressTemp';
 import SnapShotControl from './../modal/SnapShotControl';
 
 
@@ -110,7 +110,7 @@ spec:
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });

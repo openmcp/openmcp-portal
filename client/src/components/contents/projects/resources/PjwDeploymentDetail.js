@@ -13,7 +13,7 @@ import {
   SortingState,
   IntegratedSorting,
 } from "@devexpress/dx-react-grid";
-import LineReChart from "./../../../modules/LineReChart";
+// import LineReChart from "./../../../modules/LineReChart";
 import {
   Grid,
   Table,
@@ -24,6 +24,7 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../../util/UtLogs.js';
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 
 // import { withStyles, makeStyles } from "@material-ui/core/styles";
 // import clsx from "clsx";
@@ -51,7 +52,7 @@ class PjwDeploymentDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -84,7 +85,7 @@ class PjwDeploymentDetail extends Component {
     // this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -241,7 +242,7 @@ class ReplicaStatus extends React.Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -397,7 +398,7 @@ class Pods extends Component {
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 330 },
-        { columnName: "status", width: 100 },
+        { columnName: "status", width: 120 },
         { columnName: "cluster", width: 100 },
         { columnName: "project", width: 130 },
         { columnName: "pod_ip", width: 120 },
@@ -457,6 +458,104 @@ class Pods extends Component {
   // };
 
   render() {
+
+    // 셀 데이터 스타일 변경
+    const HighlightedCell = ({ value, style, row, ...restProps }) => (
+      <Table.Cell
+        {...restProps}
+        style={{
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // cursor: "pointer",
+          ...style,
+        }}>
+        <span
+          style={{
+            color:
+            value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "#b5b5b5" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+          value === "Running" ? "rgba(85,188,138,.1)"
+              : value === "Succeeded" ? "rgba(85,188,138,.1)"
+                : value === "Failed" ? "rgb(152 13 13 / 10%)"
+                  : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : value === "Pending" ? "rgb(109 31 7 / 10%)" : "white",
+          boxShadow: 
+          value === "Running" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+              : value === "Succeeded" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                : value === "Failed" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                  : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : value === "Pending" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
+        <span
+          style={{
+            color:
+              value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "#b5b5b5" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
+          }}>
+          {value}
+        </span>
+      </Table.Cell>
+    );
+
+     //셀
+    const Cell = (props) => {
+      const { column } = props;
+      // console.log("cell : ", props);
+      // const values = props.value.split("|");
+      // console.log("values", props.value);
+      
+      // const values = props.value.replace("|","1");
+      // console.log("values,values", values)
+
+      const fnEnterCheck = () => {
+        if(props.value === undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
+      }
+
+
+      if (column.name === "status") {
+        return <HighlightedCell {...props} />;
+      } 
+      // else if (column.name === "name") {
+      //   return (
+      //     <Table.Cell
+      //       {...props}
+      //       style={{ cursor: "pointer" }}
+      //     ><Link to={{
+      //       pathname: `/projects/${apiParams}/resources/pods/${props.value}`,
+      //       search:`cluster=${row.cluster}&project=${row.project}`,
+      //       state: {
+      //         data : row
+      //       }
+      //     }}>{fnEnterCheck()}</Link></Table.Cell>
+      //   );
+      // } 
+      return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
+    };
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -502,7 +601,7 @@ class Pods extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
-                  <Table rowComponent={Row} />
+                  <Table cellComponent={Cell} rowComponent={Row} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
                   />
@@ -651,45 +750,45 @@ class Ports extends Component {
   }
 }
 
-class PhysicalResources extends Component {
-  render() {
-    const network_title = ["in", "out"];
-    return (
-      <div className="content-box line-chart">
-        <div className="cb-header">Physical Resources</div>
-        <div className="cb-body">
-          <div className="cb-body-content">
-            <LineReChart
-              rowData={this.props.rowData.cpu}
-              unit="m"
-              name="cpu"
-              title="CPU"
-              cardinal={false}
-            ></LineReChart>
-          </div>
-          <div className="cb-body-content">
-            <LineReChart
-              rowData={this.props.rowData.memory}
-              unit="mib"
-              name="memory"
-              title="Memory"
-              cardinal={false}
-            ></LineReChart>
-          </div>
-          <div className="cb-body-content">
-            <LineReChart
-              rowData={this.props.rowData.network}
-              unit="Bps"
-              name={network_title}
-              title="Network"
-              cardinal={true}
-            ></LineReChart>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+// class PhysicalResources extends Component {
+//   render() {
+//     const network_title = ["in", "out"];
+//     return (
+//       <div className="content-box line-chart">
+//         <div className="cb-header">Physical Resources</div>
+//         <div className="cb-body">
+//           <div className="cb-body-content">
+//             <LineReChart
+//               rowData={this.props.rowData.cpu}
+//               unit="m"
+//               name="cpu"
+//               title="CPU"
+//               cardinal={false}
+//             ></LineReChart>
+//           </div>
+//           <div className="cb-body-content">
+//             <LineReChart
+//               rowData={this.props.rowData.memory}
+//               unit="mib"
+//               name="memory"
+//               title="Memory"
+//               cardinal={false}
+//             ></LineReChart>
+//           </div>
+//           <div className="cb-body-content">
+//             <LineReChart
+//               rowData={this.props.rowData.network}
+//               unit="Bps"
+//               name={network_title}
+//               title="Network"
+//               cardinal={true}
+//             ></LineReChart>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 class Events extends Component {
   constructor(props) {

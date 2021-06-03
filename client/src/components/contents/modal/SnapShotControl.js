@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 // import SelectBox from "../../modules/SelectBox";
-import { Link } from "react-router-dom";
-import * as utilLog from "../../util/UtLogs.js";
+// import { Link } from "react-router-dom";
+// import * as utilLog from "../../util/UtLogs.js";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
   Button,
@@ -26,14 +26,14 @@ import {
 import {
   Grid,
   Table,
-  TableColumnResizing,
+  // TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
   TableSelection,
-  TableFixedColumns,
+  // TableFixedColumns,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from "axios";
+// import axios from "axios";
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -116,7 +116,7 @@ class SnapShotControl extends Component {
   componentWillMount() {
     // this.callApi()
     //   .then((res) => {
-    //     if(res === null) {
+    //     if(res == null) {
     //       this.setState({ rows: [] });
     //     } else {
     //       this.setState({ rows: res });
@@ -134,7 +134,7 @@ class SnapShotControl extends Component {
 
   //snapshot open 버튼
   handleClickOpen = () => {
-    if (Object.keys(this.props.rowData).length === 0) {
+    if (Object.keys(this.props.rowData).length  === 0) {
       alert("Please select deployement");
       this.setState({ open: false });
       return;
@@ -159,7 +159,7 @@ class SnapShotControl extends Component {
   };
 
   handleSave = (e) => {
-    if (Object.keys(this.state.selectedRow).length === 0) {
+    if (Object.keys(this.state.selectedRow).length  === 0) {
       alert("Please select snapshot");
       return;
     }

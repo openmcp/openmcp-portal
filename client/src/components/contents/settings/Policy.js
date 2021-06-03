@@ -83,6 +83,7 @@ class Policy extends Component {
      } else {
       this.setState({ value: 0 });
      }
+     this.props.menuData("none");
   }
 
   render() {

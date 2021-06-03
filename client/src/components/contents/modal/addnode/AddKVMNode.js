@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import CircularProgress from "@material-ui/core/CircularProgress";
+// import CircularProgress from "@material-ui/core/CircularProgress";
 import { TextField } from "@material-ui/core";
 import * as utilLog from "../../../util/UtLogs.js";
 import {
@@ -24,7 +24,7 @@ import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import ProgressTemp from './../../../modules/ProgressTemp';
 import Confirm2 from './../../../modules/Confirm2';
-import { AsyncStorage } from 'AsyncStorage';
+// import { AsyncStorage } from 'AsyncStorage';
 
 class AddKVMNode extends Component {
   constructor(props) {
@@ -92,16 +92,16 @@ class AddKVMNode extends Component {
   };
 
   handleSaveClick = () => {
-    if (this.state.newVmName == ""){
+    if (this.state.newVmName === ""){
       alert("Please enter New VM(Node) Name");
       return;
-    } else if (this.state.newVmPassword == ""){
+    } else if (this.state.newVmPassword === ""){
       alert("Please enter New VM(Node) Password");
       return;
-    } else if (Object.keys(this.state.selectedRow).length === 0){
+    } else if (Object.keys(this.state.selectedRow).length  === 0){
       alert("Please select target Cluster");
       return;
-    } else if (this.state.templateVm == ""){
+    } else if (this.state.templateVm === ""){
       alert("Please enter Template Image VM")
       return;
     } else {
@@ -130,7 +130,7 @@ class AddKVMNode extends Component {
       };
       axios.post(url, data)
           .then((res) => {
-            if(res.data.code == 500){
+            if(res.data.code === 500){
               alert(res.data.result+"\n"+res.data.text);
             } else {
               this.props.handleClose()

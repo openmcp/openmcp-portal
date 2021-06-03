@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-import * as utilLog from "../../../util/UtLogs.js";
+// import * as utilLog from "../../../util/UtLogs.js";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
   Button,
@@ -161,10 +161,10 @@ class ChangeAKSReource extends Component {
   };
 
   handleSaveClick = () => {
-    if (Object.keys(this.state.selectedRow).length === 0) {
+    if (Object.keys(this.state.selectedRow).length  === 0) {
       alert("Please select Instance Type");
       return;
-    } else if(Object.keys(this.state.selectedRow2).length === 0) {
+    } else if(Object.keys(this.state.selectedRow2).length  === 0) {
       alert("Please select Agent Pool");
       return;
     }
@@ -300,7 +300,7 @@ class ChangeAKSReource extends Component {
                       </div>
                       <div class="md-item">
                         <span><strong>Provider : </strong></span>
-                        <span>{this.props.provider}</span>
+                        <span>{this.props.clusterInfo.provider}</span>
                       </div>
                       <div class="md-item">
                         <span><strong>Resource Group : </strong></span>
@@ -318,7 +318,7 @@ class ChangeAKSReource extends Component {
                       </div>
                       <div class="md-item">
                         <span><strong>Region : </strong></span>
-                        <span>{this.props.region}</span>
+                        <span>{this.props.clusterInfo.region}</span>
                       </div>
                       <div class="md-item">
                         <span><strong>Node Resource Group : </strong></span>

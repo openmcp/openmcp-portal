@@ -4,7 +4,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import * as utilLog from "../../util/UtLogs.js";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import {
   TextField,
   Button,
@@ -22,7 +22,7 @@ import {
   IntegratedPaging,
   IntegratedSorting,
   IntegratedSelection,
-  RowDetailState,
+  // RowDetailState,
   SearchState,
   // EditingState,
 } from "@devexpress/dx-react-grid";
@@ -33,19 +33,19 @@ import {
   TableHeaderRow,
   PagingPanel,
   TableSelection,
-  TableRowDetail,
+  // TableRowDetail,
   SearchPanel,
   Toolbar,
   // TableEditRow,
   // TableEditColumn,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import AppBar from "@material-ui/core/AppBar";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
-import { Container } from "@material-ui/core";
-import Box from "@material-ui/core/Box";
-import PropTypes from "prop-types";
+// import AppBar from "@material-ui/core/AppBar";
+// import Tabs from "@material-ui/core/Tabs";
+// import Tab from "@material-ui/core/Tab";
+// import { Container } from "@material-ui/core";
+// import Box from "@material-ui/core/Box";
+// import PropTypes from "prop-types";
 import axios from 'axios';
 // import SelectBox from "../../modules/SelectBox";
 
@@ -152,7 +152,7 @@ class PcAddProjectPolicy extends Component {
     if (Object.keys(this.state.selectedRow).length === 0) {
       alert("Please select project");
       return;
-    } else if (this.state.clusterCPURate=="" || this.state.clusterMemRate=="" ||this.state.podsCPURate==""||this.state.podsMemRate==""){
+    } else if (this.state.clusterCPURate === "" || this.state.clusterMemRate === "" ||this.state.podsCPURate === ""||this.state.podsMemRate === ""){
       alert("Please insert threshold data");
       return;
     }
@@ -229,7 +229,7 @@ class PcAddProjectPolicy extends Component {
 
     //셀
     const Cell = (props) => {
-      const { column, row } = props;
+      const { column } = props;
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;

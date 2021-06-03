@@ -43,7 +43,7 @@ class CsOverview extends Component {
       title : this.props.match.params.cluster,
       pathParams : {
         cluster : this.props.match.params.cluster,
-        state : this.props.location.state.data
+        // state : this.props.location.state.data
       },
     }
     this.props.menuData(result);
@@ -55,7 +55,7 @@ class CsOverview extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -84,7 +84,7 @@ class CsOverview extends Component {
     console.log("onClick")
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -123,12 +123,16 @@ class CsOverview extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info} provider={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider } region={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region}/>,
+            <BasicInfo rowData={this.state.rows.basic_info}
+            //  provider={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider }
+            //  region={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region}
+             />,
             <div style={{display:"flex"}}>
               <ProjectUsageTop5 rowData={this.state.rows.project_usage_top5}/>
               <NodeUsageTop5 rowData={this.state.rows.node_usage_top5}/>
             </div>,
-            <ClusterResourceUsage rowData={this.state.rows.cluster_resource_usage} onRefresh={this.onRefresh} provider={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider } region={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region} clusterInfo = {this.state.rows.basic_info}/>,
+            <ClusterResourceUsage rowData={this.state.rows.cluster_resource_usage} onRefresh={this.onRefresh} 
+            clusterInfo = {this.state.rows.basic_info}/>,
             <KubernetesStatus rowData={this.state.rows.kubernetes_status}/>,
             <Events rowData={this.state.rows.events}/>
             ]
@@ -158,7 +162,7 @@ class BasicInfo extends Component {
           </div>
           <div>
             <span>Provider : </span>
-            {this.props.provider}
+            {this.props.rowData.provider}
           </div>
           <div>
             <span>Kubernetes Version : </span>
@@ -170,7 +174,11 @@ class BasicInfo extends Component {
           </div>
           <div>
             <span>Region : </span>
-            {this.props.region}
+            {this.props.rowData.region}
+          </div>
+          <div>
+            <span>Zone : </span>
+            {this.props.rowData.zone}
           </div>
         </div>
       </div>
@@ -597,22 +605,22 @@ class ClusterResourceUsage extends Component {
   }
 
   onClick = () => {
-    if(count == 1){
+    if(count === 1){
       this.setState({
         rows:stress50,
         unhColors:colors3
       })
-    } else if (count == 2){
+    } else if (count === 2){
       this.setState({
         rows:stress70, 
         unhColors:colors3
       })
-    } else if (count ==3 ){
+    } else if (count === 3 ){
       this.setState({
         rows:stress80, 
         unhColors:colors2
       })
-    }  else if (count ==4 ){
+    }  else if (count === 4 ){
       this.setState({
         rows:stress0, 
         unhColors:colors3
@@ -713,8 +721,8 @@ class ClusterResourceUsage extends Component {
           <span style={{cursor:"cluster1"}} onClick={this.onClick} >
             Cluster Resource Usage
           </span>
-          {this.props.provider == "aks" ? 
-          <ChangeAKSReource clusterInfo={this.props.clusterInfo} provider={this.props.provider} region={this.props.region}/> : "" }
+          {this.props.clusterInfo.provider === "aks" ? 
+          <ChangeAKSReource clusterInfo={this.props.clusterInfo} /> : "" }
         </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">

@@ -33,6 +33,8 @@ class PjServices extends Component {
         { name: "cluster", title: "Cluster" },
         { name: "project", title: "Project" },
         { name: "type", title: "Type"},
+        { name: "cluster_ip", title: "Cluster IP"},
+        { name: "external_ip", title: "External IP"},
         { name: "selector", title: "Selector" },
         // { name: "port", title: "Port" },
         { name: "created_time", title: "Created Time" },
@@ -42,6 +44,8 @@ class PjServices extends Component {
         { columnName: "cluster", width: 130 },
         { columnName: "project", width: 130 },
         { columnName: "type", width: 130 },
+        { columnName: "cluster_ip", width: 130 },
+        { columnName: "external_ip", width: 130 },
         { columnName: "selector", width: 330 },
         // { columnName: "port", width: 180 },
         { columnName: "created_time", width: 180 },
@@ -91,7 +95,8 @@ class PjServices extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        console.log(res);
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -141,7 +146,7 @@ class PjServices extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (
@@ -164,6 +169,8 @@ class PjServices extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
+            // pathname: `/network/services/${props.value}`,
+            // search:`cluster=${row.cluster}`,
             pathname: `/projects/${apiParams}/resources/services/${props.value}`,
             search: this.props.location.search,
             state: {

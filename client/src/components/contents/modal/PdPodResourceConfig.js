@@ -221,7 +221,7 @@ class PdPodResourceConfig extends Component {
                   <div className="input-txt">
                     <input type="number" placeholder="No Request" name="cpu_req" 
                       value={
-                          this.state.cpu_value[0] === 0 ? "No Request" : this.state.cpu_value[0]
+                          this.state.cpu_value[0]  === 0 ? "No Request" : this.state.cpu_value[0]
                       }
                       onChange={this.onChange} />
                     <span>m</span>
@@ -261,7 +261,7 @@ class PdPodResourceConfig extends Component {
                   <div className="input-txt">
                     <input type="number" placeholder="No Request" name="mem_req" 
                           value={
-                            this.state.mem_value[0] === 0 ? "No Request" : this.state.mem_value[0]
+                            this.state.mem_value[0]  === 0 ? "No Request" : this.state.mem_value[0]
                           }
                           onChange={this.onChange} 
                     />

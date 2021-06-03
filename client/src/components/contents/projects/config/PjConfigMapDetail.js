@@ -40,7 +40,7 @@ class PjConfigMapDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -213,7 +213,7 @@ class Data extends Component {
     };
 
     const Cell = (props) => {
-      const { column, row } = props;
+      const { column } = props;
       if (column.name === "value") {
         console.log("cell : ", props);
         return (

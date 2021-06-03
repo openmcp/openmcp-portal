@@ -56,7 +56,7 @@ class PcSetOMCPPolicy extends Component {
   }
 
   handleClickOpen = () => {
-    if (Object.keys(this.props.policy).length === 0) {
+    if (Object.keys(this.props.policy).length  === 0) {
       alert("Please Select Policy");
       this.setState({ open: false });
       return;

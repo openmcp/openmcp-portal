@@ -14,12 +14,12 @@ import {
 import PdPodResourceConfig from './../modal/PdPodResourceConfig';
 import * as utilLog from './../../util/UtLogs.js';
 
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
-import PauseIcon from '@material-ui/icons/Pause';
-import PauseRoundedIcon from '@material-ui/icons/PauseRounded';
+// import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+// import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
+// import PauseIcon from '@material-ui/icons/Pause';
+// import PauseRoundedIcon from '@material-ui/icons/PauseRounded';
 
-import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
+// import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import PauseCircleFilledIcon from '@material-ui/icons/PauseCircleFilled';
 
@@ -44,7 +44,7 @@ class PdPodDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -136,7 +136,17 @@ class BasicInfo extends Component {
             <div className="cb-body-left">
               <div>
                 <span>Status : </span>
-                {this.props.rowData.status}
+                <span
+                  style={{
+                    color:
+                    this.props.rowData.status === "Pending" ? "orange" : 
+                      this.props.rowData.status === "Failed" ? "red" : 
+                        this.props.rowData.status === "Unknown" ? "#b5b5b5" : 
+                          this.props.rowData.status === "Succeeded" ? "skyblue" : 
+                            this.props.rowData.status === "Running" ? "#1ab726" : "black"
+                  }}>
+                  {this.props.rowData.status}
+                </span>
               </div>
               <div>
                 <span>Cluster : </span>

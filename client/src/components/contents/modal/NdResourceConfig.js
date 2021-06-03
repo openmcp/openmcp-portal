@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-import * as utilLog from "../../util/UtLogs.js";
+// import * as utilLog from "../../util/UtLogs.js";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
   Button,
@@ -11,30 +11,30 @@ import {
   IconButton,
   Typography,
 } from "@material-ui/core";
-import {
-  PagingState,
-  SortingState,
-  SelectionState,
-  IntegratedFiltering,
-  IntegratedPaging,
-  IntegratedSorting,
-  IntegratedSelection,
-  // SearchState,
-  // EditingState,
-} from "@devexpress/dx-react-grid";
-import {
-  Grid,
-  Table,
-  TableColumnResizing,
-  TableHeaderRow,
-  PagingPanel,
-  TableSelection,
-  // SearchPanel,
-  // Toolbar,
-  // TableEditRow,
-  // TableEditColumn,
-} from "@devexpress/dx-react-grid-material-ui";
-import Paper from "@material-ui/core/Paper";
+// import {
+//   PagingState,
+//   SortingState,
+//   SelectionState,
+//   IntegratedFiltering,
+//   IntegratedPaging,
+//   IntegratedSorting,
+//   IntegratedSelection,
+//   // SearchState,
+//   // EditingState,
+// } from "@devexpress/dx-react-grid";
+// import {
+//   Grid,
+//   Table,
+//   TableColumnResizing,
+//   TableHeaderRow,
+//   PagingPanel,
+//   TableSelection,
+//   // SearchPanel,
+//   // Toolbar,
+//   // TableEditRow,
+//   // TableEditColumn,
+// } from "@devexpress/dx-react-grid-material-ui";
+// import Paper from "@material-ui/core/Paper";
 import ChangeEKSReource from "./chageResource/ChangeEKSReource.js";
 import ChangeKVMReource from './chageResource/ChangeKVMReource';
 
@@ -119,9 +119,9 @@ class NdResourceConfig extends Component {
            Node Resource Configration
           </DialogTitle>
           <DialogContent dividers>
-            {this.props.propsRow.provider == "eks" 
+            {this.props.propsRow.provider === "eks" 
             ? <ChangeEKSReource ref={childChangeNodeRes} handleClose={this.handleClose} nodeData={this.props.nodeData} propsRow={this.props.propsRow} />
-            : (this.props.propsRow.provider == "kvm" 
+            : (this.props.propsRow.provider === "kvm" 
                 ? <ChangeKVMReource ref={childChangeNodeRes} handleClose={this.handleClose} nodeData={this.props.nodeData} propsRow={this.props.propsRow} rows={this.props.rows}/> 
                 : "")
             }

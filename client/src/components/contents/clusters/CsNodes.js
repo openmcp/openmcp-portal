@@ -21,6 +21,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 // import Editor from "../../modules/Editor";
 
 let apiParams = "";
@@ -102,7 +103,7 @@ class CsNodes extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -121,6 +122,30 @@ class CsNodes extends Component {
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell>
+        <span
+          style={{
+            color:
+            value === "Healthy" ? "#1ab726"
+              : value === "Unhealthy" ? "red"
+                : value === "Unknown" ? "#b5b5b5"
+                  : value === "Warning" ? "#ff8042" : "black",
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+          value === "Healthy" ? "rgba(85,188,138,.1)"
+            : value === "Unhealthy" ? "rgb(152 13 13 / 10%)"
+              : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                : value === "Warning" ? "rgb(109 31 7 / 10%)" : "white",
+          boxShadow: 
+          value === "Healthy" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+            : value === "Unhealthy" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+              : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                : value === "Warning" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
         <span
           style={{
             color:
@@ -144,10 +169,10 @@ class CsNodes extends Component {
       // console.log("values,values", values)
 
 
-      row.provider = this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider
-      row.region = this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region
+      row.provider = this.props.location.state.data === undefined ? "-" : this.props.location.state.data.provider
+      row.region = this.props.location.state.data === undefined ? "-" : this.props.location.state.data.region
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (

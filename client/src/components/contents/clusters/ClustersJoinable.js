@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -26,7 +26,7 @@ import {
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import Confirm from './../../modules/Confirm';
-
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 
 class ClustersJoinable extends Component {
   constructor(props) {
@@ -94,7 +94,7 @@ class ClustersJoinable extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -123,7 +123,7 @@ class ClustersJoinable extends Component {
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -149,6 +149,30 @@ class ClustersJoinable extends Component {
         <span
           style={{
             color:
+            value === "Healthy" ? "#1ab726"
+              : value === "Unhealthy" ? "red"
+                : value === "Unknown" ? "#b5b5b5"
+                  : value === "Warning" ? "#ff8042" : "black",
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+          value === "Healthy" ? "rgba(85,188,138,.1)"
+            : value === "Unhealthy" ? "rgb(152 13 13 / 10%)"
+              : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                : value === "Warning" ? "rgb(109 31 7 / 10%)" : "white",
+          boxShadow: 
+          value === "Healthy" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+            : value === "Unhealthy" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+              : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                : value === "Warning" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
+        <span
+          style={{
+            color:
               value === "Healthy" ? "#1ab726" : 
                 value === "Unhealthy" ? "red" : 
                   value === "Unknown" ? "#b5b5b5" : "black"
@@ -165,7 +189,7 @@ class ClustersJoinable extends Component {
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if  (column.name === "provider") {
-        if(row.provider == ""){
+        if(row.provider === ""){
           return <Table.Cell>-</Table.Cell>
         }
       }

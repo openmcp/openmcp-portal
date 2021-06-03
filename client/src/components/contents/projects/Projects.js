@@ -19,14 +19,11 @@ import {
   TableColumnResizing,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../../modules/Editor";
+// import Editor from "./../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import PjCreateProject from '../modal/PjCreateProject';
-
-
-
-
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 
 class Projects extends Component {
   constructor(props) {
@@ -81,7 +78,7 @@ class Projects extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -100,7 +97,7 @@ class Projects extends Component {
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -118,7 +115,26 @@ class Projects extends Component {
         <span
           style={{
             color:
-              value === "Active" ? "#1ab726" : value === "Deactive" ? "red" : undefined,
+            value === "Active" ? "#1ab726"
+              : value === "Deactive" ? "red" : "black",
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+          value === "Active" ? "rgba(85,188,138,.1)"
+            : value === "Deactive" ? "rgb(152 13 13 / 10%)" : "white",
+          boxShadow: 
+          value === "Active" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+            : value === "Deactive" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
+        <span
+          style={{
+            color:
+              value === "Active" ? "#1ab726" 
+                : value === "Deactive" ? "red" : undefined,
           }}
         >
           {value}

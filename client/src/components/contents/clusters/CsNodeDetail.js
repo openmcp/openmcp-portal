@@ -2,24 +2,24 @@ import React, { Component } from "react";
 import { NavLink} from 'react-router-dom';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext} from '@material-ui/icons';
-import Paper from "@material-ui/core/Paper";
-import {
-  SearchState,
-  IntegratedFiltering,
-  PagingState,
-  IntegratedPaging,
-  SortingState,
-  IntegratedSorting,
-} from "@devexpress/dx-react-grid";
-import {
-  Grid,
-  Table,
-  Toolbar,
-  SearchPanel,
-  TableColumnResizing,
-  TableHeaderRow,
-  PagingPanel,
-} from "@devexpress/dx-react-grid-material-ui";
+// import Paper from "@material-ui/core/Paper";
+// import {
+//   SearchState,
+//   IntegratedFiltering,
+//   PagingState,
+//   IntegratedPaging,
+//   SortingState,
+//   IntegratedSorting,
+// } from "@devexpress/dx-react-grid";
+// import {
+//   Grid,
+//   Table,
+//   Toolbar,
+//   SearchPanel,
+//   TableColumnResizing,
+//   TableHeaderRow,
+//   PagingPanel,
+// } from "@devexpress/dx-react-grid-material-ui";
 import PieReChart2 from '../../modules/PieReChart2';
 import NdTaintConfig from './../modal/NdTaintConfig';
 import * as utilLog from './../../util/UtLogs.js';
@@ -50,7 +50,7 @@ class CsNodeDetail extends Component {
       }
     }
     this.props.menuData(result);
-    if(this.props.location.state != undefined){
+    if(this.props.location.state !== undefined){
       this.setState({propsRow:this.props.location.state.data})
     }
     // apiParams = this.props.match.params.cluster;
@@ -62,7 +62,7 @@ class CsNodeDetail extends Component {
     this.callApi()
       .then((res) => {
         console.log(res);
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -90,7 +90,7 @@ class CsNodeDetail extends Component {
     console.log("onUpdateData={this.props.onUpdateData}")
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -169,7 +169,15 @@ class BasicInfo extends Component {
             <div className="cb-body-left">
               <div>
                 <span>Status : </span>
-                {this.props.rowData.status}
+                <span
+                  style={{
+                    color:
+                    this.props.rowData.status === "Healthy" ? "#1ab726"
+                      : this.props.rowData.status === "Unhealthy" ? "red"
+                        : this.props.rowData.status === "Unknown" ? "#b5b5b5"
+                          : this.props.rowData.status === "Warning" ? "#ff8042" : "black",
+                  }}
+                >{this.props.rowData.status}</span>
               </div>
               <div>
                 <span>Role : </span>
@@ -244,7 +252,7 @@ class NodeResourceUsage extends Component {
         <span>
           Node Resource Usage
           </span>
-          {this.props.propsRow.provider == "eks" || this.props.propsRow.provider == "kvm" ? 
+          {this.props.propsRow.provider === "eks" || this.props.propsRow.provider === "kvm" ? 
             <NdResourceConfig 
               rows = {this.state.rows}
               rowData={this.props.rowData}
@@ -359,30 +367,30 @@ class KubernetesStatus extends Component {
 
     if(result) {
       // const userId = localStorage.getItem("userName");
-      if(this.state.confirmType == "power"){
-        if(this.state.powerFlag == "on"){
+      if(this.state.confirmType === "power"){
+        if(this.state.powerFlag === "on"){
           console.log("poweron")
           url = `/nodes/${provider}/start`;
           // utilLog.fn_insertPLogs(userId, "log-ND-PO01"); //poweron log
-        } else if (this.state.powerFlag == "off"){
+        } else if (this.state.powerFlag === "off"){
           console.log("poweroff")
           url = `/nodes/${provider}/stop`;
           // utilLog.fn_insertPLogs(userId, "log-ND-PO02"); //poweroff log
         }
        
-        if(provider == "eks"){
+        if(provider === "eks"){
           //eks
           data = {
             region: this.props.propsRow.region,
             node: this.props.propsRow.name,
             cluster : this.props.propsRow.cluster
           };
-        } else if (provider == "aks"){
+        } else if (provider === "aks"){
           data = {
             cluster : this.props.propsRow.cluster,
             node : this.props.propsRow.name,
           };
-        } else if (provider == "kvm"){
+        } else if (provider === "kvm"){
           data = {
             cluster : this.props.propsRow.cluster,
             node : this.props.propsRow.name,
@@ -392,7 +400,7 @@ class KubernetesStatus extends Component {
           this.setState({openProgress:false})
           return;
         }
-      } else if (this.state.confirmType == "delete"){
+      } else if (this.state.confirmType === "delete"){
         url = `/nodes/delete/kvm`;
         data = {
           cluster : this.props.propsRow.cluster,
@@ -440,7 +448,7 @@ class KubernetesStatus extends Component {
                 Stop Node
               </Button>
 
-              {this.props.propsRow.provider == "kvm" ? 
+              {this.props.propsRow.provider === "kvm" ? 
                 <Button variant="outlined" color="primary" onClick={this.handleClickDelete} style={{marginLeft:"10px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
                   Delete Node
                 </Button> : ""
@@ -462,132 +470,132 @@ class KubernetesStatus extends Component {
   };
 };
 
-class Events extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columns: [
-        { name: "project", title: "Project" },
-        { name: "type", title: "Type" },
-        { name: "reason", title: "Reason" },
-        { name: "object", title: "Object" },
-        { name: "message", title: "Message" },
-        { name: "time", title: "Time" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "project", width: 150 },
-        { columnName: "type", width: 150 },
-        { columnName: "reason", width: 150 },
-        { columnName: "object", width: 240 },
-        { columnName: "message", width: 440 },
-        { columnName: "time", width: 180 },
-      ],
-      rows: this.props.rowData,
+// class Events extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       columns: [
+//         { name: "project", title: "Project" },
+//         { name: "type", title: "Type" },
+//         { name: "reason", title: "Reason" },
+//         { name: "object", title: "Object" },
+//         { name: "message", title: "Message" },
+//         { name: "time", title: "Time" },
+//       ],
+//       defaultColumnWidths: [
+//         { columnName: "project", width: 150 },
+//         { columnName: "type", width: 150 },
+//         { columnName: "reason", width: 150 },
+//         { columnName: "object", width: 240 },
+//         { columnName: "message", width: 440 },
+//         { columnName: "time", width: 180 },
+//       ],
+//       rows: this.props.rowData,
 
-      // Paging Settings
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 10, 
-      pageSizes: [5, 10, 15, 0],
+//       // Paging Settings
+//       currentPage: 0,
+//       setCurrentPage: 0,
+//       pageSize: 10, 
+//       pageSizes: [5, 10, 15, 0],
 
-      completed: 0,
-    };
-  }
+//       completed: 0,
+//     };
+//   }
 
-  componentWillMount() {
-    // this.props.onSelectMenu(false, "");
-  }
+//   componentWillMount() {
+//     // this.props.onSelectMenu(false, "");
+//   }
 
   
 
-  // callApi = async () => {
-  //   const response = await fetch("/clusters");
-  //   const body = await response.json();
-  //   return body;
-  // };
+//   // callApi = async () => {
+//   //   const response = await fetch("/clusters");
+//   //   const body = await response.json();
+//   //   return body;
+//   // };
 
-  // progress = () => {
-  //   const { completed } = this.state;
-  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  // };
+//   // progress = () => {
+//   //   const { completed } = this.state;
+//   //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+//   // };
 
-  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  // componentDidMount() {
-  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-  //   this.timer = setInterval(this.progress, 20);
-  //   this.callApi()
-  //     .then((res) => {
-  //       this.setState({ rows: res });
-  //       clearInterval(this.timer);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+//   // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+//   // componentDidMount() {
+//   //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+//   //   this.timer = setInterval(this.progress, 20);
+//   //   this.callApi()
+//   //     .then((res) => {
+//   //       this.setState({ rows: res });
+//   //       clearInterval(this.timer);
+//   //     })
+//   //     .catch((err) => console.log(err));
+//   // };
 
-  render() {
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-    const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
-    };
+//   render() {
+//     const HeaderRow = ({ row, ...restProps }) => (
+//       <Table.Row
+//         {...restProps}
+//         style={{
+//           cursor: "pointer",
+//           backgroundColor: "whitesmoke",
+//           // ...styles[row.sector.toLowerCase()],
+//         }}
+//         // onClick={()=> alert(JSON.stringify(row))}
+//       />
+//     );
+//     const Row = (props) => {
+//       // console.log("row!!!!!! : ",props);
+//       return <Table.Row {...props} key={props.tableRow.key}/>;
+//     };
 
-    return (
-      <div className="content-box">
-        <div className="cb-header">Events</div>
-        <div className="cb-body">
-        <Paper>
-            {this.state.rows ? (
-              [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
-                  <Toolbar />
-                  {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <IntegratedFiltering />
-                  <SearchPanel style={{ marginLeft: 0 }} />
+//     return (
+//       <div className="content-box">
+//         <div className="cb-header">Events</div>
+//         <div className="cb-body">
+//         <Paper>
+//             {this.state.rows ? (
+//               [
+//                 <Grid
+//                   rows={this.state.rows}
+//                   columns={this.state.columns}
+//                 >
+//                   <Toolbar />
+//                   {/* 검색 */}
+//                   <SearchState defaultValue="" />
+//                   <IntegratedFiltering />
+//                   <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* Sorting */}
-                  <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
+//                   {/* Sorting */}
+//                   <SortingState
+//                     defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+//                   />
+//                   <IntegratedSorting />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
+//                   {/* 페이징 */}
+//                   <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+//                   <IntegratedPaging />
+//                   <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  {/* 테이블 */}
-                  <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
-        </div>
-      </div>
-    );
-  };
-};
+//                   {/* 테이블 */}
+//                   <Table rowComponent={Row} />
+//                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+//                   <TableHeaderRow
+//                     showSortingControls
+//                     rowComponent={HeaderRow}
+//                   />
+//                 </Grid>,
+//               ]
+//             ) : (
+//               <CircularProgress
+//                 variant="determinate"
+//                 value={this.state.completed}
+//                 style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+//               ></CircularProgress>
+//             )}
+//           </Paper>
+//         </div>
+//       </div>
+//     );
+//   };
+// };
 export default CsNodeDetail;

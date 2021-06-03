@@ -119,9 +119,9 @@ class PjCreateProject extends Component {
 
   onChange(e) {
 
-    if (e.target.name == "project_name"){
+    if (e.target.name === "project_name"){
       project_name = e.target.value
-    } else if(e.target.name == "project_description"){
+    } else if(e.target.name === "project_description"){
       project_description = e.target.value
     }
     // this.setState({

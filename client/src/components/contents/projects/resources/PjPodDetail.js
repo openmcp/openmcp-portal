@@ -42,7 +42,7 @@ class PjPodDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -133,7 +133,17 @@ class BasicInfo extends Component {
             <div className="cb-body-left">
               <div>
                 <span>Status : </span>
-                {this.props.rowData.status}
+                <span
+                  style={{
+                    color:
+                    this.props.rowData.status === "Pending" ? "orange" : 
+                      this.props.rowData.status === "Failed" ? "red" : 
+                        this.props.rowData.status === "Unknown" ? "#b5b5b5" : 
+                          this.props.rowData.status === "Succeeded" ? "skyblue" : 
+                            this.props.rowData.status === "Running" ? "#1ab726" : "black"
+                  }}>
+                  {this.props.rowData.status}
+                </span>
               </div>
               <div>
                 <span>Cluster : </span>

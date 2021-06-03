@@ -23,7 +23,8 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 
 // import Editor from "./../modules/Editor";
-import Projects from './../projects/Projects';
+// import Projects from './../projects/Projects';
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 
 // let apiParams = "";
 class Pods extends Component {
@@ -91,7 +92,7 @@ class Pods extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -107,7 +108,7 @@ class Pods extends Component {
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -132,9 +133,36 @@ class Pods extends Component {
         <span
           style={{
             color:
+            value === "Pending" ? "orange" : 
+                value === "Failed" ? "red" : 
+                  value === "Unknown" ? "#b5b5b5" : 
+                    value === "Succeeded" ? "skyblue" : 
+                      value === "Running" ? "#1ab726" : "black"
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+          value === "Running" ? "rgba(85,188,138,.1)"
+              : value === "Succeeded" ? "rgba(85,188,138,.1)"
+                : value === "Failed" ? "rgb(152 13 13 / 10%)"
+                  : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : value === "Pending" ? "rgb(109 31 7 / 10%)" : "white",
+          boxShadow: 
+          value === "Running" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+              : value === "Succeeded" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                : value === "Failed" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                  : value === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : value === "Pending" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
+        <span
+          style={{
+            color:
               value === "Pending" ? "orange" : 
                 value === "Failed" ? "red" : 
-                  value === "Unknown" ? "red" : 
+                  value === "Unknown" ? "#b5b5b5" : 
                     value === "Succeeded" ? "skyblue" : 
                       value === "Running" ? "#1ab726" : "black"
           }}>
@@ -154,7 +182,7 @@ class Pods extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (

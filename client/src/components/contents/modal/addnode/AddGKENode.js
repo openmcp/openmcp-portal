@@ -98,7 +98,7 @@ class AddGKENode extends Component {
     if (Object.keys(this.state.selectedRow).length === 0){
       alert("Please select target Cluster");
       return;
-    } else if (this.state.desiredNumber == 0){
+    } else if (this.state.desiredNumber === 0){
       alert("Desired number must be a number greater than 0")
     } else {
 
@@ -177,7 +177,7 @@ class AddGKENode extends Component {
 
   onSelectionChange = (selection) => {
     this.setState({
-      desiredNumber: selection.initialNodeCount == undefined ? "0" : selection.initialNodeCount.toString(),
+      desiredNumber: selection.initialNodeCount === undefined ? "0" : selection.initialNodeCount.toString(),
       selectedRow: selection
     })
   };
@@ -307,7 +307,7 @@ class GKENodePools extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        var result = [];
+        // var result = [];
         console.log(res);
         // res.map(item=>
         //   item.cluster == this.props.rowData ? result.push(item) : ""

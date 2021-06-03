@@ -23,6 +23,7 @@ import {
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import NdAddNode from './../modal/NdAddNode';
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 
 class Nodes extends Component {
   constructor(props) {
@@ -87,7 +88,7 @@ class Nodes extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -104,7 +105,7 @@ class Nodes extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -120,7 +121,7 @@ class Nodes extends Component {
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -134,6 +135,27 @@ class Nodes extends Component {
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell>
+        <span
+          style={{
+            color:
+            value === "Healthy" ? "#1ab726"
+              : value === "Unhealthy" ? "red"
+                : value === "Unknown" ? "#b5b5b5" : "black",
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+          value === "Healthy" ? "rgba(85,188,138,.1)"
+            : value === "Unhealthy" ? "rgb(152 13 13 / 10%)"
+              : value === "Unknown" ? "rgb(255 255 255 / 10%)" : "white",
+          boxShadow: 
+          value === "Healthy" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+            : value === "Unhealthy" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+              : value === "Unknown" ? "rgb(255 255 255 / 10%)" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
         <span
           style={{
             color:
@@ -157,7 +179,7 @@ class Nodes extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (

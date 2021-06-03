@@ -1,21 +1,37 @@
-import React, {  Component } from "react";
-import { PieChart, Pie, Sector, Cell, Legend } from "recharts";
+import React, { Component } from "react";
+import { PieChart, Pie, Sector, Cell,
+  //  Legend
+} from "recharts";
 
-class PieHalfReChart extends Component {
+class PieReChartMini extends Component {
   constructor(props) {
     super(props);
-    console.log("pierechar constructor");
+    // console.log("pierechar constructor");
+    const result = []
+    result.push(this.props.data.status[0])
+    result.push({
+      name : "left",
+      value : this.props.data.status[1].value -  this.props.data.status[0].value
+    })
     this.state = {
       activeIndex: 0,
       rows: this.props.data.status,
+      calResult : result
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (this.props.data.status !== prevProps.data.status) {
+      const result = []
+      result.push(this.props.data.status[0])
+      result.push({
+        name : "left",
+        value : this.props.data.status[1].value -  this.props.data.status[0].value
+      })
       this.setState({
         ...this.state,
         rows: this.props.data.status,
+        calResult : result
       });
     }
   }
@@ -39,7 +55,7 @@ class PieHalfReChart extends Component {
         startAngle,
         endAngle,
         fill,
-        payload,
+        // payload,
         percent,
         // value,
       } = props;
@@ -55,13 +71,16 @@ class PieHalfReChart extends Component {
 
       return (
         <g style={{fontSize:"14px"}}>
-          <text x={cx} y={cy} dy={3} textAnchor="middle" fill={fill}>
-            {payload.name}
-          </text>
-          <text x={cx} y={cy} dy={20} textAnchor="middle" fill={fill}>
-            {`${(percent * 100).toFixed(0)}%`}
-          </text>
-
+          <g>
+            <text x={90} y={28} dy={3} textAnchor="left" fill={"#89caff"} style={{fontSize:"13px"}}>
+              {this.props.name}
+            </text>
+            <text x={90} y={28} dy={20} textAnchor="left" fill={"#ffffff"}>
+              {`${(percent * 100).toFixed(1)}%`}
+              {/* {payload.name} */}
+              {/* {`${(percent * 100).toFixed(0)}%`} */}
+            </text>
+          </g>
           <Sector
             cx={cx}
             cy={cy}
@@ -71,42 +90,56 @@ class PieHalfReChart extends Component {
             endAngle={endAngle}
             fill={fill}
           />
-          
         </g>
       );
     };
-    const style = {
-      top: 48,
-      left: 200,
-      lineHeight: "25px",
-      fontSize:"14px",
-    };
+    // const style = {
+    //   top: 48,
+    //   left: 200,
+    //   // lineHeight: "25px",
+    //   fontSize:"14px",
+    // };
     return (
       <div style={{ position: "relative" }} className="pie-chart">
-        <PieChart width={200} height={200}>
+        <PieChart width={140} height={70}>
+          {/* <Pie
+            data={[this.state.rows[1]]}
+            cx={30}
+            cy={30}
+            startAngle={this.props.angle.startAngle}
+            endAngle={this.props.angle.endAngle}
+            innerRadius={12}
+            outerRadius={20}
+            fill="#ecf0f5"
+            dataKey="value"
+            paddingAngle={0}
+            onMouseEnter={this.onPieEnter}
+            isAnimationActive={false}
+          >
+          </Pie> */}
           <Pie
             activeIndex={this.state.activeIndex}
             activeShape={renderActiveShape}
-            data={this.state.rows}
-            cx={95}
-            cy={95}
+            data={this.state.calResult}
+            cx={30}
+            cy={30}
             startAngle={this.props.angle.startAngle}
             endAngle={this.props.angle.endAngle}
-            innerRadius={50}
-            outerRadius={80}
+            innerRadius={12}
+            outerRadius={20}
             fill="#367fa9"
             dataKey="value"
             paddingAngle={0}
             onMouseEnter={this.onPieEnter}
           >
-            {this.state.rows.map((entry, index) => (
+            {this.state.calResult.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}
               />
             ))}
           </Pie>
-          <Legend
+          {/* <Legend
             iconSize={10}
             width={180}
             height={140}
@@ -119,11 +152,12 @@ class PieHalfReChart extends Component {
               value: `${item.name} (${item.value} ${this.props.unit})`,
               color: COLORS[index % COLORS.length],
             }))}
-          />
+          /> */}
+          
         </PieChart>
       </div>
     );
   }
 }
 
-export default PieHalfReChart;
+export default PieReChartMini;

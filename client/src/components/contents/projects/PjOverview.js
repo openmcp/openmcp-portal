@@ -34,7 +34,6 @@ class PjOverview extends Component {
   }
 
   componentWillMount() {
-    console.log("will")
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
       menu : "projects",
@@ -42,7 +41,7 @@ class PjOverview extends Component {
       pathParams : {
         searchString : this.props.location.search,
         project : this.props.match.params.project,
-        state : this.props.location.state.data
+        // state : this.props.location.state.data
       },
     }
     this.props.menuData(result);
@@ -54,7 +53,8 @@ class PjOverview extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        // debugger;
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });

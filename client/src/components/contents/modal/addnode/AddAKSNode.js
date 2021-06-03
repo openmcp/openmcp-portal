@@ -104,23 +104,23 @@ class AddAKSNode extends Component {
 
   handleSaveClick = () => {
     // console.log(this.state.selectedRow)
-    // if (this.state.clientId == "") {
+    // if (this.state.clientId === "") {
     //   alert("Please enter Client Id");
     //   return;
-    // } else if (this.state.clientSec == ""){
+    // } else if (this.state.clientSec === ""){
     //   alert("Please enter Client SEC");
     //   return;
-    // } else if (this.state.tenantId == ""){
+    // } else if (this.state.tenantId === ""){
     //   alert("Please enter Tenant ID");
     //   return;
-    // } else if (this.state.subId == ""){
+    // } else if (this.state.subId === ""){
     //   alert("Please enter Sub ID");
     //   return;
-    // } else if (Object.keys(this.state.selectedRow).length === 0){
+    // } else if (Object.keys(this.state.selectedRow).length  === 0){
     if (Object.keys(this.state.selectedRow).length === 0){
       alert("Please select target Cluster");
       return;
-    } else if (this.state.desiredNumber == 0){
+    } else if (this.state.desiredNumber === 0){
       alert("Desired number must be a number greater than 0")
     } else {
       this.setState({
@@ -202,7 +202,7 @@ class AddAKSNode extends Component {
 
   onSelectionChange = (selection) => {
     this.setState({
-      desiredNumber: selection.nodecount == undefined ? "0" : selection.nodecount.toString(),
+      desiredNumber: selection.nodecount === undefined ? "0" : selection.nodecount.toString(),
       selectedRow: selection
     })
   };

@@ -40,7 +40,7 @@ class PjServicesDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -125,26 +125,30 @@ class BasicInfo extends Component {
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                  <span>Namespace : </span>
-                  {this.props.rowData.namespace}
+                  <span>Project : </span>
+                  {this.props.rowData.project}
                 </div>
               <div>
                 <span>Type : </span>
                 {this.props.rowData.type}
               </div>
               <div>
+                <span>Session Affinity : </span>
+                {this.props.rowData.session_affinity}
+              </div>
+              <div>
                 <span>Selector : </span>
                 {this.props.rowData.selector}
               </div>
-              <div>
+              {/* <div>
                 <span>Access Type : </span>
                 {this.props.rowData.access_type}
-              </div>
+              </div> */}
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Session Affinity : </span>
-                {this.props.rowData.session_affinity}
+                <span>Cluster : </span>
+                {this.props.rowData.cluster}
               </div>
               <div>
                 <span>Cluster IP : </span>

@@ -99,17 +99,17 @@ class AddEKSNode extends Component {
   };
 
   handleSaveClick = () => {
-    // if (this.state.secretKey == ""){
+    // if (this.state.secretKey === ""){
     //   alert("Please enter Secret Key");
     //   return;
-    // } else if (this.state.accessKey == ""){
+    // } else if (this.state.accessKey === ""){
     //   alert("Please enter Access Key");
     //   return;
-    //else if (Object.keys(this.state.selectedRow).length === 0){
+    //else if (Object.keys(this.state.selectedRow).length  === 0){
     if (Object.keys(this.state.selectedRow).length === 0){
       alert("Please select target Cluster");
       return;
-    } else if (this.state.desiredNumber == 0){
+    } else if (this.state.desiredNumber === 0){
       alert("Desired number must be a number greater than 0")
     } else {
       this.setState({
@@ -195,7 +195,7 @@ class AddEKSNode extends Component {
 
   onSelectionChange = (selection) => {
     this.setState({ 
-      desiredNumber: selection.desired_size == undefined ? "0" : selection.desired_size.toString(),
+      desiredNumber: selection.desired_size === undefined ? "0" : selection.desired_size.toString(),
       selectedRow: selection
     });
   };
@@ -379,7 +379,7 @@ class EKSWorkerGroups extends Component {
       .then((res) => {
         var result = [];
         res.map((item) =>
-          item.cluster == this.props.rowData ? result.push(item) : ""
+          item.cluster === this.props.rowData ? result.push(item) : ""
         );
         this.setState({ rows: result });
         clearInterval(this.timer);

@@ -12,8 +12,8 @@
     Typography,
   } from "@material-ui/core";
   import axios from "axios";
-  import * as utilLog from "../../../util/UtLogs.js";
-  import Confirm2 from "../../../modules/Confirm2";
+  // import * as utilLog from "../../../util/UtLogs.js";
+  // import Confirm2 from "../../../modules/Confirm2";
   
   const styles = (theme) => ({
     root: {
@@ -47,7 +47,7 @@
     
     componentDidUpdate(prevProps, prevState) {
       if (this.props.open !== prevProps.open) {
-        if(this.props.new == false){
+        if(this.props.new === false){
           this.setState({
             ...this.state,
             open: this.props.open,
@@ -83,19 +83,19 @@
     };
   
     handleSave = (e) => {
-      if (this.state.cluster == ""){
+      if (this.state.cluster === ""){
         alert("Please enter Cluster Name");
         return;
-      } else if (this.state.type == ""){
+      } else if (this.state.type === ""){
         alert("Please enter Credential Type");
         return;
-      } else if (this.state.clientEmail == ""){
+      } else if (this.state.clientEmail === ""){
         alert("Please enter Client Email");
         return;
-      } else if (this.state.projectID == ""){
+      } else if (this.state.projectID === ""){
         alert("Please enter Project ID");
         return;
-      } else if (this.state.privateKey == ""){
+      } else if (this.state.privateKey === ""){
         alert("Please enter Private Key");
         return;
       } 

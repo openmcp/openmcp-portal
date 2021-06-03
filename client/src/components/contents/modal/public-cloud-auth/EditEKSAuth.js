@@ -12,8 +12,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import axios from "axios";
-import * as utilLog from "../../../util/UtLogs.js";
-import Confirm2 from "../../../modules/Confirm2";
+// import * as utilLog from "../../../util/UtLogs.js";
+// import Confirm2 from "../../../modules/Confirm2";
 
 const styles = (theme) => ({
   root: {
@@ -46,7 +46,7 @@ class EditEKSAuth extends Component {
   
   componentDidUpdate(prevProps, prevState) {
     if (this.props.open !== prevProps.open) {
-      if(this.props.new == false){
+      if(this.props.new === false){
         this.setState({
           ...this.state,
           open: this.props.open,
@@ -80,16 +80,16 @@ class EditEKSAuth extends Component {
   };
 
   handleSave = (e) => {
-    if (this.state.cluster == ""){
+    if (this.state.cluster === ""){
       alert("Please enter Cluster Name");
       return;
-    } else if (this.state.secretKey == ""){
+    } else if (this.state.secretKey === ""){
       alert("Please enter Secret Key");
       return;
-    } else if (this.state.accessKey == ""){
+    } else if (this.state.accessKey === ""){
       alert("Please enter Access Key");
       return;
-    } else if (this.state.region == ""){
+    } else if (this.state.region === ""){
       alert("Please enter Region");
       return;
     }

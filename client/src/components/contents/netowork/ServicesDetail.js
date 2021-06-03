@@ -38,7 +38,7 @@ class ServicesDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -169,128 +169,128 @@ class BasicInfo extends Component {
   }
 }
 
-class Workloads extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "type", title: "Type" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "name", width: 400 },
-        { columnName: "status", width: 150 },
-        { columnName: "type", width: 150 },
-      ],
-      rows: this.props.rowData,
+// class Workloads extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       columns: [
+//         { name: "name", title: "Name" },
+//         { name: "status", title: "Status" },
+//         { name: "type", title: "Type" },
+//       ],
+//       defaultColumnWidths: [
+//         { columnName: "name", width: 400 },
+//         { columnName: "status", width: 150 },
+//         { columnName: "type", width: 150 },
+//       ],
+//       rows: this.props.rowData,
 
-      // Paging Settings
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 10, 
-      pageSizes: [5, 10, 15, 0],
+//       // Paging Settings
+//       currentPage: 0,
+//       setCurrentPage: 0,
+//       pageSize: 10, 
+//       pageSizes: [5, 10, 15, 0],
 
-      completed: 0,
-    };
-  }
+//       completed: 0,
+//     };
+//   }
 
-  componentWillMount() {
-    // this.props.onSelectMenu(false, "");
-  }
+//   componentWillMount() {
+//     // this.props.onSelectMenu(false, "");
+//   }
 
   
 
-  // callApi = async () => {
-  //   const response = await fetch("/clusters");
-  //   const body = await response.json();
-  //   return body;
-  // };
+//   // callApi = async () => {
+//   //   const response = await fetch("/clusters");
+//   //   const body = await response.json();
+//   //   return body;
+//   // };
 
-  // progress = () => {
-  //   const { completed } = this.state;
-  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  // };
+//   // progress = () => {
+//   //   const { completed } = this.state;
+//   //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+//   // };
 
-  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  // componentDidMount() {
-  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-  //   this.timer = setInterval(this.progress, 20);
-  //   this.callApi()
-  //     .then((res) => {
-  //       this.setState({ rows: res });
-  //       clearInterval(this.timer);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+//   // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+//   // componentDidMount() {
+//   //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+//   //   this.timer = setInterval(this.progress, 20);
+//   //   this.callApi()
+//   //     .then((res) => {
+//   //       this.setState({ rows: res });
+//   //       clearInterval(this.timer);
+//   //     })
+//   //     .catch((err) => console.log(err));
+//   // };
 
-  render() {
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-    const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
-    };
+//   render() {
+//     const HeaderRow = ({ row, ...restProps }) => (
+//       <Table.Row
+//         {...restProps}
+//         style={{
+//           cursor: "pointer",
+//           backgroundColor: "whitesmoke",
+//           // ...styles[row.sector.toLowerCase()],
+//         }}
+//         // onClick={()=> alert(JSON.stringify(row))}
+//       />
+//     );
+//     const Row = (props) => {
+//       // console.log("row!!!!!! : ",props);
+//       return <Table.Row {...props} key={props.tableRow.key}/>;
+//     };
 
-    return (
-      <div className="content-box">
-        <div className="cb-header">Workloads</div>
-        <div className="cb-body">
-        <Paper>
-            {this.state.rows ? (
-              [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
-                  <Toolbar />
-                  {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <IntegratedFiltering />
-                  <SearchPanel style={{ marginLeft: 0 }} />
+//     return (
+//       <div className="content-box">
+//         <div className="cb-header">Workloads</div>
+//         <div className="cb-body">
+//         <Paper>
+//             {this.state.rows ? (
+//               [
+//                 <Grid
+//                   rows={this.state.rows}
+//                   columns={this.state.columns}
+//                 >
+//                   <Toolbar />
+//                   {/* 검색 */}
+//                   <SearchState defaultValue="" />
+//                   <IntegratedFiltering />
+//                   <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* Sorting */}
-                  <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
+//                   {/* Sorting */}
+//                   <SortingState
+//                     // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+//                   />
+//                   <IntegratedSorting />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
+//                   {/* 페이징 */}
+//                   <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+//                   <IntegratedPaging />
+//                   <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  {/* 테이블 */}
-                  <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
-        </div>
-      </div>
-    );
-  };
-};
+//                   {/* 테이블 */}
+//                   <Table rowComponent={Row} />
+//                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+//                   <TableHeaderRow
+//                     showSortingControls
+//                     rowComponent={HeaderRow}
+//                   />
+//                 </Grid>,
+//               ]
+//             ) : (
+//               <CircularProgress
+//                 variant="determinate"
+//                 value={this.state.completed}
+//                 style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+//               ></CircularProgress>
+//             )}
+//           </Paper>
+//         </div>
+//       </div>
+//     );
+//   };
+// };
 
 class Pods extends Component {
   constructor(props) {
@@ -397,7 +397,7 @@ class Pods extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (

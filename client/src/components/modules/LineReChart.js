@@ -28,7 +28,7 @@ class LineReChart extends Component {
     const avg = [];
     const key = this.props.name;
     if (this.props.cardinal) {
-      this.props.name.map((i) => {
+      this.props.name.forEach((i) => {
         let sum = this.state.rows.reduce(function (prev, current) {
           return prev + +current[i];
         }, 0);
@@ -48,7 +48,7 @@ class LineReChart extends Component {
             <span style={{fontSize:"13px", fontWeight:"normal", paddingLeft:"5px"}}>
                 {this.props.cardinal ? 
                 this.props.name.map((i, index) => {
-                    return <span>{index === this.props.name.length-1 ? "("+avg[index] +" "+ this.props.unit +" "+ i +")" : "("+avg[index] +" "+ this.props.unit +" "+ i+")" + " /"}</span>;
+                    return <span>{index === this.props.name.length-1 ? "("+avg[index] +" "+ this.props.unit +" "+ i +")" : "("+avg[index] +" "+ this.props.unit +" "+ i+") /"}</span>;
                 }) : 
                 <span>{"("+avg[0] + this.props.unit+")"}</span>
                 }

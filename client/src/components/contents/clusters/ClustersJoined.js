@@ -26,7 +26,9 @@ import {
 import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "../../util/UtLogs.js";
 import Confirm from './../../modules/Confirm';
-import ProgressTemp from './../../modules/ProgressTemp';
+// import ProgressTemp from './../../modules/ProgressTemp';
+import PieReChartMini from '../../modules/PieReChartMini';
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 
 class ClustersJoined extends Component {
   constructor(props) {
@@ -106,7 +108,7 @@ class ClustersJoined extends Component {
 
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -143,7 +145,7 @@ class ClustersJoined extends Component {
 
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -174,6 +176,31 @@ class ClustersJoined extends Component {
           ...style,
         }}
       >
+        <span
+          style={{
+            color:
+            status === "Healthy" ? "#1ab726"
+              : status === "Unhealthy" ? "red"
+                : status === "Unknown" ? "#b5b5b5"
+                  : status === "Warning" ? "#ff8042" : "black",
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+            status === "Healthy" ? "rgba(85,188,138,.1)"
+                : status === "Unhealthy" ? "rgb(152 13 13 / 10%)"
+                  : status === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : status === "Warning" ? "rgb(109 31 7 / 10%)" : "white",
+          boxShadow: 
+            status === "Healthy" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                : status === "Unhealthy" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                  : status === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : status === "Warning" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
+          
         <span
           style={{
             color:
@@ -287,8 +314,9 @@ class ClustersJoined extends Component {
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <SearchPanel style={{ marginLeft: 0 }} />
+                  <SearchState className="search-Satste" defaultValue="" />
+                  <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
+                  <SearchPanel className="search-Satste" style={{ marginLeft: 200, backgroundColor:"#000000" }} />
 
                   {/* Sorting */}
                   <SortingState
@@ -357,6 +385,17 @@ class ResourceStatus extends Component{
     }
   }
 
+  angle = {
+    full : {
+      startAngle : 0,
+      endAngle : 360
+    },
+    half : {
+      startAngle : 180,
+      endAngle : 0
+    }  
+  }
+
   componentWillUpdate(prevProps, prevState){
     if (this.props.data !== prevProps.data) {
         this.setState({
@@ -366,15 +405,64 @@ class ResourceStatus extends Component{
   }
 
   render(){
+    const colors = [
+      "#0088FE",
+      "#ecf0f5",
+    ];
     return(
       <div>
       <div className="rs-title">Cluster Resource Status</div>
-      <div className="rap-contents" style={{display: "flex",
-    overflow: "auto"}}>
+      {/* <div className="rap-contents" style={{display: "flex",overflow: "auto"}}> */}
+      <div className="rap-contents" style={{overflow: "auto"}}>
         {this.state.data.map((item)=>{
           return(
+            
             <Paper className="rs-status">
               <div className="status-title">
+                <div>{item.name}</div>
+              </div>
+
+              <div class="status-content">
+                <PieReChartMini name="CPU" data={item.resourceUsage.cpu} angle={this.angle.full} unit={item.resourceUsage.cpu.unit} colors={colors}></PieReChartMini>
+                <div class="sub-content">
+                  <div>{item.resourceUsage.cpu.status[0].name}</div>
+                  <div>{item.resourceUsage.cpu.status[0].value.toFixed(1)+" "+item.resourceUsage.cpu.unit }</div>
+                </div>
+                <div class="sub-content">
+                  <div> {item.resourceUsage.cpu.status[1].name}</div>
+                  <div>{item.resourceUsage.cpu.status[1].value.toFixed(1)+" "+item.resourceUsage.cpu.unit }</div>
+                </div>
+              </div>
+
+              <div class="status-content">
+                <PieReChartMini name="Memory" data={item.resourceUsage.memory} angle={this.angle.full} unit={item.resourceUsage.memory.unit} colors={colors}></PieReChartMini>
+                <div class="sub-content">
+                  <div>{item.resourceUsage.memory.status[0].name}</div>
+                  <div>{item.resourceUsage.memory.status[0].value.toFixed(1)+" "+item.resourceUsage.memory.unit }</div>
+                </div>
+                <div class="sub-content">
+                  <div> {item.resourceUsage.memory.status[1].name}</div>
+                  <div>{item.resourceUsage.memory.status[1].value.toFixed(1)+" "+item.resourceUsage.memory.unit }</div>
+                </div>
+              </div>
+
+              <div class="status-content">
+                <PieReChartMini name="Storage" data={item.resourceUsage.storage} angle={this.angle.full} unit={item.resourceUsage.cpu.unit} colors={colors}></PieReChartMini>
+                <div class="sub-content">
+                  <div>{item.resourceUsage.storage.status[0].name}</div>
+                  <div>{item.resourceUsage.storage.status[0].value.toFixed(1)+" "+item.resourceUsage.storage.unit }</div>
+                </div>
+                <div class="sub-content">
+                  <div> {item.resourceUsage.storage.status[1].name}</div>
+                  <div>{item.resourceUsage.storage.status[1].value.toFixed(1)+" "+item.resourceUsage.storage.unit }</div>
+                </div>
+              </div>
+              
+              
+              
+              
+
+              {/* <div className="status-title">
                 <div>{item.name}</div>
               </div>
               <div className="status-content">
@@ -395,7 +483,7 @@ class ResourceStatus extends Component{
                   <span>{item.network}</span>
                 </div>
 
-              </div>
+              </div> */}
             </Paper>
           )
         })}

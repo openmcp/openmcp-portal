@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -9,7 +9,7 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  IntegratedSelection,
+  // IntegratedSelection,
   // SelectionState,
 } from "@devexpress/dx-react-grid";
 import {
@@ -87,7 +87,7 @@ class ProjectsPolicy extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -108,7 +108,7 @@ class ProjectsPolicy extends Component {
     })
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });

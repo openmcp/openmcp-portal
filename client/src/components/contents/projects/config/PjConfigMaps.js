@@ -86,7 +86,7 @@ class PjConfigMaps extends Component {
     this.callApi()
       .then((res) => {
         console.log(res)
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -136,7 +136,7 @@ class PjConfigMaps extends Component {
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (

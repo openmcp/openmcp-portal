@@ -21,7 +21,7 @@
     TableHeaderRow,
     PagingPanel,
     TableSelection,
-    TableFixedColumns,
+    // TableFixedColumns,
   } from "@devexpress/dx-react-grid-material-ui";
   import Paper from "@material-ui/core/Paper";
   import EditGKEAuth from './../../../modal/public-cloud-auth/EditGKEAuth';
@@ -94,7 +94,7 @@
     }
   
     Cell = (props) => {
-      const { column, row } = props;
+      const { column } = props;
       if (column.name === "privateKey") {
         return (
           <Table.Cell
@@ -122,7 +122,7 @@
     };
   
     handleClickEdit = () => {
-      if (Object.keys(this.state.selectedRow).length === 0) {
+      if (Object.keys(this.state.selectedRow).length  === 0) {
         alert("Please select a authentication data row");
         this.setState({ open: false });
         return;
@@ -144,7 +144,7 @@
     };
 
     handleClickDelete = () => {
-      if (Object.keys(this.state.selectedRow).length === 0) {
+      if (Object.keys(this.state.selectedRow).length  === 0) {
         alert("Please select a authentication data row");
         this.setState({ open: false });
         return;

@@ -3,12 +3,12 @@ import { Settings } from "@material-ui/icons";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import { Link } from 'react-router-dom';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
+// import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+// import Grow from '@material-ui/core/Grow';
+// import Paper from '@material-ui/core/Paper';
+// import Popper from '@material-ui/core/Popper';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import MenuList from '@material-ui/core/MenuList';
 import * as utilLog from './../util/UtLogs.js';
 
 
@@ -78,12 +78,12 @@ class Head extends Component {
 
   render() {
 
-    const handleListKeyDown = (event) => {
-      if (event.key === 'Tab') {
-        event.preventDefault();
-        this.setState({open:false});
-      }
-    }
+    // const handleListKeyDown = (event) => {
+    //   if (event.key === 'Tab') {
+    //     event.preventDefault();
+    //     this.setState({open:false});
+    //   }
+    // }
 
     const userName = localStorage.getItem("userName");
     return (
@@ -144,7 +144,7 @@ class Head extends Component {
               </div>
             </div>
 
-            <div className={"main-menu " + this.state.selectedMenu} id="settings" onClick={this. onSelectMenu}>
+            <div className={"main-menu " + this.state.selectedMenu} id="settings" onClick={this.onSelectMenu}>
               <Link to="/settings/accounts" onClick={this.onSelectMenu}>
                 <div style={{ fontSize: 20}}><Settings></Settings></div>
               </Link>

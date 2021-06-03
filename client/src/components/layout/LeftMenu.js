@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import {ArrowBackIos, NavigateNext} from '@material-ui/icons';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import * as fnMenuList from './LeftMenuData.js';
 // import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
@@ -29,7 +29,7 @@ class LeftMenu extends Component {
   render() {
     const menuList = fnMenuList.getMenu(this.props.pathParams);
     const lists = [];
-    menuList[this.props.menu].map((item) => {
+    menuList[this.props.menu].forEach((item) => {
       if(item.type === "single"){
         lists.push(
           <li className="" >

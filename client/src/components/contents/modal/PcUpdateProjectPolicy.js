@@ -94,7 +94,7 @@ class PcUpdateProjectPolicy extends Component {
   }
 
   handleSave = (e) => {
-    if (this.state.clusterCPURate=="" || this.state.clusterMemRate=="" ||this.state.podsCPURate==""||this.state.podsMemRate==""){
+    if (this.state.clusterCPURate==="" || this.state.clusterMemRate==="" ||this.state.podsCPURate===""||this.state.podsMemRate===""){
       alert("Please insert threshold data");
       return;
     }

@@ -47,7 +47,7 @@ import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
 import Accounts from './../contents/settings/Accounts';
 import Policy from './../contents/settings/Policy';
-import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
+// import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 import DeploymentDetail from './../contents/deployments/DeploymentDetail';
 import ServicesDetail from './../contents/netowork/ServicesDetail';
 import IngressDetail from './../contents/netowork/IngressDetail';

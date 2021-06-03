@@ -11,7 +11,7 @@ import {
   IntegratedSorting,
   SelectionState,
   IntegratedSelection,
-  TableColumnVisibility,
+  // TableColumnVisibility,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -92,7 +92,7 @@ class ConfigKVM extends Component {
   }
 
   Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
     if (column.name === "control") {
       return (
         <Table.Cell
@@ -120,7 +120,7 @@ class ConfigKVM extends Component {
   };
 
   handleClickEdit = () => {
-    if (Object.keys(this.state.selectedRow).length === 0) {
+    if (Object.keys(this.state.selectedRow).length  === 0) {
       alert("Please select a authentication data row");
       this.setState({ open: false });
       return;
@@ -141,7 +141,7 @@ class ConfigKVM extends Component {
   };
 
   handleClickDelete = () => {
-    if (Object.keys(this.state.selectedRow).length === 0) {
+    if (Object.keys(this.state.selectedRow).length  === 0) {
       alert("Please select a authentication data row");
       this.setState({ open: false });
       return;

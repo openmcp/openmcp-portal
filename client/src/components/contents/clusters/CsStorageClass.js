@@ -85,7 +85,7 @@ class CsStorageClass extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -124,7 +124,7 @@ class CsStorageClass extends Component {
     const Cell = (props) => {
       const { column, row } = props;
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (

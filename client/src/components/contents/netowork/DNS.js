@@ -23,7 +23,7 @@ import Editor from "../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import axios from 'axios';
-import ProgressTemp from './../../modules/ProgressTemp';
+// import ProgressTemp from './../../modules/ProgressTemp';
 
 let apiParams = "";
 class DNS extends Component {
@@ -93,7 +93,7 @@ spec:
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if(res == null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -186,7 +186,7 @@ spec:
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value == undefined){
+        if(props.value === undefined){
           return ""
         } else {
           return (
