@@ -328,21 +328,36 @@ spec:
 
     return (
       <div>
-        <Button
+        {/* <Button
           variant="outlined"
           color="primary"
           onClick={this.handleClickOpen}
           style={{
-            position: "absolute",
-            right: "115px",
-            top: "26px",
+            // position: "absolute",
+            // right: "115px",
+            // top: "26px",
             zIndex: "10",
             width: "148px",
             textTransform: "capitalize",
           }}
         >
           Migration
-        </Button>
+        </Button> */}
+        <div
+          // variant="outlined"
+          // color="primary"
+          onClick={this.handleClickOpen}
+          style={{
+            // position: "absolute",
+            // right: "115px",
+            // top: "26px",
+            zIndex: "10",
+            width: "148px",
+            textTransform: "capitalize",
+          }}
+        >
+          Migration
+        </div>
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"

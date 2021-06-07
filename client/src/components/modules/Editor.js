@@ -15,7 +15,6 @@ import Typography from "@material-ui/core/Typography";
 
 // import Modal from "@material-ui/core/Modal";
 
-
 /*
 <Editor title="create" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
   
@@ -50,28 +49,28 @@ const styles = (theme) => ({
   },
 });
 
-var context = ''
+var context = "";
 
 class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {
       open: false,
-      context : ``,
+      context: ``,
     };
   }
 
-  componentDidMount(){
-    this.setState({context:this.props.context})
+  componentDidMount() {
+    this.setState({ context: this.props.context });
   }
 
   onChange = (newValue) => {
     // this.setState({context: newValue});
-    context = newValue
+    context = newValue;
   };
 
-  handleExcute= () => {
-    this.props.excuteScript(context)
+  handleExcute = () => {
+    this.props.excuteScript(context);
     this.setState({ open: false });
   };
 
@@ -115,12 +114,6 @@ class Editor extends Component {
         padding: theme.spacing(1),
       },
     }))(MuiDialogActions);
-
-
-
-
-
-
 
     // const useStyles = makeStyles((theme) => ({
     //     paper: {
@@ -180,9 +173,9 @@ class Editor extends Component {
         editorProps={{ $blockScrolling: true }}
         width="100%"
         fontSize="0.875rem"
-        style={{lineHeight:"1.05rem"}}
-        value = {this.state.context}
-          /*
+        style={{ lineHeight: "1.05rem" }}
+        value={this.state.context}
+        /*
           // value={`apiVersion: types.kubefed.io/v1beta1
           //   kind: FederatedDeployment
           //   metadata:
@@ -247,9 +240,22 @@ class Editor extends Component {
     );
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", right:"30px", top:"26px", zIndex:"10",textTransform: "capitalize"}}>
+        <div
+          // variant="outlined"
+          // color="primary"
+          onClick={this.handleClickOpen}
+          style={{
+            // position: "absolute",
+            // right: "30px",
+            // top: "26px",
+            // textAlign:"center",
+            zIndex: "10",
+            width: "148px",
+            textTransform: "capitalize",
+          }}
+        >
           {this.props.btTitle}
-        </Button>
+        </div>
         {/* <Button variant="outlined" color="primary" onClick={this.handleClickOpen} style={{position:"absolute", left:"220px", top:"102px", zIndex:"10",textTransform: "capitalize"}}>
           {this.props.btTitle}
         </Button> */}
@@ -263,9 +269,7 @@ class Editor extends Component {
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             {this.props.title}
           </DialogTitle>
-          <DialogContent dividers>
-          {editor}
-          </DialogContent>
+          <DialogContent dividers>{editor}</DialogContent>
           <DialogActions>
             <Button autoFocus onClick={this.handleExcute} color="primary">
               excution

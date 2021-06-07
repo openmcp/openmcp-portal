@@ -329,21 +329,36 @@ class SnapShotControl extends Component {
 
     return (
       <div>
-        <Button
-          variant="outlined"
-          color="primary"
+        <div
+          // variant="outlined"
+          // color="primary"
           onClick={this.handleClickOpen}
           style={{
-            position: "absolute",
-            right: "272px",
-            top: "26px",
+            // position: "absolute",
+            // right: "272px",
+            // top: "26px",
             zIndex: "10",
             width: "148px",
             textTransform: "capitalize",
           }}
         >
           SnapShot
-        </Button>
+        </div>
+        {/* <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.handleClickOpen}
+          style={{
+            // position: "absolute",
+            // right: "272px",
+            // top: "26px",
+            zIndex: "10",
+            width: "148px",
+            textTransform: "capitalize",
+          }}
+        >
+          SnapShot
+        </Button> */}
         <Dialog
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"

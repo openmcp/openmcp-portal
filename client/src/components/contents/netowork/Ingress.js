@@ -21,8 +21,12 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../modules/Editor";
 import { NavigateNext } from "@material-ui/icons";
-import * as utilLog from './../../util/UtLogs.js';
-import axios from 'axios';
+import * as utilLog from "./../../util/UtLogs.js";
+import axios from "axios";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 class Ingress extends Component {
   constructor(props) {
@@ -47,11 +51,12 @@ class Ingress extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext: ``,
+      anchorEl: null,
     };
   }
 
@@ -76,7 +81,7 @@ class Ingress extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -86,13 +91,13 @@ class Ingress extends Component {
       .catch((err) => console.log(err));
 
     const userId = localStorage.getItem("userName");
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW11');
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW11");
   }
-  
+
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -103,27 +108,28 @@ class Ingress extends Component {
   };
 
   excuteScript = (context) => {
-    if(this.state.openProgress){
-      this.setState({openProgress:false})
+    if (this.state.openProgress) {
+      this.setState({ openProgress: false });
     } else {
-      this.setState({openProgress:true})
+      this.setState({ openProgress: true });
     }
 
     const url = `/ingress/create`;
     const data = {
-      yaml:context
+      yaml: context,
     };
-    console.log(context)
-    axios.post(url, data)
-    .then((res) => {
+    console.log(context);
+    axios
+      .post(url, data)
+      .then((res) => {
         // alert(res.data.message);
         this.setState({ open: false });
         this.onUpdateData();
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         alert(err);
-    });
-  }
+      });
+  };
 
   render() {
     // 셀 데이터 스타일 변경
@@ -162,22 +168,19 @@ class Ingress extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      
+
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value === undefined){
-          return ""
+        if (props.value === undefined) {
+          return "";
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          return props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item) => {
+                return <p>{item}</p>;
+              })
+            : props.value;
         }
       };
 
@@ -219,12 +222,22 @@ class Ingress extends Component {
       return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
+    const handleClick = (event) => {
+      this.setState({ anchorEl: event.currentTarget });
+    };
+
+    const handleClose = () => {
+      this.setState({ anchorEl: null });
+    };
+
+    const open = Boolean(this.state.anchorEl);
+
     return (
       <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+            <span onClick={this.onRefresh} style={{ cursor: "pointer" }}>
               Ingress
             </span>
           </h1>
@@ -244,7 +257,53 @@ class Ingress extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor btTitle="create" title="Create Ingress" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "21px",
+                    top: "20px",
+                    zIndex: "10",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="long-menu"
+                    anchorEl={this.state.anchorEl}
+                    keepMounted
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 48 * 4.5,
+                      },
+                    }}
+                    style={{ top: "50px" }}
+                  >
+                    <MenuItem
+                      onClick={handleClose}
+                      style={{
+                        textAlign: "center",
+                        display: "block",
+                        fontSize: "14px",
+                      }}
+                    >
+                      <Editor
+                        btTitle="create"
+                        title="Create Ingress"
+                        context={this.state.editorContext}
+                        excuteScript={this.excuteScript}
+                      />
+                    </MenuItem>
+                  </Menu>
+                </div>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}

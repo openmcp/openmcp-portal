@@ -27,6 +27,10 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import Confirm from './../../modules/Confirm';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 class ClustersJoinable extends Component {
   constructor(props) {
@@ -69,6 +73,7 @@ class ClustersJoinable extends Component {
       },
       confrimTarget : "false",
       editorContext : ``,
+      anchorEl: null,
     };
   }
 
@@ -221,6 +226,15 @@ class ClustersJoinable extends Component {
       });
     };
 
+    const handleClick = (event) => {
+      this.setState({anchorEl : event.currentTarget});
+    };
+
+    const handleClose = () => {
+      this.setState({anchorEl : null});
+    };
+
+    const open = Boolean(this.state.anchorEl);
     return (
       <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
@@ -243,7 +257,42 @@ class ClustersJoinable extends Component {
         </section>
           <section className="content" style={{ position: "relative" }}>
               <Paper>
-                <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
+              <div style={{
+                  position: "absolute",
+                  right: "21px",
+                  top: "20px",
+                  zIndex: "10",
+                  textTransform: "capitalize",
+                }}>
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="long-menu"
+                    anchorEl={this.state.anchorEl}
+                    keepMounted
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 48 * 4.5,
+                      },
+                    }}
+                    style={{ top: "50px"}}
+                  >
+                    <MenuItem 
+                      onClick={handleClose}
+                      style={{ textAlign: "center", display: "block", fontSize:"14px"}}
+                    >
+                      <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
+                    </MenuItem>
+                  </Menu>
+                </div>
                 {/* <Editor title="create" context={this.state.editorContext}/> */}
         {this.state.rows ? (
                     <Grid

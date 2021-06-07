@@ -24,6 +24,10 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import NdAddNode from './../modal/NdAddNode';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 class Nodes extends Component {
   constructor(props) {
@@ -64,6 +68,7 @@ class Nodes extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
+      anchorEl: null,
     };
   }
 
@@ -231,6 +236,16 @@ class Nodes extends Component {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
+    const handleClick = (event) => {
+      this.setState({anchorEl : event.currentTarget});
+    };
+
+    const handleClose = () => {
+      this.setState({anchorEl : null});
+    };
+
+    const open = Boolean(this.state.anchorEl);
+
     return (
       <div className="content-wrapper nodes full">
         {/* 컨텐츠 헤더 */}
@@ -257,9 +272,42 @@ class Nodes extends Component {
             {this.state.rows ? (
               [
                 // <Editor title="add node"/>,
-                <NdAddNode
-                  onUpdateData = {this.onUpdateData}
-                />,
+                <div style={{
+                  position: "absolute",
+                  right: "21px",
+                  top: "20px",
+                  zIndex: "10",
+                  textTransform: "capitalize",
+                }}>
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="long-menu"
+                    anchorEl={this.state.anchorEl}
+                    keepMounted
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 48 * 4.5,
+                      },
+                    }}
+                    style={{ top: "50px"}}
+                  >
+                    <MenuItem 
+                      onClick={handleClose}
+                      style={{ textAlign: "center", display: "block", fontSize:"14px"}}
+                    >
+                      <NdAddNode onUpdateData = {this.onUpdateData}/>
+                    </MenuItem>
+                  </Menu>
+                </div>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

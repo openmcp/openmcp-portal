@@ -29,6 +29,10 @@ import Confirm from './../../modules/Confirm';
 // import ProgressTemp from './../../modules/ProgressTemp';
 import PieReChartMini from '../../modules/PieReChartMini';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import IconButton from '@material-ui/core/IconButton';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 class ClustersJoined extends Component {
   constructor(props) {
@@ -80,7 +84,8 @@ class ClustersJoined extends Component {
         }  
       },
       confrimTarget : "false",
-      openProgress : false
+      openProgress : false,
+      anchorEl: null,
     };
   }
   componentWillMount() {
@@ -281,6 +286,16 @@ class ClustersJoined extends Component {
       });
     };
 
+    const handleClick = (event) => {
+      this.setState({anchorEl : event.currentTarget});
+    };
+
+    const handleClose = () => {
+      this.setState({anchorEl : null});
+    };
+
+    const open = Boolean(this.state.anchorEl);
+
     return ([
       <div className="content-wrapper cluster-list full">
       {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
@@ -309,13 +324,49 @@ class ClustersJoined extends Component {
         {this.state.rows ? (
           [
             <section className="content" style={{ position: "relative" }}>
+              
               <Paper>
-                <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
+                <div style={{
+                  position: "absolute",
+                  right: "21px",
+                  top: "20px",
+                  zIndex: "10",
+                  textTransform: "capitalize",
+                }}>
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="long-menu"
+                    anchorEl={this.state.anchorEl}
+                    keepMounted
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 48 * 4.5,
+                      },
+                    }}
+                    style={{ top: "50px"}}
+                  >
+                    <MenuItem 
+                      onClick={handleClose}
+                      style={{ textAlign: "center", display: "block", fontSize:"14px"}}
+                    >
+                      <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
+                    </MenuItem>
+                  </Menu>
+                </div>
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState className="search-Satste" defaultValue="" />
-                  <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/>
+                  {/* <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}/> */}
                   <SearchPanel className="search-Satste" style={{ marginLeft: 200, backgroundColor:"#000000" }} />
 
                   {/* Sorting */}

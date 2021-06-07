@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-} from "@material-ui/core";
+// import { Button } from "@material-ui/core";
 import {
   SearchState,
   IntegratedFiltering,
@@ -24,9 +22,13 @@ import {
   // TableFixedColumns,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import EditAKSAuth from './../../../modal/public-cloud-auth/EditAKSAuth';
-import axios from 'axios';
-import Confirm2 from './../../../../modules/Confirm2';
+import EditAKSAuth from "./../../../modal/public-cloud-auth/EditAKSAuth";
+import axios from "axios";
+import Confirm2 from "./../../../../modules/Confirm2";
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 class ConfigAKS extends Component {
   constructor(props) {
@@ -35,7 +37,7 @@ class ConfigAKS extends Component {
     this.state = {
       // tb_auth_eks > seq,cluster,type,accessKey,secretKey
       columns: [
-        { name: "seq", title:"No"},
+        { name: "seq", title: "No" },
         { name: "cluster", title: "Cluster" },
         { name: "clientId", title: "Client ID" },
         { name: "clientSec", title: "Client Sec" },
@@ -62,20 +64,21 @@ class ConfigAKS extends Component {
 
       selection: [],
       selectedRow: "",
-      popTitle:"",
+      popTitle: "",
 
       confirmOpen: false,
-      confirmInfo : {
-        title :"Delete AKS PCA Info",
-        context :"Are you sure you want to delete AKS PCA config?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
+      confirmInfo: {
+        title: "Delete AKS PCA Info",
+        context: "Are you sure you want to delete AKS PCA config?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
       },
-      confrimTarget : "",
-      confirmTargetKeyname:""
+      confrimTarget: "",
+      confirmTargetKeyname: "",
+      anchorEl: null,
     };
   }
 
@@ -105,84 +108,82 @@ class ConfigAKS extends Component {
             whiteSpace: "inherit",
             lineHeight: "1.5",
           }}
-        >
-        </Table.Cell>
+        ></Table.Cell>
       );
     }
     return <Table.Cell>{props.value}</Table.Cell>;
   };
 
   handleClickNew = () => {
-    this.setState({ 
-      open : true,
-      new : true,
-      popTitle:"Add AKS Authentication",
-      data:{}
+    this.setState({
+      open: true,
+      new: true,
+      popTitle: "Add AKS Authentication",
+      data: {},
     });
   };
 
   handleClickEdit = () => {
-    if (Object.keys(this.state.selectedRow).length  === 0) {
+    if (Object.keys(this.state.selectedRow).length === 0) {
       alert("Please select a authentication data row");
       this.setState({ open: false });
       return;
     }
 
-    this.setState({ 
-      open: true, 
-      new: false, 
-      popTitle:"Edit AKS Authentication",
-      data:{
-        seq : this.state.selectedRow.seq,
+    this.setState({
+      open: true,
+      new: false,
+      popTitle: "Edit AKS Authentication",
+      data: {
+        seq: this.state.selectedRow.seq,
         cluster: this.state.selectedRow.cluster,
         clientId: this.state.selectedRow.clientId,
         clientSec: this.state.selectedRow.clientSec,
         tenantId: this.state.selectedRow.tenantId,
         subId: this.state.selectedRow.subId,
-      }
+      },
     });
   };
 
   handleClickDelete = () => {
-    if (Object.keys(this.state.selectedRow).length  === 0) {
+    if (Object.keys(this.state.selectedRow).length === 0) {
       alert("Please select a authentication data row");
       this.setState({ open: false });
       return;
     } else {
       this.setState({
         confirmOpen: true,
-      })
+      });
     }
-
-    
-  }
+  };
 
   //callback
   confirmed = (result) => {
-    this.setState({confirmOpen:false})
+    this.setState({ confirmOpen: false });
 
-    if(result) {
+    if (result) {
       const data = {
-        seq : this.state.selectedRow.seq,
-        cluster : this.state.selectedRow.cluster
+        seq: this.state.selectedRow.seq,
+        cluster: this.state.selectedRow.cluster,
       };
-  
+
       const url = `/settings/config/pca/aks`;
-      axios.delete(url, {data:data})
-      .then((res) => {
-        this.callBackClosed();
-      })
-      .catch((err) => {
-        console.log("Error : ",err);
-      });
+      axios
+        .delete(url, { data: data })
+        .then((res) => {
+          this.callBackClosed();
+        })
+        .catch((err) => {
+          console.log("Error : ", err);
+        });
     } else {
-      this.setState({confirmOpen:false})
+      this.setState({ confirmOpen: false });
     }
-  }
+  };
 
   callBackClosed = () => {
     this.setState({
-      open : false,
+      open: false,
       selection: [],
       selectedRow: "",
     });
@@ -191,7 +192,7 @@ class ConfigAKS extends Component {
         this.setState({ rows: res });
       })
       .catch((err) => console.log(err));
-  }
+  };
 
   render() {
     const HeaderRow = ({ row, ...restProps }) => (
@@ -220,15 +221,25 @@ class ConfigAKS extends Component {
       });
     };
 
+    const handleClick = (event) => {
+      this.setState({ anchorEl: event.currentTarget });
+    };
+
+    const handleClose = () => {
+      this.setState({ anchorEl: null });
+    };
+
+    const open = Boolean(this.state.anchorEl);
+
     return (
       <div>
-
         <Confirm2
-          confirmInfo={this.state.confirmInfo} 
-          confrimTarget ={this.state.confrimTarget} 
-          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmInfo={this.state.confirmInfo}
+          confrimTarget={this.state.confrimTarget}
+          confirmTargetKeyname={this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
-          confirmOpen={this.state.confirmOpen}/>
+          confirmOpen={this.state.confirmOpen}
+        />
 
         <EditAKSAuth
           open={this.state.open}
@@ -237,31 +248,101 @@ class ConfigAKS extends Component {
           title={this.state.popTitle}
           data={this.state.data}
         />
-        
+
         <div className="md-contents-body">
-          <div style={{padding: "15px 15px 15px 25px",
-                        backgroundColor: "#bfdcec",
-                        boxShadow: "0px 0px 3px 0px #b9b9b9"
-                      }}
-          > AKS Authentications Configration</div>
+          <div
+            style={{
+              padding: "15px 15px 15px 25px",
+              backgroundColor: "#bfdcec",
+              boxShadow: "0px 0px 3px 0px #b9b9b9",
+            }}
+          >
+            {" "}
+            AKS Authentications Configration
+          </div>
           <section className="md-content">
             <Paper>
-              <Grid 
-                rows={this.state.rows} 
-                columns={this.state.columns}
+              <div
+                style={{
+                  position: "absolute",
+                  right: "21px",
+                  top: "283px",
+                  zIndex: "10",
+                  textTransform: "capitalize",
+                }}
               >
-                <div style={{position:"relative"}}>
-                  <div style = {{position:"absolute",
-                        right: "13px",
-                        top: "13px",
-                        zIndex: "10",}}>
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  anchorEl={this.state.anchorEl}
+                  keepMounted
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      maxHeight: 48 * 4.5,
+                    },
+                  }}
+                  style={{ top: "50px" }}
+                >
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                  >
+                    <div
+                      onClick={this.handleClickNew}
+                      style={{ width: "148px", textTransform: "capitalize", }}
+                    >
+                      New </div>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                  >
+                    <div
+                      onClick={this.handleClickEdit}
+                      style={{ width: "148px", textTransform: "capitalize", }}
+                    >
+                      Edit
+                    </div>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                  >
+                    <div
+                      onClick={this.handleClickDelete}
+                      style={{ width: "148px", textTransform: "capitalize", }}
+                    >
+                      Delete
+                    </div>
+                  </MenuItem>
+                </Menu>
+              </div>
+              <Grid rows={this.state.rows} columns={this.state.columns}>
+                {/* <div style={{ position: "relative" }}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: "13px",
+                      top: "13px",
+                      zIndex: "10",
+                    }}
+                  >
                     <Button
                       variant="outlined"
                       color="primary"
                       onClick={this.handleClickNew}
                       style={{
                         width: "120px",
-                        marginRight:"10px",
+                        marginRight: "10px",
                         textTransform: "capitalize",
                       }}
                     >
@@ -273,7 +354,7 @@ class ConfigAKS extends Component {
                       onClick={this.handleClickEdit}
                       style={{
                         width: "120px",
-                        marginRight:"10px",
+                        marginRight: "10px",
                         textTransform: "capitalize",
                       }}
                     >
@@ -291,7 +372,7 @@ class ConfigAKS extends Component {
                       Delete
                     </Button>
                   </div>
-                </div>
+                </div> */}
                 <Toolbar />
                 {/* 검색 */}
                 <SearchState defaultValue="" />
@@ -320,12 +401,9 @@ class ConfigAKS extends Component {
                 <IntegratedPaging />
 
                 {/* 테이블 */}
-                <Table
-                  cellComponent={this.Cell}
-                  rowComponent={Row}
-                />
+                <Table cellComponent={this.Cell} rowComponent={Row} />
                 <TableColumnResizing
-                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  defaultColumnWidths={this.state.defaultColumnWidths}
                 />
                 <TableHeaderRow showSortingControls rowComponent={HeaderRow} />
                 {/* <TableColumnVisibility defaultHiddenColumnNames={["role_id"]} /> */}

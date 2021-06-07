@@ -126,21 +126,21 @@ class NdAddNode extends Component {
 
     return (
       <div>
-        <Button
-          variant="outlined"
-          color="primary"
+        <div
+          // variant="outlined"
+          // color="primary"
           onClick={this.handleClickOpen}
           style={{
-            position: "absolute",
-            right: "26px",
-            top: "26px",
+            // position: "absolute",
+            // right: "26px",
+            // top: "26px",
             zIndex: "10",
             width: "148px",
             textTransform: "capitalize",
           }}
         >
           Add Node
-        </Button>
+        </div>
         <Dialog
           aria-labelledby="customized-dialog-title"
           open={this.state.open}

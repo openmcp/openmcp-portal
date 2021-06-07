@@ -23,6 +23,10 @@ import Editor from "./../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import axios from 'axios';
+import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 let apiParams = "";
 class Services extends Component {
@@ -61,6 +65,7 @@ class Services extends Component {
 
       completed: 0,
       editorContext : ``,
+      anchorEl: null,
     };
   }
 
@@ -222,6 +227,16 @@ class Services extends Component {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
+    const handleClick = (event) => {
+      this.setState({ anchorEl: event.currentTarget });
+    };
+
+    const handleClose = () => {
+      this.setState({ anchorEl: null });
+    };
+
+    const open = Boolean(this.state.anchorEl);
+
     return (
       <div className="content-wrapper full">
         {/* 컨텐츠 헤더 */}
@@ -246,7 +261,48 @@ class Services extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor btTitle="create" title="Create Service" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "21px",
+                    top: "20px",
+                    zIndex: "10",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    id="long-menu"
+                    anchorEl={this.state.anchorEl}
+                    keepMounted
+                    open={open}
+                    onClose={handleClose}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 48 * 4.5,
+                      },
+                    }}
+                    style={{ top: "50px" }}
+                  >
+                    <MenuItem
+                      onClick={handleClose}
+                      style={{
+                        textAlign: "center",
+                        display: "block",
+                        fontSize: "14px",
+                      }}
+                    >
+                      <Editor btTitle="create" title="Create Service" context={this.state.editorContext} excuteScript={this.excuteScript}/>
+                    </MenuItem>
+                  </Menu>
+                </div>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

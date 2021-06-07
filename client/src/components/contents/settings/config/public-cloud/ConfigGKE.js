@@ -1,7 +1,5 @@
   import React, { Component } from "react";
-  import {
-    Button,
-  } from "@material-ui/core";
+  // import {    Button,  } from "@material-ui/core";
   import {
     SearchState,
     IntegratedFiltering,
@@ -27,7 +25,11 @@
   import EditGKEAuth from './../../../modal/public-cloud-auth/EditGKEAuth';
   import axios from 'axios';
   import Confirm2 from './../../../../modules/Confirm2';
-  
+  import IconButton from "@material-ui/core/IconButton";
+  import Menu from "@material-ui/core/Menu";
+  import MenuItem from "@material-ui/core/MenuItem";
+  import MoreVertIcon from "@material-ui/icons/MoreVert";
+
   class ConfigGKE extends Component {
     constructor(props) {
       super(props);
@@ -75,7 +77,8 @@
         }
       },
       confrimTarget : "",
-      confirmTargetKeyname:""
+      confirmTargetKeyname:"",
+      anchorEl: null,
       };
     }
   
@@ -217,6 +220,17 @@
             : {},
         });
       };
+
+      const handleClick = (event) => {
+        this.setState({ anchorEl: event.currentTarget });
+      };
+  
+      const handleClose = () => {
+        this.setState({ anchorEl: null });
+      };
+  
+      const open = Boolean(this.state.anchorEl);
+  
   
       return (
         <div>
@@ -244,11 +258,75 @@
             > GKE Authentications Configration</div>
             <section className="md-content">
               <Paper>
+              <div
+                style={{
+                  position: "absolute",
+                  right: "21px",
+                  top: "283px",
+                  zIndex: "10",
+                  textTransform: "capitalize",
+                }}
+              >
+                <IconButton
+                  aria-label="more"
+                  aria-controls="long-menu"
+                  aria-haspopup="true"
+                  onClick={handleClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  id="long-menu"
+                  anchorEl={this.state.anchorEl}
+                  keepMounted
+                  open={open}
+                  onClose={handleClose}
+                  PaperProps={{
+                    style: {
+                      maxHeight: 48 * 4.5,
+                    },
+                  }}
+                  style={{ top: "50px" }}
+                >
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                  >
+                    <div
+                      onClick={this.handleClickNew}
+                      style={{ width: "148px", textTransform: "capitalize", }}
+                    >
+                      New </div>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                  >
+                    <div
+                      onClick={this.handleClickEdit}
+                      style={{ width: "148px", textTransform: "capitalize", }}
+                    >
+                      Edit
+                    </div>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={handleClose}
+                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                  >
+                    <div
+                      onClick={this.handleClickDelete}
+                      style={{ width: "148px", textTransform: "capitalize", }}
+                    >
+                      Delete
+                    </div>
+                  </MenuItem>
+                </Menu>
+              </div>
                 <Grid 
                   rows={this.state.rows} 
                   columns={this.state.columns}
                 >
-                  <div style={{position:"relative"}}>
+                  {/* <div style={{position:"relative"}}>
                     <div style = {{position:"absolute",
                           right: "13px",
                           top: "13px",
@@ -289,7 +367,7 @@
                       Delete
                     </Button>
                     </div>
-                  </div>
+                  </div> */}
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
