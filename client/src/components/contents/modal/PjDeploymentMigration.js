@@ -180,6 +180,7 @@ class PjDeploymentMigration extends Component {
       cluster: this.state.firstValue,
       open: false,
     });
+    this.props.handleClose();
   };
 
   handleSave = (e) => {
@@ -271,6 +272,7 @@ spec:
         alert(res.data.message);
         this.setState({ open: false });
         this.props.onUpdateData();
+        this.props.menuClose();
     })
     .catch((err) => {
         alert(err);
@@ -286,6 +288,7 @@ spec:
 
     //close modal popup
     this.setState({ open: false });
+    this.props.menuClose();
   };
 
   render() {

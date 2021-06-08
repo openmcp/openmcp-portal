@@ -24,9 +24,12 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import axios from 'axios';
 import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Popper from '@material-ui/core/Popper';
+import MenuList from '@material-ui/core/MenuList';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 let apiParams = "";
 class Services extends Component {
@@ -278,30 +281,26 @@ class Services extends Component {
                   >
                     <MoreVertIcon />
                   </IconButton>
-                  <Menu
-                    id="long-menu"
-                    anchorEl={this.state.anchorEl}
-                    keepMounted
-                    open={open}
-                    onClose={handleClose}
-                    PaperProps={{
-                      style: {
-                        maxHeight: 48 * 4.5,
-                      },
-                    }}
-                    style={{ top: "50px" }}
-                  >
-                    <MenuItem
-                      onClick={handleClose}
-                      style={{
-                        textAlign: "center",
-                        display: "block",
-                        fontSize: "14px",
-                      }}
-                    >
-                      <Editor btTitle="create" title="Create Service" context={this.state.editorContext} excuteScript={this.excuteScript}/>
-                    </MenuItem>
-                  </Menu>
+                  <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                      {...TransitionProps}
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList autoFocusItem={open} id="menu-list-grow">
+                              <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
+                                <Editor btTitle="create" title="Create Service" context={this.state.editorContext} excuteScript={this.excuteScript}
+                                menuClose={handleClose}
+                                />
+                              </MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
                 </div>,
                 <Grid
                   rows={this.state.rows}

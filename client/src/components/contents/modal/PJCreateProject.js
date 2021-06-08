@@ -140,6 +140,7 @@ class PjCreateProject extends Component {
   handleClose = () => {
     this.initState();
     this.setState({ open: false });
+    this.props.menuClose();
   };
 
   handleSave = (e) => {
@@ -157,7 +158,8 @@ class PjCreateProject extends Component {
     const userId = localStorage.getItem("userName");
     utilLog.fn_insertPLogs(userId, "log-PJ-CR01");
 
-    this.setState({ open: false });
+    this.handleClose();
+    // this.setState({ open: false });
     // console.log(this.state.key, this.state.value, this.state.taint)
   };
 
@@ -223,7 +225,7 @@ class PjCreateProject extends Component {
           Create Project
         </div>
         <Dialog
-          onClose={this.handleClose}
+          // onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           fullWidth={false}

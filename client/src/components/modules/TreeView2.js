@@ -5,11 +5,13 @@ import Tree from "react-d3-tree";
 // import DnsIcon from "@material-ui/icons/Dns";
 // import MapIcon from '@material-ui/icons/Map';
 // import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import AmpStoriesIcon from '@material-ui/icons/AmpStories';
+// import AmpStoriesIcon from '@material-ui/icons/AmpStories';
 // import BallotIcon from '@material-ui/icons/Ballot';
 // import LayersIcon from '@material-ui/icons/Layers';
-import HomeWorkIcon from '@material-ui/icons/HomeWork';
+// import HomeWorkIcon from '@material-ui/icons/HomeWork';
 import { Link } from 'react-router-dom';
+import { AiOutlineCluster } from "react-icons/ai";
+import { FaServer } from "react-icons/fa";
 
 
 
@@ -29,11 +31,11 @@ class NodeLabel extends Component {
         {nodeData._children ? 
           [
             <div className="" style={{fontSize:"16px", fontWeight:"bold", color:"#006280"}}>{nodeData.name}</div>,
-            <HomeWorkIcon style={{position:"relative", fontSize:"43px", color: "#367fa9", background: "#ffffff", stroke: "none" }}/>,
+            <AiOutlineCluster style={{position:"relative", fontSize:"48px", color: "#367fa9", background: "#ffffff", stroke: "none" }}/>,
           ] : 
           [
             <Link to={"/clusters/"+nodeData.name+"/overview"}>
-              <AmpStoriesIcon style={{ fontSize:"43px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>
+              <FaServer style={{ fontSize:"30px", color: (nodeData.attributes.status === "Healthy" ? "#0088fe" : nodeData.attributes.status === "Joinable" ? "#a9a9a9" : "#ff8042"), stroke: "none", background: "#ffffff" }}/>
               <div class="" style={{fontSize:"14px", fontWeight:"bold", marginTop:"-8px"}}>
                 {nodeData.name}
               </div>

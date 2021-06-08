@@ -50,6 +50,7 @@ class AddMembers extends Component {
 
   handleClose = () => {
     this.setState({ open: false });
+    this.props.menuClose();
   };
 
   handleRegister = (e) => {
@@ -68,6 +69,7 @@ class AddMembers extends Component {
       .then((res) => {
           alert(res.data.message);
           this.setState({ open: false });
+          this.props.menuClose();
       })
       .catch((err) => {
           alert(err);
@@ -112,7 +114,7 @@ class AddMembers extends Component {
           Create an Account
         </div>
         <Dialog
-          onClose={this.handleClose}
+          // onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           fullWidth={false}

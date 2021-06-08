@@ -72,6 +72,7 @@ class Editor extends Component {
   handleExcute = () => {
     this.props.excuteScript(context);
     this.setState({ open: false });
+    this.props.menuClose();
   };
 
   handleClickOpen = () => {
@@ -80,6 +81,7 @@ class Editor extends Component {
 
   handleClose = () => {
     this.setState({ open: false });
+    this.props.menuClose();
   };
 
   render() {

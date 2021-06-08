@@ -91,6 +91,7 @@ class NdAddNode extends Component {
       open: false,
       value: 0
     });
+    this.props.menuClose();
   };
 
   handleChange = (event, newValue) => {

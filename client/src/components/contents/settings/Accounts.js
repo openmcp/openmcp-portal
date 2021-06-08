@@ -29,9 +29,12 @@ import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
 import AcChangeRole from './../modal/AcChangeRole';
 import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Popper from '@material-ui/core/Popper';
+import MenuList from '@material-ui/core/MenuList';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 class Accounts extends Component {
   constructor(props) {
@@ -211,32 +214,31 @@ class Accounts extends Component {
                 >
                   <MoreVertIcon />
                 </IconButton>
-                <Menu
-                  id="long-menu"
-                  anchorEl={this.state.anchorEl}
-                  keepMounted
-                  open={open}
-                  onClose={handleClose}
-                  PaperProps={{
-                    style: {
-                      maxHeight: 48 * 4.5,
-                    },
-                  }}
-                  style={{ top: "50px" }}
-                >
-                  <MenuItem
-                    onClick={handleClose}
-                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
-                  >
-                    <AddMembers onUpdateData={this.onUpdateData}/>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={handleClose}
-                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
-                  >
-                    <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>
-                  </MenuItem>
-                </Menu>
+                <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                      {...TransitionProps}
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList autoFocusItem={open} id="menu-list-grow">
+                            <MenuItem
+                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            >
+                              <AddMembers onUpdateData={this.onUpdateData} menuClose={handleClose}/>
+                            </MenuItem>
+                            <MenuItem
+                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            >
+                              <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData} menuClose={handleClose}/>
+                            </MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
               </div>,
                 <Grid
                   rows={this.state.rows}

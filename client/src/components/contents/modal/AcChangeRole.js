@@ -146,6 +146,7 @@ class AcChangeRole extends Component {
       role_id: "",
       open: false,
     });
+    this.props.menuClose();
   };
 
   handleSave = (e) => {
@@ -164,6 +165,7 @@ class AcChangeRole extends Component {
       .then((res) => {
           alert(res.data.message);
           this.setState({ open: false });
+          this.props.menuClose();
           this.props.onUpdateData();
       })
       .catch((err) => {
@@ -235,7 +237,7 @@ class AcChangeRole extends Component {
           Change Role
         </div>
         <Dialog
-          onClose={this.handleClose}
+          // onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           fullWidth={false}

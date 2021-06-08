@@ -1211,6 +1211,21 @@ tbody {
   border-bottom: 0px !important;
 }
 
+.MuiTableCell-root {
+  padding: 13px 0px 13px 18px !important;
+}
+
+.MuiTableCell-root > p {
+  margin : -3px 0;
+}
+
+.MuiTableCell-root > span[class*="TableSelectCell-checkbox"]{
+  padding:0px;
+}
+
+.ResizingControl-resizeHandle-32 {
+  z-index:0 !important;
+}
 
 /* content box */
 .content-box {

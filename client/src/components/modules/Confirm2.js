@@ -104,7 +104,7 @@ class Confirm2 extends Component {
       <div>
       <Dialog
         open={this.state.open}
-        onClose={this.handleNo}
+        // onClose={this.handleNo}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >

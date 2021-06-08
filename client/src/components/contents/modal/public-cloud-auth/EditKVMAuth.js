@@ -173,7 +173,7 @@ class EditKVMAuth extends Component {
     return (
       <div>
         <Dialog
-          onClose={this.handleClose}
+          // onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           fullWidth={false}

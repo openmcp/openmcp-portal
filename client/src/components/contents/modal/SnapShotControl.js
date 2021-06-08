@@ -156,6 +156,7 @@ class SnapShotControl extends Component {
       role_id: "",
       open: false,
     });
+    this.props.menuClose();
   };
 
   handleSave = (e) => {
@@ -170,6 +171,7 @@ class SnapShotControl extends Component {
 
     //close modal popup
     this.setState({ open: false });
+    this.props.menuClose();
   };
 
   onSnapshotDelete = (data) => {

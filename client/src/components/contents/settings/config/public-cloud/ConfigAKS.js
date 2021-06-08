@@ -26,9 +26,13 @@ import EditAKSAuth from "./../../../modal/public-cloud-auth/EditAKSAuth";
 import axios from "axios";
 import Confirm2 from "./../../../../modules/Confirm2";
 import IconButton from "@material-ui/core/IconButton";
-import Menu from "@material-ui/core/Menu";
+// import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Popper from '@material-ui/core/Popper';
+import MenuList from '@material-ui/core/MenuList';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 class ConfigAKS extends Component {
   constructor(props) {
@@ -279,52 +283,53 @@ class ConfigAKS extends Component {
                 >
                   <MoreVertIcon />
                 </IconButton>
-                <Menu
-                  id="long-menu"
-                  anchorEl={this.state.anchorEl}
-                  keepMounted
-                  open={open}
-                  onClose={handleClose}
-                  PaperProps={{
-                    style: {
-                      maxHeight: 48 * 4.5,
-                    },
-                  }}
-                  style={{ top: "50px" }}
-                >
-                  <MenuItem
-                    onClick={handleClose}
-                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
-                  >
-                    <div
-                      onClick={this.handleClickNew}
-                      style={{ width: "148px", textTransform: "capitalize", }}
-                    >
-                      New </div>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={handleClose}
-                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
-                  >
-                    <div
-                      onClick={this.handleClickEdit}
-                      style={{ width: "148px", textTransform: "capitalize", }}
-                    >
-                      Edit
-                    </div>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={handleClose}
-                    style={{ textAlign: "center", display: "block", fontSize: "14px"}}
-                  >
-                    <div
-                      onClick={this.handleClickDelete}
-                      style={{ width: "148px", textTransform: "capitalize", }}
-                    >
-                      Delete
-                    </div>
-                  </MenuItem>
-                </Menu>
+                <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                      {...TransitionProps}
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList autoFocusItem={open} id="menu-list-grow">
+                            <MenuItem
+                              onClick={handleClose}
+                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            >
+                              <div
+                                onClick={this.handleClickNew}
+                                style={{ width: "148px", textTransform: "capitalize", }}
+                              >
+                                New </div>
+                            </MenuItem>
+                            <MenuItem
+                              onClick={handleClose}
+                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            >
+                              <div
+                                onClick={this.handleClickEdit}
+                                style={{ width: "148px", textTransform: "capitalize", }}
+                              >
+                                Edit
+                              </div>
+                            </MenuItem>
+                            <MenuItem
+                              onClick={handleClose}
+                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            >
+                              <div
+                                onClick={this.handleClickDelete}
+                                style={{ width: "148px", textTransform: "capitalize", }}
+                              >
+                                Delete
+                              </div>
+                            </MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
               </div>
               <Grid rows={this.state.rows} columns={this.state.columns}>
                 {/* <div style={{ position: "relative" }}>

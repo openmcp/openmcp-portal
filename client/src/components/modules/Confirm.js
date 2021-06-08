@@ -71,11 +71,13 @@ class Confirm extends Component {
     const handleYes = () => {
       this.props.confirmed(true);
       this.setState({ open: false });
+      this.props.menuClose();
     };
 
     const handleNo = () => {
       this.props.confirmed(false);
       this.setState({ open: false });
+      this.props.menuClose();
     };
 
     return (
@@ -114,7 +116,7 @@ class Confirm extends Component {
         </div>
         <Dialog
           open={this.state.open}
-          onClose={handleNo}
+          // onClose={handleNo}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
