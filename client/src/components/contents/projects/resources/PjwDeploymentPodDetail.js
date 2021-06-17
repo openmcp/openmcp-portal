@@ -59,7 +59,7 @@ class PjwDeploymentPodDetail extends Component {
           <section className="content-header">
             <h1>
             { this.props.match.params.pod}
-              <small>Pod Information</small>
+              <small>Pod Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

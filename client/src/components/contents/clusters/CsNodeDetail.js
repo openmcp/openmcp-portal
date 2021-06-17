@@ -109,7 +109,7 @@ class CsNodeDetail extends Component {
           <section className="content-header">
             <h1>
             { this.props.match.params.node}
-              <small>Node Information</small>
+              <small>Node Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

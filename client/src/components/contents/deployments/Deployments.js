@@ -342,7 +342,7 @@ spec:
                                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
                               >
                                 <SnapShotControl
-                                  title="create deployment"
+                                  title="create snapshot"
                                   rowData={this.state.selectedRow}
                                   onUpdateData = {this.onUpdateData}
                                   menuClose={handleClose}
@@ -352,7 +352,7 @@ spec:
                                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
                               >
                                 <PjDeploymentMigration
-                                  title="create deployment"
+                                  title="pod migration"
                                   rowData={this.state.selectedRow}
                                   onUpdateData = {this.onUpdateData}
                                   menuClose={handleClose}

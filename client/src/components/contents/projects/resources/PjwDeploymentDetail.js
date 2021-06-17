@@ -103,7 +103,7 @@ class PjwDeploymentDetail extends Component {
         <div className="content-wrapper pj-deployments full">
           {/* 컨텐츠 헤더 */}
           <section className="content-header" style={{ paddingTop: 15 }}>
-            Deployment Information
+            Overview
             <small>
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}

@@ -85,8 +85,8 @@ class PjIngressDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            {this.props.match.params.service}
-              <small>Ingress Information</small>
+            {this.props.match.params.ingress}
+              <small>Ingress Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

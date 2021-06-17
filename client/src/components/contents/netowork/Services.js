@@ -67,7 +67,15 @@ class Services extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext : `apiVersion: v1
+kind: Service
+metadata:
+  namespace: openmcp
+  labels: {}
+spec:
+  sessionAffinity: None
+  selector: {}
+`,
       anchorEl: null,
     };
   }

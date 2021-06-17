@@ -633,7 +633,6 @@ app.get("/projects/:project/resources/services/:service", (req, res) => {
   // res.send(overview);
 
   // console.log(`${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`)
-  console.log("aldfjalskdjflskdfj");
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`,

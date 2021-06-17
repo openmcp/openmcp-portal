@@ -143,6 +143,9 @@ class Contents extends Component {
           <Route path="/projects/:project/resources/workloads/statefulsets" 
             render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
+          <Route path="/projects/:project/resources/workloads/statefulsets/:statefulset" 
+            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           <Route path="/projects/:project/resources/workloads/deployments" 
             render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>

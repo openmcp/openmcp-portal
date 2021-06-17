@@ -24,6 +24,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../util/UtLogs.js';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import{FaCube} from "react-icons/fa";
 
 let apiParams = "";
 class DeploymentDetail extends Component {
@@ -70,18 +71,18 @@ class DeploymentDetail extends Component {
   };
 
   refresh = () =>{
-    this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        if(res == null){
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
-        console.log(res);
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
+    // this.timer = setInterval(this.progress, 20);
+    // this.callApi()
+    //   .then((res) => {
+    //     if(res == null){
+    //       this.setState({ rows: [] });
+    //     } else {
+    //       this.setState({ rows: res });
+    //     }
+    //     console.log(res);
+    //     clearInterval(this.timer);
+    //   })
+    //   .catch((err) => console.log(err));
   }
 
 
@@ -90,14 +91,18 @@ class DeploymentDetail extends Component {
       <div>
         <div className="content-wrapper pj-deployments full">
           {/* 컨텐츠 헤더 */}
-          <section className="content-header" style={{ paddingTop: 15 }}>
-            Deployment Information
+          <section className="content-header">
+            <h1>
+              { this.props.match.params.deployment}
+              <small>Deployment Overview</small>
+            </h1>
+{/*             
             <small>
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
               />
               {this.props.match.params.deployment}
-            </small>
+            </small> */}
           </section>
           {/* 내용부분 */}
           <section className="content">
@@ -215,7 +220,6 @@ class ReplicaStatus extends React.Component {
       .catch((err) => console.log(err));
   };
 
-
   delClickEventHandler = (e, cluster) => {
     e.preventDefault();
     // console.log("delClickEventHandler", e, cluster)
@@ -226,7 +230,7 @@ class ReplicaStatus extends React.Component {
           .then((res) => {
             this.setState({ rows: res });
             clearInterval(this.timer);
-            this.props.refresh();
+            // this.props.refresh();
           })
           .catch((err) => console.log(err));
         })
@@ -241,7 +245,7 @@ class ReplicaStatus extends React.Component {
           .then((res) => {
             this.setState({ rows: res });
             clearInterval(this.timer);
-            this.props.refresh();
+            // this.props.refresh();
           })
           .catch((err) => console.log(err));
         })
@@ -272,13 +276,21 @@ class ReplicaStatus extends React.Component {
   render() {
     const rectangle = (status, pId) => {
       return (
-        <div className="rectangle"
-          id={pId}
-          style={{ 
-            backgroundColor: status === "ready" ? "#367fa9" : "orange",
-          }}
-          
-        />
+
+        [
+          <div>
+            <FaCube className="cube" style={{ 
+              color: status === "ready" ? "#367fa9" : "orange",
+            }}/>
+          </div>,
+          // <div className="rectangle"
+          //   id={pId}
+          //   style={{ 
+          //     backgroundColor: status === "ready" ? "#367fa9" : "orange",
+          //   }}
+            
+          // />
+        ]
       );
     };
 

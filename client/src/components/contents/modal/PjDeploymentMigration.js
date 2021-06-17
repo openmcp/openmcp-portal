@@ -180,7 +180,7 @@ class PjDeploymentMigration extends Component {
       cluster: this.state.firstValue,
       open: false,
     });
-    this.props.handleClose();
+    this.props.menuClose();
   };
 
   handleSave = (e) => {

@@ -101,7 +101,7 @@ class NdNodeDetail extends Component {
           <section className="content-header">
             <h1>
             { this.props.match.params.node}
-              <small>Node Information</small>
+              <small>Node Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -109,11 +109,11 @@ class NdNodeDetail extends Component {
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Clusters</NavLink>
+                <NavLink to="/nodes">Nodes</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Nodes
+                Overview
               </li>
             </ol>
           </section>

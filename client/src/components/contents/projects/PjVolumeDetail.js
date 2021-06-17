@@ -70,7 +70,7 @@ class PjVolumeDetail extends Component {
           <section className="content-header">
             <h1>
               { this.props.match.params.volume}
-              <small> Volume Information</small>
+              <small> Volume Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

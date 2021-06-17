@@ -53,7 +53,6 @@ class PjOverview extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        // debugger;
         if(res == null){
           this.setState({ rows: [] });
         } else {

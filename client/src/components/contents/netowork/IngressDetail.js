@@ -84,7 +84,7 @@ class IngressDetail extends Component {
           <section className="content-header">
             <h1>
             {this.props.match.params.ingress}
-              <small>Ingress Information</small>
+              <small>Ingress Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

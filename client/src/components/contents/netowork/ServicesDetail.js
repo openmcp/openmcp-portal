@@ -70,7 +70,7 @@ class ServicesDetail extends Component {
           <section className="content-header">
             <h1>
             { this.props.match.params.service}
-              <small>Service Information</small>
+              <small>Service Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -107,13 +107,20 @@ class ServicesDetail extends Component {
 }
 
 class BasicInfo extends Component {
+  // constructor(props){
+  //   super(props);
+    
+  //   this.state = {
+  //     selector : this.props.rowData.selector.split(",")
+  //   }
+  // }
   render(){
     return (
       <div className="content-box">
         <div className="cb-header">Basic Info</div>
         <div className="cb-body">
           <div style={{display:"flex"}}>
-            <div className="cb-body-left">
+            <div className="cb-body-left" style={{width:"50%"}}>
               <div>
                 <span>Name : </span>
                 <strong>{this.props.rowData.name}</strong>
@@ -132,7 +139,7 @@ class BasicInfo extends Component {
               </div>
               <div>
                 <span>Selector : </span>
-                {this.props.rowData.selector}
+                  {this.props.rowData.selector}
               </div>
               {/* <div>
                 <span>Access Type : </span>

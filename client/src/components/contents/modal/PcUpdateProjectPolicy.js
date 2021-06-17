@@ -163,7 +163,7 @@ class PcUpdateProjectPolicy extends Component {
             <div className="md-contents-body add-node">
             <section className="md-content">
                 {/* deployment informations */}
-                <p>Target Deployment</p>
+                <p>Target Project</p>
                 <div id="md-content-info">
                   <div class="md-partition">
                     <div class="md-item">

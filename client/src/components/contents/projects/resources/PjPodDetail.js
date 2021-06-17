@@ -74,8 +74,8 @@ class PjPodDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            { this.props.match.params.pod}
-              <small>Pod Information</small>
+              { this.props.match.params.pod}
+              <small>Pod Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

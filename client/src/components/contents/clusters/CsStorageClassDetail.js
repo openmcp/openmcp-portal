@@ -77,7 +77,7 @@ class CsStorageClassDetail extends Component {
           <section className="content-header">
             <h1>
             {this.props.match.params.storage_class}
-              <small>Storage Class Information</small>
+              <small>Storage Class Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

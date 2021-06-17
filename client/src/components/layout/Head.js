@@ -119,7 +119,7 @@ class Head extends Component {
             <div className={"main-menu " + this.state.selectedMenu} id="pods" onClick={this.onSelectMenu}>
               <Link to="/pods"  onClick={this.onSelectMenu}>Pods</Link>
               <div className="sub-menu pods">
-                <Link to="/pods"  onClick={this.onSelectMenu}>Pod Info</Link>
+                <Link to="/pods"  onClick={this.onSelectMenu}>Pods</Link>
                 <Link to="/pods-hpa"  onClick={this.onSelectMenu}>HPA</Link>
                 <Link to="/pods-vpa"  onClick={this.onSelectMenu} >VPA</Link>
               </div>

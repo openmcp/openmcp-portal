@@ -58,7 +58,17 @@ class Ingress extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext: ``,
+      editorContext: `apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: openmcp
+  labels: {}
+  name: ingress
+  annotations:
+    kubesphere.io/alias-name: ingress
+    kubesphere.io/description: ingress-test
+spec:
+  rules: []`,
       anchorEl: null,
     };
   }

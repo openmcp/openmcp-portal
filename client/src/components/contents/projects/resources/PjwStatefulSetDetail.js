@@ -102,12 +102,12 @@ class PjwStatefulSetDetail extends Component {
         <div className="content-wrapper pj-deployments full">
           {/* 컨텐츠 헤더 */}
           <section className="content-header" style={{ paddingTop: 15 }}>
-            Deployment Information
+            Overview
             <small>
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
               />
-              {this.props.match.params.deployment}
+              {this.props.match.params.statefulset}
             </small>
             {/* <ol className="breadcrumb">
               <li>
@@ -129,7 +129,7 @@ class PjwStatefulSetDetail extends Component {
             {this.state.rows ? (
               [
                 <BasicInfo rowData={this.state.rows.basic_info} />,
-                <ReplicaStatus refresh={this.refresh} />,
+                // <ReplicaStatus refresh={this.refresh} />,
                 <Pods rowData={this.state.rows.pods} />,
                 <Ports rowData={this.state.rows.ports} />,
                 // <PhysicalResources

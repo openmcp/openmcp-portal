@@ -1223,7 +1223,7 @@ tbody {
   padding:0px;
 }
 
-.ResizingControl-resizeHandle-32 {
+div[class*="ResizingControl-resizeHandle"] {
   z-index:0 !important;
 }
 
@@ -1596,6 +1596,12 @@ g {
   border-radius: 4px;
   margin: 1px;
   float: left;
+}
+
+.pj-deployments .content .replica-set .cube {
+  margin: 1px;
+  float: left;
+  font-size:28px;
 }
 
 .pj-deployments .content .replica-set .circle {

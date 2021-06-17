@@ -223,13 +223,14 @@ class PjWorkloads extends Component {
                 {/* <DeploymentsTab pathParam={this.props.match.params.project}></DeploymentsTab> */}
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
-                <Route path="/projects/:project/resources/workloads/statefulsets/:statefulset" 
-                  render={({match,location}) => <PjwStatefulSetDetail  match={match} location={location}/>} >
-                </Route>
-                <Route path="/projects/:project/resources/workloads/statefulsets" 
-                      render={({match,location}) => <PjwStatefulsets  match={match} location={location}/>} >
-                </Route>
-                
+                <Switch>
+                  <Route path="/projects/:project/resources/workloads/statefulsets/:statefulset" 
+                    render={({match,location}) => <PjwStatefulSetDetail  match={match} location={location}/>} >
+                  </Route>
+                  <Route path="/projects/:project/resources/workloads/statefulsets" 
+                        render={({match,location}) => <PjwStatefulsets  match={match} location={location}/>} >
+                  </Route>
+                </Switch>
               </TabPanel>
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
                 Item Three

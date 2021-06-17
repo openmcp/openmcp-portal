@@ -70,7 +70,7 @@ class DNSDetail extends Component {
           <section className="content-header">
             <h1>
             { this.props.match.params.dns}
-              <small>DNS Information</small>
+              <small>DNS Overview</small>
             </h1>
             <ol className="breadcrumb">
               <li>

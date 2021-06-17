@@ -3,7 +3,7 @@ export function getMenu(pathParams) {
     clusters : [
       {
         type: "single",
-        title : "OverView",
+        title : "Overview",
         path : "/clusters/" + pathParams.cluster + "/overview",
         state : pathParams.state
       },
@@ -36,7 +36,7 @@ export function getMenu(pathParams) {
     nodes : [
       {
         type: "single",
-        title : "OverView",
+        title : "Overview",
         path : "/nodes/" + pathParams.node + "/overview",
         state : pathParams.state
       },
@@ -56,7 +56,7 @@ export function getMenu(pathParams) {
     projects : [
       {
         type: "single",
-        title : "OverView",
+        title : "Overview",
         path : "/projects/"+pathParams.project + "/overview",
         searchString: pathParams.searchString,
         state : pathParams.state,
@@ -102,7 +102,7 @@ export function getMenu(pathParams) {
     pods : [
       {
         type: "single",
-        title : "OverView",
+        title : "Overview",
         path : "/pods/" + pathParams.pod + "/overview",
         state : pathParams.state,
       },

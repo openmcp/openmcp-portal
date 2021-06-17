@@ -176,7 +176,6 @@ class ChangeAKSReource extends Component {
   };
 
   confirmed = (result) => {
-    debugger;
     this.setState({confirmOpen:false});
 
     //show progress loading...

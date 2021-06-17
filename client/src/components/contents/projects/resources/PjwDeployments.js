@@ -34,6 +34,15 @@ import axios from 'axios';
 // import { NavigateNext} from '@material-ui/icons';
 import SnapShotControl from './../../modal/SnapShotControl';
 
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+
+import Popper from '@material-ui/core/Popper';
+import MenuList from '@material-ui/core/MenuList';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 
 // let apiParams = "";
 class PjwDeployments extends Component {
@@ -84,7 +93,8 @@ spec:
           containers:
           - image: nginx
             name: nginx`,
-      openProgress : false
+      openProgress : false,
+      anchorEl:null,
     };
   }
 
@@ -279,6 +289,16 @@ spec:
       this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
 
+    const handleClick = (event) => {
+      this.setState({anchorEl : event.currentTarget});
+    };
+
+    const handleClose = () => {
+      this.setState({anchorEl : null});
+    };
+
+    const open = Boolean(this.state.anchorEl);
+
     return (
       <div className="content-wrapper full">
         {this.state.clusterName}
@@ -287,17 +307,64 @@ spec:
           <Paper>
             {this.state.rows ? (
               [
-                <SnapShotControl
-                  title="create deployment"
-                  rowData={this.state.selectedRow}
-                  onUpdateData = {this.onUpdateData}
-                />,
-                <PjDeploymentMigration
-                  title="migration"
-                  rowData={this.state.selectedRow}
-                  onUpdateData = {this.onUpdateData}
-                />,
-                <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript}/>,
+                <div style={{
+                  position: "absolute",
+                  right: "21px",
+                  top: "20px",
+                  zIndex: "10",
+                  textTransform: "capitalize",
+                }}>
+                  <IconButton
+                    aria-label="more"
+                    aria-controls="long-menu"
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                 
+                  <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                    {({ TransitionProps, placement }) => (
+                      <Grow
+                      {...TransitionProps}
+                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                      >
+                        <Paper>
+                          <ClickAwayListener onClickAway={handleClose}>
+                            <MenuList autoFocusItem={open} id="menu-list-grow">
+                              <MenuItem 
+                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
+                              >
+                                <SnapShotControl
+                                  title="create snapshot"
+                                  rowData={this.state.selectedRow}
+                                  onUpdateData = {this.onUpdateData}
+                                  menuClose={handleClose}
+                                />
+                              </MenuItem>
+                              <MenuItem 
+                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
+                              >
+                                <PjDeploymentMigration
+                                  title="pod migration"
+                                  rowData={this.state.selectedRow}
+                                  onUpdateData = {this.onUpdateData}
+                                  menuClose={handleClose}
+                                />
+                              </MenuItem>
+                              <MenuItem 
+                                // onClick={handleClose}
+                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
+                              >
+                                <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
+                              </MenuItem>
+                            </MenuList>
+                          </ClickAwayListener>
+                        </Paper>
+                      </Grow>
+                    )}
+                  </Popper>
+                </div>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
