@@ -13,6 +13,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import PdPodResourceConfig from './../modal/PdPodResourceConfig';
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 
 // import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 // import PlayArrowRoundedIcon from '@material-ui/icons/PlayArrowRounded';
@@ -52,7 +53,10 @@ class PdPodDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-PD-VW02');
   }  
 

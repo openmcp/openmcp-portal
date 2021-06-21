@@ -12,7 +12,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import axios from "axios";
-// import * as utilLog from "../../../util/UtLogs.js";
+import * as utilLog from "../../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 // import Confirm2 from "../../../modules/Confirm2";
 
 const styles = (theme) => ({
@@ -138,8 +139,11 @@ class EditKVMAuth extends Component {
     // alert(this.state.cluster+","+ this.state.secretKey+","+this.state.accessKey)
 
     // loging deployment migration
-    // const userId = localStorage.getItem("userName");
-    // utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+    utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
 
     
   };

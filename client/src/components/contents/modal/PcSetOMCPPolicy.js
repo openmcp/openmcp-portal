@@ -10,7 +10,9 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import Slider from "@material-ui/core/Slider";
 import * as utilLog from "../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import axios from "axios";
+
 
 const styles = (theme) => ({
   root: {
@@ -108,7 +110,10 @@ class PcSetOMCPPolicy extends Component {
         } else {
           this.props.onUpdateData();
           // console.log("sdfsdf",this.props)
-          const userId = localStorage.getItem("userName");
+          let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
           utilLog.fn_insertPLogs(userId, "log-PO-MD01");
           alert(res.data.message);
         }
@@ -119,7 +124,10 @@ class PcSetOMCPPolicy extends Component {
 
       // this.props.onUpdateData();
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PD-MD01");
     this.setState({ open: false });
   };

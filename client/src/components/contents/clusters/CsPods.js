@@ -22,6 +22,7 @@ import {
 // import Editor from "../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 
 
@@ -108,7 +109,10 @@ class CsPods extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-CL-VW05');
   };
 

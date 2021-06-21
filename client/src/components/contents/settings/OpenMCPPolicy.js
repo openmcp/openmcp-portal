@@ -25,6 +25,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 // import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 // import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
 import PcSetOMCPPolicy from '../modal/PcSetOMCPPolicy';
@@ -90,7 +91,10 @@ class OpenMCPPolicy extends Component {
       })
       .catch((err) => console.log(err));
       
-  const userId = localStorage.getItem("userName");
+  let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
   utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
 
   };

@@ -22,6 +22,7 @@ import {
 import Editor from "./../../modules/Editor";
 import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -30,6 +31,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 
 class Ingress extends Component {
   constructor(props) {
@@ -103,7 +105,10 @@ spec:
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PJ-VW11");
   }
 

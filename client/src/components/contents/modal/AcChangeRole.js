@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 // import SelectBox from "../../modules/SelectBox";
 import * as utilLog from "../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
   Button,
@@ -174,7 +175,10 @@ class AcChangeRole extends Component {
 
 
     // loging deployment migration
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
 
     //close modal popup

@@ -24,8 +24,10 @@ import {
   // TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from '../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import PcAddProjectPolicy from './../modal/PcAddProjectPolicy';
 import PcUpdateProjectPolicy from './../modal/PcUpdateProjectPolicy';
+
 
 class ProjectsPolicy extends Component {
   constructor(props) {
@@ -96,7 +98,10 @@ class ProjectsPolicy extends Component {
       })
       .catch((err) => console.log(err));
       
-  const userId = localStorage.getItem("userName");
+  let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
   utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
 
   };

@@ -22,6 +22,7 @@ import {
 // import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import NdAddNode from './../modal/NdAddNode';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import IconButton from '@material-ui/core/IconButton';
@@ -105,7 +106,10 @@ class Nodes extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-ND-VW01');
   };
 
@@ -122,7 +126,10 @@ class Nodes extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 

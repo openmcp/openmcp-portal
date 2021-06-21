@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import * as utilLog from "../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 // import { Link } from "react-router-dom";
@@ -177,7 +178,10 @@ class PcAddProjectPolicy extends Component {
 
     
     // loging Add Project Policy
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PO-CR01");
 
     //close modal popup

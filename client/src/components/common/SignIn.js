@@ -3,22 +3,26 @@ import { Redirect } from "react-router-dom";
 // import SignUp from "./SignUp";
 import axios from 'axios';
 import * as utilLog from './../util/UtLogs.js';
-// import { AsyncStorage } from 'AsyncStorage';
+import { AsyncStorage } from 'AsyncStorage';
 
 // AsyncStorage 사용방법
 // var username = "test"
 // AsyncStorage.setItem("userName", username)
 // var userId = ""
-// AsyncStorage.getItem("userName",(err, result) => {
-//   userId = result
-// })
+// AsyncStorage.getItem("userName",(err, result) => { userId = result})
+
+// localStorage 사용방법
+// localStorage.setItem("token", "lkwejflkawef");
+// localStorage.getItem("token")
 
 
 class SignIn extends Component {
   constructor(props) {
     super(props);
-    // const token = localStorage.getItem("token")
-    const token = localStorage.getItem("token");
+    let token = null;
+    AsyncStorage.getItem("token",(err, result) => { 
+      token = result;
+    })
     
     
 
@@ -59,10 +63,11 @@ class SignIn extends Component {
       axios.post(url, data)
       .then((res) => {
         if(res.data.data.rowCount > 0 ){
-          localStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
-          localStorage.setItem("userName", username);
-          localStorage.setItem("roles", res.data.data.rows[0].roles);
-          // AsyncStorage.setItem('clusterName',row.cluster);
+          debugger;
+          AsyncStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
+          AsyncStorage.setItem("userName", username);
+          AsyncStorage.setItem("roles", res.data.data.rows[0].roles);
+          
           this.setState({
             loggedIn: true,
           });

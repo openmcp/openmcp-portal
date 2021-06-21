@@ -23,6 +23,7 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from "./../../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 
 // let apiParams = "";
 class PjSecretDetail extends Component {
@@ -58,7 +59,10 @@ class PjSecretDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PJ-VW16");
   }
 

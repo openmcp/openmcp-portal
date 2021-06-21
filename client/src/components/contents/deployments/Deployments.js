@@ -25,6 +25,7 @@ import {
 // import {  Button,} from "@material-ui/core";
 import Editor from "./../../modules/Editor";
 import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
 import { NavigateNext} from '@material-ui/icons';
 import axios from 'axios';
@@ -130,7 +131,10 @@ spec:
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   }
 
@@ -146,7 +150,10 @@ spec:
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 

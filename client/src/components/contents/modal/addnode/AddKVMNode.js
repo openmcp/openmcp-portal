@@ -2,6 +2,7 @@ import React, { Component } from "react";
 // import CircularProgress from "@material-ui/core/CircularProgress";
 import { TextField } from "@material-ui/core";
 import * as utilLog from "../../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import {
   PagingState,
   SortingState,
@@ -24,7 +25,7 @@ import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import ProgressTemp from './../../../modules/ProgressTemp';
 import Confirm2 from './../../../modules/Confirm2';
-// import { AsyncStorage } from 'AsyncStorage';
+
 
 class AddKVMNode extends Component {
   constructor(props) {
@@ -141,7 +142,10 @@ class AddKVMNode extends Component {
             this.setState({openProgress:false})
             this.props.handleClose()
           });
-      const userId = localStorage.getItem("userName");
+      let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
       utilLog.fn_insertPLogs(userId, "log-ND-CR01");
     } else {
       this.setState({confirmOpen:false})

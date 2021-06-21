@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 // import MenuItem from '@material-ui/core/MenuItem';
 // import MenuList from '@material-ui/core/MenuList';
 import * as utilLog from './../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 
 
 class Head extends Component {
@@ -25,30 +26,79 @@ class Head extends Component {
     this.prevOpen = React.createRef(this.state.open);
   }
 
+  componentWillUpdate(prevProps, prevState){
+    if (this.props.path !== prevProps.path) {
+      // if (prevProps.path.indexOf('/dashboard') >= 0 ){
+      //   this.setState({selectedMenu:'dashboard'})
+      // } else if (prevProps.path.indexOf('/clusters') >= 0 ) {
+      //   this.setState({selectedMenu:'clusters'})
+      // } else if (prevProps.path.indexOf('/nodes') >= 0 ) {
+      //   this.setState({selectedMenu:'nodes'})
+      // } else if (prevProps.path.indexOf('/projects') >= 0 ) {
+      //   this.setState({selectedMenu:'projects'})
+      // } else if (prevProps.path.indexOf('/deployments') >= 0 ) {
+      //   this.setState({selectedMenu:'deployments'})
+      // } else if (prevProps.path.indexOf('/pods') >= 0 ) {
+      //   this.setState({selectedMenu:'pods'})
+      // } else if (prevProps.path.indexOf('/network') >= 0 ) {
+      //   this.setState({selectedMenu:'network'})
+      // } else if (prevProps.path.indexOf('/settings') >= 0 ){
+      //   this.setState({selectedMenu:'settings'})
+      // }
+      this.selectionMenu(prevProps.path);
+    }
+  }
+
+
+
   componentWillMount(){
-    var menu = window.location.pathname
-    // console.log(menu)
-    if (menu.indexOf('dashboard') >= 0 ){
+    // var menu = window.location.pathname
+    // // console.log(menu)
+    // if (menu.indexOf('/dashboard') >= 0 ){
+    //   this.setState({selectedMenu:'dashboard'})
+    // } else if (menu.indexOf('/clusters') >= 0 ) {
+    //   this.setState({selectedMenu:'clusters'})
+    // } else if (menu.indexOf('/nodes') >= 0 ) {
+    //   this.setState({selectedMenu:'nodes'})
+    // } else if (menu.indexOf('/projects') >= 0 ) {
+    //   this.setState({selectedMenu:'projects'})
+    // } else if (menu.indexOf('/deployments') >= 0 ) {
+    //   this.setState({selectedMenu:'deployments'})
+    // } else if (menu.indexOf('/pods') >= 0 ) {
+    //   this.setState({selectedMenu:'pods'})
+    // } else if (menu.indexOf('/network') >= 0 ) {
+    //   this.setState({selectedMenu:'network'})
+    // } else if (menu.indexOf('/settings') >= 0 ){
+    //   this.setState({selectedMenu:'settings'})
+    // }
+    this.selectionMenu(this.props.path);
+  }
+  
+  selectionMenu = (path) => {
+    if (path.indexOf('/dashboard') >= 0 ){
       this.setState({selectedMenu:'dashboard'})
-    } else if (menu.indexOf('clusters') >= 0 ) {
+    } else if (path.indexOf('/clusters') >= 0 ) {
       this.setState({selectedMenu:'clusters'})
-    } else if (menu.indexOf('nodes') >= 0 ) {
+    } else if (path.indexOf('/nodes') >= 0 ) {
       this.setState({selectedMenu:'nodes'})
-    } else if (menu.indexOf('projects') >= 0 ) {
+    } else if (path.indexOf('/projects') >= 0 ) {
       this.setState({selectedMenu:'projects'})
-    } else if (menu.indexOf('deployments') >= 0 ) {
+    } else if (path.indexOf('/deployments') >= 0 ) {
       this.setState({selectedMenu:'deployments'})
-    } else if (menu.indexOf('pods') >= 0 ) {
+    } else if (path.indexOf('/pods') >= 0 ) {
       this.setState({selectedMenu:'pods'})
-    } else if (menu.indexOf('network') >= 0 ) {
+    } else if (path.indexOf('/network') >= 0 ) {
       this.setState({selectedMenu:'network'})
-    } else if (menu.indexOf('settings') >= 0 ){
+    } else if (path.indexOf('/settings') >= 0 ){
       this.setState({selectedMenu:'settings'})
     }
   }
-  
+
   onLogout = (e) => {
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-LG-LG02');
 
     localStorage.removeItem("token");
@@ -85,7 +135,10 @@ class Head extends Component {
     //   }
     // }
 
-    const userName = localStorage.getItem("userName");
+    let userName = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userName= result;
+    })
     return (
       <header className="main-header">
         <Link to="/dashboard" className="logo">

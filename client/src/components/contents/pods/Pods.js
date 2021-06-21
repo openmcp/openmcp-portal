@@ -21,6 +21,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 
 // import Editor from "./../modules/Editor";
 // import Projects from './../projects/Projects';
@@ -101,7 +102,10 @@ class Pods extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-PD-VW01');
   };
 

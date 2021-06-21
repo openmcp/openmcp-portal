@@ -20,6 +20,8 @@ import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import ProgressTemp from './../../../modules/ProgressTemp';
 import Confirm2 from './../../../modules/Confirm2';
+import * as utilLog from "./../../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 
 // const styles = (theme) => ({
 //   root: {
@@ -153,9 +155,13 @@ class ChangeEKSReource extends Component {
         
         this.props.handleClose()
         this.setState({openProgress:false})
+
       // loging Add Node
-      // const userId = localStorage.getItem("userName");
-      // utilLog.fn_insertPLogs(userId, "log-ND-MD02");
+      let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+      utilLog.fn_insertPLogs(userId, "log-ND-MD02");
     } else {
       this.setState({openProgress:false})
     }

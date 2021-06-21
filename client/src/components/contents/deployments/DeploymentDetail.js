@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { NavigateNext } from "@material-ui/icons";
+// import { NavigateNext } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
@@ -23,6 +23,7 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import{FaCube} from "react-icons/fa";
 
@@ -52,7 +53,10 @@ class DeploymentDetail extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW04');
   }
 

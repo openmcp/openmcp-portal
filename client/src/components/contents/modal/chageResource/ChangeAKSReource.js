@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-// import * as utilLog from "../../../util/UtLogs.js";
+import * as utilLog from "../../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
   Button,
@@ -203,8 +204,11 @@ class ChangeAKSReource extends Component {
         });
         
       // loging Add Node
-      // const userId = localStorage.getItem("userName");
-      // utilLog.fn_insertPLogs(userId, "log-ND-MD02");
+      let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+      utilLog.fn_insertPLogs(userId, "log-ND-MD02");
     } else {
       this.setState({open: false, openProgress:false})
     }

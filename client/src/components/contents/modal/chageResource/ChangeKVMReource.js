@@ -25,6 +25,8 @@ import Confirm2 from './../../../modules/Confirm2';
 import Slider from "@material-ui/core/Slider";
 import Typography from "@material-ui/core/Typography";
 // import { withStyles, makeStyles } from '@material-ui/core/styles';
+import * as utilLog from "./../../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 
 // const styles = (theme) => ({
 //   root: {
@@ -185,8 +187,11 @@ class ChangeKVMReource extends Component {
         this.props.handleClose()
         this.setState({openProgress:false})
       // loging Add Node
-      // const userId = localStorage.getItem("userName");
-      // utilLog.fn_insertPLogs(userId, "log-ND-MD02");
+      let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+      utilLog.fn_insertPLogs(userId, "log-ND-MD02");
     } else {
       this.setState({openProgress:false})
     }

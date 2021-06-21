@@ -25,6 +25,7 @@ import {
 // import Editor from "./../modules/Editor";
 import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import Confirm from './../../modules/Confirm';
 // import ProgressTemp from './../../modules/ProgressTemp';
 import PieReChartMini from '../../modules/PieReChartMini';
@@ -126,7 +127,10 @@ class ClustersJoined extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, "log-CL-VW01");
   }
 
@@ -135,8 +139,11 @@ class ClustersJoined extends Component {
       //Unjoin proceed
       console.log("confirmed")
 
-      // const userId = localStorage.getItem("userName");
-      // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
+      let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+      utilLog.fn_insertPLogs(userId, "log-CL-MO03");
     } else {
       console.log("cancel")
     }

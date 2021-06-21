@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { TextField } from "@material-ui/core";
 import * as utilLog from "../../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import {
   PagingState,
   SortingState,
@@ -152,7 +153,10 @@ class AddEKSNode extends Component {
           } else {
             this.props.handleClose();
             //write log
-            const userId = localStorage.getItem("userName");
+            let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
             utilLog.fn_insertPLogs(userId, "log-ND-CR01");
           }
           this.setState({openProgress:false});

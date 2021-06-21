@@ -23,6 +23,7 @@ import { NavigateNext} from '@material-ui/icons';
 import PieReChart2 from '../../modules/PieReChart2';
 import NdTaintConfig from './../modal/NdTaintConfig';
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import NdResourceConfig from './../modal/NdResourceConfig';
 import Confirm2 from './../../modules/Confirm2';
 import Button from "@material-ui/core/Button";
@@ -62,7 +63,10 @@ class NdNodeDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-ND-VW02');
   }  
 
@@ -359,7 +363,6 @@ class KubernetesStatus extends Component {
     let url = "";
 
     if(result) {
-      // const userId = localStorage.getItem("userName");
       if(this.state.confirmType === "power"){
         if(this.state.powerFlag === "on"){
           console.log("poweron")

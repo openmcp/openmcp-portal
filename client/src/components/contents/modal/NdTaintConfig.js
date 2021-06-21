@@ -10,6 +10,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import SelectBox from "../../modules/SelectBox";
 import * as utilLog from '../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 // import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
 
@@ -70,7 +71,16 @@ class NdTaintConfig extends Component {
       return
     }
 
-    const userId = localStorage.getItem("userName");
+    // todo 테인트 관련 API 호출필요
+    // Taint 실행명령
+    // kubectl taint nodes docker-for-desktop key01=value01:NoSchedule
+    // Taint 삭제명령
+    // kubectl taint nodes docker-for-desktop key01:NoSchedule-
+
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-ND-MD01');
     // console.log(this.state.key, this.state.value, this.state.taint)
     this.setState({open:false});

@@ -25,6 +25,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
 import AcChangeRole from './../modal/AcChangeRole';
@@ -35,6 +36,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 
 class Accounts extends Component {
   constructor(props) {
@@ -96,7 +98,10 @@ class Accounts extends Component {
       })
       .catch((err) => console.log(err));
       
-  const userId = localStorage.getItem("userName");
+  let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
   utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
 
   };

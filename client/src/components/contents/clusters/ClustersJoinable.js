@@ -25,6 +25,7 @@ import {
 // import Editor from "./../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import Confirm from './../../modules/Confirm';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import IconButton from '@material-ui/core/IconButton';
@@ -114,7 +115,10 @@ class ClustersJoinable extends Component {
       })
       .catch((err) => console.log(err));
       
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
   };
 
@@ -123,8 +127,11 @@ class ClustersJoinable extends Component {
       //Unjoin proceed
       console.log("confirmed")
 
-      // const userId = localStorage.getItem("userName");
-      // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
+      let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+      utilLog.fn_insertPLogs(userId, "log-CL-MO03");
     } else {
       console.log("cancel")
     }

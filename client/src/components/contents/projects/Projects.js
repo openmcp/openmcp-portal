@@ -22,6 +22,7 @@ import {
 // import Editor from "./../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 import PjCreateProject from '../modal/PjCreateProject';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import IconButton from '@material-ui/core/IconButton';
@@ -98,7 +99,10 @@ class Projects extends Component {
 
 
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW01');
 
   };

@@ -73,17 +73,27 @@ class PublicCloud extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "EKS", index: 1, param:"eks" },
-      { label: "GKE", index: 2, param:"gke" },
-      { label: "AKS", index: 3, param:"aks" },
+      { label: "EKS", index: 0, param:"eks" },
+      { label: "GKE", index: 1, param:"gke" },
+      { label: "AKS", index: 2, param:"aks" },
       { label: "KVM", index: 3, param:"kvm" },
     // { label: "DaemonSets", index: 3 },
     ],
   };
 
-  componentWillMount() {
-
+  componentWillMount(){
+    var menu = window.location.pathname
+    if (menu.indexOf('/eks') >= 0 ){
+      this.setState({value: 0})
+    } else if (menu.indexOf('/gke') >= 0 ) {
+      this.setState({value: 1})
+    } else if (menu.indexOf('/aks') >= 0 ) {
+      this.setState({value: 2})
+    } else if (menu.indexOf('/kvm') >= 0 ) {
+      this.setState({value: 3})
+    } 
   }
+  
 
   render() {
     const handleChange = (event, newValue) => {

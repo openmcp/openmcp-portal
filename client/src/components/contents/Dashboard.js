@@ -6,6 +6,7 @@ import { NavigateNext} from '@material-ui/icons';
 import TreeView from './../modules/TreeView';
 import TreeView2 from './../modules/TreeView2';
 import * as utilLog from './../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 // import RefreshButton from './../modules/RefreshButton';
 // import PieHalfReChart from './../modules/PieHalfReChart';
 
@@ -38,7 +39,11 @@ class Dashboard extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId = result;
+    });
+    
     utilLog.fn_insertPLogs(userId, 'log-DS-VW01');
   }
 
@@ -143,15 +148,16 @@ class Dashboard extends Component {
               </div>,
               <div style={{ display: "flex" }}>
                 <DashboardCard04
-                  title="Zone-Clusters"
+                  title="Clusters Groups"
                   width="100%"
                   data={this.state.rows.regions}
                 ></DashboardCard04>
               </div>,
               <div style={{ display: "flex" }}>
                 <DashboardCard03
-                  title="OpenMCP"
+                  title="OpenMCP Management Clusters"
                   width="100%"
+                  data={this.state.rows.joined_clusters}
                   // width="472px"
                   // data={this.state.masterCluster}
                 ></DashboardCard03>
@@ -238,48 +244,49 @@ class DashboardCard01 extends Component {
 
 
 class DashboardCard03 extends Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      rows:""
-    }
-  }
+  // constructor(props){
+  //   super(props)
+  //   this.state = {
+  //     rows:""
+  //   }
+  // }
   
 
-  componentDidMount() {
-    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-    this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        if(res == null){
-          this.setState({ rows: [] });
-        } else {
-          console.log(res)
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
-  }
+  // componentDidMount() {
+  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+  //   this.timer = setInterval(this.progress, 20);
+  //   this.callApi()
+  //     .then((res) => {
+  //       if(res == null){
+  //         this.setState({ rows: [] });
+  //       } else {
+  //         console.log(res)
+  //         this.setState({ rows: res });
+  //       }
+  //       clearInterval(this.timer);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
   
-  callApi = async () => {
-    const response = await fetch(`/dashboard-master-cluster`);
-    const body = await response.json();
-    return body;
-  };
+  // callApi = async () => {
+  //   const response = await fetch(`/dashboard-master-cluster`);
+  //   const body = await response.json();
+  //   return body;
+  // };
 
-  onRefresh = () => {
-    this.callApi()
-      .then((res) => {
-        if(res == null){
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
-  };
+  // onRefresh = () => {
+  //   this.callApi()
+  //     .then((res) => {
+  //       if(res == null){
+  //         this.setState({ rows: [] });
+  //       } else {
+  //         this.setState({ rows: res });
+  //       }
+  //       clearInterval(this.timer);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+  
 
   render() {
     return (
@@ -295,7 +302,8 @@ class DashboardCard03 extends Component {
         className="cb-body"
         style={{ position: "relative",display:"flex"}}
         >
-        {this.state.rows ? (
+          <TreeView data={[this.props.data]}/>
+        {/* {this.state.rows ? (
         <TreeView data={this.state.rows}/>
         ) : (
           <CircularProgress
@@ -303,7 +311,7 @@ class DashboardCard03 extends Component {
             value={this.state.completed}
             style={{ position: "absolute", left: "50%", marginTop: "20px" }}
           ></CircularProgress>
-        )}
+        )} */}
       </div>
     </div>
     

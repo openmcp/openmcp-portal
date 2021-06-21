@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext } from "@material-ui/icons";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios';
+// import axios from 'axios';
 // import LineChart from './../../../modules/LineChart';
 import {
   SearchState,
@@ -24,11 +24,12 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 
 // import { withStyles, makeStyles } from "@material-ui/core/styles";
 // import clsx from "clsx";
 
-let apiParams = "";
+// let apiParams = "";
 class PjwStatefulSetDetail extends Component {
   state = {
     rows: "",
@@ -43,7 +44,7 @@ class PjwStatefulSetDetail extends Component {
     // }
     // this.props.menuData(result);
     // console.log("detail", this.props.match.params)
-    apiParams = this.props.match.params;
+    // apiParams = this.props.match.params;
   }
 
   componentDidMount() {
@@ -60,7 +61,10 @@ class PjwStatefulSetDetail extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW06');
   }
 
@@ -201,183 +205,183 @@ class BasicInfo extends Component {
   }
 }
 
-class ReplicaStatus extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      rows: []
-      // status,
-    };
-  }
+// class ReplicaStatus extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       rows: []
+//       // status,
+//     };
+//   }
 
-  // shouldComponentUpdate(prevProps, prevState) {
-  //   if (this.props.rowData !== prevProps.rowData) {
-  //     // console.log("true");
-  //     return true;
-  //   } else {
-  //     // console.log("false");
-  //     return false;
-  //   }
-  // }
+//   // shouldComponentUpdate(prevProps, prevState) {
+//   //   if (this.props.rowData !== prevProps.rowData) {
+//   //     // console.log("true");
+//   //     return true;
+//   //   } else {
+//   //     // console.log("false");
+//   //     return false;
+//   //   }
+//   // }
 
-  componentWillMount() {
-    // this.props.onSelectMenu(false, "");
-  }
+//   componentWillMount() {
+//     // this.props.onSelectMenu(false, "");
+//   }
 
-  callApi = async () => {
-    const response = await fetch(`/projects/${apiParams.project}/resources/workloads/deployments/${apiParams.deployment}/replica_status`);
-    const body = await response.json();
-    return body;
-  };
+//   callApi = async () => {
+//     const response = await fetch(`/projects/${apiParams.project}/resources/workloads/deployments/${apiParams.deployment}/replica_status`);
+//     const body = await response.json();
+//     return body;
+//   };
 
-  progress = () => {
-    const { completed } = this.state;
-    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  };
+//   progress = () => {
+//     const { completed } = this.state;
+//     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+//   };
 
-  //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  componentDidMount() {
-    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-    this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        if(res == null){
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
-  };
-
-
-  delClickEventHandler = (e, cluster) => {
-    e.preventDefault();
-    // console.log("delClickEventHandler", e, cluster)
-    console.log(cluster);
-    this.delPod(cluster)
-        .then((res) => {
-          this.callApi()
-          .then((res) => {
-            this.setState({ rows: res });
-            clearInterval(this.timer);
-            this.props.refresh();
-          })
-          .catch((err) => console.log(err));
-        })
-  }
+//   //컴포넌트가 모두 마운트가 되었을때 실행된다.
+//   componentDidMount() {
+//     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+//     this.timer = setInterval(this.progress, 20);
+//     this.callApi()
+//       .then((res) => {
+//         if(res == null){
+//           this.setState({ rows: [] });
+//         } else {
+//           this.setState({ rows: res });
+//         }
+//         clearInterval(this.timer);
+//       })
+//       .catch((err) => console.log(err));
+//   };
 
 
-  addClickEventHandler = (e, cluster) => {
-    e.preventDefault();
-    // console.log("addClickEventHandler", e, cluster)
-    this.addPod(cluster)
-        .then((res) => {
-          this.callApi()
-          .then((res) => {
-            this.setState({ rows: res });
-            clearInterval(this.timer);
-            this.props.refresh();
-          })
-          .catch((err) => console.log(err));
-        })
-  }
+//   delClickEventHandler = (e, cluster) => {
+//     e.preventDefault();
+//     // console.log("delClickEventHandler", e, cluster)
+//     console.log(cluster);
+//     this.delPod(cluster)
+//         .then((res) => {
+//           this.callApi()
+//           .then((res) => {
+//             this.setState({ rows: res });
+//             clearInterval(this.timer);
+//             this.props.refresh();
+//           })
+//           .catch((err) => console.log(err));
+//         })
+//   }
+
+
+//   addClickEventHandler = (e, cluster) => {
+//     e.preventDefault();
+//     // console.log("addClickEventHandler", e, cluster)
+//     this.addPod(cluster)
+//         .then((res) => {
+//           this.callApi()
+//           .then((res) => {
+//             this.setState({ rows: res });
+//             clearInterval(this.timer);
+//             this.props.refresh();
+//           })
+//           .catch((err) => console.log(err));
+//         })
+//   }
 
   
-  addPod = (cluster) =>{
-    const url = `/projects/${apiParams.project}/resources/workloads/deployments/${apiParams.deployment}/replica_status/add_pod`;
-    const data = {
-      cluster : cluster
-    }
-    return axios.post(url, data);
+//   addPod = (cluster) =>{
+//     const url = `/projects/${apiParams.project}/resources/workloads/deployments/${apiParams.deployment}/replica_status/add_pod`;
+//     const data = {
+//       cluster : cluster
+//     }
+//     return axios.post(url, data);
 
-  }
+//   }
 
-  delPod = (cluster) =>{
-    console.log("delPod",cluster);
-    const url = `/projects/${apiParams.project}/resources/workloads/deployments/${apiParams.deployment}/replica_status/del_pod`;
-    const data = {
-      data : {
-        cluster: cluster
-      }
+//   delPod = (cluster) =>{
+//     console.log("delPod",cluster);
+//     const url = `/projects/${apiParams.project}/resources/workloads/deployments/${apiParams.deployment}/replica_status/del_pod`;
+//     const data = {
+//       data : {
+//         cluster: cluster
+//       }
       
-    }
-    return axios.delete(url, data);
-  }
+//     }
+//     return axios.delete(url, data);
+//   }
 
-  render() {
-    const rectangle = (status, pId) => {
-      return (
-        <div className="rectangle"
-          id={pId}
-          style={{ 
-            backgroundColor: status === "ready" ? "#367fa9" : "orange",
-          }}
+//   render() {
+//     const rectangle = (status, pId) => {
+//       return (
+//         <div className="rectangle"
+//           id={pId}
+//           style={{ 
+//             backgroundColor: status === "ready" ? "#367fa9" : "orange",
+//           }}
           
-        />
-      );
-    };
-    // const circle = (status) => (
-    //   <div className="circle"
-    //     style={{ 
-    //       backgroundColor: status === "ready" ? "#367fa9" : "orange",
-    //     }}
-    //   />
-    // );
+//         />
+//       );
+//     };
+//     // const circle = (status) => (
+//     //   <div className="circle"
+//     //     style={{ 
+//     //       backgroundColor: status === "ready" ? "#367fa9" : "orange",
+//     //     }}
+//     //   />
+//     // );
 
-    return (
-      <div className="content-box replica-set">
-        <div className="cb-header">Replica Status</div>
-        <div className="cb-body" style={{width:"100%"}}>
-          {/* <div style={{margin: "auto", width:"fit-content"}}> */}
-          <div>
-          {this.state.rows ? (
+//     return (
+//       <div className="content-box replica-set">
+//         <div className="cb-header">Replica Status</div>
+//         <div className="cb-body" style={{width:"100%"}}>
+//           {/* <div style={{margin: "auto", width:"fit-content"}}> */}
+//           <div>
+//           {this.state.rows ? (
 
-            this.state.rows.map((i) => {
-              const ready_count = i.pods.reduce((obj, v) => {
-                obj[v.status] = (obj[v.status] || 0) + 1;
-                return obj;
-              }, {})
+//             this.state.rows.map((i) => {
+//               const ready_count = i.pods.reduce((obj, v) => {
+//                 obj[v.status] = (obj[v.status] || 0) + 1;
+//                 return obj;
+//               }, {})
   
-              const count = i.pods.length
-              return (
-                <div className="rs-cluster">
-                  <div className="cluster-title">
-                    {i.cluster} </div>
-                  <div className="cluster-content">
-                  <div className="pod-count">
-                    <span>{ready_count.ready}</span>
-                    <span>/</span>
-                    <span>{count}</span>
-                  </div>
-                  {i.pods.map((p)=>{
-                    return (
-                      rectangle(p.status)
-                    );
-                  })}
-                  </div>
-                  <div className="cluster-button">
+//               const count = i.pods.length
+//               return (
+//                 <div className="rs-cluster">
+//                   <div className="cluster-title">
+//                     {i.cluster} </div>
+//                   <div className="cluster-content">
+//                   <div className="pod-count">
+//                     <span>{ready_count.ready}</span>
+//                     <span>/</span>
+//                     <span>{count}</span>
+//                   </div>
+//                   {i.pods.map((p)=>{
+//                     return (
+//                       rectangle(p.status)
+//                     );
+//                   })}
+//                   </div>
+//                   <div className="cluster-button">
                   
-                    <div onClick= {e => this.addClickEventHandler(e, i.cluster)}>+</div>
-                    <div onClick={e => this.delClickEventHandler(e, i.cluster)}>-</div>
-                  </div>
-                </div>
-              );
-            })
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-          )}  
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
+//                     <div onClick= {e => this.addClickEventHandler(e, i.cluster)}>+</div>
+//                     <div onClick={e => this.delClickEventHandler(e, i.cluster)}>-</div>
+//                   </div>
+//                 </div>
+//               );
+//             })
+//             ) : (
+//               <CircularProgress
+//                 variant="determinate"
+//                 value={this.state.completed}
+//                 style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+//               ></CircularProgress>
+//           )}  
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 class Pods extends Component {
   constructor(props) {

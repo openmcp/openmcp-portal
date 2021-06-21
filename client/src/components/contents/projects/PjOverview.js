@@ -23,6 +23,7 @@ import {
 import LineReChart from './../../modules/LineReChart';
 import SelectBox from './../../modules/SelectBox';
 import * as utilLog from './../../util/UtLogs.js';
+import { AsyncStorage } from 'AsyncStorage';
 
 
 let apiParams = "";
@@ -62,7 +63,10 @@ class PjOverview extends Component {
       })
       .catch((err) => console.log(err));
 
-    const userId = localStorage.getItem("userName");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
     utilLog.fn_insertPLogs(userId, 'log-PJ-VW02');
   }  
 

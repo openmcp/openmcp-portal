@@ -28,9 +28,6 @@ confirmed = (result) => {
   if(result) {
     //Unjoin proceed
     console.log("confirmed")
-
-    // const userId = localStorage.getItem("userName");
-    // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
   } else {
     console.log("cancel")
   }

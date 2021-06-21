@@ -3,7 +3,8 @@ import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 // import SelectBox from "../../modules/SelectBox";
 // import { Link } from "react-router-dom";
-// import * as utilLog from "../../util/UtLogs.js";
+import * as utilLog from "../../util/UtLogs.js";
+import { AsyncStorage } from 'AsyncStorage';
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
   Button,
@@ -166,8 +167,11 @@ class SnapShotControl extends Component {
     }
 
     // loging deployment migration
-    // const userId = localStorage.getItem("userName");
-    // utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+    utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
 
     //close modal popup
     this.setState({ open: false });
@@ -254,14 +258,15 @@ class SnapShotControl extends Component {
     if (result) {
       //Unjoin proceed
       console.log("confirmed");
-      // const userId = localStorage.getItem("userName");
-      // utilLog.fn_insertPLogs(userId, "log-CL-MO03");
-      // this.setState({open:false})
+      let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => { 
+      userId= result;
+    })
+      utilLog.fn_insertPLogs(userId, "log-CL-MO03");
     } else {
       console.log("cancel");
-      this.setState({ open: false });
     }
-    this.setState({ confirmOpen: false });
+    this.setState({ confirmOpen: false, open:false });
   };
 
   render() {
