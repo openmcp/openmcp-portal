@@ -23,6 +23,7 @@ const apiServer = "http://192.168.0.48:4885"; //로컬 API 서버
 const data = fs.readFileSync("./database.json");
 const conf = JSON.parse(data);
 const { Client } = require("pg");
+const { toNamespacedPath } = require("path");
 
 const connection = new Client({
   user: conf.user,
@@ -108,7 +109,7 @@ app.post("/apimcp/portal-log", (req, res) => {
 });
 
 ///////////////////////
-// Account
+// Login
 ///////////////////////
 
 app.post("/user_login", (req, res) => {
@@ -147,90 +148,9 @@ app.post("/user_login", (req, res) => {
   );
 });
 
-app.post("/create_account", (req, res) => {
-  const bcrypt = require("bcrypt");
-  const saltRounds = 10;
-  var password = "";
-
-  bcrypt.genSalt(saltRounds, function (err, salt) {
-    bcrypt.hash(req.body.password, salt, function (err, hash_password) {
-      var create_time = getDateTime();
-      connection.query(
-        `insert into tb_accounts values ('${req.body.userid}', '${hash_password}','${req.body.role}','${create_time}','${create_time}');`,
-        (err, result) => {
-          if (err !== "null") {
-            const result_set = {
-              data: [],
-              message: "Account creation was successful !!",
-            };
-            res.send(result_set);
-          } else {
-            const result_set = {
-              data: [],
-              message: "Account creation was faild, please check account",
-            };
-            res.send(result_set);
-          }
-        }
-      );
-    });
-  });
-});
-
-app.get("/account-roles", (req, res) => {
-  connection.query(
-    `select * from tb_account_roles;`,
-    (err, result) => {
-      // var result_set = {
-      //   data: [],
-      //   message: "Update success",
-      // };
-
-      // if (err !== "null") {
-      //   console.log(err)
-      //   const result_set = {
-      //     data: [],
-      //     message: "Update log failed : " + err,
-      //   };
-      // } 
-
-      res.send(result.rows);
-    }
-  );
-});
-
-app.put("/update/account-roles", (req, res) => {
-  // console.log(req.body);
-  connection.query(
-    `update tb_accounts set roles = '{"${req.body.role}"}' where user_id = '${req.body.userid}';`,
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Update was successful !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Update was faild, please check account : " + err,
-        };
-        res.send(result_set);
-      }
-    }
-  );
-
-
-  // bcrypt.genSalt(saltRounds, function (err, salt) {
-  //   bcrypt.hash(req.body.password, salt, function (err, hash_password) {
-  //     var create_time = getDateTime();
-      
-  //   });
-  // });
-});
 
 ///////////////////////
-/* Dashboard APIs */
+// Dashboard APIs 
 ///////////////////////
 app.get("/dashboard", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/dashboard.json");
@@ -317,7 +237,7 @@ app.get("/api/projects", (req, res) => {
 });
 
 ///////////////////////
-/* Projects APIs */
+// Projects APIs 
 ///////////////////////
 
 // Prjects
@@ -436,42 +356,62 @@ app.get("/projects/:project/resources/workloads/deployments/:deployment",
 );
 
 // Prjects > Resources > Workloads > Deployments > detail > replica status
-app.get(
-  "/projects/:project/resources/workloads/deployments/:deployment/replica_status",
-  (req, res) => {
-    connection.query(
-      "select * from tb_replica_status order by cluster asc, created_time desc, status desc",
-      (err, result) => {
-        var result2 = result.rows.reduce(
-          (obj, { cluster, status, pod, created_time }, index) => {
-            if (!obj[cluster]) {
-              obj[cluster] = { cluster: cluster, pods: [] };
-            }
+app.get("/projects/:project/resources/workloads/deployments/:deployment/replica_status", (req, res) => {
 
-            obj[cluster].pods.push({
-              status: status,
-              name: pod,
-              created_time: created_time,
-            });
-            return obj;
-          },
-          {}
-        );
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}/replica_status`,
+  };
 
-        var arr = [];
-        for (i = 0; i < Object.keys(result2).length; i++) {
-          arr.push(result2[Object.keys(result2)[i]]);
-          // console.log(result2[Object.keys(result2)[i]]);
-        }
-        // console.log(arr)
+  console.log(options.uri)
 
-        res.send(arr);
-      }
-    );
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+
+
+    // connection.query(
+    //   "select * from tb_replica_status order by cluster asc, created_time desc, status desc",
+    //   (err, result) => {
+    //     var result2 = result.rows.reduce(
+    //       (obj, { cluster, status, pod, created_time }, index) => {
+    //         if (!obj[cluster]) {
+    //           obj[cluster] = { cluster: cluster, pods: [] };
+    //         }
+
+    //         obj[cluster].pods.push({
+    //           status: status,
+    //           name: pod,
+    //           created_time: created_time,
+    //         });
+    //         return obj;
+    //       },
+    //       {}
+    //     );
+
+    //     var arr = [];
+    //     for (i = 0; i < Object.keys(result2).length; i++) {
+    //       arr.push(result2[Object.keys(result2)[i]]);
+    //       // console.log(result2[Object.keys(result2)[i]]);
+    //     }
+    //     // console.log(arr)
+
+    //     res.send(arr);
+    //   }
+    // );
     // let rawdata = fs.readFileSync("./json_data/projects_deployment_detail.json");
     // let overview = JSON.parse(rawdata);
     // //console.log(overview);
     // res.send(overview);
+
+
+
   }
 );
 
@@ -828,8 +768,6 @@ app.get("/projects/:project/config/config_maps/:config_map", (req, res) => {
   });
 });
 
-
-
 // Prjects > Settings > Members
 app.get("/projects/:project/settings/members", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/projects_members.json");
@@ -953,7 +891,7 @@ app.get("/snapshots", (req, res) => {
 });
 
 ///////////////////////
-/* Clusters APIs */
+// Clusters APIs
 ///////////////////////
 app.get("/clusters", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters.json");
@@ -2170,23 +2108,352 @@ app.get("/pods/:pod/physicalResPerMin", (req, res) => {
   });
 });
 
-// Pods > detail
+
+app.get("/hpa", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/hpa.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/hpa`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.get("/vpa", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/vpa.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/vpa`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+
+
+////////////////////////
+// Ingress
+////////////////////////
+
+// Prjects > Resources > Ingress
+app.get("/ingress", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/ingress.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/ingress`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+// Prjects > Resources > Ingress Detail
+app.get("/ingress/:ingress", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/ingress_detail.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+
+////////////////////////
+// Services
+////////////////////////
+
+// Services
+app.get("/services", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/services.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/services`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+// Services Detail
+app.get("/services/:service", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/service_detail.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+
+});
+
+
+
+////////////////////////
+// Network > DNS
+////////////////////////
+
+// DNS > Services
+app.get("/dns", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/dns.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/dns`,
+  //   method: "GET",
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
+});
+
+// DNS > Detail
+app.get("/dns/:dns", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/dns_detail.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+});
+
+
+///////////////////////
+//Settings > Accounts
+///////////////////////
 app.get("/settings/accounts", (req, res) => {
   connection.query(`select
   user_id, 
-  roles,
+  role_id,
   array(
       select role_name 
-      from tb_account_roles t 
-      where t.role_id = ANY(u.roles)
-      ) as role_name,
+      from tb_account_role t 
+      where t.role_id = ANY(u.role_id)
+      ) as role,
   last_login_time,
   created_time
-from tb_accounts u`, (err, result) => {
+  from tb_accounts u`, (err, result) => {
     res.send(result.rows);
   });
 });
 
+app.post("/create_account", (req, res) => {
+  const bcrypt = require("bcrypt");
+  const saltRounds = 10;
+  var password = "";
+
+  bcrypt.genSalt(saltRounds, function (err, salt) {
+    bcrypt.hash(req.body.password, salt, function (err, hash_password) {
+      var create_time = getDateTime();
+      connection.query(
+        `insert into tb_accounts values ('${req.body.userid}', '${hash_password}','${req.body.role}','${create_time}','${create_time}');`,
+        (err, result) => {
+          if (err !== "null") {
+            const result_set = {
+              data: [],
+              message: "Account creation was successful !!",
+            };
+            res.send(result_set);
+          } else {
+            const result_set = {
+              data: [],
+              message: "Account creation was faild, please check account",
+            };
+            res.send(result_set);
+          }
+        }
+      );
+    });
+  });
+});
+
+app.get("/account-roles", (req, res) => {
+  connection.query(
+    `select * from tb_account_role;`,
+    (err, result) => {
+      // var result_set = {
+      //   data: [],
+      //   message: "Update success",
+      // };
+
+      // if (err !== "null") {
+      //   console.log(err)
+      //   const result_set = {
+      //     data: [],
+      //     message: "Update log failed : " + err,
+      //   };
+      // } 
+      res.send(result.rows);
+    }
+  );
+});
+
+app.put("/update/account-roles", (req, res) => {
+  // console.log(req.body);
+  connection.query(
+    `update tb_accounts set roles = '{"${req.body.role}"}' where user_id = '${req.body.userid}';`,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Update was successful !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check account : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+
+
+  // bcrypt.genSalt(saltRounds, function (err, salt) {
+  //   bcrypt.hash(req.body.password, salt, function (err, hash_password) {
+  //     var create_time = getDateTime();
+      
+  //   });
+  // });
+});
+
+//////////////////////////
+// Settings > Groups Role
+//////////////////////////
+app.get("/settings/group-role", (req, res) => {
+  connection.query(`select
+  ga.group_id,
+  ga.group_name,
+  array(select role_name 
+    from tb_account_role t 
+    where t.role_id = ANY(ga.role_id)) as role,
+  ga.description,
+  ga.member
+  from tb_group_role ga
+  order by group_id`, (err, result) => {
+    res.send(result.rows);
+  });
+});
+
+app.post("/settings/group-role", (req, res) => {
+  let query = `
+  INSERT INTO tb_group_role (group_name, description, role_id, member)
+  VALUES ('${req.body.groupName}', '${req.body.description}', '{${req.body.role_id}}', '{${req.body.user_id}}')
+  `
+  console.log(query);
+  connection.query(query, 
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Group role is saved !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Save was faild, please check policy : " + err,
+        };
+        res.send(result_set);
+      }
+    });
+});
+
+
+app.put("/settings/group-role", (req, res) => {
+  let query =  `update tb_group_role 
+      set group_name='${req.body.groupName}', 
+          description='${req.body.description}',
+          role_id='{${req.body.role_id}}',
+          member='{${req.body.user_id}}'
+      where group_id = '${req.body.group_id}'`
+
+  console.log(query);
+  connection.query(query, 
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Group role is updated !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check policy : " + err,
+        };
+        res.send(result_set);
+      }
+    });
+});
+
+app.delete("/settings/group-role", (req, res) => {
+  console.log(req.body);
+  let query = `delete from tb_group_role 
+  where "group_id" = ${req.body.group_id}`;
+  console.log(query);
+  // connection.query(
+  //   query,
+  //   (err, result) => {
+  //     if (err !== "null") {
+  //       const result_set = {
+  //         data: [],
+  //         message: "Delete was successful!!",
+  //       };
+  //       res.send(result_set);
+  //     } else {
+  //       const result_set = {
+  //         data: [],
+  //         message: "Delete was faild, please check error : " + err,
+  //       };
+  //       res.send(result_set);
+  //     }
+  //   }
+  // );
+});
+
+
+//////////////////////////
+// Settings > Policy
+//////////////////////////
 app.get("/settings/policy/openmcp-policy", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/settings_policy.json");
   // let overview = JSON.parse(rawdata);
@@ -2267,151 +2534,6 @@ app.put("/settings/policy/project-policy", (req, res) => {
     }
   );
 });
-
-app.get("/hpa", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/hpa.json");
-  // let overview = JSON.parse(rawdata);
-  // res.send(overview);
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/hpa`,
-    method: "GET",
-  };
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-});
-
-app.get("/vpa", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/vpa.json");
-  // let overview = JSON.parse(rawdata);
-  // res.send(overview);
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/vpa`,
-    method: "GET",
-  };
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-});
-
-
-////////////////////////
-// Ingress
-////////////////////////
-
-// Prjects > Resources > Ingress
-app.get("/ingress", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/ingress.json");
-  // let overview = JSON.parse(rawdata);
-  // res.send(overview);
-
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/ingress`,
-    method: "GET",
-  };
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-});
-
-// Prjects > Resources > Ingress Detail
-app.get("/ingress/:ingress", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/ingress_detail.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-});
-
-
-////////////////////////
-// Services
-////////////////////////
-
-// Services
-app.get("/services", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/services.json");
-  // let overview = JSON.parse(rawdata);
-  // res.send(overview);
-
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/services`,
-    method: "GET",
-  };
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-});
-
-// Services Detail
-app.get("/services/:service", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/service_detail.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-
-});
-
-
-
-////////////////////////
-// DNS
-////////////////////////
-
-// DNS > Services
-app.get("/dns", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/dns.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/dns`,
-  //   method: "GET",
-  // };
-
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
-});
-
-// DNS > Detail
-app.get("/dns/:dns", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/dns_detail.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-});
-
 
 
 // Settings > Config > Public Cloud Auth

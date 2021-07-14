@@ -18,6 +18,7 @@ import {
   // Toolbar,
   // SearchPanel,
   TableHeaderRow,
+  TableColumnResizing,
   // PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import LineReChart from './../../modules/LineReChart';
@@ -115,7 +116,7 @@ class PjOverview extends Component {
             <BasicInfo rowData={this.state.rows.basic_info}/>,
             <div style={{display:"flex"}}>
               <ProjectResources rowData={this.state.rows.project_resource}/>
-              <UsageTop5 rowData={this.state.rows.usage_top5}/>
+              <UsageTop5 rowData={this.state.rows.usage_top5} query ={this.props.location.search}/>
             </div>,
             <PhysicalResources rowData={this.state.rows.physical_resources}/>
             ]
@@ -241,16 +242,21 @@ class UsageTop5 extends Component {
       // { name: "type", title: "Type" },
       { name: "usage", title: "Usage" },
     ],
+    defaultColumnWidths: [
+      { columnName: "name", width: 350 },
+      { columnName: "usage", width: 200 },
+    ],
     rows : this.props.rowData.cpu,
   }
 
   callApi = async () => {
-    const response = await fetch(`/projects/${apiParams}/overview`);
+    const response = await fetch(`/projects/${apiParams}/overview${this.props.query}`);
     const body = await response.json();
     return body;
   };
   
   render(){
+    
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -264,28 +270,26 @@ class UsageTop5 extends Component {
     );
 
     const onSelectBoxChange = (data) => {
-      console.log("onSelectBoxChange", data)
       switch(data){
         case "cpu":
-          console.log("cpu")
-          // this.setState({rows:this.props.rowData.cpu});
+          this.setState({rows:this.props.rowData.cpu});
 
-          this.callApi()
-          .then((res) => {
-            this.setState({ rows: res.usage_top5.cpu });
-          })
-          .catch((err) => console.log(err));
+          // this.callApi()
+          // .then((res) => {
+          //   this.setState({ rows: res.usage_top5.cpu });
+          // })
+          // .catch((err) => console.log(err));
 
           break;
         case "memory":
-          console.log("memory")
-          // this.setState({rows:this.props.rowData.memory});
+          this.setState({rows:this.props.rowData.memory});
 
-          this.callApi()
-          .then((res) => {
-            this.setState({ rows: res.usage_top5.memory });
-          })
-          .catch((err) => console.log(err));
+          // this.callApi()
+          // .then((res) => {
+          //   console.log(res.usage_top5.memory)
+          //   this.setState({ rows: res.usage_top5.memory });
+          // })
+          // .catch((err) => console.log(err));
 
           break;
         default:
@@ -315,6 +319,7 @@ class UsageTop5 extends Component {
             <IntegratedSorting />
 
             <Table/>
+            <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
             <TableHeaderRow showSortingControls rowComponent={HeaderRow}/>
           </Grid>
         </div>

@@ -1,5 +1,5 @@
 // UtLogs is group of functions what writing portal users behaviors
-
+import React, { Component } from "react";
 import axios from 'axios';
 
 export function fn_insertPLogs(userid, code) {

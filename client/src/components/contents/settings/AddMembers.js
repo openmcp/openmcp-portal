@@ -118,7 +118,7 @@ class AddMembers extends Component {
           aria-labelledby="customized-dialog-title"
           open={this.state.open}
           fullWidth={false}
-          //   maxWidth={false}
+          // maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             Create Account

@@ -31,7 +31,9 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+//import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import LinearProgressBar from './../../modules/LinearProgressBar';
+
 
 class Nodes extends Component {
   constructor(props) {
@@ -72,7 +74,8 @@ class Nodes extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      anchorEl: null,
+
+      infoWindowOpen:null,
     };
   }
 
@@ -146,6 +149,16 @@ class Nodes extends Component {
       .catch((err) => console.log(err));
   };
 
+      //셀
+  infoWindowOpen = (e) => {
+    document.getElementById("info-window-"+e.currentTarget.id).style.visibility='visible';
+  };
+
+  infoWindowClose = (e) => {
+    // this.setState({infoWindowOpen:null});
+    document.getElementById("info-window-"+e.currentTarget.id).style.visibility='hidden';
+  };
+
   render() {
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -183,16 +196,8 @@ class Nodes extends Component {
       </Table.Cell>
     );
 
-    //셀
     const Cell = (props) => {
       const { column, row } = props;
-      // console.log("cell : ", props);
-      // const values = props.value.split("|");
-      // console.log("values", props.value);
-      
-      // const values = props.value.replace("|","1");
-      // console.log("values,values", values)
-
       const fnEnterCheck = () => {
         if(props.value === undefined){
           return ""
@@ -208,25 +213,46 @@ class Nodes extends Component {
         }
       }
 
+      const fn_linearProgressBar = () =>{
+        // props.value.split("|")[1].
+        return (
+          <LinearProgressBar/>
+        )
+      }
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // // console.log("name", props.value);
         return (
           <Table.Cell
             {...props}
             style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/nodes/${props.value}`,
-            // search:`clustername=${row.cluster}&provider=${row.provider}`,
-            search:`clustername=${row.cluster}`,
-            state: {
-              data : row
-            }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
-        );
-      }
+            aria-haspopup="true"
+          >
+            <InfoWindow data={row} rowId={props.tableRow.rowId}/>
+            <Link  
+            id={props.tableRow.rowId}
+            onMouseEnter={this.infoWindowOpen}
+            onMouseLeave={this.infoWindowClose}
+            to={{
+              pathname: `/nodes/${props.value}`,
+              // search:`clustername=${row.cluster}&provider=${row.provider}`,
+              search:`clustername=${row.cluster}`,
+              state: {
+                data : row
+              }
+            }}>
+              {fnEnterCheck()}
+            </Link>
+          </Table.Cell>
+        ) 
+      } else if (column.name === "cpu"){
+        return <Table.Cell>
+          {fnEnterCheck()}
+          <p style={{marginTop:"5px"}}>{fn_linearProgressBar()}</p>
+          </Table.Cell>
+        // 
+      };
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
@@ -242,12 +268,16 @@ class Nodes extends Component {
       />
     );
     const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
+      console.log("row!!!!!! : ",props);
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
     const handleClick = (event) => {
-      this.setState({anchorEl : event.currentTarget});
+      if(this.state.anchorEl === null){
+        this.setState({anchorEl : event.currentTarget});
+      } else {
+        this.setState({anchorEl : null});
+      }
     };
 
     const handleClose = () => {
@@ -305,15 +335,13 @@ class Nodes extends Component {
                       style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
                       >
                         <Paper>
-                          <ClickAwayListener onClickAway={handleClose}>
-                            <MenuList autoFocusItem={open} id="menu-list-grow">
+                          <MenuList autoFocusItem={open} id="menu-list-grow">
                               <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
                                 <NdAddNode onUpdateData = {this.onUpdateData}
                                  menuClose={handleClose}/>
                               </MenuItem>
                             </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
+                          </Paper>
                       </Grow>
                     )}
                   </Popper>
@@ -359,6 +387,28 @@ class Nodes extends Component {
         </section>
       </div>
     );
+  }
+}
+
+class InfoWindow extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      row : this.props.data
+    }
+  }
+  render(){
+    return(
+      
+      <div className="info-window" id={"info-window-" + this.props.rowId}
+        style={{visibility: "hidden" }}
+        >
+        <div className="info">
+          <div>{this.state.row.name}</div> 
+        </div>
+      </div>
+      
+    )
   }
 }
 

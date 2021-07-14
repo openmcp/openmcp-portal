@@ -36,23 +36,28 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import GrCreateGroup from './../modal/GrCreateGroup';
+import GrEditGroup from './../modal/GrEditGroup';
+import axios from 'axios';
+import Confirm2 from './../../modules/Confirm2';
 
-
-class Accounts extends Component {
+class GroupRole extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "user_id", title: "User ID"},
+        { name: "group_name", title: "Group Name"},
+        { name: "description", title: "Description" },
+        { name: "member", title: "Member" },
         { name: "role", title: "Roles" },
-        { name: "last_login_time", title: "Last login time"},
-        { name: "created_time", title: "Created time"},
+        { name: "group_id", title: "Group ID" },
       ],
       defaultColumnWidths: [
-        { columnName: "user_id", width: 150 },
-        { columnName: "role", width: 400 },
-        { columnName: "last_login_time", width: 200 },
-        { columnName: "created_time", width: 200 },
+        { columnName: "group_name", width: 150 },
+        { columnName: "description", width: 200 },
+        { columnName: "member", width: 200 },
+        { columnName: "role", width: 600 },
+        { columnName: "group_id", width: 0 },
       ],
       rows: "",
 
@@ -66,6 +71,22 @@ class Accounts extends Component {
       selection: [],
       selectedRow: "",
       anchorEl: null,
+
+      grEditOpen: false,
+
+      confirmOpen: false,
+      confirmInfo : {
+        title :"Delete Group Role",
+        context :"Are you sure you want to Delete Group Role?",
+        button : {
+          open : "",
+          yes : "CONFIRM",
+          no : "CANCEL",
+        }
+      },
+      confrimTarget : "",
+      confirmTargetKeyname:"Group Name"
+
     };
   }
 
@@ -74,7 +95,7 @@ class Accounts extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch(`/settings/accounts`);
+    const response = await fetch(`/settings/group-role`);
     const body = await response.json();
     return body;
   };
@@ -89,6 +110,7 @@ class Accounts extends Component {
     this.callApi()
       .then((res) => {
         if(res == null){
+          
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -97,12 +119,11 @@ class Accounts extends Component {
       })
       .catch((err) => console.log(err));
       
-  let userId = null;
+    let userId = null;
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-  utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
-
+    utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
   };
 
   onUpdateData = () => {
@@ -120,53 +141,126 @@ class Accounts extends Component {
       .catch((err) => console.log(err));
   };
 
-  render() {
+   Cell = (props) => {
+    const { column, row } = props;
+    // const { column } = props;
+    let stringData = []
 
-    const Cell = (props) => {
-      // const { column, row } = props;
-      const { column } = props;
-
-      const arrayToString = () => {
-        const stringData = props.value.reduce((result, item, index, arr) => {
+    const arrayToString = () => {
+      if (props.value === null){
+        stringData = ["-"]
+      } else {
+        stringData = props.value.reduce((result, item, index, arr) => {
           if (index+1 === arr.length){
             return `${result}${item}`
           } else {
-            return `${result}${item}, `
+            return `${result}${item} | `
           }
         }, "")
-
-        return stringData
       }
 
-      if (column.name === "role_name") {
-        return (
-          <Table.Cell
-            {...props}
-          >{arrayToString()}</Table.Cell>
-        );
+      return stringData
+    }
 
-      } 
-      return <Table.Cell>{props.value}</Table.Cell>;
-    };
+    if (column.name === "role" || column.name === "member") {
+      return (
+        <Table.Cell {...props}>
+          {arrayToString()}
+        </Table.Cell>
+      );
+    } 
+    // else if (column.name == "group_name") {
+    //   return (
+    //     <Table.Cell {...props} 
+    //       style={{ cursor: "pointer", color:"#3c8dbc", marginLeft:"20px"}} 
+    //       // onClick = {this.editDialogOpen}
+    //       onClick= {e => this.editDialogOpen(props.row)}
+    //     >
+    //         {props.value}
+    //     </Table.Cell>
+    //   )
+    // }
+    return <Table.Cell>{props.value}</Table.Cell>;
+  };
 
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-        }}
-      />
-    );
-    const Row = (props) => {
-      return <Table.Row {...props} key={props.tableRow.key}/>;
-    };
+   HeaderRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      style={{
+        cursor: "pointer",
+        backgroundColor: "whitesmoke",
+      }}
+    />
+  );
+  Row = (props) => {
+    return <Table.Row {...props} key={props.tableRow.key}/>;
+  };
 
+  // editDialogOpen = (row) => {
+  //   this.setState({
+  //     grEditOpen : true,
+  //     selectedRow : row
+  //   });
+  // }
+  handleDeleteClick = (e) => {
+    if (Object.keys(this.state.selectedRow).length  === 0) {
+      alert("Please select a Group Role");
+      return;
+    } else {
+      this.setState({
+        confirmOpen: true,
+      })
+    }
+  }
+
+  confirmed = (result) => {
+    
+    this.setState({confirmOpen:false});
+
+    //show progress loading...
+    this.setState({openProgress:true});
+
+    if(result) {
+      const url = `/settings/group-role`;
+      const data = {
+        group_id : this.state.selectedRow.group_id,
+      };
+
+      axios.delete(url, data)
+        .then((res) => {
+          if(res.data.error){
+            alert(res.data.message)
+            return
+          }
+        })
+        .catch((err) => {
+        });
+        
+      this.props.handleClose()
+      this.setState({openProgress:false})
+
+      // loging Add Node
+      let userId = null;
+      AsyncStorage.getItem("userName",(err, result) => { 
+        userId= result;
+      })
+        utilLog.fn_insertPLogs(userId, "log-ND-MD02");
+    } else {
+      this.setState({openProgress:false})
+    }
+  };
+
+  render() {
     const onSelectionChange = (selection) => {
       // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
-      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
+      this.setState({ 
+        selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {},
+        confrimTarget : this.state.rows[selection[0]].group_name
+      });
+
+
     };
 
     const handleClick = (event) => {
@@ -181,13 +275,22 @@ class Accounts extends Component {
       this.setState({ anchorEl: null });
     };
 
+
+
     const open = Boolean(this.state.anchorEl);
 
     return (
       <div className="content-wrapper full">
+        <Confirm2
+          confirmInfo={this.state.confirmInfo} 
+          confrimTarget ={this.state.confrimTarget} 
+          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmed={this.confirmed}
+          confirmOpen={this.state.confirmOpen}/>
+
         <section className="content-header">
           <h1>
-          Accounts
+          Group Role
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -233,12 +336,18 @@ class Accounts extends Component {
                             <MenuItem
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
-                              <AddMembers onUpdateData={this.onUpdateData} menuClose={handleClose}/>
+                              <GrCreateGroup onUpdateData={this.onUpdateData} menuClose={handleClose}/>
                             </MenuItem>
                             <MenuItem
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
-                            >
-                              <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData} menuClose={handleClose}/>
+                              >
+                              <GrEditGroup rowData={this.state.selectedRow} menuClose={handleClose}
+                              />
+                            </MenuItem>
+                            <MenuItem
+                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                              >
+                              <div onClick={this.handleDeleteClick}>Delete Group</div>
                             </MenuItem>
                             </MenuList>
                           </Paper>
@@ -249,10 +358,11 @@ class Accounts extends Component {
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
-                >
+                  >
                   <Toolbar />
                   <SearchState defaultValue="" />
                   <SearchPanel style={{ marginLeft: 0 }} />
+
 
                   <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
                   <PagingPanel pageSizes={this.state.pageSizes} />
@@ -271,11 +381,11 @@ class Accounts extends Component {
                   <IntegratedSorting />
                   <IntegratedPaging />
 
-                  <Table cellComponent={Cell} rowComponent={Row} />
+                  <Table cellComponent={this.Cell} rowComponent={this.Row} />
                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
                   <TableHeaderRow
                     showSortingControls
-                    rowComponent={HeaderRow}
+                    rowComponent={this.HeaderRow}
                   />
                   
                   <TableSelection
@@ -299,4 +409,4 @@ class Accounts extends Component {
   }
 }
 
-export default Accounts;
+export default GroupRole;

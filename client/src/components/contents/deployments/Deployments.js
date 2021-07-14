@@ -11,6 +11,7 @@ import {
   IntegratedSorting,
   SelectionState,
   IntegratedSelection,
+  FilteringState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -21,6 +22,7 @@ import {
   TableHeaderRow,
   PagingPanel,
   TableSelection,
+  TableFilterRow ,
 } from "@devexpress/dx-react-grid-material-ui";
 // import {  Button,} from "@material-ui/core";
 import Editor from "./../../modules/Editor";
@@ -40,7 +42,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+//import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 // let apiParams = "";
 class Deployments extends Component {
@@ -201,81 +203,57 @@ spec:
     this.setState({openProgress:false})
   }
 
-  render() {
-    // 셀 데이터 스타일 변경
-    const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          // cursor: "pointer",
-          ...style,
-        }}
-      >
-        <span
-          style={{
-            color:
-              value === "Warning"
-                ? "orange"
-                : value === "Unschedulable"
-                ? "red"
-                : value === "Stop"
-                ? "red"
-                : value === "Running"
-                ? "#1ab726"
-                : "black",
-          }}
-        >
-          {value}
-        </span>
-      </Table.Cell>
-    );
+  //셀
+  Cell = (props) => {
+    console.log("CEll");
+    const { column, row } = props;
 
-    //셀
-    const Cell = (props) => {
-      const { column, row } = props;
+    if (column.name === "name") {
+      // // console.log("name", props.value);
+      // console.log("this.props.match.params", this.props)
+      return (
+        <Table.Cell {...props} style={{ cursor: "pointer" }}>
+          <Link
+            to={{
+              pathname: `/deployments/${props.value}`,
+              search: `cluster=${row.cluster}&project=${row.project}`,
+              state: {
+                data: row,
+              },
+            }}
+          >
+            {props.value}
+          </Link>
+        </Table.Cell>
+      );
+    }
+    return <Table.Cell>{props.value}</Table.Cell>;
+  };
 
-      if (column.name === "status") {
-        return <HighlightedCell {...props} />;
-      } else if (column.name === "name") {
-        // // console.log("name", props.value);
-        // console.log("this.props.match.params", this.props)
-        return (
-          <Table.Cell {...props} style={{ cursor: "pointer" }}>
-            <Link
-              to={{
-                pathname: `/deployments/${props.value}`,
-                search: `cluster=${row.cluster}&project=${row.project}`,
-                state: {
-                  data: row,
-                },
-              }}
-            >
-              {props.value}
-            </Link>
-          </Table.Cell>
-        );
-      }
-      return <Table.Cell>{props.value}</Table.Cell>;
-    };
+  HeaderRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      style={{
+        cursor: "pointer",
+        backgroundColor: "whitesmoke",
+        // ...styles[row.sector.toLowerCase()],
+      }}
+      // onClick={()=> alert(JSON.stringify(row))}
+    />
+  );
 
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-    const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
+  Row = (props) => {
+    console.log("row!!!!!! : ",props);
+
+    if (props.tableRow.row.project === "openmcp") {
       return <Table.Row {...props} key={props.tableRow.key} />;
-    };
+    } else {
+      return null;
+    }
 
+    return <Table.Row {...props} key={props.tableRow.key} />;
+  };
+  render() {
     const onSelectionChange = (selection) => {
       // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
@@ -283,8 +261,13 @@ spec:
       this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
 
+
     const handleClick = (event) => {
-      this.setState({anchorEl : event.currentTarget});
+      if(this.state.anchorEl === null){
+        this.setState({anchorEl : event.currentTarget});
+      } else {
+        this.setState({anchorEl : null});
+      }
     };
 
     const handleClose = () => {
@@ -343,8 +326,7 @@ spec:
                       style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
                       >
                         <Paper>
-                          <ClickAwayListener onClickAway={handleClose}>
-                            <MenuList autoFocusItem={open} id="menu-list-grow">
+                          <MenuList autoFocusItem={open} id="menu-list-grow">
                               <MenuItem 
                                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
                               >
@@ -372,8 +354,7 @@ spec:
                                 <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
                               </MenuItem>
                             </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
+                          </Paper>
                       </Grow>
                     )}
                   </Popper>
@@ -405,6 +386,7 @@ spec:
                     selection={this.state.selection}
                     onSelectionChange={onSelectionChange}
                   />
+                  {/* <FilteringState/> */}
 
                   <IntegratedFiltering />
                   <IntegratedSorting />
@@ -412,19 +394,22 @@ spec:
                   <IntegratedPaging />
 
                   {/* 테이블 */}
-                  <Table cellComponent={Cell} rowComponent={Row} />
+                  <Table cellComponent={this.Cell}  />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
                   />
                   <TableHeaderRow
                     showSortingControls
-                    rowComponent={HeaderRow}
+                    rowComponent={this.HeaderRow}
                   />
                   <TableSelection
                     selectByRowClick
                     highlightRow
+                    rowComponent={this.Row}
                     // showSelectionColumn={false}
                   />
+                  
+                  {/* <TableFilterRow showFilterSelector={true}/> */}
                 </Grid>,
               ]
             ) : (

@@ -53,12 +53,7 @@ import ServicesDetail from './../contents/netowork/ServicesDetail';
 import IngressDetail from './../contents/netowork/IngressDetail';
 import DNSDetail from './../contents/netowork/DNSDetail';
 import Config from "../contents/settings/config/Config";
-
-
-
-
-
-
+import GroupRole from './../contents/settings/GroupRole';
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
 // 각 컨텐츠는 Route를 이용해서 전환되도록 해야한다.
@@ -192,7 +187,6 @@ class Contents extends Component {
             }}  />} >
           </Route>
 
-
           <Route path="/projects/:project/volumes/:volume" 
             render={({match,location}) => <PjVolumeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
@@ -256,14 +250,11 @@ class Contents extends Component {
               render={({match,location}) => <DNSDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* Dns contents END*/}
 
-
-
           {/* Nodes contents */}
           <Route path="/nodes/:node" 
             render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           {/* Nodes contents END*/}
-          
 
           {/* Pods contents */}
           <Route path="/pods/:pod"
@@ -275,14 +266,24 @@ class Contents extends Component {
           {/* Pods contents END*/}
 
           {/* Settings contents */}
-          <Route path="/settings/accounts" 
+          <Route exact path="/settings/accounts" 
             render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
+
+          <Route path="/settings/group-role" 
+            render={({match,location}) => <GroupRole  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
           
-          <Route path="/settings/policy/project-policy"
+          <Route exact path="/settings/policy"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/policy/openmcp-policy`,
+            }}  />} >
+          </Route>
+          
+          <Route path="/settings/policy/openmcp-policy"
             render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/settings/policy/openmcp-policy"
+          <Route path="/settings/policy/project-policy"
             render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           <Route exact path="/settings/policy"
@@ -320,7 +321,6 @@ class Contents extends Component {
 
           <Route exact path="/"><Dashboard menuData={this.onMenuData}/></Route>
           <Route exact path="/dashboard"><Dashboard menuData={this.onMenuData}/></Route>
-          <Route exact path="/clusters" ><ClustersJoined menuData={this.onMenuData}/></Route>
           <Route exact path="/clusters" ><ClustersJoined menuData={this.onMenuData}/></Route>
           <Route exact path="/clusters-joinable" ><ClustersJoinable menuData={this.onMenuData}/></Route>
           <Route exact path="/nodes" ><Nodes menuData={this.onMenuData}/></Route>

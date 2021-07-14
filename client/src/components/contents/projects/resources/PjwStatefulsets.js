@@ -42,7 +42,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+//import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 // let apiParams = "";
 class PjwStatefulsets extends Component {
@@ -308,7 +308,11 @@ spec:
     };
 
     const handleClick = (event) => {
-      this.setState({anchorEl : event.currentTarget});
+      if(this.state.anchorEl === null){
+        this.setState({anchorEl : event.currentTarget});
+      } else {
+        this.setState({anchorEl : null});
+      }
     };
 
     const handleClose = () => {
@@ -348,8 +352,7 @@ spec:
                       style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
                       >
                         <Paper>
-                          <ClickAwayListener onClickAway={handleClose}>
-                            <MenuList autoFocusItem={open} id="menu-list-grow">
+                          <MenuList autoFocusItem={open} id="menu-list-grow">
                               {/*<MenuItem 
                                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
                               >
@@ -377,8 +380,7 @@ spec:
                                 <Editor btTitle="create" title="Create Statefulset" context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
                               </MenuItem>
                             </MenuList>
-                          </ClickAwayListener>
-                        </Paper>
+                          </Paper>
                       </Grow>
                     )}
                   </Popper>

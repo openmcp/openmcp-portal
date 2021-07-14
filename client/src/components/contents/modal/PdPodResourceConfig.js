@@ -143,7 +143,6 @@ class PdPodResourceConfig extends Component {
   ];
 
   render() {
-    console.log("render");
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (

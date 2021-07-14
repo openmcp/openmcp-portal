@@ -3,7 +3,7 @@ import { Settings } from "@material-ui/icons";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 import { Link } from 'react-router-dom';
-// import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+// //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 // import Grow from '@material-ui/core/Grow';
 // import Paper from '@material-ui/core/Paper';
 // import Popper from '@material-ui/core/Popper';
@@ -203,6 +203,7 @@ class Head extends Component {
               </Link>
               <div className="sub-menu settings">
                 <Link to="/settings/accounts" onClick={this.onSelectMenu}>Accounts</Link>
+                <Link to="/settings/group-role" onClick={this.onSelectMenu}>Group Role</Link>
                 <Link to="/settings/policy" onClick={this.onSelectMenu}>Policy</Link>
                 <Link to="/settings/config" onClick={this.onSelectMenu}>Config</Link>
               </div>
@@ -225,7 +226,7 @@ class Head extends Component {
                       style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
                     >
                       <Paper>
-                        <ClickAwayListener mouseEvent='onMouseUp' onClickAway={this.handleClose}>
+                        <ClickAwayListener> mouseEvent='onMouseUp' onClickAway={this.handleClose}>
                           <MenuList 
                             // autoFocusItem={this.state.open}
                             id="menu-account"

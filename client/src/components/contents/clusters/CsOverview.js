@@ -284,6 +284,7 @@ class NodeUsageTop5 extends Component {
       { name: "usage", title: "Usage" },
     ],
     rows : this.props.rowData.cpu,
+    unit : " core",
   }
 
   callApi = async () => {
@@ -293,6 +294,19 @@ class NodeUsageTop5 extends Component {
   };
   
   render(){
+    const Cell = (props) => {
+      const { column } = props;
+      // console.log("cell : ", props);
+      if (column.name === "usage") {
+        return (
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            {props.value + this.state.unit}
+          </Table.Cell>
+        );
+      }
+      return <Table.Cell {...props} />;
+    };
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -306,28 +320,31 @@ class NodeUsageTop5 extends Component {
     );
 
     const onSelectBoxChange = (data) => {
-      console.log("onSelectBoxChange", data)
       switch(data){
         case "cpu":
-          console.log("cpu")
-          // this.setState({rows:this.props.rowData.cpu});
+          this.setState({
+            rows:this.props.rowData.cpu,
+            unit : " core"
+          });
 
-          this.callApi()
-          .then((res) => {
-            this.setState({ rows: res.node_usage_top5.cpu });
-          })
-          .catch((err) => console.log(err));
+          // this.callApi()
+          // .then((res) => {
+          //   this.setState({ rows: res.node_usage_top5.cpu });
+          // })
+          // .catch((err) => console.log(err));
 
           break;
         case "memory":
-          console.log("memory")
-          // this.setState({rows:this.props.rowData.memory});
+          this.setState({
+            rows:this.props.rowData.memory,
+            unit : " Gi"
+          });
 
-          this.callApi()
-          .then((res) => {
-            this.setState({ rows: res.node_usage_top5.memory });
-          })
-          .catch((err) => console.log(err));
+          // this.callApi()
+          // .then((res) => {
+          //   this.setState({ rows: res.node_usage_top5.memory });
+          // })
+          // .catch((err) => console.log(err));
 
           break;
         default:
@@ -356,7 +373,7 @@ class NodeUsageTop5 extends Component {
             />
             <IntegratedSorting />
 
-            <Table/>
+            <Table cellComponent={Cell}/>
             <TableHeaderRow showSortingControls rowComponent={HeaderRow}/>
           </Grid>
         </div>
