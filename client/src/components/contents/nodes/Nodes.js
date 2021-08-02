@@ -278,7 +278,6 @@ class Nodes extends Component {
       />
     );
     const Row = (props) => {
-      console.log("row!!!!!! : ",props);
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 

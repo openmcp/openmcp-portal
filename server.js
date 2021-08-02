@@ -2365,6 +2365,7 @@ app.get("/settings/group-role", (req, res) => {
   array(select role_name 
     from tb_account_role t 
     where t.role_id = ANY(ga.role_id)) as role,
+    projects,
   ga.description,
   ga.member
   from tb_group_role ga
@@ -2375,8 +2376,8 @@ app.get("/settings/group-role", (req, res) => {
 
 app.post("/settings/group-role", (req, res) => {
   let query = `
-  INSERT INTO tb_group_role (group_name, description, role_id, member)
-  VALUES ('${req.body.groupName}', '${req.body.description}', '{${req.body.role_id}}', '{${req.body.user_id}}')
+  INSERT INTO tb_group_role (group_name, description, role_id, member, projects)
+  VALUES ('${req.body.groupName}', '${req.body.description}', '{${req.body.role_id}}', '{${req.body.user_id}}', '{${req.body.projects}}')
   `
   console.log(query);
   connection.query(query, 
@@ -2397,13 +2398,13 @@ app.post("/settings/group-role", (req, res) => {
     });
 });
 
-
 app.put("/settings/group-role", (req, res) => {
   let query =  `update tb_group_role 
       set group_name='${req.body.groupName}', 
           description='${req.body.description}',
           role_id='{${req.body.role_id}}',
-          member='{${req.body.user_id}}'
+          member='{${req.body.user_id}}',
+          projects = '{${req.body.projects}}',
       where group_id = '${req.body.group_id}'`
 
   console.log(query);
@@ -2426,28 +2427,27 @@ app.put("/settings/group-role", (req, res) => {
 });
 
 app.delete("/settings/group-role", (req, res) => {
-  console.log(req.body);
   let query = `delete from tb_group_role 
   where "group_id" = ${req.body.group_id}`;
   console.log(query);
-  // connection.query(
-  //   query,
-  //   (err, result) => {
-  //     if (err !== "null") {
-  //       const result_set = {
-  //         data: [],
-  //         message: "Delete was successful!!",
-  //       };
-  //       res.send(result_set);
-  //     } else {
-  //       const result_set = {
-  //         data: [],
-  //         message: "Delete was faild, please check error : " + err,
-  //       };
-  //       res.send(result_set);
-  //     }
-  //   }
-  // );
+  connection.query(
+    query,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Delete was successful!!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Delete was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
 });
 
 

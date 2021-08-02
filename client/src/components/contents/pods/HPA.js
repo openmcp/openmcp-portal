@@ -24,6 +24,7 @@ import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 // import Editor from "./../../modules/Editor";
 import axios from 'axios';
+import { FaCube } from "react-icons/fa";
 // import ProgressTemp from './../../modules/ProgressTemp';
 
 // let apiParams = "";
@@ -47,7 +48,7 @@ class HPA extends Component {
         { columnName: "reference", width: 200 },
         { columnName: "min_repl", width: 80 },
         { columnName: "max_repl", width: 80 },
-        { columnName: "current_repl", width: 100 },
+        { columnName: "current_repl", width: Infinity },
       ],
       rows: "",
 
@@ -165,58 +166,68 @@ spec:
   }
 
   render() {
+    const rectangle = (status, pId) => {
+      return (
 
-    // 셀 데이터 스타일 변경
-    const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell
-        {...restProps}
-        style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          // cursor: "pointer",
-          ...style,
-        }}>
-        <span
-          style={{
-            color:
-              value === "Pending" ? "orange" : 
-                value === "Failed" ? "red" : 
-                  value === "Unknown" ? "red" : 
-                    value === "Succeeded" ? "skyblue" : 
-                      value === "Running" ? "#1ab726" : "black"
-          }}>
-          {value}
-        </span>
-      </Table.Cell>
-    );
-
+        [
+          <div>
+            <FaCube className="cube" style={{ 
+              color: status === "ready" ? "#367fa9" : "#ececec",
+            }}/>
+          </div>,
+          // <div className="rectangle"
+          //   id={pId}
+          //   style={{ 
+          //     backgroundColor: status === "ready" ? "#367fa9" : "orange",
+          //   }}
+            
+          // />
+        ]
+      );
+    };
     //셀
     const Cell = (props) => {
       const { column, row } = props;
-      // console.log("cell : ", props);
-      // const values = props.value.split("|");
-      // console.log("values", props.value);
+      // if (column.name === "name") {
+      //   return (
+      //     <Table.Cell
+      //       {...props}
+      //       style={{ cursor: "pointer" }}
+      //     ><Link to={{
+      //       pathname: `/pods/${props.value}`,
+      //       state: {
+      //         data : row
+      //       }
+      //     }}>{props.value}</Link></Table.Cell>
+      //   );
+      // } else 
       
-      // const values = props.value.replace("|","1");
-      // console.log("values,values", values)
-
-    
-
-      if (column.name === "status") {
-        return <HighlightedCell {...props} />;
-      } else if (column.name === "name") {
-        // console.log("name", props.value);
+      if (column.name === "current_repl") {
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/pods/${props.value}`,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
-        );
+          <Table.Cell>
+            <div className="replica-set">
+              {[...Array(props.row.min_repl)].map((n, index) => {
+                  return (
+                      <div>
+                          {rectangle("ready")}
+                      </div>
+                  )
+              })}
+              {[...Array(props.row.max_repl-props.row.min_repl)].map((n, index) => {
+                  return (
+                      <div>
+                          {rectangle("notReady")}
+                      </div>
+                  )
+              })}
+            </div>
+          </Table.Cell>
+        )
+        // min_repl
+        // max_repl
+
+
+
       }
       return <Table.Cell>{props.value}</Table.Cell>;
     };

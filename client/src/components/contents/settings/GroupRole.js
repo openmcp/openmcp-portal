@@ -50,13 +50,15 @@ class GroupRole extends Component {
         { name: "description", title: "Description" },
         { name: "member", title: "Member" },
         { name: "role", title: "Roles" },
+        { name: "projects", title: "Project" },
         { name: "group_id", title: "Group ID" },
       ],
       defaultColumnWidths: [
         { columnName: "group_name", width: 150 },
         { columnName: "description", width: 200 },
         { columnName: "member", width: 200 },
-        { columnName: "role", width: 600 },
+        { columnName: "role", width: 400 },
+        { columnName: "projects", width: 400 },
         { columnName: "group_id", width: 0 },
       ],
       rows: "",
@@ -162,7 +164,7 @@ class GroupRole extends Component {
       return stringData
     }
 
-    if (column.name === "role" || column.name === "member") {
+    if (column.name === "role" || column.name === "member" || column.name === "projects") {
       return (
         <Table.Cell {...props}>
           {arrayToString()}
@@ -214,7 +216,6 @@ class GroupRole extends Component {
   }
 
   confirmed = (result) => {
-    
     this.setState({confirmOpen:false});
 
     //show progress loading...
@@ -222,23 +223,23 @@ class GroupRole extends Component {
 
     if(result) {
       const url = `/settings/group-role`;
+
       const data = {
         group_id : this.state.selectedRow.group_id,
       };
 
-      axios.delete(url, data)
+      axios.delete(url, {data:data})
         .then((res) => {
-          if(res.data.error){
-            alert(res.data.message)
-            return
-          }
+          alert(res.data.message);
+          this.setState({ open: false });
+          this.handleClose();
+          this.onUpdateData();
         })
         .catch((err) => {
         });
-        
-      this.props.handleClose()
+      
       this.setState({openProgress:false})
-
+      
       // loging Add Node
       let userId = null;
       AsyncStorage.getItem("userName",(err, result) => { 
@@ -250,32 +251,33 @@ class GroupRole extends Component {
     }
   };
 
+  handleClick = (event) => {
+    if(this.state.anchorEl === null){
+      this.setState({anchorEl : event.currentTarget});
+    } else {
+      this.setState({anchorEl : null});
+    }
+  };
+
+  handleClose = () => {
+    this.setState({ 
+      anchorEl: null,
+      selection: [],
+      selectedRow: ""});
+  };
+
   render() {
     const onSelectionChange = (selection) => {
-      // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
       this.setState({ 
         selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {},
-        confrimTarget : this.state.rows[selection[0]].group_name
+        confrimTarget : this.state.rows[selection[0]] ? this.state.rows[selection[0]].group_name : "false" ,
       });
 
 
     };
-
-    const handleClick = (event) => {
-      if(this.state.anchorEl === null){
-        this.setState({anchorEl : event.currentTarget});
-      } else {
-        this.setState({anchorEl : null});
-      }
-    };
-
-    const handleClose = () => {
-      this.setState({ anchorEl: null });
-    };
-
-
+    
 
     const open = Boolean(this.state.anchorEl);
 
@@ -321,7 +323,7 @@ class GroupRole extends Component {
                   aria-label="more"
                   aria-controls="long-menu"
                   aria-haspopup="true"
-                  onClick={handleClick}
+                  onClick={this.handleClick}
                 >
                   <MoreVertIcon />
                 </IconButton>
@@ -336,12 +338,12 @@ class GroupRole extends Component {
                             <MenuItem
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
-                              <GrCreateGroup onUpdateData={this.onUpdateData} menuClose={handleClose}/>
+                              <GrCreateGroup onUpdateData={this.onUpdateData} menuClose={this.handleClose}/>
                             </MenuItem>
                             <MenuItem
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                               >
-                              <GrEditGroup rowData={this.state.selectedRow} menuClose={handleClose}
+                              <GrEditGroup rowData={this.state.selectedRow} onUpdateData={this.onUpdateData} menuClose={this.handleClose}
                               />
                             </MenuItem>
                             <MenuItem

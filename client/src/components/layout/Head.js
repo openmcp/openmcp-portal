@@ -103,9 +103,14 @@ class Head extends Component {
     })
     utilLog.fn_insertPLogs(userId, 'log-LG-LG02');
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("userName");
-    localStorage.removeItem("roles");
+    // localStorage.removeItem("token");
+    // localStorage.removeItem("userName");
+    // localStorage.removeItem("roles");
+    
+    AsyncStorage.setItem("token", null);
+    AsyncStorage.setItem("userName", null);
+    AsyncStorage.setItem("roles", null);
+    AsyncStorage.setItem("projects", null);
   }
  
   handleToggle = () => {

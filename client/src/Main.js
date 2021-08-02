@@ -10,12 +10,12 @@ class Main extends Component {
   constructor(props) {
     super(props);
     let token = null;
-    AsyncStorage.getItem("token",(err, result) => { 
+    AsyncStorage.getItem("token", (err, result) => { 
       token = result;
     })
 
     let loggedIn = true;
-    if (token == null) {
+    if (token == null || token == "null" || token=="") {
       loggedIn = false;
     }
 
@@ -48,6 +48,7 @@ class Main extends Component {
   }
 
   render() {
+
     if (!this.state.loggedIn) {
       return <Redirect to="/login"></Redirect>;
     }

@@ -23,11 +23,9 @@ class SignIn extends Component {
     AsyncStorage.getItem("token",(err, result) => { 
       token = result;
     })
-    
-    
 
     let loggedIn = true;
-    if (token == null) {
+    if (token == null || token == "null" || token=="") {
       loggedIn = false;
     }
 
@@ -63,11 +61,16 @@ class SignIn extends Component {
       axios.post(url, data)
       .then((res) => {
         if(res.data.data.rowCount > 0 ){
-          debugger;
           AsyncStorage.setItem("token", "asdlfkasjldkfjlkwejflkawef");
           AsyncStorage.setItem("userName", username);
           AsyncStorage.setItem("roles", res.data.data.rows[0].roles);
+          AsyncStorage.setItem("projects", res.data.data.rows[0].projects);
           
+          // var projects;
+          // AsyncStorage.getItem("projects",(err, result) => { 
+          //   projects = result.split(",");
+          // })
+
           this.setState({
             loggedIn: true,
           });

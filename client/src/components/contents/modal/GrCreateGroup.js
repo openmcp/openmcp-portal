@@ -5,6 +5,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import * as utilLog from "../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import {
   Button,
   Dialog,
@@ -85,6 +87,9 @@ class GrCreateGroup extends Component {
       selectedUserIds : [],
       userSelectionId : [],
 
+      selectedProjects : [],
+      projectSelectionId : [],
+
       activeStep : 0,
     };
     // this.onChange = this.onChange.bind(this);
@@ -131,6 +136,9 @@ class GrCreateGroup extends Component {
   } else if (Object.keys(this.state.selectedRoleIds).length === 0) {
     alert("Please select roles");
     return;
+  } else if (Object.keys(this.state.selectedProjects).length === 0) {
+    alert("Please select users");
+    return;
   } else if (Object.keys(this.state.selectedUserIds).length === 0) {
     alert("Please select users");
     return;
@@ -143,6 +151,7 @@ class GrCreateGroup extends Component {
         description:this.state.description,
         role_id:this.state.selectedRoleIds,
         user_id:this.state.selectedUserIds,
+        projects: this.state.selectedProjects,
       };
       axios.post(url, data)
       .then((res) => {
@@ -191,6 +200,18 @@ class GrCreateGroup extends Component {
     })
   }
 
+  onSelectProjects = (rows, selectionId) => {
+    let projects = [];
+    rows.map((project) => {
+      projects.push(project.name);
+    });
+
+    this.setState({
+      selectedProjects : projects,
+      projectSelectionId : selectionId
+    })
+  }
+
   render() {
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
@@ -210,7 +231,7 @@ class GrCreateGroup extends Component {
       );
     });
 
-    const steps = ['Set Group Informations', 'Select Group Roles', 'Select Group Users'];
+    const steps = ['Set Group Informations', 'Select Group Roles','Select Projects', 'Select Group Users'];
     const handleNext = () => {
       switch (this.state.activeStep){
         case 0 :
@@ -227,6 +248,14 @@ class GrCreateGroup extends Component {
         case 1:
           if (Object.keys(this.state.selectedRoleIds).length === 0) {
             alert("Please select roles");
+            return;
+          } else {
+            this.setState({activeStep : this.state.activeStep + 1});
+            return;
+          }
+        case 2:
+          if (Object.keys(this.state.selectedProjects).length === 0) {
+            alert("Please select projects");
             return;
           } else {
             this.setState({activeStep : this.state.activeStep + 1});
@@ -273,6 +302,7 @@ class GrCreateGroup extends Component {
             <Typography>
               {this.state.activeStep === 0 ? (
                 <div>
+                  
                   <section className="md-content">
                     <p>Group Role Name</p>
                     <TextField
@@ -305,6 +335,13 @@ class GrCreateGroup extends Component {
                   <GrRoles 
                     selection={this.state.roleSelectionId}
                     onSelectedRoles={this.onSelectRoles}
+                  />
+                </section>
+              ) : this.state.activeStep === 2 ? (
+                <section className="md-content">
+                  <GrProjects 
+                    selection={this.state.projectSelectionId}
+                    onSelectedProjects={this.onSelectProjects}
                   />
                 </section>
               ) : (
@@ -523,6 +560,7 @@ class GrUsers extends Component{
   componentWillMount(){
     this.callApi()
       .then((res) => {
+        
         this.setState({ rows: res});
         let selectedRows = [];
         this.props.selection.map((index) => {
@@ -574,7 +612,7 @@ class GrUsers extends Component{
                   color:"#9a9a9a",
                   textAlign: "center",
                   paddingTop: "30px"}}>
-                    Please Select Roles
+                    Please Select Users
                   </div>}
           </div>
         {/* <p>Select Role</p> */}
@@ -623,6 +661,244 @@ class GrUsers extends Component{
               highlightRow
             />
           </Grid>
+        </Paper>
+      </div>
+    );
+  }
+}
+
+class GrProjects extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      columns: [
+        { name: "name", title: "Name" },
+        { name: "status", title: "Status" },
+        { name: "cluster", title: "Cluster" },
+        { name: "created_time", title: "Created Time" },
+        { name: "labels", title: "Labels" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "name", width: 200 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100 },
+        { columnName: "created_time", width: 180 },
+        { columnName: "labels", width: 180 },
+      ],
+      rows:[],
+      
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 5,
+      pageSizes: [5, 10, 15, 0],
+      
+      selection: this.props.selection,
+      selectedRow : [],
+      completed: 0,
+    }
+  }
+
+  callApi = async () => {
+    const response = await fetch("/projects");
+    const body = await response.json();
+    return body;
+  };
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
+  componentDidMount(){
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        if(res == null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+          let selectedRows = [];
+          this.props.selection.map((index) => {
+            selectedRows.push(res[index]);
+          });
+          this.setState({ selectedRow: selectedRows});
+        }
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  render(){
+
+    const HighlightedCell = ({ value, style, row, ...restProps }) => (
+      <Table.Cell>
+        <span
+          style={{
+            color:
+            value === "Active" ? "#1ab726"
+              : value === "Deactive" ? "red" : "black",
+          }}
+        >
+          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
+          backgroundColor: 
+          value === "Active" ? "rgba(85,188,138,.1)"
+            : value === "Deactive" ? "rgb(152 13 13 / 10%)" : "white",
+          boxShadow: 
+          value === "Active" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+            : value === "Deactive" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px" : "white",
+          borderRadius: "20px",
+          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+          }}></FiberManualRecordSharpIcon>
+        </span>
+        <span
+          style={{
+            color:
+              value === "Active" ? "#1ab726" 
+                : value === "Deactive" ? "red" : undefined,
+          }}
+        >
+          {value}
+        </span>
+      </Table.Cell>
+    );
+
+    const Cell = (props) => {
+
+      const fnEnterCheck = (prop) => {
+        var arr = [];
+        var i;
+        for(i=0; i < Object.keys(prop.value).length; i++){
+          const str = Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i]
+          arr.push(str)
+        }
+        return (
+         arr.map(item => {
+           return (
+             <p>{item}</p>
+           )
+         })
+        )
+        // return (
+          // props.value.indexOf("|") > 0 ? 
+          //   props.value.split("|").map( item => {
+          //     return (
+          //       <p>{item}</p>
+          //   )}) : 
+          //     props.value
+        // )
+      }
+
+      const { column, row } = props;
+      // console.log("cell : ", props);
+      if (column.name === "status") {
+        return <HighlightedCell {...props} />;
+      } else if (column.name === "labels"){
+        return (
+        <Table.Cell>{fnEnterCheck(props)}</Table.Cell>
+        )
+      }
+      return <Table.Cell {...props} />;
+    };
+
+
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
+      />
+    );
+
+    const onSelectionChange = (selection) => {
+      let selectedRows = [];
+      selection.map((id) => {
+        selectedRows.push(this.state.rows[id]);
+      });
+      this.setState({ selectedRow: selectedRows});
+      this.setState({ selection: selection });
+
+      this.props.onSelectedProjects(selectedRows, selection);
+    };
+
+    return(
+      <div>
+        <p>Select Projects</p>
+          <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
+              {this.state.selectedRow.length > 0 
+                ? this.state.selectedRow.map((row)=>{
+                  return (
+                    <span>
+                      <LensIcon style={{fontSize:"8px", marginRight:"5px"}}/>
+                      {row.name}
+                    </span>
+                  );
+                }) 
+                : <div style={{
+                  color:"#9a9a9a",
+                  textAlign: "center",
+                  paddingTop: "30px"}}>
+                    Please Select Projects
+                  </div>}
+          </div>
+        {/* <p>Select Role</p> */}
+        <Paper>
+           {this.state.rows.length > 0 ? (
+              [
+          <Grid rows={this.state.rows} columns={this.state.columns}>
+            {/* <Toolbar /> */}
+            {/* 검색 */}
+            {/* <SearchState defaultValue="" />
+            <SearchPanel style={{ marginLeft: 0 }} /> */}
+
+            {/* Sorting */}
+            <SortingState
+              defaultSorting={[{ columnName: "status", direction: "asc" }]}
+            />
+
+            {/* 페이징 */}
+            <PagingState
+              defaultCurrentPage={0}
+              defaultPageSize={this.state.pageSize}
+            />
+            <PagingPanel pageSizes={this.state.pageSizes} />
+            <SelectionState
+              selection={this.state.selection}
+              onSelectionChange={onSelectionChange}
+            />
+
+            <IntegratedFiltering />
+            <IntegratedSorting />
+            <IntegratedSelection />
+            <IntegratedPaging />
+
+            {/* 테이블 */}
+            <Table  cellComponent={Cell}/>
+            <TableColumnResizing
+              defaultColumnWidths={this.state.defaultColumnWidths}
+            />
+            <TableHeaderRow
+              showSortingControls
+              rowComponent={HeaderRow}
+            />
+            <TableColumnVisibility
+              // defaultHiddenColumnNames={['role_id']}
+            />
+            <TableSelection
+              selectByRowClick
+              highlightRow
+            />
+          </Grid>]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
         </Paper>
       </div>
     );

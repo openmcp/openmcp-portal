@@ -95,10 +95,20 @@ spec:
             name: nginx`,
       openProgress : false,
       anchorEl:null,
+      projects : "",
     };
   }
 
   componentWillMount() {
+    var projects = "";
+
+    AsyncStorage.getItem("projects",(err, result) => { 
+      projects = result;
+    })
+
+    this.setState({
+      projects:projects
+    })
     this.props.menuData("none");
   }
 
@@ -243,14 +253,13 @@ spec:
   );
 
   Row = (props) => {
-    console.log("row!!!!!! : ",props);
 
-    if (props.tableRow.row.project === "openmcp") {
+    if(this.state.projects.indexOf(props.tableRow.row.project) > -1){
       return <Table.Row {...props} key={props.tableRow.key} />;
     } else {
       return null;
     }
-
+   
     return <Table.Row {...props} key={props.tableRow.key} />;
   };
   render() {

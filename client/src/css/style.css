@@ -1633,12 +1633,6 @@ g {
   float: left;
 }
 
-.pj-deployments .content .replica-set .cube {
-  margin: 1px;
-  float: left;
-  font-size:28px;
-}
-
 .pj-deployments .content .replica-set .circle {
   background-color: #367fa9;
   width: 40px;
@@ -1646,6 +1640,17 @@ g {
   border-radius: 50%;
   margin: 1px;
 }
+
+.content .replica-set .cube {
+  margin: 1px;
+  float: left;
+  font-size:20px;
+}
+.pj-deployments .content .replica-set .cube {
+  font-size:28px;
+}
+
+
 
 .pd-resource-config {
   margin: 0 45px;
