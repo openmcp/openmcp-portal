@@ -23,6 +23,7 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import LinearProgressBar from "../../modules/LinearProgressBar.js";
 // import Editor from "../../modules/Editor";
 
 let apiParams = "";
@@ -34,7 +35,6 @@ class CsNodes extends Component {
         { name: "name", title: "Node" },
         { name: "status", title: "Status" },
         { name: "cluster", title: "Cluster"},
-        // { name: "region", title: "Region" },
         { name: "role", title: "Role" },
         { name: "system_version", title: "System Version" },
         { name: "cpu", title: "CPU" },
@@ -42,19 +42,20 @@ class CsNodes extends Component {
         { name: "pods", title: "Pods" },
         { name: "provider", title: "Provider" },
         { name: "region", title: "Region" },
+        { name: "zone", title: "Zone" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
-        { columnName: "status", width: 130 },
-        { columnName: "cluster", width: 130},
-        // { columnName: "region", width: "150" },
-        { columnName: "role", width: 130 },
+        { columnName: "status", width: 100 },
+        { columnName: "cluster", width: 100},
+        { columnName: "role", width: 75 },
         { columnName: "system_version", width: 200 },
-        { columnName: "cpu", width: 130 },
-        { columnName: "memory", width: 130 },
-        { columnName: "pods", width: 130 },
-        { columnName: "provider", width: 130 },
-        { columnName: "region", width: 130 },
+        { columnName: "cpu", width: 155 },
+        { columnName: "memory", width: 155 },
+        { columnName: "pods", width: 155 },
+        { columnName: "provider", width: 100 },
+        { columnName: "region", width: 90 },
+        { columnName: "zone", width: 80 },
       ],
       rows: "",
 
@@ -165,37 +166,42 @@ class CsNodes extends Component {
     //셀
     const Cell = (props) => {
       const { column, row } = props;
-      // console.log("cell : ", props);
-      // const values = props.value.split("|");
-      // console.log("values", props.value);
-      
-      // const values = props.value.replace("|","1");
-      // console.log("values,values", values)
-
-
-      row.provider = this.props.location.state.data === undefined ? "-" : this.props.location.state.data.provider
-      row.region = this.props.location.state.data === undefined ? "-" : this.props.location.state.data.region
       const fnEnterCheck = () => {
+        let data = []
         if(props.value === undefined){
           return ""
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          props.value.indexOf("|") > 0 ? 
+            props.value.split("|").map( (item,index) => 
+                data[index] = item
+            ) : data[0] = props.value
+          return data.length > 1 ? <p>{data[1] + " ("+data[0]+")" }</p> : props.value
         }
+      }
+
+      const fn_linearProgressBar = () =>{
+        var data = [];
+        if(props.value.indexOf("|") > -1) {
+          props.value.split("|").map( item => {
+            if(item.indexOf(" ") > -1) {
+              item.split(" ").map((i, index) => data[index] = i);
+            }
+          });
+        } else {
+          data = [];
+        }
+        
+        return (
+          <p style={{marginTop:"5px"}}>
+            <LinearProgressBar value={data[0]} total={data[2]}/>
+          </p>
+        )
       }
 
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // console.log("name", props.value);
-        
         return (
           <Table.Cell
             {...props}
@@ -208,11 +214,13 @@ class CsNodes extends Component {
             }
           }}>{fnEnterCheck()}</Link></Table.Cell>
         );
-      } else if (column.name === "cluster"){
-        return(
-        <Table.Cell>{apiParams}</Table.Cell>
-        );
-      }
+      } else if (column.name === "cpu" || column.name === "memory" || column.name === "pods"){
+        return <Table.Cell>
+          {fnEnterCheck()}
+          {fn_linearProgressBar()}
+          </Table.Cell>
+        // 
+      };
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 

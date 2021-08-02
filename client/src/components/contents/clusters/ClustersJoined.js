@@ -37,6 +37,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
+import LinearProgressBar from "../../modules/LinearProgressBar.js";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 class ClustersJoined extends Component {
@@ -61,8 +62,8 @@ class ClustersJoined extends Component {
         { columnName: "region", width: 130 },
         { columnName: "zone", width: 130 },
         { columnName: "nodes", width: 130 },
-        { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 130 },
+        { columnName: "cpu", width: 140 },
+        { columnName: "ram", width: 150 },
         { columnName: "provider", width: 150 },
         // { columnName: "disk", width: 150 },
         // { columnName: "network", width: 150 },
@@ -239,6 +240,31 @@ class ClustersJoined extends Component {
     //셀
     const Cell = (props) => {
       const { column, row } = props;
+
+      const fn_linearProgressBar = () =>{
+        var data = [];
+        if(props.value.indexOf(" ") > -1) {
+          props.value.split(" ").map( item => {
+            if(item.indexOf("/") > -1) {
+              item.split("/").map((i, index) => data[index] = i);
+            }
+          });
+        } else {
+          data = [];
+        }
+
+        var percent = data[0]/data[1]*100;
+        
+        return (
+          <div>
+            <p>{props.value+ " (" + percent.toFixed(1) + "%)"}</p>
+            <p style={{marginTop:"5px"}}>
+              <LinearProgressBar value={data[0]} total={data[1]}/>
+            </p>
+          </div>
+        )
+      }
+
       // console.log("cell : ", props);
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
@@ -257,18 +283,13 @@ class ClustersJoined extends Component {
             </Link>
           </Table.Cell>
         );
-      } else if (column.name === "provider") {
-        if(row.name.indexOf("eks") >= 0) {
-          row.provider = "eks"
-        } else if (row.name.indexOf("gke") >= 0){
-          row.provider = "gke"
-        }
-        return (
-          <Table.Cell {...props} style={{ cursor: "pointer" }}>
-              {row.provider}
+      } else if (column.name === "cpu" || column.name === "ram"){
+        return <Table.Cell>
+          {/* <p>{props.value}</p> */}
+          {fn_linearProgressBar()}
           </Table.Cell>
-        );
-      }
+        // 
+      };
       return <Table.Cell {...props} />;
     };
 

@@ -89,6 +89,8 @@ class Head extends Component {
       this.setState({selectedMenu:'pods'})
     } else if (path.indexOf('/network') >= 0 ) {
       this.setState({selectedMenu:'network'})
+    } else if (path.indexOf('/maintenance') >= 0 ) {
+      this.setState({selectedMenu:'maintenance'})
     } else if (path.indexOf('/settings') >= 0 ){
       this.setState({selectedMenu:'settings'})
     }
@@ -185,6 +187,14 @@ class Head extends Component {
                 <Link to="/network/ingress"  onClick={this.onSelectMenu} >Ingress</Link>
               </div>
             </div>
+            <div className={"main-menu " + this.state.selectedMenu} id="maintenance" onClick={this.onSelectMenu}>
+              <Link to="/maintenance/migration"  onClick={this.onSelectMenu}>Maintenance</Link>
+              <div className="sub-menu maintenance">
+                <Link to="/maintenance/migration"  onClick={this.onSelectMenu}>Migration</Link>
+                <Link to="/maintenance/snapshot"  onClick={this.onSelectMenu}>Snapshot</Link>
+              </div>
+            </div>
+
           </div>
 
           <div className="top-menu navbar-right">

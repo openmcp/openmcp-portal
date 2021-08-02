@@ -54,6 +54,8 @@ import IngressDetail from './../contents/netowork/IngressDetail';
 import DNSDetail from './../contents/netowork/DNSDetail';
 import Config from "../contents/settings/config/Config";
 import GroupRole from './../contents/settings/GroupRole';
+import Migration from "../contents/maintenance/Migration";
+import Snapshot from "../contents/maintenance/Snapshot";
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
 // 각 컨텐츠는 Route를 이용해서 전환되도록 해야한다.
@@ -250,6 +252,20 @@ class Contents extends Component {
               render={({match,location}) => <DNSDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* Dns contents END*/}
 
+
+
+          {/* snapshot contents */}
+          <Route path="/maintenance/snapshot/:snapshot"
+              render={({match,location}) => <Snapshot  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* snapshot contents END*/}
+
+          {/* migration contents */}
+          <Route path="/maintenance/migration/:migration"
+              render={({match,location}) => <Migration  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          {/* migration contents END*/}
+
+
+
           {/* Nodes contents */}
           <Route path="/nodes/:node" 
             render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
@@ -332,6 +348,11 @@ class Contents extends Component {
           <Route exact path="/network/services" ><Services menuData={this.onMenuData}/></Route>
           <Route exact path="/network/ingress" ><Ingress menuData={this.onMenuData}/></Route>
           <Route exact path="/network/dns" ><DNS menuData={this.onMenuData}/></Route>
+
+          <Route exact path="/maintenance/snapshot" ><Snapshot menuData={this.onMenuData}/></Route>
+          <Route exact path="/maintenance/migration" ><Migration menuData={this.onMenuData}/></Route>
+          
+
           <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
           <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
         </Switch>
