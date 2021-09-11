@@ -220,6 +220,7 @@ class Head extends Component {
                 <Link to="/settings/accounts" onClick={this.onSelectMenu}>Accounts</Link>
                 <Link to="/settings/group-role" onClick={this.onSelectMenu}>Group Role</Link>
                 <Link to="/settings/policy" onClick={this.onSelectMenu}>Policy</Link>
+                <Link to="/settings/alert" onClick={this.onSelectMenu}>Alert</Link>
                 <Link to="/settings/config" onClick={this.onSelectMenu}>Config</Link>
               </div>
             </div>

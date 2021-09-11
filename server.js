@@ -2404,8 +2404,8 @@ app.put("/settings/group-role", (req, res) => {
           description='${req.body.description}',
           role_id='{${req.body.role_id}}',
           member='{${req.body.user_id}}',
-          projects = '{${req.body.projects}}',
-      where group_id = '${req.body.group_id}'`
+          projects = '{${req.body.projects}}'
+      where group_id = ${req.body.group_id}`
 
   console.log(query);
   connection.query(query, 
@@ -2428,7 +2428,7 @@ app.put("/settings/group-role", (req, res) => {
 
 app.delete("/settings/group-role", (req, res) => {
   let query = `delete from tb_group_role 
-  where "group_id" = ${req.body.group_id}`;
+  where "group_id" = ${req.body.group_id};`;
   console.log(query);
   connection.query(
     query,
@@ -2889,6 +2889,121 @@ app.delete("/settings/config/pca/kvm", (req, res) => {
     }
   );
 });
+
+//////////////////////////
+// Settings > Alert
+//////////////////////////
+app.get("/settings/threshold", (req, res) => {
+  var create_time = getDateTime();
+  connection.query(`select
+    ht.node_name,
+    ht.cluster_name,
+    ht.cpu_warn,
+    ht.cpu_danger,
+    ht.ram_warn,
+    ht.ram_danger,
+    ht.storage_warn,
+    ht.storage_danger,
+    ht.created_time,
+    ht.updated_time
+    from tb_host_threshold ht
+    order by cluster_name, node_name;`, (err, result) => {
+    res.send(result.rows);
+  });
+});
+
+app.post("/settings/threshold", (req, res) => {
+  var now = getDateTime();
+  let query = `
+  INSERT INTO public.tb_host_threshold(
+    node_name, cluster_name, cpu_warn, cpu_danger, ram_warn, ram_danger, storage_warn, storage_danger, created_time, updated_time)
+    VALUES ('${req.body.nodeName}', '${req.body.clusterName}', ${req.body.cpuWarn}, ${req.body.cpuDanger}, ${req.body.ramWarn}, ${req.body.ramDanger}, ${req.body.storageWarn}, ${req.body.stroageDanger}, '${now}', '${now}');
+  `
+  console.log(query);
+  connection.query(query, 
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Host Threshold is saved !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Save was faild, please check Host Threshold : " + err,
+        };
+        res.send(result_set);
+      }
+    });
+});
+
+app.put("/settings/threshold", (req, res) => {
+  var now = getDateTime();
+  let query =  `
+  UPDATE public.tb_host_threshold
+	SET cpu_warn=${req.body.cpuWarn}, cpu_danger=${req.body.cpuDanger}, ram_warn=${req.body.ramWarn}, ram_danger=${req.body.ramDanger}, storage_warn=${req.body.storageWarn}, storage_danger=${req.body.storageDanger}, updated_time='${now}'	WHERE cluster_name='${req.body.clusterName}' AND node_name='${req.body.nodeName}';
+  `
+
+  console.log(query);
+  connection.query(query, 
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Host Threshold is updated !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Update was faild, please check threshold : " + err,
+        };
+        res.send(result_set);
+      }
+    });
+});
+
+app.delete("/settings/threshold", (req, res) => {
+  let query = `delete from tb_host_threshold 
+  where node_name = '${req.body.node}' and cluster_name = '${req.body.cluster}';`;
+  // console.log(query);
+  connection.query(
+    query,
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Delete was successful!!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Delete was faild, please check error : " + err,
+        };
+        res.send(result_set);
+      }
+    }
+  );
+});
+
+app.get("/settings/threshold/log", (req, res) => {
+  var create_time = getDateTime();
+  connection.query(`select
+    tl.node_name,
+    tl.cluster_name,
+    tl.created_time,
+    tl.status,
+    tl.message,
+    tl.resource
+    from tb_threshold_log tl
+    order by created_time desc, node_name;`, (err, result) => {
+    res.send(result.rows);
+  });
+});
+
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 

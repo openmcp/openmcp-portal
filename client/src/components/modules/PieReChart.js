@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { PieChart, Pie, Sector, Cell, Legend } from "recharts";
+import { PieChart, Pie, Sector, Cell, Legend, ResponsiveContainer  } from "recharts";
 
 class PieReChart extends Component {
   constructor(props) {
@@ -110,51 +110,55 @@ class PieReChart extends Component {
       );
     };
     const style = {
-      top: 48,
-      left: 200,
+      // top: 48,
+      // left: 200,
+      // position: "relative",
       lineHeight: "25px",
-      fontSize:"14px",
+      fontSize:"0.9vw",
     };
     return (
-      <div style={{ position: "relative" }} className="pie-chart">
-        <PieChart width={200} height={200}>
-          <Pie
-            activeIndex={this.state.activeIndex}
-            activeShape={renderActiveShape}
-            data={this.state.rows}
-            cx={95}
-            cy={95}
-            startAngle={this.props.angle.startAngle}
-            endAngle={this.props.angle.endAngle}
-            innerRadius={50}
-            outerRadius={80}
-            fill="#367fa9"
-            dataKey="value"
-            paddingAngle={0}
-            onMouseEnter={this.onPieEnter}
-          >
-            {this.state.rows.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-          <Legend
-            iconSize={10}
-            width={180}
-            height={140}
-            layout="vertical"
-            verticalAlign="middle"
-            wrapperStyle={style}
-            payload={this.state.rows.map((item, index) => ({
-              id: item.name,
-              type: "square",
-              value: `${item.name} (${item.value}${this.props.unit})`,
-              color: COLORS[index % COLORS.length],
-            }))}
-          />
-        </PieChart>
+      <div style={{ position: "relative", height: "200px"}} className="pie-chart">
+        <ResponsiveContainer  width="100%" height="100%">
+          <PieChart >
+            <Pie
+              activeIndex={this.state.activeIndex}
+              activeShape={renderActiveShape}
+              data={this.state.rows}
+              cx={95}
+              cy={95}
+              startAngle={this.props.angle.startAngle}
+              endAngle={this.props.angle.endAngle}
+              innerRadius={50}
+              outerRadius={80}
+              fill="#367fa9"
+              dataKey="value"
+              paddingAngle={0}
+              onMouseEnter={this.onPieEnter}
+            >
+              {this.state.rows.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Legend
+              iconSize={10}
+              // width={180}
+              // height={140}
+              align= "right"
+              layout="vertical"
+              verticalAlign="middle"
+              wrapperStyle={style}
+              payload={this.state.rows.map((item, index) => ({
+                id: item.name,
+                type: "square",
+                value: `${item.name} (${item.value}${this.props.unit})`,
+                color: COLORS[index % COLORS.length],
+              }))}
+            />
+          </PieChart>
+        </ResponsiveContainer>
       </div>
     );
   }

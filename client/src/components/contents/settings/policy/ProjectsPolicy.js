@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-// import { NavLink } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -9,8 +9,8 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  IntegratedSelection,
-  SelectionState,
+  // IntegratedSelection,
+  // SelectionState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -19,37 +19,43 @@ import {
   SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
-  TableSelection,
+  // TableSelection,
   PagingPanel,
-  TableColumnVisibility
+  // TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
-// import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from '../../util/UtLogs.js';
+import * as utilLog from '../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-// import AddMembers from "./AddMembers";
-// import Editor from "../../modules/Editor";
-import PcSetOMCPPolicy from '../modal/PcSetOMCPPolicy';
+import PcAddProjectPolicy from './../../modal/PcAddProjectPolicy';
+import PcUpdateProjectPolicy from './../../modal/PcUpdateProjectPolicy';
 
-class OpenMCPPolicy extends Component {
+
+class ProjectsPolicy extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "policy_name", title: "Policy"},
-        { name: "policy_id", title: "policy_id"},
-        { name: "rate", title: "rate"},
-        { name: "period", title: "period"},
+        { name: "project", title: "Project"},
+        { name: "cluster", title: "cluster"},
+        { name: "cls_cpu_trh_r", title: "Cluster CPU"},
+        { name: "cls_mem_trh_r", title: "Cluster Memory"},
+        { name: "pod_cpu_trh_r", title: "Pods CPU"},
+        { name: "pod_mem_trh_r", title: "Pods Memory"},
+        { name: "updated_time", title: "Updated Time"},
       ],
       defaultColumnWidths: [
-        { columnName: "policy_name", width: 500 },
-        { columnName: "policy_id", width: 100 },
-        { columnName: "rate", width: 100 },
-        { columnName: "period", width: 100 },
+        { columnName: "project", width: 300 },
+        { columnName: "cluster", width: 200 },
+        { columnName: "cls_cpu_trh_r", width: 150 },
+        { columnName: "cls_mem_trh_r", width: 150 },
+        { columnName: "pod_cpu_trh_r", width: 150 },
+        { columnName: "pod_mem_trh_r", width: 150 },
+        { columnName: "updated_time", width: 200 },
       ],
-      defaultHiddenColumnNames :[
-        "rate", "period", "policy_id"
-      ],
+      // defaultHiddenColumnNames :[
+      //   "rate", "period", "policy_id"
+      // ],
       rows: "",
+      selectedRowData:"",
 
       // Paging Settings
       currentPage: 0,
@@ -58,8 +64,9 @@ class OpenMCPPolicy extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      selection: [],
-      selectedRow: "",
+      onClickUpdatePolicy: false,
+      // selection: [],
+      // selectedRow: "",
     };
   }
 
@@ -68,7 +75,7 @@ class OpenMCPPolicy extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch(`/settings/policy/openmcp-policy`);
+    const response = await fetch(`/settings/policy/project-policy`);
     const body = await response.json();
     return body;
   };
@@ -116,32 +123,32 @@ class OpenMCPPolicy extends Component {
       .catch((err) => console.log(err));
   };
 
+  onClickUpdatePolicy = (rowData) => {
+    this.setState({
+      onClickUpdatePolicy: true,
+      selectedRowData : rowData
+    })
+  }
+
+  onCloseUpdatePolicy = (value) => {
+    this.setState({onClickUpdatePolicy:value})
+  }
+
   render() {
-
     const Cell = (props) => {
-      // const { column, row } = props;
-      const { column } = props;
+      const { column, row } = props;
 
-      const arrayToString = () => {
-        const stringData = props.value.reduce((result, item, index, arr) => {
-          if (index+1 === arr.length){
-            return `${result}${item}`
-          } else {
-            return `${result}${item}, `
-          }
-        }, "")
-
-        return stringData
-      }
-
-      if (column.name === "role_name") {
+      if (column.name === "project") {
+        // // console.log("name", props.value);
+        // console.log("this.props.match.params", this.props)
         return (
-          <Table.Cell
-            {...props}
-          >{arrayToString()}</Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer", color:"#3c8dbc"}}>
+            <div onClick={()=>this.onClickUpdatePolicy(row)}>
+              {props.value}
+            </div>
+          </Table.Cell>
         );
-
-      } 
+      }
       return <Table.Cell>{props.value}</Table.Cell>;
     };
 
@@ -158,12 +165,12 @@ class OpenMCPPolicy extends Component {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
-    const onSelectionChange = (selection) => {
-      // console.log(this.state.rows[selection[0]])
-      if (selection.length > 1) selection.splice(0, 1);
-      this.setState({ selection: selection });
-      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
-    };
+    // const onSelectionChange = (selection) => {
+    //   // console.log(this.state.rows[selection[0]])
+    //   if (selection.length > 1) selection.splice(0, 1);
+    //   this.setState({ selection: selection });
+    //   this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
+    // };
 
     return (
       <div className="content-wrapper full">
@@ -173,7 +180,8 @@ class OpenMCPPolicy extends Component {
               [
                 // <PcSetOMCPPolicy rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
                 // <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
-                <PcSetOMCPPolicy policy={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
+                <PcAddProjectPolicy onUpdateData={this.onUpdateData}/>,
+                <PcUpdateProjectPolicy onUpdateData={this.onUpdateData} onOpen={this.state.onClickUpdatePolicy} onCloseUpdatePolicy={this.onCloseUpdatePolicy} rowData={this.state.selectedRowData}/>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
@@ -186,16 +194,16 @@ class OpenMCPPolicy extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   <SortingState
-                    defaultSorting={[{ columnName: 'policy_id', direction: 'asc' }]}
+                    defaultSorting={[{ columnName: 'updated_time', direction: 'desc' }]}
                   />
 
-                  <SelectionState
+                  {/* <SelectionState
                     selection={this.state.selection}
                     onSelectionChange={onSelectionChange}
-                  />
+                  /> */}
 
                   <IntegratedFiltering />
-                  <IntegratedSelection />
+                  {/* <IntegratedSelection /> */}
                   <IntegratedSorting />
                   <IntegratedPaging />
 
@@ -205,15 +213,15 @@ class OpenMCPPolicy extends Component {
                     showSortingControls
                     rowComponent={HeaderRow}
                   />
-                  <TableColumnVisibility
+                  {/* <TableColumnVisibility
                     defaultHiddenColumnNames={this.state.defaultHiddenColumnNames}
-                  />
+                  /> */}
                   
-                  <TableSelection
+                  {/* <TableSelection
                     selectByRowClick
                     highlightRow
                     // showSelectionColumn={false}
-                  />
+                  /> */}
                   
                 </Grid>,
               ]
@@ -231,4 +239,4 @@ class OpenMCPPolicy extends Component {
   }
 }
 
-export default OpenMCPPolicy;
+export default ProjectsPolicy;

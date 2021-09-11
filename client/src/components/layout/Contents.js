@@ -46,7 +46,7 @@ import PjSecretDetail from './../contents/projects/config/PjSecretDetail';
 import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
 import Accounts from './../contents/settings/Accounts';
-import Policy from './../contents/settings/Policy';
+import Policy from '../contents/settings/policy/Policy';
 // import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 import DeploymentDetail from './../contents/deployments/DeploymentDetail';
 import ServicesDetail from './../contents/netowork/ServicesDetail';
@@ -56,6 +56,13 @@ import Config from "../contents/settings/config/Config";
 import GroupRole from './../contents/settings/GroupRole';
 import Migration from "../contents/maintenance/Migration";
 import Snapshot from "../contents/maintenance/Snapshot";
+import Threshold from "../contents/settings/alert/Alert";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import BgThresholdCheck from './../service/BgThresholdCheck';
+
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
 // 각 컨텐츠는 Route를 이용해서 전환되도록 해야한다.
@@ -67,11 +74,23 @@ class Contents extends Component {
     }
   }
 
+    
+
+  componentDidMount(){
+    
+  }
+
   onMenuData = (data) => {
     this.setState({menuData : data});
   }
 
+  // handleClick = e => {
+  //   console.log(';;;;;;;;;;;;')
+  //   this.props.info.history.push("/nodes/cluster2-master.dev.gmd.life?clustername=cluster2");
+  // };
+
   render() {
+    
     return (
       <div>
         {
@@ -289,12 +308,7 @@ class Contents extends Component {
           <Route path="/settings/group-role" 
             render={({match,location}) => <GroupRole  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          
-          <Route exact path="/settings/policy"
-            render={({match,location}) => <Redirect to={{
-              pathname : `/settings/policy/openmcp-policy`,
-            }}  />} >
-          </Route>
+      
           
           <Route path="/settings/policy/openmcp-policy"
             render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
@@ -330,6 +344,35 @@ class Contents extends Component {
               pathname : `/settings/config/public-cloud/eks`,
             }}  />} >
           </Route>
+
+
+          
+          {/* <Route path="/settings/policy/openmcp-policy"
+            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/settings/policy/project-policy"
+            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route exact path="/settings/policy"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/policy/openmcp-policy`,
+            }}  />} >
+          </Route> */}
+
+          
+          <Route path="/settings/alert/set-threshold"
+            render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/settings/alert/alert-log"
+            render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route exact path="/settings/alert"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/alert/set-threshold`,
+            }}  />} >
+          </Route>
+
+
           <Redirect 
             from="/settings" 
             to="/settings/accounts" />
@@ -356,8 +399,9 @@ class Contents extends Component {
           <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
           <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
         </Switch>
-          
+        <BgThresholdCheck propsData = {this.props}/>
       </div>
+      
       );
     }
 }

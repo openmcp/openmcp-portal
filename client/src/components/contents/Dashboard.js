@@ -117,30 +117,31 @@ class Dashboard extends Component {
               // <div onClick={this.onRefresh}><RefreshButton ></RefreshButton></div>
               // ,
               <div style={{ display: "flex" }}>
+                
                 <DashboardCard01
                   title="Clusters"
-                  width="25%"
+                  width="24%"
                   data={this.state.rows.clusters}
                   path="/clusters"
                   angle={this.angle.full}
                 ></DashboardCard01>
                 <DashboardCard01
                   title="Nodes"
-                  width="25%"
+                  width="24%"
                   data={this.state.rows.nodes}
                   path="/nodes"
                   angle={this.angle.full}
                 ></DashboardCard01>
                 <DashboardCard01
                   title="Pods"
-                  width="25%"
+                  width="24%"
                   data={this.state.rows.pods}
                   path="/pods"
                   angle={this.angle.full}
                 ></DashboardCard01>
                 <DashboardCard01
                   title="Projects"
-                  width="25%"
+                  width="24%"
                   data={this.state.rows.projects}
                   path="/projects"
                   angle={this.angle.full}
