@@ -5,12 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
-// export function fn_bgThresholdCheck() {
-//   console.log("thrsh");
-//   checkResource();
-//   this.timer = setInterval(checkResource, 8000);
-//   // clearInterval(this.timer);
-// }
 
 class BgThresholdCheck extends Component {
   constructor(props) {
@@ -22,7 +16,7 @@ class BgThresholdCheck extends Component {
 
   componentDidMount() {
     this.timer = setInterval(this.checkResource, 10000);
-    // clearInterval(this.timer);
+    clearInterval(this.timer);
   }
 
   callApiThreshold = async () => {

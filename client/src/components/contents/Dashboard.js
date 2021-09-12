@@ -301,9 +301,10 @@ class DashboardCard03 extends Component {
       </div>
       <div
         className="cb-body"
-        style={{ position: "relative",display:"flex"}}
+        style={{ position: "relative", width: "100%", display:"flex"}}
         >
-          <TreeView data={[this.props.data]}/>
+          <TreeView data={this.props.data}/>
+          {/* <TreeView data=[{this.props.data}]/> */}
         {/* {this.state.rows ? (
         <TreeView data={this.state.rows}/>
         ) : (

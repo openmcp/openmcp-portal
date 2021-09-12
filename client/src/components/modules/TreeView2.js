@@ -111,7 +111,7 @@ class TreeView2 extends React.Component {
 
     const containerStyles = {
       // width: 100/myTreeData.length+"%",
-      width: "20%",
+      width: "33%",
       height: "40vh",
       // border:"1px solid #000",
       float:"left"
@@ -123,15 +123,17 @@ class TreeView2 extends React.Component {
       // <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
       <div style={{ width: "100%"}}>
         {this.state.data.map((c) => {
+          
           return (
             <div style={containerStyles} ref={(tc) => (this.treeContainer = tc)}>
+            {/* <div style={{width: c.children.length/5*100 +"%", height: "40vh", float:"left"}} ref={(tc) => (this.treeContainer = tc)}> */}
               <Tree
                 data={c}
                 pathFunc="diagonal" //
                 nodeSvgShape={svgSquare}
                 collapsible	= {false}
                 zoomable = {false}
-                separation = {{siblings: 0.7, nonSiblings: 2}}
+                separation = {{siblings: 0.5, nonSiblings: 2}}
                 // nodeSvgShape={svgSquare2}
                 transitionDuration="0"
                 translate={this.state.translate}

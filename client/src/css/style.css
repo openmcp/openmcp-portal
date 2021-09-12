@@ -2028,3 +2028,17 @@ g {
 .linear-progress{
   width: 100%;
 }
+
+.cluster-joined-context {
+  position: absolute !important;
+  top: 79px !important;
+  left: 8px !important;
+  background: #dedede;
+  width: 97px;
+  text-align: center;
+  height: 34px;
+  padding: 4px;
+  box-shadow: 0px 2px 3px 0px #7d7d7d85;
+  border-radius: 6px;
+  cursor: pointer;
+}

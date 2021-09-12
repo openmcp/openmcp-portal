@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-// import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -9,8 +8,6 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  // IntegratedSelection,
-  // SelectionState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -19,14 +16,11 @@ import {
   SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
-  // TableSelection,
   PagingPanel,
-  // TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from '../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-import PcAddProjectPolicy from './../../modal/PcAddProjectPolicy';
-import PcUpdateProjectPolicy from './../../modal/PcUpdateProjectPolicy';
+import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
 
 
 class AlertLog extends Component {
@@ -42,12 +36,12 @@ class AlertLog extends Component {
         { name: "created_time", title: "Created Time"},
       ],
       defaultColumnWidths: [
-        { columnName: "node_name", width: 150 },
+        { columnName: "node_name", width: 250 },
         { columnName: "cluster_name", width: 150 },
-        { columnName: "status", width: 130 },
-        { columnName: "message", width: 300 },
+        { columnName: "status", width: 100 },
+        { columnName: "message", width: 450 },
         { columnName: "resource", width: 130 },
-        { columnName: "created_time", width: 180 },
+        { columnName: "created_time", width: 200 },
       ],
       // defaultHiddenColumnNames :[
       //   "rate", "period", "policy_id"
@@ -136,13 +130,27 @@ class AlertLog extends Component {
     const Cell = (props) => {
       const { column, row } = props;
 
-      if (column.name === "project") {
-        // // console.log("name", props.value);
-        // console.log("this.props.match.params", this.props)
+      if (
+        column.name === "status"
+      ) {
         return (
-          <Table.Cell {...props} style={{ cursor: "pointer", color:"#3c8dbc"}}>
-            <div onClick={()=>this.onClickUpdatePolicy(row)}>
-              {props.value}
+          <Table.Cell
+            {...props}
+            // style={{ cursor: "pointer" }}
+            aria-haspopup="true"
+          >
+            <div style={{ position: "relative", top: "-3px" }}>
+              
+              <WarningRoundedIcon
+                style={{
+                  fontSize: "24px",
+                  marginRight: "5px",
+                  position: "relative",
+                  top: "5px",
+                  color: props.value == "warn" ? "#efac17" : "#dc0505",
+                }}
+              />
+              <span>{props.value}</span>
             </div>
           </Table.Cell>
         );

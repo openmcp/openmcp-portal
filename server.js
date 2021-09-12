@@ -153,29 +153,29 @@ app.post("/user_login", (req, res) => {
 // Dashboard APIs 
 ///////////////////////
 app.get("/dashboard", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  // let overview = JSON.parse(rawdata);
-  // res.send(overview);
+  let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
 
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/dashboard`,
-    method: "GET",
-    // headers: {
-    //   Authorization:
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-    // },
-  };
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/dashboard`,
+  //   method: "GET",
+  //   // headers: {
+  //   //   Authorization:
+  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+  //   // },
+  // };
 
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      // console.log("result", body);
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     // console.log("result", body);
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
 });
 
 
@@ -3009,7 +3009,7 @@ app.post("/settings/threshold/log", (req, res) => {
 
   INSERT INTO public.tb_threshold_log(
     cluster_name, node_name, created_time, status, message, resource)
-    VALUES ('${req.body.cluster}', '${req.body.nodeName}', '${req.body.now}', '${req.body.status}', '${req.body.message}', '${req.body.resource}');
+    VALUES ('${req.body.clusterName}', '${req.body.nodeName}', '${now}', '${req.body.status}', '${req.body.message}', '${req.body.resource}');
   `
   console.log(query);
   connection.query(query, 
