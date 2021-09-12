@@ -22,26 +22,25 @@ import {
   TableHeaderRow,
   PagingPanel,
   TableSelection,
-  TableFilterRow ,
+  TableFilterRow,
 } from "@devexpress/dx-react-grid-material-ui";
 // import {  Button,} from "@material-ui/core";
 import Editor from "./../../modules/Editor";
 import * as utilLog from "./../../util/UtLogs.js";
-import { AsyncStorage } from 'AsyncStorage';
+import { AsyncStorage } from "AsyncStorage";
 import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
-import { NavigateNext} from '@material-ui/icons';
-import axios from 'axios';
+import { NavigateNext } from "@material-ui/icons";
+import axios from "axios";
 // import ProgressTemp from './../../modules/ProgressTemp';
-import SnapShotControl from './../modal/SnapShotControl';
+import SnapShotControl from "./../modal/SnapShotControl";
 
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
+import Grow from "@material-ui/core/Grow";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 // let apiParams = "";
@@ -76,8 +75,8 @@ class Deployments extends Component {
       completed: 0,
       selection: [],
       selectedRow: "",
-      clusterName : "",
-      editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+      clusterName: "",
+      editorContext: `apiVersion: openmcp.k8s.io/v1alpha1
 kind: OpenMCPDeployment
 metadata:
   name: openmcp-deployment2
@@ -93,22 +92,22 @@ spec:
           containers:
           - image: nginx
             name: nginx`,
-      openProgress : false,
-      anchorEl:null,
-      projects : "",
+      openProgress: false,
+      anchorEl: null,
+      projects: "",
     };
   }
 
   componentWillMount() {
     var projects = "";
 
-    AsyncStorage.getItem("projects",(err, result) => { 
+    AsyncStorage.getItem("projects", (err, result) => {
       projects = result;
-    })
+    });
 
     this.setState({
-      projects:projects
-    })
+      projects: projects,
+    });
     this.props.menuData("none");
   }
 
@@ -116,9 +115,7 @@ spec:
     // var param = this.props.match.params.cluster;
     // queryString = queryString.parse(this.props.location.search).cluster
     // console.log(query);
-    const response = await fetch(
-      `/deployments`
-    );
+    const response = await fetch(`/deployments`);
     const body = await response.json();
     return body;
   };
@@ -133,20 +130,28 @@ spec:
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then((res) => {
-        if(res == null){
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
+      .then((result) => {
+        // var res = [];
+        // if (result == null) {
+        //   this.setState({ rows: [] });
+        // } else {
+        //   result.map((item) => {
+        //     if (this.state.projects.indexOf(item.project) < 0) {
+        //       res.push(item);
+        //     }
+        //   });
+
+        //   // this.setState({ rows: res });
+        // }
+        this.setState({ rows: result });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
 
     let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   }
 
@@ -154,64 +159,66 @@ spec:
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        this.setState({ 
-          selection : [],
-          selectedRow : "",
-          rows: res });
+        this.setState({
+          selection: [],
+          selectedRow: "",
+          rows: res,
+        });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
 
     let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
     utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
   excuteScript = (context) => {
-
-    if(this.state.openProgress){
-      this.setState({openProgress:false})
+    if (this.state.openProgress) {
+      this.setState({ openProgress: false });
     } else {
-      this.setState({openProgress:true})
+      this.setState({ openProgress: true });
     }
 
     const url = `/deployments/create`;
     const data = {
-      yaml:context
+      yaml: context,
     };
     // console.log(context)
-    axios.post(url, data)
-    .then((res) => {
+    axios
+      .post(url, data)
+      .then((res) => {
         // alert(res.data.message);
         this.setState({ open: false });
         this.onUpdateData();
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         alert(err);
-    });
-  }
-  
+      });
+  };
+
   onRefresh = () => {
-    if(this.state.openProgress){
-      this.setState({openProgress:false})
+    if (this.state.openProgress) {
+      this.setState({ openProgress: false });
     } else {
-      this.setState({openProgress:true})
+      this.setState({ openProgress: true });
     }
     this.callApi()
       .then((res) => {
-        this.setState({ 
+        this.setState({
           // selection : [],
           // selectedRow : "",
-          rows: res });
+          rows: res,
+        });
       })
       .catch((err) => console.log(err));
   };
 
   closeProgress = () => {
-    this.setState({openProgress:false})
-  }
+    this.setState({ openProgress: false });
+  };
 
   //셀
   Cell = (props) => {
@@ -253,13 +260,12 @@ spec:
   );
 
   Row = (props) => {
+    // if(this.state.projects.indexOf(props.tableRow.row.project) > -1){
+    //   return <Table.Row {...props} key={props.tableRow.key} />;
+    // } else {
+    //   return null;
+    // }
 
-    if(this.state.projects.indexOf(props.tableRow.row.project) > -1){
-      return <Table.Row {...props} key={props.tableRow.key} />;
-    } else {
-      return null;
-    }
-   
     return <Table.Row {...props} key={props.tableRow.key} />;
   };
   render() {
@@ -267,20 +273,23 @@ spec:
       // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
-      this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
+      this.setState({
+        selectedRow: this.state.rows[selection[0]]
+          ? this.state.rows[selection[0]]
+          : {},
+      });
     };
 
-
     const handleClick = (event) => {
-      if(this.state.anchorEl === null){
-        this.setState({anchorEl : event.currentTarget});
+      if (this.state.anchorEl === null) {
+        this.setState({ anchorEl: event.currentTarget });
       } else {
-        this.setState({anchorEl : null});
+        this.setState({ anchorEl: null });
       }
     };
 
     const handleClose = () => {
-      this.setState({anchorEl : null});
+      this.setState({ anchorEl: null });
     };
 
     const open = Boolean(this.state.anchorEl);
@@ -290,12 +299,10 @@ spec:
         {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header"  onClick={this.onRefresh}>
+        <section className="content-header" onClick={this.onRefresh}>
           <h1>
-          <span>
-            Deployments
-          </span>
-            
+            <span>Deployments</span>
+
             <small></small>
           </h1>
           <ol className="breadcrumb">
@@ -303,7 +310,9 @@ spec:
               <Link to="/dashboard">Home</Link>
             </li>
             <li className="active">
-             <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               Deployments
             </li>
           </ol>
@@ -312,13 +321,15 @@ spec:
           <Paper>
             {this.state.rows ? (
               [
-                <div style={{
-                  position: "absolute",
-                  right: "21px",
-                  top: "20px",
-                  zIndex: "10",
-                  textTransform: "capitalize",
-                }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "21px",
+                    top: "20px",
+                    zIndex: "10",
+                    textTransform: "capitalize",
+                  }}
+                >
                   <IconButton
                     aria-label="more"
                     aria-controls="long-menu"
@@ -327,43 +338,73 @@ spec:
                   >
                     <MoreVertIcon />
                   </IconButton>
-                 
-                  <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+
+                  <Popper
+                    open={open}
+                    anchorEl={this.state.anchorEl}
+                    role={undefined}
+                    transition
+                    disablePortal
+                    placement={"bottom-end"}
+                  >
                     {({ TransitionProps, placement }) => (
                       <Grow
-                      {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === "bottom"
+                              ? "center top"
+                              : "center top",
+                        }}
                       >
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem 
-                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
-                              >
-                                <SnapShotControl
-                                  title="create snapshot"
-                                  rowData={this.state.selectedRow}
-                                  onUpdateData = {this.onUpdateData}
-                                  menuClose={handleClose}
-                                />
-                              </MenuItem>
-                              <MenuItem 
-                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
-                              >
-                                <PjDeploymentMigration
-                                  title="pod migration"
-                                  rowData={this.state.selectedRow}
-                                  onUpdateData = {this.onUpdateData}
-                                  menuClose={handleClose}
-                                />
-                              </MenuItem>
-                              <MenuItem 
-                                // onClick={handleClose}
-                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
-                              >
-                                <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
-                              </MenuItem>
-                            </MenuList>
-                          </Paper>
+                            <MenuItem
+                              style={{
+                                textAlign: "center",
+                                display: "block",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <SnapShotControl
+                                title="create snapshot"
+                                rowData={this.state.selectedRow}
+                                onUpdateData={this.onUpdateData}
+                                menuClose={handleClose}
+                              />
+                            </MenuItem>
+                            <MenuItem
+                              style={{
+                                textAlign: "center",
+                                display: "block",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <PjDeploymentMigration
+                                title="pod migration"
+                                rowData={this.state.selectedRow}
+                                onUpdateData={this.onUpdateData}
+                                menuClose={handleClose}
+                              />
+                            </MenuItem>
+                            <MenuItem
+                              // onClick={handleClose}
+                              style={{
+                                textAlign: "center",
+                                display: "block",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <Editor
+                                btTitle="create"
+                                title="Create Deployment"
+                                context={this.state.editorContext}
+                                excuteScript={this.excuteScript}
+                                menuClose={handleClose}
+                              />
+                            </MenuItem>
+                          </MenuList>
+                        </Paper>
                       </Grow>
                     )}
                   </Popper>
@@ -377,7 +418,9 @@ spec:
 
                   {/* Sorting */}
                   <SortingState
-                  defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
+                    defaultSorting={[
+                      { columnName: "created_time", direction: "desc" },
+                    ]}
                   />
 
                   {/* 페이징 */}
@@ -403,7 +446,7 @@ spec:
                   <IntegratedPaging />
 
                   {/* 테이블 */}
-                  <Table cellComponent={this.Cell}  />
+                  <Table cellComponent={this.Cell} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
                   />
@@ -417,7 +460,7 @@ spec:
                     rowComponent={this.Row}
                     // showSelectionColumn={false}
                   />
-                  
+
                   {/* <TableFilterRow showFilterSelector={true}/> */}
                 </Grid>,
               ]

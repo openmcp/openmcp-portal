@@ -3003,6 +3003,50 @@ app.get("/settings/threshold/log", (req, res) => {
   });
 });
 
+app.post("/settings/threshold/log", (req, res) => {
+  var now = getDateTime();
+  let query = `
+
+  INSERT INTO public.tb_threshold_log(
+    cluster_name, node_name, created_time, status, message, resource)
+    VALUES ('${req.body.cluster}', '${req.body.nodeName}', '${req.body.now}', '${req.body.status}', '${req.body.message}', '${req.body.resource}');
+  `
+  console.log(query);
+  connection.query(query, 
+    (err, result) => {
+      if (err !== "null") {
+        const result_set = {
+          data: [],
+          message: "Host Threshold is saved !!",
+        };
+        res.send(result_set);
+      } else {
+        const result_set = {
+          data: [],
+          message: "Save was faild, please check Host Threshold : " + err,
+        };
+        res.send(result_set);
+      }
+    });
+});
+
+//all nodes metrics
+app.get("/apis/nodes_metric", (req, res) => {
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/nodes_metric`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
 
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
