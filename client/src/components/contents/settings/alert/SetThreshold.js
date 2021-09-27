@@ -277,7 +277,7 @@ class SetThreshold extends Component {
                   color: "#efac17",
                 }}
               />
-              <span>{props.value}</span>
+              <span>{props.value}%</span>
             </div>
           </Table.Cell>
         );
@@ -302,12 +302,12 @@ class SetThreshold extends Component {
                   color: "#dc0505",
                 }}
               />
-              <span>{props.value}</span>
+              <span>{props.value}%</span>
             </div>
           </Table.Cell>
         );
       }
-      return <Table.Cell>{props.value}</Table.Cell>;
+      return <Table.Cell>{props.value}%</Table.Cell>;
     };
 
     return (

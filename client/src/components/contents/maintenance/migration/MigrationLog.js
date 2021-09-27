@@ -22,18 +22,18 @@ import * as utilLog from '../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
 
-
-class AlertLog extends Component {
+class MigrationLog extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "node_name", title: "Node"},
-        { name: "cluster_name", title: "Cluster"},
-        { name: "status", title: "Status"},
-        { name: "message", title: "Message"},
-        { name: "resource", title: "Resource"},
-        { name: "created_time", title: "Created Time"},
+        // deployment, currentCluster, targetCluster, start, end, status
+        { name: "node_name", title: "Deployement"},
+        { name: "cluster_name", title: "Current Cluster"},
+        { name: "status", title: "Target Cluster"},
+        { name: "message", title: "Status"},
+        { name: "resource", title: "Start Time"},
+        { name: "created_time", title: "End Time"},
       ],
       defaultColumnWidths: [
         { columnName: "node_name", width: 250 },
@@ -241,4 +241,4 @@ class AlertLog extends Component {
   }
 }
 
-export default AlertLog;
+export default MigrationLog;

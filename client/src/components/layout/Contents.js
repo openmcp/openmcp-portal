@@ -54,14 +54,16 @@ import IngressDetail from './../contents/netowork/IngressDetail';
 import DNSDetail from './../contents/netowork/DNSDetail';
 import Config from "../contents/settings/config/Config";
 import GroupRole from './../contents/settings/GroupRole';
-import Migration from "../contents/maintenance/Migration";
-import Snapshot from "../contents/maintenance/Snapshot";
+import Migration from "../contents/maintenance/migration/MigrationMenu";
+import Snapshot from "../contents/maintenance/snapshot/SnapshotMenu";
 import Threshold from "../contents/settings/alert/Alert";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import BgThresholdCheck from './../service/BgThresholdCheck';
+import MigrationMenu from "../contents/maintenance/migration/MigrationMenu";
+import SnapshotMenu from "../contents/maintenance/snapshot/SnapshotMenu";
 
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
@@ -282,6 +284,33 @@ class Contents extends Component {
           <Route path="/maintenance/migration/:migration"
               render={({match,location}) => <Migration  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* migration contents END*/}
+
+
+
+
+          <Route path="/maintenance/migration/execute"
+            render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/maintenance/migration/log"
+            render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route exact path="/maintenance/migration"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/maintenance/migration/execute`,
+            }}  />} >
+          </Route>
+
+          <Route path="/maintenance/snapshot/execute"
+            render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/maintenance/snapshot/log"
+            render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route exact path="/maintenance/snapshot"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/maintenance/snapshot/execute`,
+            }}  />} >
+          </Route>
 
 
 

@@ -5,19 +5,19 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
-
 class BgThresholdCheck extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      preProps : this.props.propsData
-    }
+      preProps: this.props.propsData,
+    };
   }
 
   componentDidMount() {
-    this.timer = setInterval(this.checkResource, 10000);
+    this.timer = setInterval(this.checkResource, 600000);
     clearInterval(this.timer);
   }
+  
 
   callApiThreshold = async () => {
     const response = await fetch(`/settings/threshold`);
@@ -34,9 +34,9 @@ class BgThresholdCheck extends Component {
   };
 
   handleClick = (url) => {
-    let preProps = this.props.propsData
+    let preProps = this.props.propsData;
     this.props.propsData.info.history.push("/nodes");
-    setTimeout(function() {
+    setTimeout(function () {
       preProps.info.history.push(url);
     }, 100);
   };
@@ -58,10 +58,10 @@ class BgThresholdCheck extends Component {
       });
   };
 
-  showNotification = (status, message, id, cluster, node, resourceType) => {
+  showNotification = (status, messageObj, message, id, cluster, node, resourceType) => {
     let url = `/nodes/${node}?clustername=${cluster}`;
-    if (status == "warn") {
-      toast.warn(message, {
+    if (status === "warn") {
+      toast.warn(messageObj, {
         toastId: id,
         position: toast.POSITION.BOTTOM_RIGHT,
         autoClose: false,
@@ -71,10 +71,12 @@ class BgThresholdCheck extends Component {
         draggable: true,
         progress: undefined,
         pauseOnFocusLoss: false,
+        className: "toast-warn",
+        bodyClassName: "body-toast-warn",
         onClick: (props) => this.handleClick(url),
       });
-    } else if (status == "danger") {
-      toast.error(message, {
+    } else if (status === "danger") {
+      toast.error(messageObj, {
         toastId: id,
         position: toast.POSITION.BOTTOM_RIGHT,
         autoClose: false,
@@ -84,6 +86,7 @@ class BgThresholdCheck extends Component {
         draggable: true,
         progress: undefined,
         pauseOnFocusLoss: false,
+        className: "toast-danger",
         onClick: (props) => this.handleClick(url),
       });
     }
@@ -96,20 +99,6 @@ class BgThresholdCheck extends Component {
     this.callApiThreshold().then((res) => {
       if (res.length > 0) {
         thresholds = res;
-
-        toast.warn("test", {
-          toastId: "test",
-          position: toast.POSITION.BOTTOM_RIGHT,
-          autoClose: false,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          pauseOnFocusLoss: false,
-          onClick: (props) =>
-            this.handleClick("/nodes/cluster1-master.dev.gmd.life?clustername=cluster1"),
-        });
 
         this.callApi()
           .then((res) => {
@@ -136,6 +125,7 @@ class BgThresholdCheck extends Component {
               console.log("storageUsed: ", storageUsed + "%");
 
               let message = "";
+              let messageObj = "";
               let resourceType = ""; // cpu/ram/storage
               let status = ""; // warn/danger
               let id = "";
@@ -151,14 +141,38 @@ class BgThresholdCheck extends Component {
                 // ht.storage_warn,
                 // ht.storage_danger,
 
-                if (ht.node_name == node && ht.cluster_name == cluster) {
+                id = ht.cluster_name + ht.node_name + resourceType;
+                const Msg = (props) => (
+                  <div style={{marginLeft:"8px"}}>
+                    <div style={{color: props.status === "warn" ? "#efac17" : "#dc0505", fontWeight:"bold"}}>
+                      [{props.status.toUpperCase()}] 
+                    </div>
+                    <div style={{fontWeight:"bold"}}>Host '{props.node}'</div>
+                    <div style={{margin: "2px 0"}}>
+                      {props.type === "ram" ? "memory" : props.type} usage 
+                      <span style={{color: props.status === "warn" ? "#efac17" : "#dc0505", fontWeight:"bold"}}> {props.usage}% </span>
+                       over threshold <span style={{color: props.status === "warn" ? "#efac17" : "#dc0505", fontWeight:"bold"}}> {props.threshold}%</span>
+                    </div>
+                  </div>
+                );
+
+                if (ht.node_name === node && ht.cluster_name === cluster) {
                   if (cpuUsed >= ht.cpu_warn) {
                     resourceType = "cpu";
                     status = "warn";
-                    message = `[WARN] ${resourceType} useage ${cpuUsed}% over threshold ${ht.cpu_warn}%`;
-                    id = ht.cluster_name + ht.node_name + resourceType;
+                    messageObj = (
+                      <Msg
+                        status={status}
+                        type={resourceType}
+                        node={ht.node_name}
+                        usage={cpuUsed.toFixed(2)}
+                        threshold={ht.cpu_warn}
+                      />
+                    );
+                    message = `${node} ${resourceType} usage ${cpuUsed.toFixed(2)}% over threshold ${ht.cpu_warn}%`;
                     this.showNotification(
                       status,
+                      messageObj,
                       message,
                       id,
                       ht.cluster_name,
@@ -168,10 +182,19 @@ class BgThresholdCheck extends Component {
                   } else if (cpuUsed >= ht.cpu_danger) {
                     resourceType = "cpu";
                     status = "danger";
-                    message = `[DANGER] ${resourceType} useage ${cpuUsed}% over threshold ${ht.cpu_danger}%`;
-                    id = ht.cluster_name + ht.node_name + resourceType;
+                    messageObj = (
+                      <Msg
+                        status={status}
+                        type={resourceType}
+                        node={ht.node_name}
+                        usage={cpuUsed.toFixed(2)}
+                        threshold={ht.cpu_danger}
+                      />
+                    );
+                    message = `${node} ${resourceType} usage ${cpuUsed.toFixed(2)}% over threshold ${ht.cpu_danger}%`;
                     this.showNotification(
                       status,
+                      messageObj,
                       message,
                       id,
                       ht.cluster_name,
@@ -181,12 +204,21 @@ class BgThresholdCheck extends Component {
                   }
 
                   if (ramUsed >= ht.ram_warn) {
-                    resourceType = "cpu";
+                    resourceType = "ram";
                     status = "warn";
-                    message = `[WARN] ${resourceType} useage ${ramUsed}% over threshold ${ht.ram_warn}%`;
-                    id = ht.cluster_name + ht.node_name + resourceType;
+                    messageObj = (
+                      <Msg
+                        status={status}
+                        type={resourceType}
+                        node={ht.node_name}
+                        usage={ramUsed.toFixed(2)}
+                        threshold={ht.ram_warn}
+                      />
+                    );
+                    message = `${node} ${resourceType} usage ${ramUsed.toFixed(2)}% over threshold ${ht.ram_warn}%`;
                     this.showNotification(
                       status,
+                      messageObj,
                       message,
                       id,
                       ht.cluster_name,
@@ -194,12 +226,21 @@ class BgThresholdCheck extends Component {
                       resourceType
                     );
                   } else if (ramUsed >= ht.ram_danger) {
-                    resourceType = "cpu";
+                    resourceType = "ram";
                     status = "danger";
-                    message = `[DANGER] ${resourceType} useage ${ramUsed}% over threshold ${ht.ram_danger}%`;
-                    id = ht.cluster_name + ht.node_name + resourceType;
+                    messageObj = (
+                      <Msg
+                        status={status}
+                        type={resourceType}
+                        node={ht.node_name}
+                        usage={ramUsed.toFixed(2)}
+                        threshold={ht.ram_danger}
+                      />
+                    );
+                    message = `${node} ${resourceType} usage ${ramUsed.toFixed(2)}% over threshold ${ht.ram_danger}%`;
                     this.showNotification(
                       status,
+                      messageObj,
                       message,
                       id,
                       ht.cluster_name,
@@ -211,10 +252,19 @@ class BgThresholdCheck extends Component {
                   if (storageUsed >= ht.storage_warn) {
                     resourceType = "storage";
                     status = "warn";
-                    message = `[WARN] ${resourceType} useage ${storageUsed}% over threshold ${ht.storage_warn}%`;
-                    id = ht.cluster_name + ht.node_name + resourceType;
+                    messageObj = (
+                      <Msg
+                        status={status}
+                        type={resourceType}
+                        node={ht.node_name}
+                        usage={storageUsed.toFixed(2)}
+                        threshold={ht.storage_warn}
+                      />
+                    );
+                    message = `${node} ${resourceType} usage ${storageUsed.toFixed(2)}% over threshold ${ht.storage_warn}%`;
                     this.showNotification(
                       status,
+                      messageObj,
                       message,
                       id,
                       ht.cluster_name,
@@ -222,12 +272,21 @@ class BgThresholdCheck extends Component {
                       resourceType
                     );
                   } else if (storageUsed >= ht.storage_danger) {
-                    resourceType = "cpu";
+                    resourceType = "storage";
                     status = "danger";
-                    message = `[DANGER] ${resourceType} useage ${storageUsed}% over threshold ${ht.storage_danger}%`;
-                    id = ht.cluster_name + ht.node_name + resourceType;
+                    messageObj = (
+                      <Msg
+                        status={status}
+                        type={resourceType}
+                        node={ht.node_name}
+                        usage={storageUsed.toFixed(2)}
+                        threshold={ht.storage_danger}
+                      />
+                    );
+                    message = `${node} ${resourceType} usage ${storageUsed.toFixed(2)}% over threshold ${ht.storage_danger}%`;
                     this.showNotification(
                       status,
+                      messageObj,
                       message,
                       id,
                       ht.cluster_name,
