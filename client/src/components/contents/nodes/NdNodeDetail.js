@@ -43,7 +43,7 @@ class NdNodeDetail extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
     if(this.props.location.state !== undefined){
       this.setState({propsRow:this.props.location.state.data})
     }
@@ -100,7 +100,7 @@ class NdNodeDetail extends Component {
     // console.log("CsOverview_Render : ",this.state.rows.basic_info);
     return (
       <div>
-        <div className="content-wrapper node-detail full">
+        <div className="content-wrapper node-detail fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>

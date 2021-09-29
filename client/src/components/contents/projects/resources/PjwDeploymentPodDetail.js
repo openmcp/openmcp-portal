@@ -54,7 +54,7 @@ class PjwDeploymentPodDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pod-detail full">
+        <div className="content-wrapper pod-detail fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>

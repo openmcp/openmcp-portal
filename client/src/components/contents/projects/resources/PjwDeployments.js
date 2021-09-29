@@ -311,7 +311,7 @@ spec:
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
         <section className="content" style={{ position: "relative" }}>

@@ -210,7 +210,7 @@ class GrEditGroup extends Component {
 
   onSelectRoles = (rows, selectionId) => {
     let roleIds = [];
-    rows.map((role) => {
+    rows.forEach((role) => {
       roleIds.push(role.role_id);
     });
 
@@ -222,7 +222,7 @@ class GrEditGroup extends Component {
 
   onSelectUsers = (rows, selectionId) => {
     let userIds = [];
-    rows.map((user) => {
+    rows.forEach((user) => {
       userIds.push(user.user_id);
     });
 
@@ -234,7 +234,7 @@ class GrEditGroup extends Component {
 
   onSelectProjects = (rows, selectionId) => {
     let projects = [];
-    rows.map((project) => {
+    rows.forEach((project) => {
       projects.push(project.name);
     });
 
@@ -293,6 +293,8 @@ class GrEditGroup extends Component {
             this.setState({activeStep : this.state.activeStep + 1});
             return;
           }
+        default :
+          return;
       }
     };
   
@@ -458,7 +460,7 @@ class GrRoles extends Component{
     .then((res) => {
       this.setState({ rows: res});
       let selectedRows = [];
-      this.props.selection.map((id) => {
+      this.props.selection.forEach((id) => {
         selectedRows.push(res[id]);
       });
       this.setState({ selectedRow: selectedRows});
@@ -468,7 +470,7 @@ class GrRoles extends Component{
 
   
   Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
 
     if (column.name === "role_name") {
       
@@ -509,7 +511,7 @@ class GrRoles extends Component{
     console.log("rende");
     const onSelectionChange = (selection) => {
       let selectedRows = [];
-      selection.map((id) => {
+      selection.forEach((id) => {
         selectedRows.push(this.state.rows[id]);
       });
       this.setState({ selectedRow: selectedRows});
@@ -625,7 +627,7 @@ class GrUsers extends Component{
       .then((res) => {
         this.setState({ rows: res});
         let selectedRows = [];
-        this.props.selection.map((index) => {
+        this.props.selection.forEach((index) => {
           selectedRows.push(res[index]);
         });
         this.setState({ selectedRow: selectedRows});
@@ -634,7 +636,7 @@ class GrUsers extends Component{
   }
 
   Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
 
     if (column.name === "user_id") {
       
@@ -669,7 +671,7 @@ class GrUsers extends Component{
 
     const onSelectionChange = (selection) => {
       let selectedRows = [];
-      selection.map((id) => {
+      selection.forEach((id) => {
         selectedRows.push(this.state.rows[id]);
       });
       this.setState({ selectedRow: selectedRows});
@@ -803,7 +805,7 @@ class GrProjects extends Component{
         } else {
           this.setState({ rows: res });
           let selectedRows = [];
-          this.props.selection.map((index) => {
+          this.props.selection.forEach((index) => {
             selectedRows.push(res[index]);
           });
           this.setState({ selectedRow: selectedRows});
@@ -873,7 +875,7 @@ class GrProjects extends Component{
         // )
       }
 
-      const { column, row } = props;
+      const { column } = props;
       // console.log("cell : ", props);
 
 
@@ -914,7 +916,7 @@ class GrProjects extends Component{
 
     const onSelectionChange = (selection) => {
       let selectedRows = [];
-      selection.map((id) => {
+      selection.forEach((id) => {
         selectedRows.push(this.state.rows[id]);
       });
       this.setState({ selectedRow: selectedRows});

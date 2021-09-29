@@ -258,7 +258,8 @@
           />
           
           <div className="md-contents-body">
-            <div style={{padding: "15px 15px 15px 25px",
+            <div style={{padding:  "8px 15px",
+                        fontSize:"13px",
                           backgroundColor: "#bfdcec",
                           boxShadow: "0px 0px 3px 0px #b9b9b9"
                         }}
@@ -269,7 +270,7 @@
                 style={{
                   position: "absolute",
                   right: "21px",
-                  top: "283px",
+                  top: "222px",
                   zIndex: "10",
                   textTransform: "capitalize",
                 }}

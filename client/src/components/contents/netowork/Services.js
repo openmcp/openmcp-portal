@@ -82,7 +82,7 @@ spec:
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
 
   callApi = async () => {
@@ -257,9 +257,9 @@ spec:
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        {/* <section className="content-header">
           <h1>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
               Services
@@ -275,7 +275,7 @@ spec:
               Netowork
             </li>
           </ol>
-        </section>
+        </section> */}
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (

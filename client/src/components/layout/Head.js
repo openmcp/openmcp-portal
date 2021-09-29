@@ -1,32 +1,30 @@
 import React, { Component } from "react";
 import { Settings } from "@material-ui/icons";
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 // //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 // import Grow from '@material-ui/core/Grow';
 // import Paper from '@material-ui/core/Paper';
 // import Popper from '@material-ui/core/Popper';
 // import MenuItem from '@material-ui/core/MenuItem';
 // import MenuList from '@material-ui/core/MenuList';
-import * as utilLog from './../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-
+import * as utilLog from "./../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
 
 class Head extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       // anchorEl:null,
-      open:false,
-      selectedMenu : "dashboard"
-      
-    }
+      open: false,
+      selectedMenu: "dashboard",
+    };
     this.anchorRef = React.createRef();
     this.prevOpen = React.createRef(this.state.open);
   }
 
-  componentWillUpdate(prevProps, prevState){
+  componentWillUpdate(prevProps, prevState) {
     if (this.props.path !== prevProps.path) {
       // if (prevProps.path.indexOf('/dashboard') >= 0 ){
       //   this.setState({selectedMenu:'dashboard'})
@@ -49,9 +47,7 @@ class Head extends Component {
     }
   }
 
-
-
-  componentWillMount(){
+  componentWillMount() {
     // var menu = window.location.pathname
     // // console.log(menu)
     // if (menu.indexOf('/dashboard') >= 0 ){
@@ -73,68 +69,65 @@ class Head extends Component {
     // }
     this.selectionMenu(this.props.path);
   }
-  
+
   selectionMenu = (path) => {
-    if (path.indexOf('/dashboard') >= 0 ){
-      this.setState({selectedMenu:'dashboard'})
-    } else if (path.indexOf('/clusters') >= 0 ) {
-      this.setState({selectedMenu:'clusters'})
-    } else if (path.indexOf('/nodes') >= 0 ) {
-      this.setState({selectedMenu:'nodes'})
-    } else if (path.indexOf('/projects') >= 0 ) {
-      this.setState({selectedMenu:'projects'})
-    } else if (path.indexOf('/deployments') >= 0 ) {
-      this.setState({selectedMenu:'deployments'})
-    } else if (path.indexOf('/pods') >= 0 ) {
-      this.setState({selectedMenu:'pods'})
-    } else if (path.indexOf('/network') >= 0 ) {
-      this.setState({selectedMenu:'network'})
-    } else if (path.indexOf('/maintenance') >= 0 ) {
-      this.setState({selectedMenu:'maintenance'})
-    } else if (path.indexOf('/settings') >= 0 ){
-      this.setState({selectedMenu:'settings'})
+    if (path.indexOf("/dashboard") >= 0) {
+      this.setState({ selectedMenu: "dashboard" });
+    } else if (path.indexOf("/clusters") >= 0) {
+      this.setState({ selectedMenu: "clusters" });
+    } else if (path.indexOf("/nodes") >= 0) {
+      this.setState({ selectedMenu: "nodes" });
+    } else if (path.indexOf("/projects") >= 0) {
+      this.setState({ selectedMenu: "projects" });
+    } else if (path.indexOf("/deployments") >= 0) {
+      this.setState({ selectedMenu: "deployments" });
+    } else if (path.indexOf("/pods") >= 0) {
+      this.setState({ selectedMenu: "pods" });
+    } else if (path.indexOf("/network") >= 0) {
+      this.setState({ selectedMenu: "network" });
+    } else if (path.indexOf("/maintenance") >= 0) {
+      this.setState({ selectedMenu: "maintenance" });
+    } else if (path.indexOf("/settings") >= 0) {
+      this.setState({ selectedMenu: "settings" });
     }
-  }
+  };
 
   onLogout = (e) => {
     let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-LG-LG02');
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-LG-LG02");
 
     // localStorage.removeItem("token");
     // localStorage.removeItem("userName");
     // localStorage.removeItem("roles");
-    
+
     AsyncStorage.setItem("token", null);
     AsyncStorage.setItem("userName", null);
     AsyncStorage.setItem("roles", null);
     AsyncStorage.setItem("projects", null);
-  }
- 
+  };
+
   handleToggle = () => {
-    this.setState({open:!this.prevOpen.current})
+    this.setState({ open: !this.prevOpen.current });
   };
 
   handleClose = (event) => {
-    this.setState({open:false});
+    this.setState({ open: false });
   };
 
   onSelectMenu = (e) => {
-    this.setState({selectedMenu : e.currentTarget.id});
+    this.setState({ selectedMenu: e.currentTarget.id });
   };
 
   onClick = (e) => {
-    e.preventDefault()
+    e.preventDefault();
   };
 
-
-  componentDidUpdate(){
-  }
+  componentDidUpdate() {}
 
   render() {
-
     // const handleListKeyDown = (event) => {
     //   if (event.key === 'Tab') {
     //     event.preventDefault();
@@ -143,9 +136,9 @@ class Head extends Component {
     // }
 
     let userName = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userName= result;
-    })
+    AsyncStorage.getItem("userName", (err, result) => {
+      userName = result;
+    });
     return (
       <header className="main-header">
         <Link to="/dashboard" className="logo">
@@ -155,64 +148,36 @@ class Head extends Component {
         </Link>
 
         <nav className="navbar navbar-static-top">
-          <div className="top-menu navbar-left">
-            <div className={"main-menu " + this.state.selectedMenu} id="dashboard" onClick={this.onSelectMenu}>
-                <Link to="/dashboard" activeClassName="active">Dashboard</Link>
-            </div>
-            <div className={"main-menu " + this.state.selectedMenu} id="clusters" onClick={this.onSelectMenu}>
-              <Link to="/clusters" activeClassName="active" >Clusters</Link>
-              <div className="sub-menu clusters">
-                <Link to="/clusters"  onClick={this.onSelectMenu}>Joined</Link>
-                <Link to="/clusters-joinable"  onClick={this.onSelectMenu}>Joinable</Link>
-              </div>
-            </div>
-            <div className={"main-menu " + this.state.selectedMenu} id="nodes" onClick={this.onSelectMenu}>
-              <Link to="/nodes" activeClassName="active" >Nodes</Link>
-            </div>
-            
-            <div className={"main-menu " + this.state.selectedMenu} id="projects" onClick={this.onSelectMenu}>
-              <Link to="/projects" activeClassName="active" >Projects</Link>
-            </div>
-            <div className={"main-menu " + this.state.selectedMenu} id="deployments" onClick={this.onSelectMenu}>
-              <Link to="/deployments" activeClassName="active" >Deployments</Link>
-            </div>
-            <div className={"main-menu " + this.state.selectedMenu} id="pods" onClick={this.onSelectMenu}>
-              <Link to="/pods"  onClick={this.onSelectMenu}>Pods</Link>
-              <div className="sub-menu pods">
-                <Link to="/pods"  onClick={this.onSelectMenu}>Pods</Link>
-                <Link to="/pods-hpa"  onClick={this.onSelectMenu}>HPA</Link>
-                <Link to="/pods-vpa"  onClick={this.onSelectMenu} >VPA</Link>
-              </div>
-            </div>
-            <div className={"main-menu " + this.state.selectedMenu} id="network" onClick={this.onSelectMenu}>
-              <Link to="/network/dns"  onClick={this.onSelectMenu}>Network</Link>
-              <div className="sub-menu network">
-                <Link to="/network/dns"  onClick={this.onSelectMenu}>DNS</Link>
-                <Link to="/network/services"  onClick={this.onSelectMenu}>Services</Link>
-                <Link to="/network/ingress"  onClick={this.onSelectMenu} >Ingress</Link>
-              </div>
-            </div>
-            <div className={"main-menu " + this.state.selectedMenu} id="maintenance" onClick={this.onSelectMenu}>
-              <Link to="/maintenance/migration"  onClick={this.onSelectMenu}>Maintenance</Link>
-              <div className="sub-menu maintenance">
-                <Link to="/maintenance/migration"  onClick={this.onSelectMenu}>Migration</Link>
-                <Link to="/maintenance/snapshot"  onClick={this.onSelectMenu}>Snapshot</Link>
-              </div>
-            </div>
-
-          </div>
-
           <div className="top-menu navbar-right">
-            <div className={"main-menu " + this.state.selectedMenu} id="accounts" style={{position: "relative", textAlign: "left"}}>
-              <Link to="/"  onClick={this.onClick}>
-                <AccountCircleIcon/><div style={{position: "absolute", display: "inline-block", right: "15px", top: "18px"}}>{userName}</div>
+            <div
+              className={"main-menu " + this.state.selectedMenu}
+              id="accounts"
+              style={{ position: "relative", textAlign: "left" }}
+            >
+              <Link to="/" onClick={this.onClick}>
+                <AccountCircleIcon />
+                <div
+                  style={{
+                    position: "absolute",
+                    display: "inline-block",
+                    right: "15px",
+                    top: "12px",
+                  }}
+                >
+                  {userName}
+                </div>
               </Link>
-              <div className="sub-menu accounts" >
-                <Link to="/login"  onClick={this.onLogout}>Logout</Link>
+              <div className="sub-menu accounts">
+                <Link to="/login" onClick={this.onLogout}>
+                  Logout
+                </Link>
+                <Link to="/language" onClick={this.onLogout}>
+                  Logout
+                </Link>
               </div>
             </div>
 
-            <div className={"main-menu " + this.state.selectedMenu} id="settings" onClick={this.onSelectMenu}>
+            {/* <div className={"main-menu " + this.state.selectedMenu} id="settings" onClick={this.onSelectMenu}>
               <Link to="/settings/accounts" onClick={this.onSelectMenu}>
                 <div style={{ fontSize: 20}}><Settings></Settings></div>
               </Link>
@@ -223,52 +188,8 @@ class Head extends Component {
                 <Link to="/settings/alert" onClick={this.onSelectMenu}>Alert</Link>
                 <Link to="/settings/config" onClick={this.onSelectMenu}>Config</Link>
               </div>
-            </div>
+            </div> */}
           </div>
-          {/* <div className="navbar-custom-menu">
-            <ul className="nav navbar-nav">
-              <li className="dropdown user user-menu">
-                <div ref={this.anchorRef}
-                      aria-controls={this.state.open ? 'menu-account' : undefined}
-                      aria-haspopup="true"
-                      onClick={this.handleToggle}>
-                  <AccountCircleIcon></AccountCircleIcon>
-                  <span className="hidden-xs">{userName}</span>
-                </div>
-                <Popper style={{minWidth:"150px"}} open={this.state.open} anchorEl={this.anchorRef.current} role={undefined} transition disablePortal>
-                  {({ TransitionProps, placement }) => (
-                    <Grow
-                      {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                    >
-                      <Paper>
-                        <ClickAwayListener> mouseEvent='onMouseUp' onClickAway={this.handleClose}>
-                          <MenuList 
-                            // autoFocusItem={this.state.open}
-                            id="menu-account"
-                            onKeyDown={handleListKeyDown}
-                          >
-                            <MenuItem onClick={this.handleClose}>
-                              <Link to="/login" className="dropdown-toggle" data-toggle="dropdown" onClick={this.onLogout}>
-                                Logout
-                              </Link>
-                            </MenuItem>
-                          </MenuList>
-                        </ClickAwayListener>
-                      </Paper>
-                    </Grow>
-                  )}
-                </Popper>
-              </li>
-              <li className="dropdown user user-menu">
-                <Link to="/settings/accounts" data-toggle="dropdown" id="settings" onClick={this.onSelectMenu}>
-                  <div style={{ fontSize: 20}}>
-                    <Settings></Settings>
-                  </div>
-                </Link>
-              </li>
-            </ul>
-          </div> */}
         </nav>
       </header>
     );

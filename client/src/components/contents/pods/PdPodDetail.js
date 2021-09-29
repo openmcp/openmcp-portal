@@ -37,7 +37,7 @@ class PdPodDetail extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
 
   componentDidMount() {
@@ -80,7 +80,7 @@ class PdPodDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pod-detail full">
+        <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>

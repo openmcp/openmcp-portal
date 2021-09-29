@@ -11,6 +11,8 @@ import { Container } from "@material-ui/core";
 import { NavigateNext } from '@material-ui/icons';
 import ProjectsPolicy from './ProjectsPolicy';
 import OpenMCPPolicy from './OpenMCPPolicy';
+import { IoKeyOutline} from "react-icons/io5";
+
 
 const styles = (theme) => ({
   root: {
@@ -93,11 +95,12 @@ class Policy extends Component {
     const { classes } = this.props;
     return (
       <div>
-        <div className="content-wrapper full">
+        <div className="content-wrapper fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              Policy
+              <i><IoKeyOutline/></i>
+              <span>Policy</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
@@ -124,9 +127,14 @@ class Policy extends Component {
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
-                  style={{ backgroundColor: "#16586c" }}
-                  // indicatorColor="primary"
-                  TabIndicatorProps ={{ style:{backgroundColor:"#41aabf"}}}
+                  style={{
+                    backgroundColor: "#3c8dbc",
+                    minHeight: "42px",
+                    position: "fixed",
+                    width: "100%",
+                    zIndex: "990",
+                  }}
+                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
@@ -135,6 +143,7 @@ class Policy extends Component {
                           to={{
                             pathname: `/settings/policy/${i.param}`
                           }}
+                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
                     />
                     );
                   })}

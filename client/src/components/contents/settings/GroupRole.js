@@ -26,9 +26,9 @@ import {
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-import AddMembers from "./AddMembers";
+// import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
-import AcChangeRole from './../modal/AcChangeRole';
+// import AcChangeRole from './../modal/AcChangeRole';
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -40,6 +40,8 @@ import GrCreateGroup from './../modal/GrCreateGroup';
 import GrEditGroup from './../modal/GrEditGroup';
 import axios from 'axios';
 import Confirm2 from './../../modules/Confirm2';
+import { SiGraphql} from "react-icons/si";
+
 
 class GroupRole extends Component {
   constructor(props) {
@@ -144,7 +146,7 @@ class GroupRole extends Component {
   };
 
    Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
     // const { column } = props;
     let stringData = []
 
@@ -282,7 +284,7 @@ class GroupRole extends Component {
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper fulled">
         <Confirm2
           confirmInfo={this.state.confirmInfo} 
           confrimTarget ={this.state.confrimTarget} 
@@ -292,7 +294,8 @@ class GroupRole extends Component {
 
         <section className="content-header">
           <h1>
-          Group Role
+          <i><SiGraphql/></i>
+          <span>Group Role</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">

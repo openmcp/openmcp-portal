@@ -14,7 +14,7 @@ class BgThresholdCheck extends Component {
   }
 
   componentDidMount() {
-    this.timer = setInterval(this.checkResource, 600000);
+    this.timer = setInterval(this.checkResource, 10000);
     clearInterval(this.timer);
   }
   
@@ -103,7 +103,7 @@ class BgThresholdCheck extends Component {
         this.callApi()
           .then((res) => {
             //전체 노드리소스 정보
-            res.map((item) => {
+            res.forEach((item) => {
               let cluster = item.cluster;
               let node = item.node;
 
@@ -131,7 +131,7 @@ class BgThresholdCheck extends Component {
               let id = "";
 
               //설정된 임계치 정보
-              thresholds.map((ht) => {
+              thresholds.forEach((ht) => {
                 // ht.node_name,
                 // ht.cluster_name,
                 // ht.cpu_warn,

@@ -29,6 +29,7 @@ import Confirm2 from './../../modules/Confirm2';
 import Button from "@material-ui/core/Button";
 import ProgressTemp from './../../modules/ProgressTemp';
 import axios from "axios";
+import NdNodeDetail from "../nodes/NdNodeDetail";
 
 
 class CsNodeDetail extends Component {
@@ -108,46 +109,8 @@ class CsNodeDetail extends Component {
     // console.log("CsOverview_Render : ",this.state.rows.basic_info);
     return (
       <div>
-        <div className="content-wrapper node-detail">
-          {/* 컨텐츠 헤더 */}
-          <section className="content-header">
-            <h1>
-            { this.props.match.params.node}
-              <small>Node Overview</small>
-            </h1>
-            <ol className="breadcrumb">
-              <li>
-                <NavLink to="/dashboard">Home</NavLink>
-              </li>
-              <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Clusters</NavLink>
-              </li>
-              <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Nodes
-              </li>
-            </ol>
-          </section>
-
-          {/* 내용부분 */}
-          <section className="content">
-            {this.state.rows ? (
-              [
-              <BasicInfo rowData={this.state.rows.basic_info} onUpdateData={this.onUpdateData} propsRow={this.state.propsRow}/>,
-              <KubernetesStatus rowData={this.state.rows.kubernetes_node_status} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
-              <NodeResourceUsage rowData={this.state.rows.node_resource_usage} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
-              // <Events rowData={this.state.rows.events}/>
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </section>
-        </div>
+        
+        <NdNodeDetail match={this.props.match} location={this.props.location} menuData={this.props.menuData}/>
       </div>
     );
   }

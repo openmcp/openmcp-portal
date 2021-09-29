@@ -8,10 +8,10 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
-import { NavigateNext } from '@material-ui/icons';
-import AlertLog from './AlertLog';
-import SetThreshold from './SetThreshold';
-import { AiFillAlert} from "react-icons/ai";
+import { NavigateNext } from "@material-ui/icons";
+import ClustersJoinable from "./ClustersJoinable";
+import ClustersJoined from "./ClustersJoined";
+import { FaBuffer } from "react-icons/fa";
 
 const styles = (theme) => ({
   root: {
@@ -43,9 +43,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Container>
-          <Box>
-            {children}
-          </Box>
+          <Box>{children}</Box>
         </Container>
       )}
     </div>
@@ -65,27 +63,26 @@ function a11yProps(index) {
   };
 }
 
-class Threshold extends Component {
+class ClustersMenu extends Component {
   state = {
     // rows: "",
     // completed: 0,
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "threshold", index: 1, param:"set-threshold" },
-      { label: "alert log", index: 2, param:"alert-log" },
-    // { label: "DaemonSets", index: 3 },
+      { label: "Joined", index: 1, param: "joined" },
+      { label: "Joinable", index: 2, param: "joinable" },
+      // { label: "DaemonSets", index: 3 },
     ],
   };
 
   componentWillMount() {
-
-     if(this.props.match.url.indexOf("log") > 0 ){
-       this.setState({ value: 1 });
-     } else {
+    if (this.props.match.url.indexOf("joinable") > 0) {
+      this.setState({ value: 1 });
+    } else {
       this.setState({ value: 0 });
-     }
-     this.props.menuData("none");
+    }
+    this.props.menuData("none");
   }
 
   render() {
@@ -94,18 +91,16 @@ class Threshold extends Component {
     };
     const { classes } = this.props;
 
-
-    
-
-
     return (
       <div>
         <div className="content-wrapper fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            <i><AiFillAlert/></i>
-              <span>Alert</span>
+              <i>
+                <FaBuffer />
+              </i>
+              <span>Clusters</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
@@ -113,12 +108,10 @@ class Threshold extends Component {
                 <NavLink to="/dashboard">Home</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/settings">Settings</NavLink>
-              </li>
-              <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Alert
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
+                <NavLink to="/clusters">Clusters</NavLink>
               </li>
             </ol>
           </section>
@@ -128,7 +121,7 @@ class Threshold extends Component {
             {/* 탭매뉴가 들어간다. */}
             <div className={classes.root}>
               <AppBar position="static" className="app-bar">
-              <Tabs
+                <Tabs
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
@@ -139,33 +132,61 @@ class Threshold extends Component {
                     width: "100%",
                     zIndex: "990",
                   }}
-                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
+                  TabIndicatorProps={{ style: { backgroundColor: "#00d0ff" } }}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
-                          component={Link}
-                          to={{
-                            pathname: `/settings/alert/${i.param}`
-                          }}
-                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
-                    />
+                      <Tab
+                        label={i.label}
+                        {...a11yProps(i.index)}
+                        component={Link}
+                        to={{
+                          pathname: `/clusters/${i.param}`,
+                        }}
+                        style={{
+                          minHeight: "42px",
+                          fontSize: "13px",
+                          minWidth: "100px",
+                        }}
+                      />
                     );
                   })}
                 </Tabs>
               </AppBar>
-              <TabPanel className="tab-panel" value={this.state.value} index={0}>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={0}
+              >
                 <Switch>
-                <Route path="/settings/alert/set-threshold"
-                    render={({match,location}) => <SetThreshold  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+                  <Route
+                    path="/clusters/joined"
+                    render={({ match, location }) => (
+                      <ClustersJoined
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={1}>
-               <Switch>
-                  <Route path="/settings/alert/alert-log"
-                    render={({match,location}) => <AlertLog  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={1}
+              >
+                <Switch>
+                  <Route
+                    path="/clusters/joinable"
+                    render={({ match, location }) => (
+                      <ClustersJoinable
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
@@ -179,17 +200,15 @@ class Threshold extends Component {
   }
 }
 
+// function App(){
+//   const notify = () => toast("Wow so easy!");
 
-  
-  // function App(){
-  //   const notify = () => toast("Wow so easy!");
+//   return (
+//     <div>
+//       <button onClick={notify}>Notify!</button>
+//       <ToastContainer />
+//     </div>
+//   );
+// }
 
-  //   return (
-  //     <div>
-  //       <button onClick={notify}>Notify!</button>
-  //       <ToastContainer />
-  //     </div>
-  //   );
-  // }
-
-export default withStyles(styles)(Threshold);
+export default withStyles(styles)(ClustersMenu);

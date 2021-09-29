@@ -137,7 +137,7 @@ class Storages extends Component {
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>

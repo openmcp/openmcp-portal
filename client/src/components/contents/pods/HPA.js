@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -80,7 +80,7 @@ spec:
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
 
 
@@ -187,7 +187,7 @@ spec:
     };
     //셀
     const Cell = (props) => {
-      const { column, row } = props;
+      const { column } = props;
       // if (column.name === "name") {
       //   return (
       //     <Table.Cell
@@ -249,21 +249,18 @@ spec:
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper">
         {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
           {/* <Editor btTitle="create" title="Create HAS" context={this.state.editorContext} excuteScript={this.excuteScript}/> */}
-        <section className="content-header"  onClick={this.onRefresh} style={{position:"relative"}}>
+        {/* <section className="content-header"  onClick={this.onRefresh} style={{position:"relative"}}>
           <h1>
           <span>
           HPA
           </span>
             <small>(Horizental Pod Autoscaler)</small>
-          {/* <span>
-          HAS
-          </span>
-            <small>(Hybrid Auto Scaler)</small> */}
+         
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -274,7 +271,7 @@ spec:
               Pods
             </li>
           </ol>
-        </section>
+        </section> */}
         <section className="content" style={{ position: "relative" }}>
           {/* <div className="HPA-TEMP">
             HPA

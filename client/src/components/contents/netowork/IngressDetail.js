@@ -83,7 +83,7 @@ class IngressDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper full">
+        <div className="content-wrapper fulled">
           {/* 컨텐츠 헤더 */} 
           <section className="content-header">
             <h1>

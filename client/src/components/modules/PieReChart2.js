@@ -98,7 +98,7 @@ class PieReChart2 extends Component {
     };
     return (
       <div style={{ position: "relative" }} className="pie-chart">
-        <PieChart width={200} height={200}>
+        <PieChart width={100} height={200}>
           <Pie
             data={[this.state.rows[1]]}
             cx={95}

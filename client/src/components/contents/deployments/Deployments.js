@@ -11,7 +11,7 @@ import {
   IntegratedSorting,
   SelectionState,
   IntegratedSelection,
-  FilteringState,
+  // FilteringState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -22,7 +22,7 @@ import {
   TableHeaderRow,
   PagingPanel,
   TableSelection,
-  TableFilterRow,
+  // TableFilterRow,
 } from "@devexpress/dx-react-grid-material-ui";
 // import {  Button,} from "@material-ui/core";
 import Editor from "./../../modules/Editor";
@@ -41,6 +41,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
+import { AiOutlineDeploymentUnit } from "react-icons/ai";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 // let apiParams = "";
@@ -295,14 +296,14 @@ spec:
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper fulled">
         {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {this.state.clusterName}
         {/* 컨텐츠 헤더 */}
         <section className="content-header" onClick={this.onRefresh}>
           <h1>
+            <i><AiOutlineDeploymentUnit/></i>
             <span>Deployments</span>
-
             <small></small>
           </h1>
           <ol className="breadcrumb">

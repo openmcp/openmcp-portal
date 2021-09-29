@@ -3,8 +3,7 @@ import Head from "./components/layout/Head";
 import Contents from "./components/layout/Contents";
 import { Redirect } from "react-router-dom";
 import { AsyncStorage } from 'AsyncStorage';
-// import LeftMenu from './components/layout/LeftMenu';
-
+import MainLeftMenu2 from './components/layout/MainLeftMenu2';
 
 class Main extends Component {
   constructor(props) {
@@ -15,7 +14,7 @@ class Main extends Component {
     })
 
     let loggedIn = true;
-    if (token == null || token == "null" || token=="") {
+    if (token === null || token === "null" || token==="") {
       loggedIn = false;
     }
 
@@ -55,7 +54,8 @@ class Main extends Component {
     return (
       <div className="wrapper" style={{minHeight:this.state.windowHeight}}>
         <Head onSelectMenu={this.onLeftMenu} path={this.props.location.pathname}/>
-        {/* <LeftMenu /> */}
+        <MainLeftMenu2 info={this.props}/>
+
         <Contents path={this.props.location.pathname} onSelectMenu={this.onLeftMenu} info={this.props}/>
       </div>
     );

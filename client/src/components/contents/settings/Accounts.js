@@ -35,6 +35,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
+import { AiOutlineUser} from "react-icons/ai";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
@@ -184,10 +185,11 @@ class Accounts extends Component {
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper fulled">
         <section className="content-header">
           <h1>
-          Accounts
+          <i><AiOutlineUser/></i>
+          <span>Accounts</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">

@@ -31,6 +31,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
+import { HiOutlineDuplicate } from "react-icons/hi";
+
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
@@ -241,10 +243,11 @@ class Projects extends Component {
 
 
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
+            <i><HiOutlineDuplicate/></i>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
               Projects
             </span>

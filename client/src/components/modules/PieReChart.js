@@ -75,10 +75,10 @@ class PieReChart extends Component {
 
       return (
         <g style={{fontSize:"14px"}}>
-          <text x={cx} y={cy} dy={3} textAnchor="middle" fill={fill}>
+          <text x={cx} y={cy} dy={0} textAnchor="middle" fill={fill}>
             {payload.name}
           </text>
-          <text x={cx} y={cy} dy={20} textAnchor="middle" fill={fill}>
+          <text x={cx} y={cy} dy={15} textAnchor="middle" fill={fill}>
             {`${(percent * 100).toFixed(0)}%`}
           </text>
 
@@ -113,23 +113,24 @@ class PieReChart extends Component {
       // top: 48,
       // left: 200,
       // position: "relative",
+      right:"8px",
       lineHeight: "25px",
       fontSize:"0.9vw",
     };
     return (
-      <div style={{ position: "relative", height: "200px"}} className="pie-chart">
+      <div style={{ position: "relative", height: "150px"}} className="pie-chart">
         <ResponsiveContainer  width="100%" height="100%">
-          <PieChart >
+          <PieChart>
             <Pie
               activeIndex={this.state.activeIndex}
               activeShape={renderActiveShape}
               data={this.state.rows}
-              cx={95}
-              cy={95}
+              cx={70}
+              cy={70}
               startAngle={this.props.angle.startAngle}
               endAngle={this.props.angle.endAngle}
-              innerRadius={50}
-              outerRadius={80}
+              innerRadius={35}
+              outerRadius={60}
               fill="#367fa9"
               dataKey="value"
               paddingAngle={0}

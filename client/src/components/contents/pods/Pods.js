@@ -23,6 +23,8 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 
+
+
 // import Editor from "./../modules/Editor";
 // import Projects from './../projects/Projects';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
@@ -70,7 +72,7 @@ class Pods extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
 
 
@@ -210,7 +212,7 @@ class Pods extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/pods/${props.value}`,
+            pathname: `/pods/${props.value}/overview`,
             search:`cluster=${row.cluster}&project=${row.project}`,
             state: {
               data : row
@@ -239,9 +241,9 @@ class Pods extends Component {
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        {/* <section className="content-header">
           <h1>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
               Pods
@@ -257,7 +259,7 @@ class Pods extends Component {
               Pods
             </li>
           </ol>
-        </section>
+        </section> */}
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (

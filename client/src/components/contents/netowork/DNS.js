@@ -82,7 +82,7 @@ spec:
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
 
   callApi = async () => {
@@ -263,10 +263,10 @@ spec:
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header"  onClick={this.onRefresh}>
+        {/* <section className="content-header"  onClick={this.onRefresh}>
           <h1>
           <span>
           DNS
@@ -282,7 +282,7 @@ spec:
               Netowork
             </li>
           </ol>
-        </section>
+        </section> */}
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (

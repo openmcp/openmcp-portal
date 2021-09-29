@@ -33,6 +33,7 @@ import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import LinearProgressBar from './../../modules/LinearProgressBar';
+import { CgServer} from "react-icons/cg";
 
 
 class Nodes extends Component {
@@ -80,7 +81,7 @@ class Nodes extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
 
   callApi = async () => {
@@ -214,7 +215,7 @@ class Nodes extends Component {
       const fn_linearProgressBar = () =>{
         var data = [];
         if(props.value.indexOf("|") > -1) {
-          props.value.split("|").map( item => {
+          props.value.split("|").forEach( item => {
             if(item.indexOf(" ") > -1) {
               item.split(" ").map((i, index) => data[index] = i);
             }
@@ -296,11 +297,12 @@ class Nodes extends Component {
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper nodes full">
+      <div className="content-wrapper nodes">
         {/* 컨텐츠 헤더 */}
         <section className="content-header" onClick={this.onRefresh}>
           <h1>
             {/* <span  style={{cursor:"pointer"}}> */}
+            <i><CgServer/></i>
             <span>
               Nodes
             </span>

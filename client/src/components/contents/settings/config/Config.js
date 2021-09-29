@@ -10,6 +10,7 @@ import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from '@material-ui/icons';
 import PublicCloud from './public-cloud/PublicCloud';
+import { AiOutlineSetting} from "react-icons/ai";
 
 const styles = (theme) => ({
   root: {
@@ -86,11 +87,12 @@ class Config extends Component {
     const { classes } = this.props;
     return (
       <div>
-        <div className="content-wrapper full">
+        <div className="content-wrapper fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              Config
+              <i><AiOutlineSetting/></i>
+              <span>Config</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
@@ -117,9 +119,14 @@ class Config extends Component {
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
-                  style={{ backgroundColor: "#16586c" }}
-                  // indicatorColor="primary"
-                  TabIndicatorProps ={{ style:{backgroundColor:"#41aabf"}}}
+                  style={{
+                    backgroundColor: "#3c8dbc",
+                    minHeight: "42px",
+                    position: "fixed",
+                    width: "100%",
+                    zIndex: "990",
+                  }}
+                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
@@ -128,6 +135,7 @@ class Config extends Component {
                           to={{
                             pathname: `/settings/config/${i.param}`
                           }}
+                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
                     />
                     );
                   })}

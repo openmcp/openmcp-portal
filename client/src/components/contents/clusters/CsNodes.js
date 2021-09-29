@@ -182,7 +182,7 @@ class CsNodes extends Component {
       const fn_linearProgressBar = () =>{
         var data = [];
         if(props.value.indexOf("|") > -1) {
-          props.value.split("|").map( item => {
+          props.value.split("|").forEach( item => {
             if(item.indexOf(" ") > -1) {
               item.split(" ").map((i, index) => data[index] = i);
             }

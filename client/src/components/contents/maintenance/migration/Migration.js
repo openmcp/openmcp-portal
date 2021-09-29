@@ -23,7 +23,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import axios from "axios";
+// import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -172,7 +172,7 @@ spec:
   //셀
   Cell = (props) => {
     console.log("CEll");
-    const { column, row } = props;
+    // const { column, row } = props;
     return <Table.Cell>{props.value}</Table.Cell>;
   };
 
@@ -196,7 +196,7 @@ spec:
       // if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
       let selectedRows = [];
-      selection.map((index)=>{
+      selection.forEach((index)=>{
         selectedRows.push(this.state.rows[index]);
       })
       this.setState({
@@ -221,7 +221,7 @@ spec:
     const open = Boolean(this.state.anchorEl);
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper">
         {/* 컨텐츠 헤더 */}
         <section className="content" style={{ position: "relative" }}>
           <Paper>

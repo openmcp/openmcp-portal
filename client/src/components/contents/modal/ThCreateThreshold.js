@@ -266,6 +266,8 @@ class ThCreateThreshold extends Component {
             this.setState({ activeStep: this.state.activeStep + 1 });
             return;
           }
+        default:
+          return;
       }
     };
 
@@ -536,10 +538,9 @@ class ThCluseter extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        
         this.setState({ rows: res });
         let selectedRows = [];
-        this.props.selection.map((id) => {
+        this.props.selection.forEach((id) => {
           selectedRows.push(res[id]);
         });
         this.setState({ selectedRow: selectedRows });
@@ -574,7 +575,7 @@ class ThCluseter extends Component {
       if (selection.length > 1) selection.splice(0, 1);
       let selectedRows = [];
 
-      selection.map((id) => {
+      selection.forEach((id) => {
         selectedRows.push(this.state.rows[id]);
       });
       this.setState({ selectedRow: selectedRows });
@@ -703,7 +704,6 @@ class ThNode extends Component {
       setCurrentPage: 0,
       pageSize: 5,
       pageSizes: [5, 10, 15, 0],
-      rows: "",
       selection: this.props.selection,
       selectedRow: [],
       completed: 0,
@@ -728,11 +728,11 @@ class ThNode extends Component {
     this.callApi()
       .then((result) => {
         var res = [];
-        result.map((item)=>{
+        result.forEach((item)=>{
           var isExsits = false;
           
-          this.props.preRows.map((pre)=>{
-            if(item.cluster == pre.cluster_name && item.name == pre.node_name){
+          this.props.preRows.forEach((pre)=>{
+            if(item.cluster === pre.cluster_name && item.name === pre.node_name){
               isExsits = true;
             }
           })
@@ -744,7 +744,7 @@ class ThNode extends Component {
 
         this.setState({ rows: res });
         let selectedRows = [];
-        this.props.selection.map((index) => {
+        this.props.selection.forEach((index) => {
           selectedRows.push(res[index]);
         });
         this.setState({ selectedRow: selectedRows });
@@ -770,7 +770,7 @@ class ThNode extends Component {
       if (selection.length > 1) selection.splice(0, 1);
       let selectedRows = [];
 
-      selection.map((id) => {
+      selection.forEach((id) => {
         selectedRows.push(this.state.rows[id]);
       });
       this.setState({ selectedRow: selectedRows });

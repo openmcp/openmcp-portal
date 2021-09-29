@@ -123,7 +123,7 @@ class ExcuteMigration extends Component {
     this.timer = setInterval(this.progress, 20);
     let dpCnt = this.props.rowData.length;
     let info = [];
-    this.props.rowData.map((dp) => {
+    this.props.rowData.forEach((dp) => {
       info.push({ name: dp.name, cluster: dp.cluster });
     });
 
@@ -238,7 +238,7 @@ spec:
     const onSelectionChange = (selection) => {
       this.setState({ selection: selection });
       let selectedRows = [];
-      selection.map((index) => {
+      selection.forEach((index) => {
         selectedRows.push(this.state.clusters[index]);
       });
       this.setState({

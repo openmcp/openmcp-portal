@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, Route, Switch } from "react-router-dom";
+import { NavLink, Link, Route, Switch } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
@@ -8,11 +8,12 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
-// import { NavigateNext } from '@material-ui/icons';
-import ConfigEKS from './ConfigEKS';
-import ConfigGKE from './ConfigGKE';
-import ConfigAKS from './ConfigAKS';
-import ConfigKVM from './ConfigKVM';
+import { NavigateNext } from '@material-ui/icons';
+import DNS from './DNS';
+import Services from './Services';
+import Ingress from './Ingress';
+import { BiNetworkChart } from "react-icons/bi";
+
 
 const styles = (theme) => ({
   root: {
@@ -66,71 +67,87 @@ function a11yProps(index) {
   };
 }
 
-class PublicCloud extends Component {
+class NetworkMenu extends Component {
   state = {
     // rows: "",
     // completed: 0,
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "EKS", index: 0, param:"eks" },
-      { label: "GKE", index: 1, param:"gke" },
-      { label: "AKS", index: 2, param:"aks" },
-      { label: "KVM", index: 3, param:"kvm" },
-    // { label: "DaemonSets", index: 3 },
+      { label: "dns", index: 1, param:"dns" },
+      { label: "services", index: 2, param:"services" },
+      { label: "ingress", index: 3, param:"ingress" },
     ],
   };
 
-  componentWillMount(){
-    var menu = window.location.pathname
-    if (menu.indexOf('/eks') >= 0 ){
-      this.setState({value: 0})
-    } else if (menu.indexOf('/gke') >= 0 ) {
-      this.setState({value: 1})
-    } else if (menu.indexOf('/aks') >= 0 ) {
-      this.setState({value: 2})
-    } else if (menu.indexOf('/kvm') >= 0 ) {
-      this.setState({value: 3})
-    } 
+  componentWillMount() {
+     if(this.props.match.url.indexOf("services") > 0 ){
+       this.setState({ value: 1 });
+     } else if(this.props.match.url.indexOf("ingress") > 0){
+      this.setState({ value: 2 });
+     } else {
+      this.setState({ value: 0 });
+     }
+     this.props.menuData("none");
   }
-  
 
   render() {
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
     const { classes } = this.props;
+
+
+    
+
+
     return (
       <div>
-        <div className="sub-content-wrapper">
+        <div className="content-wrapper fulled">
+          {/* 컨텐츠 헤더 */}
+          <section className="content-header">
+            <h1>
+            <i><BiNetworkChart/></i>
+              <span>Network</span>
+              <small>{this.props.match.params.project}</small>
+            </h1>
+            <ol className="breadcrumb">
+              <li>
+                <NavLink to="/dashboard">Home</NavLink>
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavLink to="/clusters">Network</NavLink>
+              </li>
+            </ol>
+          </section>
+
           {/* 내용부분 */}
-          <section class="pca-tab">
+          <section>
             {/* 탭매뉴가 들어간다. */}
             <div className={classes.root}>
               <AppBar position="static" className="app-bar">
-                <Tabs
+              <Tabs
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
-                  // style={{ backgroundColor: "#257790" }}
-                  style={{ backgroundColor: "#ecf0f5",
-                    padding: "14px 12px 0px 12px",
-                    minHeight:"35px"
+                  style={{
+                    backgroundColor: "#3c8dbc",
+                    minHeight: "42px",
+                    position: "fixed",
+                    width: "100%",
+                    zIndex: "990",
                   }}
-                  // indicatorColor="primary"
-                  // indicatorColor="primary"
-                  TabIndicatorProps ={{ style:{backgroundColor:"#9ccee6"}}}
+                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
                     <Tab label={i.label} {...a11yProps(i.index)}
                           component={Link}
                           to={{
-                            pathname: `/settings/config/public-cloud/${i
-                              .param}`
+                            pathname: `/network/${i.param}`
                           }}
-                          style={{minHeight:"35px", fontSize: "13px", minWidth:"100px"  }}
-                          
+                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
                     />
                     );
                   })}
@@ -138,35 +155,26 @@ class PublicCloud extends Component {
               </AppBar>
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 <Switch>
-                  <Route path="/settings/config/public-cloud/eks"
-                    render={({match,location}) => <ConfigEKS  match={match} location={location} menuData={this.onMenuData}/>} >
+                <Route path="/network/dns"
+                    render={({match,location}) => <DNS  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
-                <Switch>
-                  <Route path="/settings/config/public-cloud/gke"
-                    render={({match,location}) => <ConfigGKE  match={match} location={location} menuData={this.onMenuData}/>} >
+               <Switch>
+                  <Route path="/network/services"
+                    render={({match,location}) => <Services  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={2}>
-                <Switch>
-                  <Route path="/settings/config/public-cloud/aks"
-                    render={({match,location}) => <ConfigAKS  match={match} location={location} menuData={this.onMenuData}/>} >
+               <Switch>
+                  <Route path="/network/ingress"
+                    render={({match,location}) => <Ingress  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={3}>
-                <Switch>
-                  <Route path="/settings/config/public-cloud/kvm"
-                    render={({match,location}) => <ConfigKVM  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
-                </Switch>
-              </TabPanel>
-              {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
-                Item Three
-              </TabPanel> */}
+             
             </div>
           </section>
         </div>
@@ -175,4 +183,4 @@ class PublicCloud extends Component {
   }
 }
 
-export default withStyles(styles)(PublicCloud);
+export default withStyles(styles)(NetworkMenu);

@@ -29,10 +29,11 @@ import Box from "@material-ui/core/Box";
 // import Editor from "../../../modules/Editor";
 import { Container } from "@material-ui/core";
 import PjwDeployments from './PjwDeployments';
-import PjwDeploymentDetail from './PjwDeploymentDetail';
+// import PjwDeploymentDetail from './PjwDeploymentDetail';
 import { NavigateNext } from '@material-ui/icons';
 import PjwStatefulsets from './PjwStatefulsets';
 import PjwStatefulSetDetail from './PjwStatefulSetDetail';
+import DeploymentDetail from "../../deployments/DeploymentDetail";
 
 const styles = (theme) => ({
   root: {
@@ -175,9 +176,14 @@ class PjWorkloads extends Component {
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
-                  style={{ backgroundColor: "#16586c" }}
-                  // indicatorColor="primary"
-                  TabIndicatorProps ={{ style:{backgroundColor:"#41aabf"}}}
+                  style={{
+                    backgroundColor: "#3c8dbc",
+                    minHeight: "42px",
+                    position: "fixed",
+                    width: "100%",
+                    zIndex: "990",
+                  }}
+                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
@@ -190,6 +196,7 @@ class PjWorkloads extends Component {
                             //   data : row
                             // }
                           }}
+                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
                     />
                     );
                   })}
@@ -207,7 +214,7 @@ class PjWorkloads extends Component {
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 <Switch>
                   <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
-                    render={({match,location}) => <PjwDeploymentDetail  match={match} location={location}/>} >
+                    render={({match,location}) => <DeploymentDetail  match={match} location={location}/>} >
                   </Route>
                   <Route path="/projects/:project/resources/workloads/deployments" 
                     render={({match,location}) => <PjwDeployments  match={match} location={location}/>} >

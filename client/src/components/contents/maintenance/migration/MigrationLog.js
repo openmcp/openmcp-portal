@@ -128,7 +128,7 @@ class MigrationLog extends Component {
 
   render() {
     const Cell = (props) => {
-      const { column, row } = props;
+      const { column } = props;
 
       if (
         column.name === "status"
@@ -147,7 +147,7 @@ class MigrationLog extends Component {
                   marginRight: "5px",
                   position: "relative",
                   top: "5px",
-                  color: props.value == "warn" ? "#efac17" : "#dc0505",
+                  color: props.value === "warn" ? "#efac17" : "#dc0505",
                 }}
               />
               <span>{props.value}</span>
@@ -179,7 +179,7 @@ class MigrationLog extends Component {
     // };
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (

@@ -25,7 +25,7 @@ class SignIn extends Component {
     })
 
     let loggedIn = true;
-    if (token == null || token == "null" || token=="") {
+    if (token === null || token === "null" || token === "") {
       loggedIn = false;
     }
 

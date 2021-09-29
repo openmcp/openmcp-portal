@@ -54,7 +54,7 @@ class VPA extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
 
 
@@ -154,7 +154,7 @@ class VPA extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/pods/${props.value}`,
+            pathname: `/pods/${props.value}/overview`,
             state: {
               data : row
             }
@@ -183,10 +183,10 @@ class VPA extends Component {
     return (
       // background:"rgba(0, 0, 0, 0.77)", 
       // background:"rgba(0, 0, 0, 0.5)", 
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper">
         {/* <div className="loading" style={{height:"109vh", width:"100%", position:"absolute", background:"rgba(0, 0, 0, 0.5)", zIndex:"100", top:"0", left: "0", margin:"auto" }}></div> */}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header">
+        {/* <section className="content-header">
           <h1>
             VPA
             <small>(Vertical Pod Autoscaler)</small>
@@ -200,7 +200,7 @@ class VPA extends Component {
               Pods
             </li>
           </ol>
-        </section>
+        </section> */}
         <section className="content" style={{ position: "relative" }}>
         {/* <div className="VPA-TEMP">
             VPA 

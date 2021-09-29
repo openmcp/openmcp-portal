@@ -158,14 +158,13 @@ class NdAddNode extends Component {
                   value={this.state.value}
                   onChange={this.handleChange}
                   aria-label="simple tabs example"
-                  style={{ backgroundColor: "#16586c" }}
-                  // indicatorColor="primary"
-                  TabIndicatorProps ={{ style:{backgroundColor:"#41aabf"}}}
+                  style={{ backgroundColor: "#3c8dbc", minHeight:"42px"}}
+                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
                 >
-                  <Tab label="EKS" {...a11yProps(0)} />
-                  <Tab label="GKE" {...a11yProps(1)} />
-                  <Tab label="AKS" {...a11yProps(2)} />
-                  <Tab label="KVM" {...a11yProps(3)} />
+                  <Tab label="EKS" {...a11yProps(0)} style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}/>
+                  <Tab label="GKE" {...a11yProps(1)} style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}/>
+                  <Tab label="AKS" {...a11yProps(2)} style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}/>
+                  <Tab label="KVM" {...a11yProps(3)} style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}/>
                 </Tabs>
               </AppBar>
               <TabPanel className="tab-panel" value={this.state.value} index={0}>

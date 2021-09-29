@@ -7,6 +7,7 @@ import TreeView from './../modules/TreeView';
 import TreeView2 from './../modules/TreeView2';
 import * as utilLog from './../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
+import { RiDashboardFill } from "react-icons/ri";
 // import RefreshButton from './../modules/RefreshButton';
 // import PieHalfReChart from './../modules/PieHalfReChart';
 
@@ -90,10 +91,11 @@ class Dashboard extends Component {
     // console.log(this.state.rows);
     
     return (
-      <div className="content-wrapper full">
+      <div className="content-wrapper">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
+            <i><RiDashboardFill/></i>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>Dashboard</span>
             <small></small>
           </h1>

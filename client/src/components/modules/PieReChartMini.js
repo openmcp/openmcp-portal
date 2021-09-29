@@ -102,7 +102,7 @@ class PieReChartMini extends Component {
     return (
       <div style={{ position: "relative" }} className="pie-chart">
         <PieChart width={140} height={70}>
-          {/* <Pie
+          <Pie
             data={[this.state.rows[1]]}
             cx={30}
             cy={30}
@@ -116,7 +116,7 @@ class PieReChartMini extends Component {
             onMouseEnter={this.onPieEnter}
             isAnimationActive={false}
           >
-          </Pie> */}
+          </Pie>
           <Pie
             activeIndex={this.state.activeIndex}
             activeShape={renderActiveShape}
@@ -127,7 +127,7 @@ class PieReChartMini extends Component {
             endAngle={this.props.angle.endAngle}
             innerRadius={12}
             outerRadius={20}
-            fill="#367fa9"
+            fill="#36A1A9"
             dataKey="value"
             paddingAngle={0}
             onMouseEnter={this.onPieEnter}

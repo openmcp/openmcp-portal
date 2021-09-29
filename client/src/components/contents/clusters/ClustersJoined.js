@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -23,7 +23,6 @@ import {
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 // import Editor from "./../modules/Editor";
-import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
 import Confirm from './../../modules/Confirm';
@@ -38,6 +37,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import LinearProgressBar from "../../modules/LinearProgressBar.js";
+
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 class ClustersJoined extends Component {
@@ -95,7 +95,7 @@ class ClustersJoined extends Component {
     };
   }
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
     
   }
 
@@ -244,7 +244,7 @@ class ClustersJoined extends Component {
       const fn_linearProgressBar = () =>{
         var data = [];
         if(props.value.indexOf(" ") > -1) {
-          props.value.split(" ").map( item => {
+          props.value.split(" ").forEach( (item) => {
             if(item.indexOf("/") > -1) {
               item.split("/").map((i, index) => data[index] = i);
             }
@@ -333,13 +333,12 @@ class ClustersJoined extends Component {
     const open = Boolean(this.state.anchorEl);
 
     return ([
-      <div className="content-wrapper cluster-list full">
+      <div className="sub-content-wrapper cluster-list">
       {/* {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""} */}
         {/* 컨텐츠 헤더 */}
-        <section className="content-header" onClick={this.onRefresh} >
-        {/* <section className="content-header"> */}
+        {/* <section className="content-header" onClick={this.onRefresh} >
           <h1>
-            {/* <span onClick={this.onRefresh} > */}
+            <i><FaBuffer/></i>
             <span>
               Joined Clusters
             </span>
@@ -356,7 +355,7 @@ class ClustersJoined extends Component {
               Clusters
             </li>
           </ol>
-        </section>
+        </section> */}
         {this.state.rows ? (
           [
             <section className="content" style={{ position: "relative" }}>
@@ -492,7 +491,7 @@ class ResourceStatus extends Component{
 
   render(){
     const colors = [
-      "#0088FE",
+      "#51BFFF",
       "#ecf0f5",
     ];
     return(

@@ -166,7 +166,7 @@ class OpenMCPPolicy extends Component {
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (

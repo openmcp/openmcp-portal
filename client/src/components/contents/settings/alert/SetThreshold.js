@@ -22,12 +22,12 @@ import {
   PagingPanel,
   // TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
-import { NavigateNext } from "@material-ui/icons";
+// import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import AddMembers from "./../AddMembers";
+// import AddMembers from "./../AddMembers";
 // import Editor from "../../modules/Editor";
-import AcChangeRole from "./../../modal/AcChangeRole";
+// import AcChangeRole from "./../../modal/AcChangeRole";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
@@ -35,8 +35,8 @@ import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import GrCreateGroup from "./../../modal/GrCreateGroup";
-import GrEditGroup from "./../../modal/GrEditGroup";
+// import GrCreateGroup from "./../../modal/GrCreateGroup";
+// import GrEditGroup from "./../../modal/GrEditGroup";
 import axios from "axios";
 import Confirm2 from "./../../../modules/Confirm2";
 import ThCreateThreshold from "../../modal/ThCreateThreshold.js";
@@ -253,7 +253,7 @@ class SetThreshold extends Component {
     };
 
     const Cell = (props) => {
-      const { column, row } = props;
+      const { column } = props;
 
       // <WarningRoundedIcon style={{ fontSize: "8px", marginRight: "5px" }} />
       if (
@@ -270,7 +270,7 @@ class SetThreshold extends Component {
             <div style={{ position: "relative", top: "-3px" }}>
               <WarningRoundedIcon
                 style={{
-                  fontSize: "24px",
+                  fontSize: "19px",
                   marginRight: "5px",
                   position: "relative",
                   top: "5px",
@@ -295,7 +295,7 @@ class SetThreshold extends Component {
             <div style={{ position: "relative", top: "-3px" }}>
               <WarningRoundedIcon
                 style={{
-                  fontSize: "24px",
+                  fontSize: "19px",
                   marginRight: "5px",
                   position: "relative",
                   top: "5px",
@@ -311,7 +311,7 @@ class SetThreshold extends Component {
     };
 
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         <Confirm2
           confirmInfo={this.state.confirmInfo}
           confrimTarget={this.state.confrimTarget}

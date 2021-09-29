@@ -8,11 +8,11 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
-import { NavigateNext } from '@material-ui/icons';
+import { NavigateNext } from "@material-ui/icons";
 
 import Snapshot from "./Snapshot";
 import SnapshotLog from "./SnapshotLog";
-
+import { HiOutlineCamera } from "react-icons/hi";
 
 const styles = (theme) => ({
   root: {
@@ -44,9 +44,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Container>
-          <Box>
-            {children}
-          </Box>
+          <Box>{children}</Box>
         </Container>
       )}
     </div>
@@ -73,20 +71,19 @@ class SnapshotMenu extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "snapshot", index: 1, param:"execute" },
-      { label: "snapshot log", index: 2, param:"log" },
-    // { label: "DaemonSets", index: 3 },
+      { label: "snapshot", index: 1, param: "execute" },
+      { label: "snapshot log", index: 2, param: "log" },
+      // { label: "DaemonSets", index: 3 },
     ],
   };
 
   componentWillMount() {
-
-     if(this.props.match.url.indexOf("log") > 0 ){
-       this.setState({ value: 1 });
-     } else {
+    if (this.props.match.url.indexOf("log") > 0) {
+      this.setState({ value: 1 });
+    } else {
       this.setState({ value: 0 });
-     }
-     this.props.menuData("none");
+    }
+    this.props.menuData("none");
   }
 
   render() {
@@ -95,17 +92,16 @@ class SnapshotMenu extends Component {
     };
     const { classes } = this.props;
 
-
-    
-
-
     return (
       <div>
-        <div className="content-wrapper full">
+        <div className="content-wrapper fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              Snapshot
+              <i>
+                <HiOutlineCamera />
+              </i>
+              <span>Snapshot</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
@@ -113,11 +109,15 @@ class SnapshotMenu extends Component {
                 <NavLink to="/dashboard">Home</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/settings">Maintenance</NavLink>
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 Snapshot
               </li>
             </ol>
@@ -128,38 +128,72 @@ class SnapshotMenu extends Component {
             {/* 탭매뉴가 들어간다. */}
             <div className={classes.root}>
               <AppBar position="static" className="app-bar">
-              <Tabs
+                <Tabs
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
-                  style={{ backgroundColor: "#16586c" }}
-                  // indicatorColor="primary"
-                  TabIndicatorProps ={{ style:{backgroundColor:"#41aabf"}}}
+                  style={{
+                    backgroundColor: "#3c8dbc",
+                    minHeight: "42px",
+                    position: "fixed",
+                    width: "100%",
+                    zIndex: "990",
+                  }}
+                  TabIndicatorProps={{ style: { backgroundColor: "#00d0ff" } }}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
-                          component={Link}
-                          to={{
-                            pathname: `/maintenance/snapshot/${i.param}`
-                          }}
-                    />
+                      <Tab
+                        label={i.label}
+                        {...a11yProps(i.index)}
+                        component={Link}
+                        to={{
+                          pathname: `/maintenance/snapshot/${i.param}`,
+                        }}
+                        style={{
+                          minHeight: "42px",
+                          fontSize: "13px",
+                          minWidth: "100px",
+                        }}
+                      />
                     );
                   })}
                 </Tabs>
               </AppBar>
-              <TabPanel className="tab-panel" value={this.state.value} index={0}>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={0}
+              >
                 <Switch>
-                <Route path="/maintenance/snapshot/execute"
-                    render={({match,location}) => <Snapshot  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+                  <Route
+                    path="/maintenance/snapshot/execute"
+                    render={({ match, location }) => (
+                      <Snapshot
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={1}>
-               <Switch>
-                  <Route path="/maintenance/snapshot/log"
-                    render={({match,location}) => <SnapshotLog  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={1}
+              >
+                <Switch>
+                  <Route
+                    path="/maintenance/snapshot/log"
+                    render={({ match, location }) => (
+                      <SnapshotLog
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
@@ -173,17 +207,15 @@ class SnapshotMenu extends Component {
   }
 }
 
+// function App(){
+//   const notify = () => toast("Wow so easy!");
 
-  
-  // function App(){
-  //   const notify = () => toast("Wow so easy!");
-
-  //   return (
-  //     <div>
-  //       <button onClick={notify}>Notify!</button>
-  //       <ToastContainer />
-  //     </div>
-  //   );
-  // }
+//   return (
+//     <div>
+//       <button onClick={notify}>Notify!</button>
+//       <ToastContainer />
+//     </div>
+//   );
+// }
 
 export default withStyles(styles)(SnapshotMenu);

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { withStyles } from "@material-ui/core/styles";
-import { debug } from "request";
+// import { debug } from "request";
 
 const styles = (props) => ({
   normalColor: {
@@ -57,7 +57,7 @@ class LinearProgressBar extends Component {
     // }
   }
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <div className="linear-progress">
         <LinearProgress

@@ -93,7 +93,7 @@ class DeploymentDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pj-deployments full">
+        <div className="sub-content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>

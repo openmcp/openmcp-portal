@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -22,8 +21,6 @@ import {
   PagingPanel,
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
-// import Editor from "./../modules/Editor";
-import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import Confirm from './../../modules/Confirm';
@@ -84,7 +81,7 @@ class ClustersJoinable extends Component {
   }
 
   componentWillMount() {
-    this.props.menuData("none");
+    // this.props.menuData("none");
   }
   
 
@@ -252,9 +249,9 @@ class ClustersJoinable extends Component {
 
     const open = Boolean(this.state.anchorEl);
     return (
-      <div className="content-wrapper full">
+      <div className="sub-content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
-        <section className="content-header" onClick={this.onRefresh}>
+        {/* <section className="content-header" onClick={this.onRefresh}>
           <h1>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
               Joinable Clusters
@@ -270,7 +267,7 @@ class ClustersJoinable extends Component {
               Clusters
             </li>
           </ol>
-        </section>
+        </section> */}
           <section className="content" style={{ position: "relative" }}>
               <Paper>
               <div style={{

@@ -103,7 +103,7 @@ class PjwStatefulSetDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pj-deployments full">
+        <div className="content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header" style={{ paddingTop: 15 }}>
             Overview
