@@ -104,9 +104,9 @@ class PjwDeploymentDetail extends Component {
   render() {
     return (
       <div>
-        <div className="content-wrapper pj-deployments fulled">
+        <div className="sub-content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
-          <section className="content-header" style={{ paddingTop: 15 }}>
+          <section className="sub-content-header" style={{ paddingTop: 15 }}>
             Overview
             <small>
               <NavigateNext

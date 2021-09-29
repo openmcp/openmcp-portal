@@ -981,6 +981,19 @@ body {
   display: inline-block;
 }
 
+.sub-content-header {
+  width: 100%;
+  top: 0px;
+  z-index: 1000;
+
+  /* position: relative; */
+  padding: 15px 15px 11px 15px;
+  padding-top: 47px;
+  /* padding-top: 100px; */
+  background-color: #ecf0f5;
+  box-shadow: 0px 0px 3px 0px #b9b9b9;
+}
+
 .content {
   min-height: 250px;
   padding: 12px;

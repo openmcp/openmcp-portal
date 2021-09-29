@@ -29,11 +29,10 @@ import Box from "@material-ui/core/Box";
 // import Editor from "../../../modules/Editor";
 import { Container } from "@material-ui/core";
 import PjwDeployments from './PjwDeployments';
-// import PjwDeploymentDetail from './PjwDeploymentDetail';
+import PjwDeploymentDetail from './PjwDeploymentDetail';
 import { NavigateNext } from '@material-ui/icons';
 import PjwStatefulsets from './PjwStatefulsets';
 import PjwStatefulSetDetail from './PjwStatefulSetDetail';
-import DeploymentDetail from "../../deployments/DeploymentDetail";
 
 const styles = (theme) => ({
   root: {
@@ -214,7 +213,7 @@ class PjWorkloads extends Component {
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 <Switch>
                   <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
-                    render={({match,location}) => <DeploymentDetail  match={match} location={location}/>} >
+                    render={({match,location}) => <PjwDeploymentDetail  match={match} location={location}/>} >
                   </Route>
                   <Route path="/projects/:project/resources/workloads/deployments" 
                     render={({match,location}) => <PjwDeployments  match={match} location={location}/>} >
