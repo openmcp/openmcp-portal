@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Settings } from "@material-ui/icons";
+// import { Settings } from "@material-ui/icons";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 
 import { Link } from "react-router-dom";

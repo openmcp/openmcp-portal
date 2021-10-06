@@ -736,7 +736,7 @@ body {
 }
 
 .treeview-menu > li > a {
-  padding: 5px 5px 5px 20px;
+  padding: 6px 20px;
   display: block;
   font-size: 14px;
 }
@@ -2018,7 +2018,11 @@ g {
 
 /* public cloud auth */
 .pca-tab {
-  margin-top: 10px;
+  /* margin-top: 10px; */
+}
+
+.pca-tab .tab-panel {
+  padding-top: 0px;
 }
 
 .pca-tab .MuiTabs-root .MuiTab-root {

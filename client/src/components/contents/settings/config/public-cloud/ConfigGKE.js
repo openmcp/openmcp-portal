@@ -270,7 +270,7 @@
                 style={{
                   position: "absolute",
                   right: "21px",
-                  top: "222px",
+                  top: "212px",
                   zIndex: "10",
                   textTransform: "capitalize",
                 }}

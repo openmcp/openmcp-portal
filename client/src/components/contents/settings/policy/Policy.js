@@ -9,7 +9,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from '@material-ui/icons';
-import ProjectsPolicy from './ProjectsPolicy';
+// import ProjectsPolicy from './ProjectsPolicy';
 import OpenMCPPolicy from './OpenMCPPolicy';
 import { IoKeyOutline} from "react-icons/io5";
 
@@ -74,8 +74,7 @@ class Policy extends Component {
     value: 0,
     tabHeader: [
       { label: "OMCP Policy", index: 1, param:"openmcp-policy" },
-      { label: "Project Policy", index: 2, param:"project-policy" },
-    // { label: "DaemonSets", index: 3 },
+      // { label: "Project Policy", index: 2, param:"project-policy" },
     ],
   };
 
@@ -156,13 +155,13 @@ class Policy extends Component {
                   </Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={1}>
+              {/* <TabPanel className="tab-panel" value={this.state.value} index={1}>
                <Switch>
                   <Route path="/settings/policy/project-policy"
                     render={({match,location}) => <ProjectsPolicy  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
-              </TabPanel>
+              </TabPanel> */}
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
                 Item Three
               </TabPanel> */}

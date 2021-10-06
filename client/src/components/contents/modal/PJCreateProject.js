@@ -38,6 +38,7 @@ import {
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
+import axios from 'axios';
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -61,7 +62,7 @@ const styles = (theme) => ({
 });
 
 let project_name = "";
-let project_description = "";
+// let project_description = "";
 class PjCreateProject extends Component {
   constructor(props) {
     super(props);
@@ -88,7 +89,7 @@ class PjCreateProject extends Component {
       selection: [],
       selectedRows: [],
       project_name: "",
-      project_description: "",
+      // project_description: "",
       open: false,
     };
     this.onChange = this.onChange.bind(this);
@@ -99,7 +100,7 @@ class PjCreateProject extends Component {
       selection: [],
       selectedRows: [],
       project_name: "",
-      project_description: "",
+      // project_description: "",
     });
   };
   callApi = async () => {
@@ -120,12 +121,7 @@ class PjCreateProject extends Component {
   onChange(e) {
     if (e.target.name === "project_name") {
       project_name = e.target.value;
-    } else if (e.target.name === "project_description") {
-      project_description = e.target.value;
     }
-    // this.setState({
-    //   [e.target.name]: e.target.value,
-    // });
   }
 
   handleClickOpen = () => {
@@ -154,7 +150,24 @@ class PjCreateProject extends Component {
       return;
     }
 
-    console.log(project_name, project_description);
+    const url = `/project/create`;
+      const data = {
+        project:project_name,
+        clusters:this.state.selectedRows,
+      };
+      axios.post(url, data)
+      .then((res) => {
+          alert(res.data.message);
+          this.setState({ open: false });
+          this.props.menuClose();
+          this.props.onUpdateData();
+      })
+      .catch((err) => {
+          alert(err);
+      });
+
+
+
 
     let userId = null;
     AsyncStorage.getItem("userName",(err, result) => { 
@@ -257,7 +270,7 @@ class PjCreateProject extends Component {
                     onChange={this.onChange}
                   />
                 </div>
-                <div style={{ marginBottom: "10px" }}>
+                {/* <div style={{ marginBottom: "10px" }}>
                   <TextField
                     id="outlined-multiline-static"
                     // label="decription"
@@ -270,7 +283,7 @@ class PjCreateProject extends Component {
                     // value = {this.state.project_description}
                     fullWidth={true}
                   />
-                </div>
+                </div> */}
               </section>
               <section className="md-content">
                 <p>Select Clusters</p>

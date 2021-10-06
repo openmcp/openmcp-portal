@@ -289,6 +289,34 @@ app.get("/projects/:project/overview", (req, res) => {
   });
 });
 
+
+// Prjects > overview
+app.post("/projects/create", (req, res) => {
+  requestData = {
+    project : req.body.project,
+    clusters : req.body.clusters,
+  }
+
+  console.log(requestData);
+  // var data = JSON.stringify(requestData);
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/clusters/projects/create`,
+  //   method: "POST",
+  //   body: data
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     res.send(body);
+  //     console.log(body)
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
+});
+
 // // Prjects > get Clusters Names
 // app.get("/clusters/name", (req, res) => {
 //   let rawdata = fs.readFileSync(

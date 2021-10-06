@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-// import {ArrowBackIos, NavigateNext} from '@material-ui/icons';
 import { NavLink } from "react-router-dom";
-import * as fnMenuList from "./LeftMenuData.js";
-// import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-import { AiFillDashboard, AiOutlineDashboard,AiOutlineDeploymentUnit,AiOutlineUser,AiFillAlert, AiOutlineSetting, AiOutlineAreaChart } from "react-icons/ai";
+import { AiFillDashboard, AiOutlineDeploymentUnit, AiOutlineUser, AiFillAlert, AiOutlineSetting} from "react-icons/ai";
 import { RiDashboardFill } from "react-icons/ri";
 import { GrBundle } from "react-icons/gr";
 import { FaBuffer} from "react-icons/fa";
@@ -20,13 +17,13 @@ import { SiGraphql } from "react-icons/si";
 
 
 class LeftMenu2 extends Component {
-  constructor(props) {
-    super(props);
+  // constructor(props) {
+  //   super(props);
 
-    // this.state = {
-    //   params: this.props.menu,
-    // };
-  }
+  //   // this.state = {
+  //   //   params: this.props.menu,
+  //   // };
+  // }
 
   // shouldComponentUpdate(prevProps, prevState) {
   //   if (
@@ -58,11 +55,11 @@ class LeftMenu2 extends Component {
             path: "/dashboard",
             icon : <RiDashboardFill className="leftMenu-sub-icon"/>,
           },
-          {
-            title: "Multiple Metrics",
-            path: "/dashboard",
-            icon : <AiOutlineDashboard className="leftMenu-sub-icon"/>,
-          },
+          // {
+          //   title: "Multiple Metrics",
+          //   path: "/dashboard",
+          //   icon : <AiOutlineDashboard className="leftMenu-sub-icon"/>,
+          // },
         ],
       },
       {
@@ -156,11 +153,11 @@ class LeftMenu2 extends Component {
             path: "/settings/alert",
             icon : <AiFillAlert className="leftMenu-sub-icon"/>,
           },
-          {
-            title: "Meterings",
-            path: "/dashboard",
-            icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
-          },
+          // {
+          //   title: "Meterings",
+          //   path: "/dashboard",
+          //   icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
+          // },
           {
             title: "Config",
             path: "/settings/config",

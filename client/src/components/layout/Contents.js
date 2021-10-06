@@ -4,8 +4,17 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import LeftMenu from './LeftMenu';
 import Dashboard from "./../contents/Dashboard";
 import Projects from "./../contents/projects/Projects";
+// import Pods from "../contents/pods/Pods";
+// import HPA from '../contents/pods/HPA';
+// import VPA from '../contents/pods/VPA';
+// import ClustersJoinable from "../contents/clusters/ClustersJoinable";
+// import ClustersJoined from "../contents/clusters/ClustersJoined";
+// import Storages from "./../contents/Storages";
 import Nodes from './../contents/nodes/Nodes';
 import Deployments from '../contents/deployments/Deployments';
+// import DNS from '../contents/netowork/DNS';
+// import Ingress from '../contents/netowork/Ingress';
+// import Services from '../contents/netowork/Services';
 
 // Sub menu contents
 import PjOverview from "../contents/projects/PjOverview";
@@ -19,12 +28,12 @@ import PjConfigMaps from "./../contents/projects/config/PjConfigMaps";
 
 import CsOverview from "../contents/clusters/CsOverview";
 import CsNodes from "../contents/clusters/CsNodes";
+import CsNodeDetail from './../contents/clusters/CsNodeDetail';
 import CsPods from "../contents/clusters/CsPods";
+import CsPodDetail from './../contents/clusters/CsPodDetail';
 import CsStorageClass from "../contents/clusters/CsStorageClass";
 import CsStorageClassDetail from './../contents/clusters/CsStorageClassDetail';
-
 import NdNodeDetail from './../contents/nodes/NdNodeDetail';
-
 import PdPodDetail from './../contents/pods/PdPodDetail';
 import PjPodDetail from './../contents/projects/resources/PjPodDetail';
 import PjServicesDetail from './../contents/projects/resources/PjServicesDetail';
@@ -33,9 +42,9 @@ import PjVolumeDetail from './../contents/projects/PjVolumeDetail';
 import PjSecretDetail from './../contents/projects/config/PjSecretDetail';
 import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
-
 import Accounts from './../contents/settings/Accounts';
 import Policy from '../contents/settings/policy/Policy';
+// import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 import DeploymentDetail from './../contents/deployments/DeploymentDetail';
 import ServicesDetail from './../contents/netowork/ServicesDetail';
 import IngressDetail from './../contents/netowork/IngressDetail';
@@ -46,24 +55,13 @@ import Migration from "../contents/maintenance/migration/MigrationMenu";
 import Snapshot from "../contents/maintenance/snapshot/SnapshotMenu";
 import Threshold from "../contents/settings/alert/Alert";
 import "react-toastify/dist/ReactToastify.css";
+
 import BgThresholdCheck from './../service/BgThresholdCheck';
 import MigrationMenu from "../contents/maintenance/migration/MigrationMenu";
 import SnapshotMenu from "../contents/maintenance/snapshot/SnapshotMenu";
 import ClustersMenu from "../contents/clusters/ClustersMenu";
 import PodMenu from "../contents/pods/PodMenu";
 import NetworkMenu from "../contents/netowork/NetworkMenu";
-// import DNS from '../contents/netowork/DNS';
-// import Ingress from '../contents/netowork/Ingress';
-// import Services from '../contents/netowork/Services';
-// import CsNodeDetail from './../contents/clusters/CsNodeDetail';
-// import CsPodDetail from './../contents/clusters/CsPodDetail';
-// import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
-// import Pods from "../contents/pods/Pods";
-// import HPA from '../contents/pods/HPA';
-// import VPA from '../contents/pods/VPA';
-// import ClustersJoinable from "../contents/clusters/ClustersJoinable";
-// import ClustersJoined from "../contents/clusters/ClustersJoined";
-// import Storages from "./../contents/Storages";
 
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
@@ -77,7 +75,7 @@ class Contents extends Component {
   }
 
     
-  
+
   componentDidMount(){
     
   }
@@ -110,11 +108,11 @@ class Contents extends Component {
             render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           <Route path="/clusters/:cluster/nodes/:node" 
-            render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/nodes" 
             render={({match,location}) => <CsNodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/pods/:pod" 
-            render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/pods" 
             render={({match,location}) => <CsPods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/storage_class/:storage_class" 
@@ -125,11 +123,11 @@ class Contents extends Component {
             render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
           <Route path="/clusters-joinable/:cluster/nodes/:node" 
-            render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/nodes" 
             render={({match,location}) => <CsNodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/pods/:pod" 
-            render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/pods" 
             render={({match,location}) => <CsPods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/storage_class/:storage_class" 

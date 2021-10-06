@@ -75,7 +75,7 @@ class Nodes extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-
+      anchorEl:null,
       infoWindowOpen:null,
     };
   }

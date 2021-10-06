@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -20,21 +20,21 @@ import {
   PagingPanel,  
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "../../modules/Editor";
-import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import axios from 'axios';
-// import ProgressTemp from './../../modules/ProgressTemp';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
+// import { NavigateNext} from '@material-ui/icons';
+// import ProgressTemp from './../../modules/ProgressTemp';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
-let apiParams = "";
+// let apiParams = "";
 class DNS extends Component {
   constructor(props) {
     super(props);
