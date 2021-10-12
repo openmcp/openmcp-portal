@@ -3,7 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 // import SelectBox from "../../modules/SelectBox";
 import * as utilLog from "../../util/UtLogs.js";
-import { AsyncStorage } from 'AsyncStorage';
+import { AsyncStorage } from "AsyncStorage";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import {
   TextField,
@@ -38,7 +38,7 @@ import {
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios';
+import axios from "axios";
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -149,36 +149,37 @@ class PjCreateProject extends Component {
       alert("Please select target cluster");
       return;
     }
+    
+    const url = `/projects/create`;
+    const data = {
+      project: project_name,
+      clusters: this.state.selectedRows,
+    };
 
-    const url = `/project/create`;
-      const data = {
-        project:project_name,
-        clusters:this.state.selectedRows,
-      };
-      axios.post(url, data)
+    axios
+      .post(url, data)
       .then((res) => {
-          alert(res.data.message);
-          this.setState({ open: false });
-          this.props.menuClose();
-          this.props.onUpdateData();
+        // alert(res.data.message);
+        this.setState({ open: false });
+        this.props.menuClose();
+        this.props.onUpdateData();
       })
       .catch((err) => {
-          alert(err);
+        alert(err);
       });
 
-
-
-
     let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
     utilLog.fn_insertPLogs(userId, "log-PJ-CR01");
 
     this.handleClose();
     // this.setState({ open: false });
     // console.log(this.state.key, this.state.value, this.state.taint)
   };
+
+
 
   onSelectionChange = (selection) => {
     this.setState({ selection: selection });

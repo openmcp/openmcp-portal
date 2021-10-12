@@ -28,26 +28,24 @@ import * as utilLog from '../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 // import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
-import PcSetOMCPPolicy from '../../modal/PcSetOMCPPolicy';
+import PcSetOMCPPolicy from '../../modal/setOMCPPolicy/PcSetOMCPPolicy';;
 
 class OpenMCPPolicy extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "policy_name", title: "Policy"},
-        { name: "policy_id", title: "policy_id"},
-        { name: "rate", title: "rate"},
-        { name: "period", title: "period"},
+        { name: "name", title: "Policy"},
+        { name: "status", title: "Status"},
+        { name: "value", title: "Policy Value"},
+        
       ],
       defaultColumnWidths: [
-        { columnName: "policy_name", width: 500 },
-        { columnName: "policy_id", width: 100 },
-        { columnName: "rate", width: 100 },
-        { columnName: "period", width: 100 },
+        { columnName: "name", width: 300 },
+        { columnName: "status", width: 100 },
+        { columnName: "value", width: 300 },
       ],
       defaultHiddenColumnNames :[
-        "rate", "period", "policy_id"
       ],
       rows: "",
 
@@ -60,6 +58,7 @@ class OpenMCPPolicy extends Component {
       completed: 0,
       selection: [],
       selectedRow: "",
+      selectedPolicyName : "analytic-metrics-weight"
     };
   }
 
@@ -82,10 +81,17 @@ class OpenMCPPolicy extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
+        let result = [];
         if(res == null){
           this.setState({ rows: [] });
         } else {
-          this.setState({ rows: res });
+          res.forEach((item) => {
+            if(item.name != "has-target-cluster"){
+              console.log(item.name);
+              result.push(item);
+            }
+          });
+          this.setState({ rows: result });
         }
         clearInterval(this.timer);
       })
@@ -106,10 +112,17 @@ class OpenMCPPolicy extends Component {
     })
     this.callApi()
       .then((res) => {
+        let result = [];
         if(res == null){
           this.setState({ rows: [] });
         } else {
-          this.setState({ rows: res });
+          res.forEach((item) => {
+            if(item.name != "has-target-cluster"){
+              console.log(item.name);
+              result.push(item);
+            }
+          });
+          this.setState({ rows: result });
         }
         clearInterval(this.timer);
       })
@@ -122,25 +135,35 @@ class OpenMCPPolicy extends Component {
       // const { column, row } = props;
       const { column } = props;
 
-      const arrayToString = () => {
-        const stringData = props.value.reduce((result, item, index, arr) => {
-          if (index+1 === arr.length){
-            return `${result}${item}`
-          } else {
-            return `${result}${item}, `
-          }
-        }, "")
-
-        return stringData
+      const fnEnterCheck = () => {
+        if(props.value === undefined){
+          return ""
+        } else {
+          return (
+            props.value.indexOf("|") > 0 ? 
+              props.value.split("|").map( item => {
+                return (
+                  <p>{item}</p>
+              )}) : 
+                props.value
+          )
+        }
       }
 
-      if (column.name === "role_name") {
-        return (
-          <Table.Cell
-            {...props}
-          >{arrayToString()}</Table.Cell>
-        );
+      // const arrayToString = () => {
+      //   const stringData = props.value.reduce((result, item, index, arr) => {
+      //     if (index+1 === arr.length){
+      //       return `${result}${item}`
+      //     } else {
+      //       return `${result}${item}, `
+      //     }
+      //   }, "")
 
+      //   return stringData
+      // }
+
+      if (column.name === "value") {
+        return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
       } 
       return <Table.Cell>{props.value}</Table.Cell>;
     };
@@ -161,7 +184,9 @@ class OpenMCPPolicy extends Component {
     const onSelectionChange = (selection) => {
       // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
-      this.setState({ selection: selection });
+      this.setState({ 
+        selection: selection, 
+        selectedPolicyName : this.state.rows[selection[0]] ? this.state.rows[selection[0]].name : ""});
       this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
 
@@ -171,9 +196,7 @@ class OpenMCPPolicy extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                // <PcSetOMCPPolicy rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
-                // <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
-                <PcSetOMCPPolicy policy={this.state.selectedRow} onUpdateData={this.onUpdateData}/>,
+                <PcSetOMCPPolicy policy={this.state.selectedRow} onUpdateData={this.onUpdateData} policyName={this.state.selectedPolicyName}/>, 
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}
@@ -210,7 +233,7 @@ class OpenMCPPolicy extends Component {
                   />
                   
                   <TableSelection
-                    selectByRowClick
+                    // selectByRowClick
                     highlightRow
                     // showSelectionColumn={false}
                   />

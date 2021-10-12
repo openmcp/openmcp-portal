@@ -32,6 +32,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
+import axios from "axios";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
@@ -123,6 +124,23 @@ class ClustersJoinable extends Component {
     if(result) {
       //Unjoin proceed
       console.log("confirmed")
+      
+      const url = `/cluster/join`;
+      const data = {
+        clusterName: this.state.selectedRow.name,
+        clusterAddress : this.state.selectedRow.endpoint
+      };
+  
+      axios
+        .post(url, data)
+        .then((res) => {
+          // alert(res.data.message);
+          this.setState({ open: false });
+          this.onRefresh();
+        })
+        .catch((err) => {
+          alert(err);
+        });
 
       let userId = null;
     AsyncStorage.getItem("userName",(err, result) => { 
@@ -293,7 +311,7 @@ class ClustersJoinable extends Component {
                       >
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem onClick={handleClose} style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
+                              <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
                                 <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}
                                 menuClose={handleClose}
                                 />

@@ -2,9 +2,10 @@ const fs = require("fs"); //database.json파일 접근
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-
 var os = require("os");
 var path = require("path");
+const data = fs.readFileSync("./config.json");
+const conf = JSON.parse(data);
 
 const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
@@ -15,22 +16,20 @@ app.get("/api/hello", (req, res) => {
 });
 
 // const apiServer = "http://192.168.0.51:4885"; //로컬 API 서버
-const apiServer = "http://192.168.0.48:4885"; //로컬 API 서버
+const apiServer = conf.api.url; //로컬 API 서버
 // const apiServer = "http://192.168.0.4:4885"; //kvm API 서버
 // const apiServer = "http://10.0.3.40:4885";
 
 //데이터베이스 접속 설정
-const data = fs.readFileSync("./database.json");
-const conf = JSON.parse(data);
 const { Client } = require("pg");
 const { toNamespacedPath } = require("path");
 
 const connection = new Client({
-  user: conf.user,
-  host: conf.host,
-  database: conf.database,
-  password: conf.password,
-  port: conf.port,
+  user: conf.db.user,
+  host: conf.db.host,
+  database: conf.db.database,
+  password: conf.db.password,
+  port: conf.db.port,
 });
 
 //데이터베이스 접속
@@ -290,31 +289,31 @@ app.get("/projects/:project/overview", (req, res) => {
 });
 
 
-// Prjects > overview
+// Prjects > create
 app.post("/projects/create", (req, res) => {
   requestData = {
     project : req.body.project,
     clusters : req.body.clusters,
   }
 
-  console.log(requestData);
-  // var data = JSON.stringify(requestData);
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/clusters/projects/create`,
-  //   method: "POST",
-  //   body: data
-  // };
+  
+  var data = JSON.stringify(requestData);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/clusters/projects/create`,
+    method: "POST",
+    body: data
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //     console.log(body)
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body)
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // // Prjects > get Clusters Names
@@ -1078,6 +1077,61 @@ app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
   let overview = JSON.parse(rawdata);
   //console.log(overview);
   res.send(overview);
+});
+
+
+// cluster > join
+app.post("/cluster/join", (req, res) => {
+  requestData = {
+		clusterName : req.body.clusterName,
+    clusterAddress : req.body.clusterAddress
+  }
+
+  var data = JSON.stringify(requestData);
+  var request = require("request");
+  var options = {
+    // https://192.168.0.152:30000/apis/openmcp.k8s.io/v1alpha1/namespaces/openmcp/openmcpclusters/cluster2?clustername=openmcp
+    uri: `${apiServer}/apis/clusters/join`,
+    method: "POST",
+    body: data
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body)
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+// cluster > unjoin
+app.post("/cluster/unjoin", (req, res) => {
+  console.log("cluster/unjoin");
+  requestData = {
+		clusterName : req.body.clusterName
+  }
+
+  var data = JSON.stringify(requestData);
+  var request = require("request");
+  var options = {
+    // https://192.168.0.152:30000/apis/openmcp.k8s.io/v1alpha1/namespaces/openmcp/openmcpclusters/cluster2?clustername=openmcp
+    uri: `${apiServer}/apis/clusters/unjoin`,
+    method: "POST",
+    body: data
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body)
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 
@@ -2255,24 +2309,24 @@ app.get("/services/:service", (req, res) => {
 
 // DNS > Services
 app.get("/dns", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/dns.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/dns.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/dns`,
-  //   method: "GET",
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/dns`,
+    method: "GET",
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 // DNS > Detail
@@ -2486,37 +2540,51 @@ app.get("/settings/policy/openmcp-policy", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/settings_policy.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
-  let sql =`select  policy_id, policy_name,
-                    rate, period
-            from tb_policy`
+  // let sql =`select  policy_id, policy_name,
+  //                   rate, period
+  //           from tb_policy`
 
-  connection.query(sql, (err, result) => {
-    res.send(result.rows);
+  // connection.query(sql, (err, result) => {
+  //   res.send(result.rows);
+  // });
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/policy/openmcp`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
   });
 });
 
-app.put("/settings/policy/openmcp-policy", (req, res) => {
-  connection.query(
-    `update tb_policy 
-      set rate='${req.body.rate.start}-${req.body.rate.end}', 
-          period='${req.body.period.start}-${req.body.period.end}'
-      where policy_id = '${req.body.policyId}'`,
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Update was successful !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Update was faild, please check policy : " + err,
-        };
-        res.send(result_set);
-      }
+app.post("/settings/policy/openmcp-policy", (req, res) => {
+  requestData = {
+    policyName : req.body.policyName,
+    values : req.body.values,
+  }
+
+  var data = JSON.stringify(requestData);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/policy/openmcp/edit`,
+    method: "POST",
+    body: data
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
     }
-  );
+  });
 });
 
 app.get("/settings/policy/project-policy", (req, res) => {
@@ -3074,6 +3142,58 @@ app.get("/apis/nodes_metric", (req, res) => {
       return error;
     }
   });
+});
+
+app.get("/apis/metering", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/metering.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/dashboard`,
+  //   method: "GET",
+  //   // headers: {
+  //   //   Authorization:
+  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+  //   // },
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     // console.log("result", body);
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
+});
+
+app.get("/apis/metering/bill", (req, res) => {
+  let rawdata = fs.readFileSync("./json_data/metering_bill.json");
+  let overview = JSON.parse(rawdata);
+  res.send(overview);
+
+  // var request = require("request");
+  // var options = {
+  //   uri: `${apiServer}/apis/dashboard`,
+  //   method: "GET",
+  //   // headers: {
+  //   //   Authorization:
+  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+  //   // },
+  // };
+
+  // request(options, function (error, response, body) {
+  //   if (!error && response.statusCode == 200) {
+  //     // console.log("result", body);
+  //     res.send(body);
+  //   } else {
+  //     console.log("error", error);
+  //     return error;
+  //   }
+  // });
 });
 
 

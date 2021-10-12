@@ -11,6 +11,8 @@ import { Link } from "react-router-dom";
 // import MenuList from '@material-ui/core/MenuList';
 import * as utilLog from "./../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
+import LanguageSwitch from "../modules/LanguageSwitch.js";
+import LanguageListMenu from "../modules/LanguageListMenu.js";
 
 class Head extends Component {
   constructor(props) {
@@ -149,6 +151,9 @@ class Head extends Component {
 
         <nav className="navbar navbar-static-top">
           <div className="top-menu navbar-right">
+            <div>
+              <LanguageListMenu />
+            </div>
             <div
               className={"main-menu " + this.state.selectedMenu}
               id="accounts"
@@ -171,9 +176,7 @@ class Head extends Component {
                 <Link to="/login" onClick={this.onLogout}>
                   Logout
                 </Link>
-                <Link to="/language" onClick={this.onLogout}>
-                  Logout
-                </Link>
+                {/* <LanguageSwitch/> */}
               </div>
             </div>
 

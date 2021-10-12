@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 // Top menu contents
 import LeftMenu from './LeftMenu';
-import Dashboard from "./../contents/Dashboard";
+import Dashboard from "./../contents/dashboard/Dashboard";
 import Projects from "./../contents/projects/Projects";
 // import Pods from "../contents/pods/Pods";
 // import HPA from '../contents/pods/HPA';
@@ -62,6 +62,10 @@ import SnapshotMenu from "../contents/maintenance/snapshot/SnapshotMenu";
 import ClustersMenu from "../contents/clusters/ClustersMenu";
 import PodMenu from "../contents/pods/PodMenu";
 import NetworkMenu from "../contents/netowork/NetworkMenu";
+import Metering from "../contents/settings/metering/Metering";
+import BillList from "../contents/settings/metering/BillList";
+import MeteringMenu from "../contents/settings/metering/MeteringMenu";
+import BillDetail from "../contents/settings/metering/BillDetail";
 
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
@@ -396,6 +400,21 @@ class Contents extends Component {
           <Route exact path="/settings/alert"
             render={({match,location}) => <Redirect to={{
               pathname : `/settings/alert/set-threshold`,
+            }}  />} >
+          </Route>
+
+          
+          <Route path="/settings/meterings/metering"
+            render={({match,location}) => <MeteringMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route path="/settings/meterings/bill/:date" 
+            render={({match,location}) => <BillDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+          <Route path="/settings/meterings/bill"
+            render={({match,location}) => <MeteringMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+          </Route>
+          <Route exact path="/settings/meterings"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/meterings/metering`,
             }}  />} >
           </Route>
 

@@ -37,7 +37,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import LinearProgressBar from "../../modules/LinearProgressBar.js";
-
+import axios from "axios";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 class ClustersJoined extends Component {
@@ -138,7 +138,24 @@ class ClustersJoined extends Component {
   confirmed = (result) => {
     if(result) {
       //Unjoin proceed
-      console.log("confirmed")
+      console.log("confirmed");
+
+      const url = `/cluster/unjoin`;
+      const data = {
+        clusterName: this.state.selectedRow.name,
+      };
+  
+      axios
+        .post(url, data)
+        .then((res) => {
+          // alert(res.data.message);
+          this.setState({ open: false });
+          this.onRefresh();
+        })
+        .catch((err) => {
+          alert(err);
+        });
+
 
       let userId = null;
     AsyncStorage.getItem("userName",(err, result) => { 
@@ -167,7 +184,6 @@ class ClustersJoined extends Component {
         } else {
           this.setState({ rows: res });
         }
-        
       })
       .catch((err) => console.log(err));
   };

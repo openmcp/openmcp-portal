@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { AiFillDashboard, AiOutlineDeploymentUnit, AiOutlineUser, AiFillAlert, AiOutlineSetting} from "react-icons/ai";
+import { AiFillDashboard, AiOutlineDeploymentUnit, AiOutlineUser, AiFillAlert, AiOutlineSetting, AiOutlineAreaChart} from "react-icons/ai";
 import { RiDashboardFill } from "react-icons/ri";
 import { GrBundle } from "react-icons/gr";
 import { FaBuffer} from "react-icons/fa";
@@ -153,11 +153,11 @@ class LeftMenu2 extends Component {
             path: "/settings/alert",
             icon : <AiFillAlert className="leftMenu-sub-icon"/>,
           },
-          // {
-          //   title: "Meterings",
-          //   path: "/dashboard",
-          //   icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
-          // },
+          {
+            title: "Meterings",
+            path: "/settings/meterings",
+            icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
+          },
           {
             title: "Config",
             path: "/settings/config",

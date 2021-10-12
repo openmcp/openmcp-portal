@@ -292,7 +292,7 @@ class Projects extends Component {
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
                               <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
-                                <PjCreateProject menuClose={handleClose}/>
+                                <PjCreateProject menuClose={handleClose} onUpdateData={this.onRefresh}/>
                               </MenuItem>
                             </MenuList>
                           </Paper>

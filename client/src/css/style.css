@@ -319,7 +319,7 @@ body {
 .skin-blue .main-header .navbar {
   background-color: #3c8dbc;
   min-width: 775px;
-  padding-right: 8px;
+  padding-right: 12px;
 }
 
 .skin-blue .main-header .navbar .sidebar-toggle {
@@ -367,7 +367,8 @@ body {
 
 .main-header .navbar-custom-menu,
 .main-header .navbar-right {
-  position: absolute;
+  /* position: absolute; */
+  float:right;
   right: 14px;
   background: #3c8dbcdb;
 }
@@ -2119,4 +2120,135 @@ g {
   font-size: 16px;
   position: absolute;
   top: 5px;
+}
+
+.dashboard-main .btn-worldmap-size{
+  width: 61px;
+  height: 29px;
+  border: 0;
+  border-radius: 5px;
+  color: white;
+  background-color: #0088fe;
+  font-size: 20px;
+}
+
+.dashboard-main .btn-worldmap-size:first-child{
+  margin-right: 5px;
+}
+
+
+.MuiSwitch-switchBase.Mui-checked {
+  color : #ffffff;
+}
+.MuiSwitch-switchBase.Mui-checked:hover{
+  background-color : rgba(255, 192, 203, 0);
+}
+
+
+.MuiSwitch-switchBase.Mui-checked {
+  background-color : rgba(255, 192, 203, 0);
+} 
+.MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track{
+  background-color : #293e50;
+  opacity: 1 !important;
+}
+
+.language {
+  margin-right: 12px;
+  margin-top: 3px;
+}
+
+.language .lang-list-btn{
+  color: white;
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+
+.language .language-icon{
+  font-size: 20px;
+}
+
+.language li {
+  font-size : 14px;
+}
+
+
+
+
+.mt-set-metering {
+  margin: 20px 33px;
+  min-width: 301px;
+}
+
+.mt-set-metering .MuiSlider-markLabel {
+  font-size: 12px;
+}
+
+.mt-set-metering .res {
+  margin: 70px 0 0 20px;
+  position: relative;
+}
+
+.mt-set-metering .res:first-child {
+  margin: 40px 0 0 20px;
+}
+
+.mt-set-metering .res #range-slider {
+  position: absolute;
+  top: -30px;
+  left: -14px;
+  font-weight: bold;
+  color: #367fa9;
+}
+
+.mt-set-metering .res .sl {
+}
+
+.mt-set-metering .res .txt {
+  display: flex;
+  margin: 0px 0 11px 0;
+  font-size: 14px;
+}
+
+.mt-set-metering .res .txt > span {
+  margin-top: 8px;
+  min-width: 124px;
+}
+
+
+.mt-set-metering .res.transfer-price .txt > span {
+  min-width: 130px;
+}
+
+.mt-set-metering .res .txt > span.per {
+  min-width: 92px;
+}
+
+.mt-set-metering .res .txt > span.price {
+  min-width: 0;
+    margin-right: 5px;
+}
+
+.mt-set-metering .res .txt > .input-txt {
+  position: relative;
+}  
+.mt-set-metering .res .txt > .input-txt > span {
+  position: absolute;
+  right: 17px;
+  top: 9px;
+  font-size: 13px;
+  font-weight: bold;
+}  
+
+.mt-set-metering .res .txt > .input-txt input {
+  width: 100px;
+  height: 32px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+  margin: 0 8px 0 8px;
 }

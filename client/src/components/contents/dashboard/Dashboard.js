@@ -1,13 +1,15 @@
 import React, { Component } from "react";
-import PieReChart from "./../modules/PieReChart";
+import PieReChart from "../../modules/PieReChart";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from 'react-router-dom';
 import { NavigateNext} from '@material-ui/icons';
-import TreeView from './../modules/TreeView';
-import TreeView2 from './../modules/TreeView2';
-import * as utilLog from './../util/UtLogs.js';
+import TreeView from '../../modules/TreeView';
+import TreeView2 from '../../modules/TreeView2';
+import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import { RiDashboardFill } from "react-icons/ri";
+import CustomDynamicView from "./CustomDynamicView";
+import DashboardSelectModule from "../modal/dashboard/DashboardSelectModule";
 // import RefreshButton from './../modules/RefreshButton';
 // import PieHalfReChart from './../modules/PieHalfReChart';
 
@@ -18,7 +20,8 @@ class Dashboard extends Component {
       rows: "",
       completed: 0,
       reRender: "",
-      masterCluster: ""
+      masterCluster: "",
+      componentList: []
     };
   }
 
@@ -68,7 +71,6 @@ class Dashboard extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
   };
 
   progress = () => {
@@ -90,14 +92,17 @@ class Dashboard extends Component {
     // let classNam = 'content-wrapper';
     // console.log(this.state.rows);
     
+    
     return (
-      <div className="content-wrapper">
+      <div className="content-wrapper dashboard-main">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
             <i><RiDashboardFill/></i>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>Dashboard</span>
+            <span><DashboardSelectModule/></span>
             <small></small>
+            
           </h1>
           <ol className="breadcrumb">
             <li>
@@ -119,7 +124,6 @@ class Dashboard extends Component {
               // <div onClick={this.onRefresh}><RefreshButton ></RefreshButton></div>
               // ,
               <div style={{ display: "flex" }}>
-                
                 <DashboardCard01
                   title="Clusters"
                   width="24%"
@@ -175,7 +179,9 @@ class Dashboard extends Component {
           )}
           
         </section>
-        
+        <section className="content" style={{ minWidth: 1160 }}>
+          <CustomDynamicView componentList={this.state.componentList}/>
+        </section>
       </div>
     );
   }

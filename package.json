@@ -18,6 +18,7 @@
         "react-d3-tree": "^1.16.1",
         "react-icons": "^4.2.0",
         "react-simple-tree-menu": "^1.1.18",
+        "react-svg-worldmap": "^2.0.0-alpha.0",
         "react-toastify": "^8.0.2",
         "request": "^2.88.2"
     },

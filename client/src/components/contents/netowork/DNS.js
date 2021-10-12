@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -19,16 +19,16 @@ import {
   TableHeaderRow,
   PagingPanel,  
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "../../modules/Editor";
 import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import axios from 'axios';
 import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
+// import Editor from "../../modules/Editor";
+// import MenuItem from '@material-ui/core/MenuItem';
+// import Popper from '@material-ui/core/Popper';
+// import MenuList from '@material-ui/core/MenuList';
+// import Grow from '@material-ui/core/Grow';
 // import { NavigateNext} from '@material-ui/icons';
 // import ProgressTemp from './../../modules/ProgressTemp';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -40,16 +40,16 @@ class DNS extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "namespace", title: "Project"},
+        { name: "project", title: "Project"},
         { name: "name", title: "Name"},
-        { name: "domain", title: "Domain"},
+        { name: "dns_name", title: "Dns Name"},
         { name: "ip", title: "IP"},
       ],
       defaultColumnWidths: [
-        { columnName: "namespace", width: 120 },
+        { columnName: "project", width: 120 },
         { columnName: "name", width: 230 },
-        { columnName: "domain", width: 640 },
-        { columnName: "ip", width: 130 },
+        { columnName: "dns_name", width: 640 },
+        { columnName: "ip", width: 300 },
       ],
       rows: "",
 
@@ -190,7 +190,7 @@ spec:
 
     //셀
     const Cell = (props) => {
-      const { column, row } = props;
+      const { column } = props;
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
@@ -216,19 +216,20 @@ spec:
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "name") {
-        return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/network/dns/${props.value}`,
-            state: {
-              data : row
-            }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
-        );
       } 
+      // else if (column.name === "name") {
+      //   return (
+      //     <Table.Cell
+      //       {...props}
+      //       style={{ cursor: "pointer" }}
+      //     ><Link to={{
+      //       pathname: `/network/dns/${props.value}`,
+      //       state: {
+      //         data : row
+      //       }
+      //     }}>{fnEnterCheck()}</Link></Table.Cell>
+      //   );
+      // } 
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
@@ -256,11 +257,11 @@ spec:
       }
     };
 
-    const handleClose = () => {
-      this.setState({anchorEl : null});
-    };
+    // const handleClose = () => {
+    //   this.setState({anchorEl : null});
+    // };
 
-    const open = Boolean(this.state.anchorEl);
+    // const open = Boolean(this.state.anchorEl);
 
     return (
       <div className="sub-content-wrapper fulled">
@@ -302,7 +303,7 @@ spec:
                   >
                     <MoreVertIcon />
                   </IconButton>
-                  <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                  {/* <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
                     {({ TransitionProps, placement }) => (
                       <Grow
                       {...TransitionProps}
@@ -319,7 +320,7 @@ spec:
                           </Paper>
                       </Grow>
                     )}
-                  </Popper>
+                  </Popper> */}
                   
                 </div>,
                 <Grid
