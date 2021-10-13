@@ -26,6 +26,7 @@ import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import{FaCube} from "react-icons/fa";
+import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
 
 let apiParams = "";
 class DeploymentDetail extends Component {
@@ -75,18 +76,18 @@ class DeploymentDetail extends Component {
   };
 
   refresh = () =>{
-    // this.timer = setInterval(this.progress, 20);
-    // this.callApi()
-    //   .then((res) => {
-    //     if(res == null){
-    //       this.setState({ rows: [] });
-    //     } else {
-    //       this.setState({ rows: res });
-    //     }
-    //     console.log(res);
-    //     clearInterval(this.timer);
-    //   })
-    //   .catch((err) => console.log(err));
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        if(res == null){
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
+        console.log(res);
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
   }
 
 
@@ -112,7 +113,7 @@ class DeploymentDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} />,
+                <BasicInfo rowData={this.state.rows.basic_info} refresh={this.refresh}/>,
                 <ReplicaStatus refresh={this.refresh} queryString={this.props.location.search} />,
                 <Pods rowData={this.state.rows.pods} />,
                 <Ports rowData={this.state.rows.ports} />,
@@ -139,7 +140,10 @@ class BasicInfo extends Component {
   render() {
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">
+          <span>Basic Info</span>Basic Info
+          <PdPodResourceConfig data={this.props.rowData} refresh={this.props.refresh}/>
+        </div>
         <div className="cb-body">
           <div style={{display:"flex"}}>
             <div className="cb-body-left">
@@ -536,7 +540,7 @@ class Pods extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/pods/${props.value}`,
+            pathname: `/pods/${props.value}/overview`,
             search:`cluster=${row.cluster}&project=${row.project}`,
             state: {
               data : row

@@ -410,14 +410,16 @@ body {
   border-bottom: 2px solid #d5ecff;
 }
 
-.main-header .top-menu.navbar-right a {
-  padding: 15px 0;
-}
 
 
 .main-header .top-menu .main-menu:hover {
   border-bottom: 2px solid #ffffff;
   color: #ffffff;
+}
+
+
+.main-header .top-menu.navbar-right .main-menu>a {
+  display:flex
 }
 
 .main-header .top-menu .main-menu.main-menu.dashboard#dashboard,

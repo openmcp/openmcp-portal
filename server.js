@@ -15,10 +15,7 @@ app.get("/api/hello", (req, res) => {
   res.send({ messge: "Hello Express!" });
 });
 
-// const apiServer = "http://192.168.0.51:4885"; //로컬 API 서버
 const apiServer = conf.api.url; //로컬 API 서버
-// const apiServer = "http://192.168.0.4:4885"; //kvm API 서버
-// const apiServer = "http://10.0.3.40:4885";
 
 //데이터베이스 접속 설정
 const { Client } = require("pg");
@@ -894,6 +891,26 @@ app.post("/deployments/create", (req, res) => {
   });
 });
 
+app.post("/apis/deployments/resources", (req, res) => {
+  var request = require("request");
+
+  
+  var data = JSON.stringify(req.body);
+
+  var options = {
+    uri: `${apiServer}/apis/deployments/resources`,
+    method: "POST",
+    body: data
+  };
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
 
 app.get("/snapshots", (req, res) => {
   let deployment = req.query.deployment

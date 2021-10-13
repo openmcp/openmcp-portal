@@ -160,13 +160,11 @@ class Head extends Component {
               style={{ position: "relative", textAlign: "left" }}
             >
               <Link to="/" onClick={this.onClick}>
-                <AccountCircleIcon />
+                <AccountCircleIcon className="account"/>
                 <div
                   style={{
-                    position: "absolute",
                     display: "inline-block",
-                    right: "15px",
-                    top: "12px",
+                    padding: "1px 11px 0px 5px"
                   }}
                 >
                   {userName}

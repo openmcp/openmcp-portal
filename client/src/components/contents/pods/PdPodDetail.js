@@ -129,7 +129,7 @@ class BasicInfo extends Component {
         <div className="cb-header" style={{position:"relative"}}>
         <span>Basic Info</span>
           
-          <PdPodResourceConfig name={this.props.rowData.name}/>
+          {/* <PdPodResourceConfig name={this.props.rowData.name}/> */}
         </div>
         <div className="cb-body">
           <div>

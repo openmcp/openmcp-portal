@@ -416,9 +416,17 @@ body {
   padding: 9px 0 0 0;
 }
 
+.main-header .top-menu.navbar-right a {
+  padding: 9px 0 0 0;
+}
+
 .main-header .top-menu .main-menu:hover {
   border-bottom: 2px solid #ffffff;
   color: #ffffff;
+}
+
+.main-header .top-menu.navbar-right .main-menu>a {
+  display:flex
 }
 
 .main-header .top-menu .main-menu.main-menu.dashboard#dashboard,
@@ -1680,6 +1688,19 @@ g {
 .pd-resource-config {
   margin: 0 45px;
   min-width: 640px;
+}
+
+.pd-resource-config.select{
+  min-width: 222px;
+}
+
+.pd-resource-config.select .res:first-child{
+  margin-top: 9px;
+}
+
+.pd-resource-config.select .res #select-mode{
+  font-weight: bold;
+  color: #367fa9;
 }
 
 .pd-resource-config .MuiSlider-markLabel {

@@ -8,5 +8,10 @@
         "password":"Rnalek19!",
         "port":"5432",
         "database":"portal-controller"
+    },
+    "deleteData" : {
+        "url1" : "http://192.168.0.51:4885  로컬 API 서버",
+        "url2" : "http://10.0.3.40:4885",
+        "url3" : "http://192.168.0.4:4885 kvm API 서버"
     }
 }

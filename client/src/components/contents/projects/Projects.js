@@ -23,7 +23,7 @@ import {
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-import PjCreateProject from '../modal/PjCreateProject';
+import PjCreateProject from '../modal/PjCreateProject.js';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';

@@ -12,6 +12,7 @@ import Slider from "@material-ui/core/Slider";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
+import SelectBox from "../../../modules/SelectBox.js";
 
 const styles = (theme) => ({
   root: {
@@ -35,17 +36,10 @@ class PcSetTextValuePolicy extends Component {
       open: false,
       policyData: [],
     };
-    this.onChange = this.onChange.bind(this);
+    // this.onChange = this.onChange.bind(this);
   }
 
   componentWillMount() {}
-
-  onChange(e, newValue) {
-    if(e.target.id !== ""){
-      let tempData = this.state.policyData;
-      tempData[e.target.id].value = newValue;
-    }
-  }
 
   handleClickOpen = () => {
     if (Object.keys(this.props.policy).length === 0) {
@@ -62,7 +56,7 @@ class PcSetTextValuePolicy extends Component {
         let itemSplit = item.split(" : ");
         policyData.push({
           key: itemSplit[0],
-          value: parseFloat(itemSplit[1]),
+          value: itemSplit[1],
         });
       });
     console.log(policyData);
@@ -73,6 +67,14 @@ class PcSetTextValuePolicy extends Component {
     });
   };
 
+  selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}];
+
+  onSelectBoxChange = (data) => {
+      let tempData = this.state.policyData;
+      tempData[0].value = data;
+  }
+
+
   handleClose = () => {
     this.setState({ open: false });
   };
@@ -80,6 +82,9 @@ class PcSetTextValuePolicy extends Component {
   handleSave = (e) => {
     let valueData = [];
     this.state.policyData.forEach((item, index)=>{
+
+      // {"op": "replace", "path": "/spec/template/spec/policies/0/value/0", "value": "Unequal"}
+
       let object = {
         op: "replace",
         path: "/spec/template/spec/policies/"+index.toString()+"/value/0",
@@ -117,35 +122,6 @@ class PcSetTextValuePolicy extends Component {
     this.setState({ open: false });
   };
 
-  g_float_marks = [
-    { value: 0, label: "0" },
-    { value: 0.1, label: "0.1" },
-    { value: 0.2, label: "0.2" },
-    { value: 0.3, label: "0.3" },
-    { value: 0.4, label: "0.4" },
-    { value: 0.5, label: "0.5" },
-    { value: 0.6, label: "0.6" },
-    { value: 0.7, label: "0.7" },
-    { value: 0.8, label: "0.8" },
-    { value: 0.9, label: "0.9" },
-    { value: 1, label: "1" },
-  ];
-
-  
-  g_int_marks = [
-    {value: 0,label: "0"},
-    {value: 1,label: "1"},
-    {value: 2,label: "2"},
-    {value: 3,label: "3"},
-    {value: 4,label: "4"},
-    {value: 5,label: "5"},
-    {value: 6,label: "6"},
-    {value: 7,label: "7"},
-    {value: 8,label: "8"},
-    {value: 9,label: "9"},
-    {value: 10,label: "10"},
-  ];
-
   render() {
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
@@ -167,21 +143,9 @@ class PcSetTextValuePolicy extends Component {
       );
     });
 
+
     return (
       <div>
-        {/* <div
-          className="btn-join"
-          onClick={this.handleClickOpen}
-          style={{
-            position: "absolute",
-            right: "12px",
-            top: "0px",
-            zIndex: "10",
-
-          }}
-        >
-          
-        </div> */}
         <Button
           variant="outlined"
           color="primary"
@@ -209,28 +173,15 @@ class PcSetTextValuePolicy extends Component {
             {this.props.policyName}
           </DialogTitle>
           <DialogContent dividers>
-            <div className="pd-resource-config">
+            <div className="pd-resource-config select">
               {this.state.policyData.map((item, index) => {
                 return (
                   <div className="res">
-                    <Typography id="range-slider" gutterBottom>
+                    <Typography id="select-mode" gutterBottom>
                       {item.key}
                     </Typography>
-                    <Slider
-                      id={index}
-                      className="sl"
-                      name="policyData"
-                      defaultValue={item.value}
-                      onChange={this.onChange}
-                      valueLabelDisplay="auto"
-                      aria-labelledby="range-slider"
-                      // getAriaValueText={valuetext}
-                      step={null}
-                      min={0}
-                      max={this.props.isFloat ? 1 : 10}
-                      marks={this.props.isFloat ? this.g_float_marks : this.g_int_marks}
-                    />
-                    <div className="txt"></div>
+                    <SelectBox rows={this.selectBoxData} onSelectBoxChange={this.onSelectBoxChange}
+                      defaultValue={item.value}></SelectBox>
                   </div>
                 );
               })}
