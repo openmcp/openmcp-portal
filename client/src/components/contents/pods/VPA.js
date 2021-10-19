@@ -77,7 +77,7 @@ class VPA extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });

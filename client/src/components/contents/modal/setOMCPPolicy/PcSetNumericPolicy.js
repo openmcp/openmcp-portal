@@ -99,7 +99,7 @@ class PcSetNumericPolicy extends Component {
       .post(url, data)
       .then((res) => {
         if (res.data.length > 0) {
-          if (res.data[0].code == 200) {
+          if (res.data[0].code === 200) {
             this.props.onUpdateData();
 
             let userId = null;

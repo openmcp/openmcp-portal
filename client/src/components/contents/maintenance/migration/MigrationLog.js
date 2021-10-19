@@ -21,6 +21,8 @@ import {
 import * as utilLog from '../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import { convertUTCTime } from "../../../util/Utitlity.js";
 
 class MigrationLog extends Component {
   constructor(props) {
@@ -28,24 +30,27 @@ class MigrationLog extends Component {
     this.state = {
       columns: [
         // deployment, currentCluster, targetCluster, start, end, status
-        { name: "node_name", title: "Deployement"},
-        { name: "cluster_name", title: "Current Cluster"},
-        { name: "status", title: "Target Cluster"},
-        { name: "message", title: "Status"},
-        { name: "resource", title: "Start Time"},
-        { name: "created_time", title: "End Time"},
+        { name: "name", title: "Migration"},
+        { name: "deployment", title: "Deployment"},
+        { name: "sourceCluster", title: "Source Cluster"},
+        { name: "targetCluster", title: "Target Cluster"},
+        { name: "namespace", title: "Namespace"},
+        { name: "status", title: "Status"},
+        { name: "reason", title: "Reason"},
+        { name: "elapsedTime", title: "Elapsed Time"},
+        { name: "creationTime", title: "Created Time"},
       ],
       defaultColumnWidths: [
-        { columnName: "node_name", width: 250 },
-        { columnName: "cluster_name", width: 130 },
+        { columnName: "name", width: 200 },
+        { columnName: "deployment", width: 130 },
+        { columnName: "sourceCluster", width: 130 },
+        { columnName: "targetCluster", width: 130 },
+        { columnName: "namespace", width: 120 },
         { columnName: "status", width: 100 },
-        { columnName: "message", width: 500 },
-        { columnName: "resource", width: 120 },
-        { columnName: "created_time", width: 200 },
+        { columnName: "reason", width: 400 },
+        { columnName: "elapsedTime", width: 130 },
+        { columnName: "creationTime", width: 200 },
       ],
-      // defaultHiddenColumnNames :[
-      //   "rate", "period", "policy_id"
-      // ],
       rows: "",
       selectedRowData:"",
 
@@ -57,17 +62,14 @@ class MigrationLog extends Component {
 
       completed: 0,
       onClickUpdatePolicy: false,
-      // selection: [],
-      // selectedRow: "",
     };
   }
 
   componentWillMount() {
-    // this.props.menuData("none");
   }
 
   callApi = async () => {
-    const response = await fetch(`/settings/threshold/log`);
+    const response = await fetch(`/apis/migration/log`);
     const body = await response.json();
     return body;
   };
@@ -81,7 +83,7 @@ class MigrationLog extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -94,7 +96,7 @@ class MigrationLog extends Component {
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-  utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
+  utilLog.fn_insertPLogs(userId, 'log-MG-VW02');
 
   };
 
@@ -105,7 +107,7 @@ class MigrationLog extends Component {
     })
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -140,22 +142,41 @@ class MigrationLog extends Component {
             aria-haspopup="true"
           >
             <div style={{ position: "relative", top: "-3px" }}>
-              
+              {props.value === "Success" ? 
+                <CheckCircleIcon
+                        style={{
+                        fontSize: "24px",
+                        marginRight: "5px",
+                        position: "relative",
+                        top: "5px",
+                        color: "#00B80F",
+                      }}
+                    />
+              :
               <WarningRoundedIcon
                 style={{
                   fontSize: "24px",
                   marginRight: "5px",
                   position: "relative",
                   top: "5px",
-                  color: props.value === "warn" ? "#efac17" : "#dc0505",
+                  color:"#dc0505",
                 }}
               />
+              }
               <span>{props.value}</span>
             </div>
           </Table.Cell>
         );
+      } else if (column.name === "creationTime"){
+        return (
+        <Table.Cell
+            {...props}
+          >
+              <span>{convertUTCTime(new Date(props.value), "%Y-%m-%d %H:%M:%S", false)}</span>
+          </Table.Cell>)
+      } else {
+        return <Table.Cell>{props.value}</Table.Cell>;
       }
-      return <Table.Cell>{props.value}</Table.Cell>;
     };
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -170,13 +191,6 @@ class MigrationLog extends Component {
     const Row = (props) => {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
-
-    // const onSelectionChange = (selection) => {
-    //   // console.log(this.state.rows[selection[0]])
-    //   if (selection.length > 1) selection.splice(0, 1);
-    //   this.setState({ selection: selection });
-    //   this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
-    // };
 
     return (
       <div className="sub-content-wrapper fulled">
@@ -196,16 +210,10 @@ class MigrationLog extends Component {
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   <SortingState
-                    defaultSorting={[{ columnName: 'updated_time', direction: 'desc' }]}
+                    defaultSorting={[{ columnName: 'creationTime', direction: 'desc' }]}
                   />
-
-                  {/* <SelectionState
-                    selection={this.state.selection}
-                    onSelectionChange={onSelectionChange}
-                  /> */}
-
+               
                   <IntegratedFiltering />
-                  {/* <IntegratedSelection /> */}
                   <IntegratedSorting />
                   <IntegratedPaging />
 
@@ -215,16 +223,6 @@ class MigrationLog extends Component {
                     showSortingControls
                     rowComponent={HeaderRow}
                   />
-                  {/* <TableColumnVisibility
-                    defaultHiddenColumnNames={this.state.defaultHiddenColumnNames}
-                  /> */}
-                  
-                  {/* <TableSelection
-                    selectByRowClick
-                    highlightRow
-                    // showSelectionColumn={false}
-                  /> */}
-                  
                 </Grid>,
               ]
             ) : (

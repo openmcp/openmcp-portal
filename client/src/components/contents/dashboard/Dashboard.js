@@ -34,7 +34,7 @@ class Dashboard extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if(res === null){
           this.setState({ rows: "" });
         } else {
           console.log(res)
@@ -63,7 +63,7 @@ class Dashboard extends Component {
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if(res === null){
           this.setState({ rows: "" });
         } else {
           this.setState({ rows: res });
@@ -266,7 +266,7 @@ class DashboardCard03 extends Component {
   //   this.timer = setInterval(this.progress, 20);
   //   this.callApi()
   //     .then((res) => {
-  //       if(res == null){
+  //       if(res === null){
   //         this.setState({ rows: [] });
   //       } else {
   //         console.log(res)
@@ -286,7 +286,7 @@ class DashboardCard03 extends Component {
   // onRefresh = () => {
   //   this.callApi()
   //     .then((res) => {
-  //       if(res == null){
+  //       if(res === null){
   //         this.setState({ rows: [] });
   //       } else {
   //         this.setState({ rows: res });

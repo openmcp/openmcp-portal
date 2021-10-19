@@ -125,7 +125,7 @@ spec:
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
+    utilLog.fn_insertPLogs(userId, "log-MG-VW01");
   }
 
   onUpdateData = () => {
@@ -193,7 +193,7 @@ spec:
   render() {
     const onSelectionChange = (selection) => {
       // console.log(this.state.rows[selection[0]])
-      // if (selection.length > 1) selection.splice(0, 1);
+      if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
       let selectedRows = [];
       selection.forEach((index)=>{

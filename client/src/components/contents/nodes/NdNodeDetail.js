@@ -55,7 +55,7 @@ class NdNodeDetail extends Component {
     this.callApi()
       .then((res) => {
         console.log(res);
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -86,7 +86,7 @@ class NdNodeDetail extends Component {
     console.log("onUpdateData={this.props.onUpdateData}")
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });

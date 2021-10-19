@@ -440,29 +440,26 @@ app.get("/projects/:project/resources/workloads/deployments/:deployment/replica_
 );
 
 app.post(
-  "/projects/:project/resources/workloads/deployments/:deployment/replica_status/add_pod",
+  "/apis/deployments/replica_status/set_pod_num",
   (req, res) => {
-    var create_time = getDateTime();
-    var podName = Math.random().toString(36).substring(10);
-    connection.query(
-      `insert into tb_replica_status values ('${req.body.cluster}', '${podName}','config','${create_time}');`,
-      (err, result) => {
-        res.send(result);
+    var data = JSON.stringify(req.body);
+    console.log(data);
+    var request = require("request");
+    var options = {
+      uri: `${apiServer}/apis/deployments/replica_status/set_pod_num`,
+      method: "POST",
+      body: data
+    };
+  
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        res.send(body);
+        console.log(body)
+      } else {
+        console.log("error", error);
+        return error;
       }
-    );
-  }
-);
-
-app.delete(
-  "/projects/:project/resources/workloads/deployments/:deployment/replica_status/del_pod",
-  (req, res) => {
-    // console.log("delete", req.body);
-    connection.query(
-      `delete from tb_replica_status where ctid IN (select ctid from tb_replica_status where cluster = '${req.body.cluster}' order by created_time desc limit 1)`,
-      (err, result) => {
-        res.send(result);
-      }
-    );
+    });
   }
 );
 
@@ -850,26 +847,6 @@ app.get("/deployments/:deployment", (req, res) => {
   });
 });
 
-app.post("/deployments/migration", (req, res) => {
-  const YAML = req.body.yaml
-  // console.log(YAML)
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/migration`,
-    method: "POST",
-    body: YAML
-  };
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-      console.log(body)
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-});
 
 app.post("/deployments/create", (req, res) => {
   const YAML = req.body.yaml
@@ -893,8 +870,6 @@ app.post("/deployments/create", (req, res) => {
 
 app.post("/apis/deployments/resources", (req, res) => {
   var request = require("request");
-
-  
   var data = JSON.stringify(req.body);
 
   var options = {
@@ -2425,9 +2400,8 @@ app.get("/account-roles", (req, res) => {
 });
 
 app.put("/update/account-roles", (req, res) => {
-  // console.log(req.body);
   connection.query(
-    `update tb_accounts set roles = '{"${req.body.role}"}' where user_id = '${req.body.userid}';`,
+    `update tb_accounts set role_id = '{"${req.body.role}"}' where user_id = '${req.body.userid}';`,
     (err, result) => {
       if (err !== "null") {
         const result_set = {
@@ -2458,13 +2432,23 @@ app.put("/update/account-roles", (req, res) => {
 // Settings > Groups Role
 //////////////////////////
 app.get("/settings/group-role", (req, res) => {
+  // connection.query(`select
+  // ga.group_id,
+  // ga.group_name,
+  // array(select role_name 
+  //   from tb_account_role t 
+  //   where t.role_id = ANY(ga.role_id)) as role,
+  //   projects,
+  // ga.description,
+  // ga.member
+  // from tb_group_role ga
+  // order by group_id`, (err, result) => {
+  //   res.send(result.rows);
+  // });
   connection.query(`select
   ga.group_id,
   ga.group_name,
-  array(select role_name 
-    from tb_account_role t 
-    where t.role_id = ANY(ga.role_id)) as role,
-    projects,
+  ga.clusters,
   ga.description,
   ga.member
   from tb_group_role ga
@@ -2475,8 +2459,8 @@ app.get("/settings/group-role", (req, res) => {
 
 app.post("/settings/group-role", (req, res) => {
   let query = `
-  INSERT INTO tb_group_role (group_name, description, role_id, member, projects)
-  VALUES ('${req.body.groupName}', '${req.body.description}', '{${req.body.role_id}}', '{${req.body.user_id}}', '{${req.body.projects}}')
+  INSERT INTO tb_group_role (group_name, description, member, clusters)
+  VALUES ('${req.body.groupName}', '${req.body.description}', '{${req.body.user_id}}', '{${req.body.clusters}}')
   `
   console.log(query);
   connection.query(query, 
@@ -2501,12 +2485,17 @@ app.put("/settings/group-role", (req, res) => {
   let query =  `update tb_group_role 
       set group_name='${req.body.groupName}', 
           description='${req.body.description}',
-          role_id='{${req.body.role_id}}',
           member='{${req.body.user_id}}',
-          projects = '{${req.body.projects}}'
+          clusters = '{${req.body.clusters}}'
       where group_id = ${req.body.group_id}`
+  // let query =  `update tb_group_role 
+  //     set group_name='${req.body.groupName}', 
+  //         description='${req.body.description}',
+  //         role_id='{${req.body.role_id}}',
+  //         member='{${req.body.user_id}}',
+  //         projects = '{${req.body.projects}}'
+  //     where group_id = ${req.body.group_id}`
 
-  console.log(query);
   connection.query(query, 
     (err, result) => {
       if (err !== "null") {
@@ -3211,6 +3200,49 @@ app.get("/apis/metering/bill", (req, res) => {
   //     return error;
   //   }
   // });
+});
+
+
+
+app.get("/apis/migration/log", (req, res) => {
+  let request = require("request");
+
+  let options = {
+    uri: `${apiServer}/apis/migration/log`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body)
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.post("/apis/migration", (req, res) => {
+  // const YAML = req.body.yaml
+  // console.log(YAML)
+  let data = JSON.stringify(req.body);
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/migration`,
+    method: "POST",
+    body: data
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body)
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
 
 

@@ -74,8 +74,8 @@ let preRoleSelection=[];
 let preRoleSelectedRow=[];
 let preUserSelection=[];
 let preUserSelectedRow=[];
-let preProjectSelection=[];
-let preProjectSelectedRow=[];
+let preClusterSelection=[];
+let preClusterSelectedRow=[];
 class GrEditGroup extends Component {
   constructor(props) {
     super(props);
@@ -87,14 +87,14 @@ class GrEditGroup extends Component {
 
       rows : [],
 
-      selectedRoleIds : [], //선택된 row의 role_id
-      roleSelectionId : [], //컬럼 index
+      // selectedRoleIds : [], //선택된 row의 role_id
+      // roleSelectionId : [], //컬럼 index
 
       selectedUserIds : [],
       userSelectionId : [],
 
-      selectedProjects : [],
-      projectSelectionId : [],
+      selectedClusters : [],
+      clusterSelectionId : [],
 
       activeStep : 0,
     };
@@ -105,8 +105,8 @@ class GrEditGroup extends Component {
     preRoleSelectedRow=[];
     preUserSelection=[];
     preUserSelectedRow=[];
-    preProjectSelection=[];
-    preProjectSelectedRow=[];
+    preClusterSelection=[];
+    preClusterSelectedRow=[];
   }
 
   onChange = (e) => {
@@ -128,13 +128,13 @@ class GrEditGroup extends Component {
       groupName : this.props.rowData.group_name,
       description : this.props.rowData.description,
       selectedRoleIds : [], //선택된 row의 role_id
-      roleSelectionId : [], //컬럼 index
+      // roleSelectionId : [], //컬럼 index
 
       selectedUserIds : [],
       userSelectionId : [],
 
-      selectedProjects : [],
-      projectSelectionId : [],
+      selectedClusters : [],
+      clusterSelectionId : [],
     });
   };
 
@@ -144,11 +144,11 @@ class GrEditGroup extends Component {
       description : "",
       rows : [],
       selectedRoleIds : [],
-      roleSelectionId : [],
+      // roleSelectionId : [],
       selectedUserIds : [],
       userSelectionId : [],
-      selectedProjects : [],
-      projectSelectionId : [],
+      selectedClusters : [],
+      clusterSelectionId : [],
       
       activeStep : 0,
       open: false,
@@ -167,10 +167,16 @@ class GrEditGroup extends Component {
     } else if (this.state.description === "") {
       alert("Please insert 'description' data");
       return;
-    } else if (Object.keys(this.state.selectedRoleIds).length === 0) {
-      alert("Please select roles");
+    }
+    //  else if (Object.keys(this.state.selectedRoleIds).length === 0) {
+    //   alert("Please select roles");
+    //   return;
+    // }
+    else if (Object.keys(this.state.selectedClusters).length === 0) {
+      alert("Please select clusters");
       return;
-    } else if (Object.keys(this.state.selectedUserIds).length === 0) {
+    }
+     else if (Object.keys(this.state.selectedUserIds).length === 0) {
       alert("Please select users");
       return;
     }
@@ -181,9 +187,9 @@ class GrEditGroup extends Component {
       group_id : this.state.groupId,
       groupName:this.state.groupName,
       description:this.state.description,
-      role_id:this.state.selectedRoleIds,
+      // role_id:this.state.selectedRoleIds,
       user_id:this.state.selectedUserIds,
-      projects:this.state.selectedProjects,
+      clusters:this.state.selectedClusters,
     };
     axios.put(url, data)
     .then((res) => {
@@ -208,17 +214,17 @@ class GrEditGroup extends Component {
     this.setState({ open: false });
   };
 
-  onSelectRoles = (rows, selectionId) => {
-    let roleIds = [];
-    rows.forEach((role) => {
-      roleIds.push(role.role_id);
-    });
+  // onSelectRoles = (rows, selectionId) => {
+  //   let roleIds = [];
+  //   rows.forEach((role) => {
+  //     roleIds.push(role.role_id);
+  //   });
 
-    this.setState({
-      selectedRoleIds : roleIds,
-      roleSelectionId : selectionId
-    })
-  }
+  //   this.setState({
+  //     selectedRoleIds : roleIds,
+  //     roleSelectionId : selectionId
+  //   })
+  // }
 
   onSelectUsers = (rows, selectionId) => {
     let userIds = [];
@@ -232,15 +238,15 @@ class GrEditGroup extends Component {
     })
   }
 
-  onSelectProjects = (rows, selectionId) => {
-    let projects = [];
-    rows.forEach((project) => {
-      projects.push(project.name);
+  onSelectedClusters = (rows, selectionId) => {
+    let clusters = [];
+    rows.forEach((cluster) => {
+      clusters.push(cluster.name);
     });
 
     this.setState({
-      selectedProjects : projects,
-      projectSelectionId : selectionId
+      selectedClusters : clusters,
+      clusterSelectionId : selectionId
     })
   }
 
@@ -263,7 +269,7 @@ class GrEditGroup extends Component {
       );
     });
 
-    const steps = ['Set Group Informations', 'Select Group Roles','Select Projects', 'Select Group Users'];
+    const steps = ['Set Group Informations','Select clusters', 'Select Group Users'];
     const handleNext = () => {
       switch (this.state.activeStep){
         case 0 :
@@ -277,17 +283,17 @@ class GrEditGroup extends Component {
             this.setState({activeStep : this.state.activeStep + 1});
             return;
           }
+        // case 1:
+        //   if (Object.keys(this.state.selectedRoleIds).length === 0) {
+        //     alert("Please select roles");
+        //     return;
+        //   } else {
+        //     this.setState({activeStep : this.state.activeStep + 1});
+        //     return;
+        //   }
         case 1:
-          if (Object.keys(this.state.selectedRoleIds).length === 0) {
-            alert("Please select roles");
-            return;
-          } else {
-            this.setState({activeStep : this.state.activeStep + 1});
-            return;
-          }
-        case 2:
-          if (Object.keys(this.state.selectedProjects).length === 0) {
-            alert("Please select projects");
+          if (Object.keys(this.state.selectedClusters).length === 0) {
+            alert("Please select clusters");
             return;
           } else {
             this.setState({activeStep : this.state.activeStep + 1});
@@ -363,20 +369,22 @@ class GrEditGroup extends Component {
                     />
                   </section>
                 </div>
-              ) : this.state.activeStep === 1 ? (
+              ) : 
+              // this.state.activeStep === 1 ? (
+              //   <section className="md-content">
+              //     <GrRoles 
+              //       selection={this.state.roleSelectionId}
+              //       onSelectedRoles={this.onSelectRoles}
+              //       preSelection={this.props.rowData.role}
+              //     />
+              //   </section>
+              // ) : 
+              this.state.activeStep === 1 ? (
                 <section className="md-content">
-                  <GrRoles 
-                    selection={this.state.roleSelectionId}
-                    onSelectedRoles={this.onSelectRoles}
-                    preSelection={this.props.rowData.role}
-                  />
-                </section>
-              ) : this.state.activeStep === 2 ? (
-                <section className="md-content">
-                  <GrProjects 
-                    selection={this.state.projectSelectionId}
-                    onSelectedProjects={this.onSelectProjects}
-                    preSelection={this.props.rowData.projects}
+                  <Grclusters 
+                    selection={this.state.clusterSelectionId}
+                    onselectedClusters={this.onSelectedClusters}
+                    preSelection={this.props.rowData.clusters}
                   />
                 </section>
               ) : (
@@ -423,174 +431,174 @@ class GrEditGroup extends Component {
   }
 }
 
-class GrRoles extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      columns: [
-        { name: "role_name", title: "Role" },
-        { name: "description", title: "Description" },
-        { name: "role_id", title: "Role id" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "role_name", width: 200 },
-        { columnName: "description", width: 480 },
-        { columnName: "role_id", width: 0 },
-      ],
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 0,
-      pageSizes: [5, 10, 15, 0],
-      rows:[],
-      selection: this.props.selection,
-      selectedRow : [],
+// class GrRoles extends Component{
+//   constructor(props){
+//     super(props);
+//     this.state = {
+//       columns: [
+//         { name: "role_name", title: "Role" },
+//         { name: "description", title: "Description" },
+//         { name: "role_id", title: "Role id" },
+//       ],
+//       defaultColumnWidths: [
+//         { columnName: "role_name", width: 200 },
+//         { columnName: "description", width: 480 },
+//         { columnName: "role_id", width: 0 },
+//       ],
+//       currentPage: 0,
+//       setCurrentPage: 0,
+//       pageSize: 0,
+//       pageSizes: [5, 10, 15, 0],
+//       rows:[],
+//       selection: this.props.selection,
+//       selectedRow : [],
 
-      preSelection : this.props.preSelection,
-    }
-  }
+//       preSelection : this.props.preSelection,
+//     }
+//   }
 
-  callApi = async () => {
-    const response = await fetch("/account-roles");
-    const body = await response.json();
-    return body;
-  };
+//   callApi = async () => {
+//     const response = await fetch("/account-roles");
+//     const body = await response.json();
+//     return body;
+//   };
 
-  componentWillMount(){
-    this.callApi()
-    .then((res) => {
-      this.setState({ rows: res});
-      let selectedRows = [];
-      this.props.selection.forEach((id) => {
-        selectedRows.push(res[id]);
-      });
-      this.setState({ selectedRow: selectedRows});
-      })
-      .catch((err) => console.log(err));
-  }
+//   componentWillMount(){
+//     this.callApi()
+//     .then((res) => {
+//       this.setState({ rows: res});
+//       let selectedRows = [];
+//       this.props.selection.forEach((id) => {
+//         selectedRows.push(res[id]);
+//       });
+//       this.setState({ selectedRow: selectedRows});
+//       })
+//       .catch((err) => console.log(err));
+//   }
 
   
-  Cell = (props) => {
-    const { column } = props;
+//   Cell = (props) => {
+//     const { column } = props;
 
-    if (column.name === "role_name") {
+//     if (column.name === "role_name") {
       
-      if(this.props.preSelection.includes(props.value)){
-        if(!preRoleSelection.includes(props.tableRow.rowId)){
-          preRoleSelection.push(props.tableRow.rowId);
-          preRoleSelectedRow.push(props.row)
-          this.setState({
-            selection: preRoleSelection,
-          });
+//       if(this.props.preSelection.includes(props.value)){
+//         if(!preRoleSelection.includes(props.tableRow.rowId)){
+//           preRoleSelection.push(props.tableRow.rowId);
+//           preRoleSelectedRow.push(props.row)
+//           this.setState({
+//             selection: preRoleSelection,
+//           });
 
-          this.props.onSelectedRoles(preRoleSelectedRow, preRoleSelection);
-        }
-      }
-    }
-    return <Table.Cell>{props.value}</Table.Cell>;
-  };
+//           this.props.onSelectedRoles(preRoleSelectedRow, preRoleSelection);
+//         }
+//       }
+//     }
+//     return <Table.Cell>{props.value}</Table.Cell>;
+//   };
 
-  Row = (props) => {
-    console.log("Row")
-    return <Table.Row {...props} key={props.tableRow.key}/>;
-  };
+//   Row = (props) => {
+//     console.log("Row")
+//     return <Table.Row {...props} key={props.tableRow.key}/>;
+//   };
 
-  HeaderRow = ({ row, ...restProps }) => (
-    <Table.Row
-      {...restProps}
-      style={{
-        cursor: "pointer",
-        backgroundColor: "whitesmoke",
-        // ...styles[row.sector.toLowerCase()],
-      }}
-      // onClick={()=> alert(JSON.stringify(row))}
-    />
-  );
+//   HeaderRow = ({ row, ...restProps }) => (
+//     <Table.Row
+//       {...restProps}
+//       style={{
+//         cursor: "pointer",
+//         backgroundColor: "whitesmoke",
+//         // ...styles[row.sector.toLowerCase()],
+//       }}
+//       // onClick={()=> alert(JSON.stringify(row))}
+//     />
+//   );
 
 
-  render(){
-    console.log("rende");
-    const onSelectionChange = (selection) => {
-      let selectedRows = [];
-      selection.forEach((id) => {
-        selectedRows.push(this.state.rows[id]);
-      });
-      this.setState({ selectedRow: selectedRows});
-      this.setState({ selection: selection });
+//   render(){
+//     console.log("rende");
+//     const onSelectionChange = (selection) => {
+//       let selectedRows = [];
+//       selection.forEach((id) => {
+//         selectedRows.push(this.state.rows[id]);
+//       });
+//       this.setState({ selectedRow: selectedRows});
+//       this.setState({ selection: selection });
 
-      this.props.onSelectedRoles(selectedRows, selection);
-    };
+//       this.props.onSelectedRoles(selectedRows, selection);
+//     };
 
-    return(
-      <div>
-        <p>Select Group Roles</p>
-          <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
-              {this.state.selectedRow.length > 0 
-                ? this.state.selectedRow.map((row)=>{
-                  return (
-                    <span>
-                      <LensIcon style={{fontSize:"8px", marginRight:"5px"}}/>
-                      {row.role_name}
-                    </span>
-                  );
-                }) 
-                : <div style={{
-                  color:"#9a9a9a",
-                  textAlign: "center",
-                  paddingTop: "30px"}}>
-                    Please Select Roles
-                  </div>}
-          </div>
-        {/* <p>Select Role</p> */}
-        <Paper>
-          <Grid rows={this.state.rows} columns={this.state.columns}>
-            {/* <Toolbar /> */}
-            {/* 검색 */}
-            {/* <SearchState defaultValue="" />
-            <SearchPanel style={{ marginLeft: 0 }} /> */}
+//     return(
+//       <div>
+//         <p>Select Group Roles</p>
+//           <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
+//               {this.state.selectedRow.length > 0 
+//                 ? this.state.selectedRow.map((row)=>{
+//                   return (
+//                     <span>
+//                       <LensIcon style={{fontSize:"8px", marginRight:"5px"}}/>
+//                       {row.role_name}
+//                     </span>
+//                   );
+//                 }) 
+//                 : <div style={{
+//                   color:"#9a9a9a",
+//                   textAlign: "center",
+//                   paddingTop: "30px"}}>
+//                     Please Select Roles
+//                   </div>}
+//           </div>
+//         {/* <p>Select Role</p> */}
+//         <Paper>
+//           <Grid rows={this.state.rows} columns={this.state.columns}>
+//             {/* <Toolbar /> */}
+//             {/* 검색 */}
+//             {/* <SearchState defaultValue="" />
+//             <SearchPanel style={{ marginLeft: 0 }} /> */}
 
-            {/* Sorting */}
-            <SortingState
-              defaultSorting={[{ columnName: "status", direction: "asc" }]}
-            />
+//             {/* Sorting */}
+//             <SortingState
+//               defaultSorting={[{ columnName: "status", direction: "asc" }]}
+//             />
 
-            {/* 페이징 */}
-            <PagingState
-              defaultCurrentPage={0}
-              defaultPageSize={this.state.pageSize}
-            />
-            <PagingPanel pageSizes={this.state.pageSizes} />
-            <SelectionState
-              selection={this.state.selection}
-              onSelectionChange={onSelectionChange}
-            />
+//             {/* 페이징 */}
+//             <PagingState
+//               defaultCurrentPage={0}
+//               defaultPageSize={this.state.pageSize}
+//             />
+//             <PagingPanel pageSizes={this.state.pageSizes} />
+//             <SelectionState
+//               selection={this.state.selection}
+//               onSelectionChange={onSelectionChange}
+//             />
 
-            <IntegratedFiltering />
-            <IntegratedSorting />
-            <IntegratedSelection />
-            <IntegratedPaging />
+//             <IntegratedFiltering />
+//             <IntegratedSorting />
+//             <IntegratedSelection />
+//             <IntegratedPaging />
 
-            {/* 테이블 */}
-            <Table cellComponent={this.Cell} rowComponent={this.Row}/>
-            <TableColumnResizing
-              defaultColumnWidths={this.state.defaultColumnWidths}
-            />
-            <TableHeaderRow
-              showSortingControls
-              rowComponent={this.HeaderRow}
-            />
-            <TableColumnVisibility
-              defaultHiddenColumnNames={['role_id']}
-            />
-            <TableSelection
-              selectByRowClick
-              highlightRow
-            />
-          </Grid>
-        </Paper>
-      </div>
-    );
-  }
-}
+//             {/* 테이블 */}
+//             <Table cellComponent={this.Cell} rowComponent={this.Row}/>
+//             <TableColumnResizing
+//               defaultColumnWidths={this.state.defaultColumnWidths}
+//             />
+//             <TableHeaderRow
+//               showSortingControls
+//               rowComponent={this.HeaderRow}
+//             />
+//             <TableColumnVisibility
+//               defaultHiddenColumnNames={['role_id']}
+//             />
+//             <TableSelection
+//               selectByRowClick
+//               highlightRow
+//             />
+//           </Grid>
+//         </Paper>
+//       </div>
+//     );
+//   }
+// }
 
 class GrUsers extends Component{
   constructor(props){
@@ -752,23 +760,26 @@ class GrUsers extends Component{
   }
 }
 
-class GrProjects extends Component{
+class Grclusters extends Component{
   constructor(props){
     super(props);
     this.state = {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "cluster", title: "Cluster" },
-        { name: "created_time", title: "Created Time" },
-        { name: "labels", title: "Labels" },
+        { name: "nodes", title: "nodes" },
+        { name: "cpu", title: "CPU(%)" },
+        { name: "ram", title: "Memory(%)" },
+
+        // { name: "edit", title: "edit" },
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 200 },
-        { columnName: "status", width: 100 },
-        { columnName: "cluster", width: 100 },
-        { columnName: "created_time", width: 180 },
-        { columnName: "labels", width: 180 },
+        { columnName: "name", width: 180 },
+        { columnName: "status", width: 130 },
+        { columnName: "nodes", width: 100 },
+        { columnName: "cpu", width: 100 },
+        { columnName: "ram", width: 120 },
+        // { columnName: "edit", width: 170 },
       ],
       rows:[],
       
@@ -786,7 +797,7 @@ class GrProjects extends Component{
   }
 
   callApi = async () => {
-    const response = await fetch("/projects");
+    const response = await fetch("/clusters");
     const body = await response.json();
     return body;
   };
@@ -800,7 +811,7 @@ class GrProjects extends Component{
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -817,37 +828,64 @@ class GrProjects extends Component{
 
   render(){
 
-    const HighlightedCell = ({ value, style, row, ...restProps }) => (
-      <Table.Cell>
+    const HighlightedCell = ({ value, style, row, ...restProps }) => {
+      var cpuPct = parseFloat(row.cpu.split("/")[0])/parseFloat(row.cpu.split("/")[1].split(" Core")[0]) * 100
+      var memPct = parseFloat(row.ram.split("/")[0])/parseFloat(row.ram.split("/")[1].split(" Gi")[0]) * 100
+      // console.log(cpuPct, memPct)
+      var status = cpuPct >= 90 || memPct >= 90 ? "Warning" : value
+      return (
+      <Table.Cell
+        {...restProps}
+        style={{
+          // backgroundColor:
+          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+          // cursor: "pointer",
+          ...style,
+        }}
+      >
         <span
           style={{
             color:
-            value === "Active" ? "#1ab726"
-              : value === "Deactive" ? "red" : "black",
+            status === "Healthy" ? "#1ab726"
+              : status === "Unhealthy" ? "red"
+                : status === "Unknown" ? "#b5b5b5"
+                  : status === "Warning" ? "#ff8042" : "black",
           }}
         >
           <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
           backgroundColor: 
-          value === "Active" ? "rgba(85,188,138,.1)"
-            : value === "Deactive" ? "rgb(152 13 13 / 10%)" : "white",
+            status === "Healthy" ? "rgba(85,188,138,.1)"
+                : status === "Unhealthy" ? "rgb(152 13 13 / 10%)"
+                  : status === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : status === "Warning" ? "rgb(109 31 7 / 10%)" : "white",
           boxShadow: 
-          value === "Active" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
-            : value === "Deactive" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px" : "white",
+            status === "Healthy" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                : status === "Unhealthy" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                  : status === "Unknown" ? "rgb(255 255 255 / 10%)"
+                    : status === "Warning" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
           borderRadius: "20px",
           // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
           }}></FiberManualRecordSharpIcon>
         </span>
+          
         <span
           style={{
             color:
-              value === "Active" ? "#1ab726" 
-                : value === "Deactive" ? "red" : undefined,
+            status === "Healthy"
+                ? "#1ab726"
+                : status === "Unhealthy"
+                ? "red"
+                : status === "Unknown"
+                ? "#b5b5b5"
+                : status === "Warning"
+                ? "#ff8042"
+                : "black",
           }}
         >
-          {value}
+          {status}
         </span>
       </Table.Cell>
-    );
+    )};
 
     const Cell = (props) => {
 
@@ -881,14 +919,14 @@ class GrProjects extends Component{
 
       if (column.name === "name") {
         if(this.props.preSelection.includes(props.value)){
-          if(!preProjectSelection.includes(props.tableRow.rowId)){
-            preProjectSelection.push(props.tableRow.rowId);
-            preProjectSelectedRow.push(props.row)
+          if(!preClusterSelection.includes(props.tableRow.rowId)){
+            preClusterSelection.push(props.tableRow.rowId);
+            preClusterSelectedRow.push(props.row)
             this.setState({
-              selection: preProjectSelection,
+              selection: preClusterSelection,
             });
   
-            this.props.onSelectedProjects(preProjectSelectedRow, preProjectSelection);
+            this.props.onselectedClusters(preClusterSelectedRow, preClusterSelection);
           }
         }
       } else if (column.name === "status") {
@@ -922,12 +960,12 @@ class GrProjects extends Component{
       this.setState({ selectedRow: selectedRows});
       this.setState({ selection: selection });
 
-      this.props.onSelectedProjects(selectedRows, selection);
+      this.props.onselectedClusters(selectedRows, selection);
     };
 
     return(
       <div>
-        <p>Select Projects</p>
+        <p>Select clusters</p>
           <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
               {this.state.selectedRow.length > 0 
                 ? this.state.selectedRow.map((row)=>{
@@ -942,7 +980,7 @@ class GrProjects extends Component{
                   color:"#9a9a9a",
                   textAlign: "center",
                   paddingTop: "30px"}}>
-                    Please Select Projects
+                    Please Select clusters
                   </div>}
           </div>
         {/* <p>Select Role</p> */}

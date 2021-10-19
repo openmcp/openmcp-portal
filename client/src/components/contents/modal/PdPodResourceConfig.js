@@ -67,10 +67,10 @@ class PdPodResourceConfig extends Component {
 
   handleClickOpen = () => {
     let resource = this.props.data.resources
-    let cpu_req = resource[0].requests.cpu == "-" ? "No Request" : parseInt(resource[0].requests.cpu.split("m")[0]);
-    let cpu_limit = resource[0].limits.cpu == "-" ? "Limitless" : parseInt(resource[0].limits.cpu.split("m")[0]);
-    let mem_req = resource[0].requests.memory == "-" ? "No Request" :parseInt(resource[0].requests.memory.split("Mi")[0]);
-    let mem_limit = resource[0].limits.memory == "-" ? "Limitless" : parseInt(resource[0].limits.memory.split("Mi")[0]);
+    let cpu_req = resource[0].requests.cpu === "-" ? "No Request" : parseInt(resource[0].requests.cpu.split("m")[0]);
+    let cpu_limit = resource[0].limits.cpu === "-" ? "Limitless" : parseInt(resource[0].limits.cpu.split("m")[0]);
+    let mem_req = resource[0].requests.memory === "-" ? "No Request" :parseInt(resource[0].requests.memory.split("Mi")[0]);
+    let mem_limit = resource[0].limits.memory === "-" ? "Limitless" : parseInt(resource[0].limits.memory.split("Mi")[0]);
     let cpu_value = [
       resource[0].requests.cpu === "-" ? 0 : parseInt(resource[0].requests.cpu.split("m")[0]),
       resource[0].limits.cpu === "-" ? this.cpu_max : parseInt(resource[0].limits.cpu.split("m")[0]),
@@ -158,7 +158,7 @@ class PdPodResourceConfig extends Component {
       .post(url, data)
       .then((res) => {
         if (res.data.length > 0) {
-          if (res.data[0].code == 200) {
+          if (res.data[0].code === 200) {
             this.props.refresh()
 
             let userId = null;

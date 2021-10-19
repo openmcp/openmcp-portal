@@ -153,11 +153,11 @@ class LeftMenu2 extends Component {
             path: "/settings/alert",
             icon : <AiFillAlert className="leftMenu-sub-icon"/>,
           },
-          {
-            title: "Meterings",
-            path: "/settings/meterings",
-            icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
-          },
+          // {
+          //   title: "Meterings",
+          //   path: "/settings/meterings",
+          //   icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
+          // },
           {
             title: "Config",
             path: "/settings/config",

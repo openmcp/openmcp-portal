@@ -32,6 +32,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
+import { dateFormat } from "../../util/Utitlity.js";
 
 const styles = (theme) => ({
   root: {
@@ -78,26 +79,6 @@ class ExcuteMigration extends Component {
       clusters: [],
       selection: [],
       selectedRow: "",
-      YAML: `apiVersion: openmcp.k8s.io/v1alpha1
-      kind: Migration
-      metadata:
-        name: migrations8
-      spec:
-        MigrationServiceSource:
-        - SourceCluster: cluster1
-          TargetCluster: cluster2
-          NameSpace: testmig
-          ServiceName: testim
-          MigrationSource:
-          - ResourceName: testim-dp
-            ResourceType: Deployment
-          - ResourceName: testim-sv
-            ResourceType: Service
-          - ResourceName: testim-pv
-            ResourceType: PersistentVolume
-          - ResourceName: testim-pvc
-            ResourceType: PersistentVolumeClaim
-      `,
       completed: 0,
     };
   }
@@ -160,24 +141,36 @@ class ExcuteMigration extends Component {
       return;
     }
 
-    const url = `/deployments/migration`;
+    const url = `/apis/migration`;
     const data = {
-      yaml: `apiVersion: openmcp.k8s.io/v1alpha1
-kind: Migration
-metadata:
-  name: migrations1
-spec:
-  MigrationServiceSource:
-  - SourceCluster: cluster1
-    TargetCluster: cluster2
-    NameSpace: default
-    ServiceName: iotservice
-    MigrationSource:
-    - ResourceName: iot-gateway
-      ResourceType: Deployment
-    - ResourceName: iot-gateway-svc
-      ResourceType: Service`,
-    };
+      cluster : "openmcp",
+      namespace : this.props.rowData[0].project,
+      value : {
+        "apiVersion": "openmcp.k8s.io/v1alpha1",
+        "kind": "Migration",
+        "metadata": {
+          "name": "migrations"+ dateFormat(new Date (), "%Y%m%d%H%M%S", false),
+          "namespace": "openmcp"
+        },
+        "spec": {
+          "MigrationServiceSource": [
+            {
+              "SourceCluster": this.props.rowData[0].cluster,
+              "TargetCluster": this.state.selectedRow[0].name,
+              "NameSpace": this.props.rowData[0].project,
+              "ServiceName": "migration-srv",
+              "MigrationSource": [
+                {
+                  "ResourceName": this.props.rowData[0].name,
+                  "ResourceType": "Deployment"
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+
     axios
       .post(url, data)
       .then((res) => {
@@ -236,6 +229,7 @@ spec:
     );
 
     const onSelectionChange = (selection) => {
+      if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
       let selectedRows = [];
       selection.forEach((index) => {
@@ -430,5 +424,23 @@ spec:
     );
   }
 }
+
+// function dateFormat (date, fstr, utc) {
+//   utc = utc ? 'getUTC' : 'get';
+//   return fstr.replace (/%[YmdHMS]/g, function (m) {
+//     switch (m) {
+//     case '%Y': return date[utc + 'FullYear']().toString().substr(2); // no leading zeros required
+//     case '%m': m = 1 + date[utc + 'Month'] (); break;
+//     case '%d': m = date[utc + 'Date'] (); break;
+//     case '%H': m = date[utc + 'Hours'] (); break;
+//     case '%M': m = date[utc + 'Minutes'] (); break;
+//     case '%S': m = date[utc + 'Seconds'] (); break;
+//     default: return m.slice (1); // unknown code, remove %
+//     }
+//     // add leading zero if required
+//     return ('0' + m).slice (-2);
+//   });
+// }
+
 
 export default ExcuteMigration;

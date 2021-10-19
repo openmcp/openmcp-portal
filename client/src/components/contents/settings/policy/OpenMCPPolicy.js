@@ -82,11 +82,11 @@ class OpenMCPPolicy extends Component {
     this.callApi()
       .then((res) => {
         let result = [];
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           res.forEach((item) => {
-            if(item.name != "has-target-cluster"){
+            if(item.name !== "has-target-cluster"){
               console.log(item.name);
               result.push(item);
             }
@@ -113,11 +113,11 @@ class OpenMCPPolicy extends Component {
     this.callApi()
       .then((res) => {
         let result = [];
-        if(res == null){
+        if(res === null){
           this.setState({ rows: [] });
         } else {
           res.forEach((item) => {
-            if(item.name != "has-target-cluster"){
+            if(item.name !== "has-target-cluster"){
               console.log(item.name);
               result.push(item);
             }
