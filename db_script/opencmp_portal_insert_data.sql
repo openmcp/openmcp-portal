@@ -1,332 +1,150 @@
---==================================================================================
--- tb_account_role
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_account_role
-(
-    role_id character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    role_name character varying(100) COLLATE pg_catalog."default",
-    description character varying(200) COLLATE pg_catalog."default",
-    CONSTRAINT tb_account_roles_pkey PRIMARY KEY (role_id)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
+-- Login/Logout
+insert into tb_codes values ('LOG-PT','log-LG-VW01','Enter login page','Login');
+insert into tb_codes values ('LOG-PT','log-LG-LG01','Log in','Login');
+insert into tb_codes values ('LOG-PT','log-LG-LG02','Log out','Logout');
 
 
-ALTER TABLE public.tb_account_role
-    OWNER to postgres;
+-- Dashboard Pages
+insert into tb_codes values ('LOG-PT','log-DS-VW01','View Dashboard page','Dashboard');
 
---==================================================================================
+
+-- Cluster Pages
+insert into tb_codes values ('LOG-PT','log-CL-VW01','View cluster list page','Clusters');
+insert into tb_codes values ('LOG-PT','log-CL-VW02','View cluster overview page','Clusters > Overview');
+insert into tb_codes values ('LOG-PT','log-CL-VW03','View cluster nodes list page','Clusters > Nodes');
+insert into tb_codes values ('LOG-PT','log-CL-VW04','View cluster nodes detail page','Clusters > Nodes > Node Information');
+insert into tb_codes values ('LOG-PT','log-CL-VW05','View cluster pods list page','Clusters > Pods');
+insert into tb_codes values ('LOG-PT','log-CL-VW06','View cluster pods detail page','Clusters > Pods > Pod Information');
+insert into tb_codes values ('LOG-PT','log-CL-SR01','Search cluster list page','Clusters');
+insert into tb_codes values ('LOG-PT','log-CL-SR02','Search clusters events','Clusters - Events');
+insert into tb_codes values ('LOG-PT','log-CL-SR03','Search cluster nodes','Clusters > Nodes');
+insert into tb_codes values ('LOG-PT','log-CL-SR04','Search cluster nodes events','Clusters > Nodes > Node Information - Events');
+insert into tb_codes values ('LOG-PT','log-CL-SR05','Search cluster pods','Clusters > Pods');
+insert into tb_codes values ('LOG-PT','log-CL-SR06','Search cluster pod status','Clusters > Pods - Pod Status');
+insert into tb_codes values ('LOG-PT','log-CL-SR07','Search cluster containers','Clusters > Pods - Containers');
+insert into tb_codes values ('LOG-PT','log-CL-SR08','Search cluster pods events','Clusters > Pods > Pod Information - Events');
+insert into tb_codes values ('LOG-PT','log-CL-MD01','Modify cluster pod resources(cpu,memory)','Clusters > Pods > Pod Information - Resource Config');
+
+-- Nodes Pages
+insert into tb_codes values ('LOG-PT','log-ND-VW01','View node list page','Nodes');
+insert into tb_codes values ('LOG-PT','log-ND-VW02','View node detail page','Nodes > Node Information');
+insert into tb_codes values ('LOG-PT','log-ND-SR01','Search nodes','Nodes');
+insert into tb_codes values ('LOG-PT','log-ND-SR02','Search nodes events','Nodes > Node Information - Events');
+insert into tb_codes values ('LOG-PT','log-ND-MD01','Modify node taint','Nodes > Node Information - BasicInfo(Taint)');
+insert into tb_codes values ('LOG-PT','log-ND-MD02','Modify public cloud node resource','Nodes > Node Information - BasicInfo(Config Resource)');
+-- 2021-03-29
+insert into tb_codes values ('LOG-PT','log-ND-CR01','Add EKS Node','Nodes > Add EKS Node');
+insert into tb_codes values ('LOG-PT','log-ND-CR02','Add GKE Node','Nodes > Add GKE Node');
+insert into tb_codes values ('LOG-PT','log-ND-CR03','Add AKS Node','Nodes > Add AKS Node');
+insert into tb_codes values ('LOG-PT','log-ND-CR04','Add KVM Node','Nodes > Add KVM Node');
+
+
+-- Projects Pages
+insert into tb_codes values ('LOG-PT','log-PJ-VW01','View project list page','Projects');
+insert into tb_codes values ('LOG-PT','log-PJ-VW02','View project overview page','Projects > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW03','View project deployment list page','Projects > Resources > Workloads > Deplotments');
+insert into tb_codes values ('LOG-PT','log-PJ-VW04','View project deployment detail page','Projects > Resources > Workloads > Deplotments > Deployment Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW05','View project statefulsets list page','Projects > Resources > Workloads > Statefulsets');
+insert into tb_codes values ('LOG-PT','log-PJ-VW06','View project statefulsets detail page','Projects > Resources > Workloads > Statefulsets > Statefulset Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW07','View project pods list page','Projects > Resources > Pods');
+insert into tb_codes values ('LOG-PT','log-PJ-VW08','View project pods detail page','Projects > Resources > Pods > Pod Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW09','View project services list page','Projects > Resources > Services');
+insert into tb_codes values ('LOG-PT','log-PJ-VW10','View project services detail page','Projects > Resources > Services > Service Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW11','View project ingress list page','Projects > Resources > Ingress');
+insert into tb_codes values ('LOG-PT','log-PJ-VW12','View project ingress detail page','Projects > Resources > Ingress > Ingress Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW13','View project volumes page','Projects > Volumes');
+insert into tb_codes values ('LOG-PT','log-PJ-VW14','View project volumes detail page','Projects > Volumes > Volume Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW15','View project secrets page','Projects > Config > Secrets');
+insert into tb_codes values ('LOG-PT','log-PJ-VW16','View project secrets detail page','Projects > Config > Secrets > Secrets Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW17','View project config maps page','Projects > Config > ConfigMaps');
+insert into tb_codes values ('LOG-PT','log-PJ-VW18','View project config maps detail page','Projects > Config > ConfigMaps > ConfigMaps Information');
+
+
+insert into tb_codes values ('LOG-PT','log-PJ-SR01','Search project list page','Projects');
+insert into tb_codes values ('LOG-PT','log-PJ-SR02','Search deployments','Projects > Resources > Workloads > Deplotments');
+insert into tb_codes values ('LOG-PT','log-PJ-SR03','Search deployments pods','Projects > Resources > Workloads > Deplotment Information - Pods');
+insert into tb_codes values ('LOG-PT','log-PJ-SR04','Search deployments ports','Projects > Resources > Workloads > Deplotment Information - Ports');
+insert into tb_codes values ('LOG-PT','log-PJ-SR05','Search deployments events','Projects > Resources > Workloads > Deplotment Information - Events');
+insert into tb_codes values ('LOG-PT','log-PJ-SR06','Search statefulsets','Projects > Resources > Workloads > Statefulsets');
+insert into tb_codes values ('LOG-PT','log-PJ-SR07','Search statefulsets events','Projects > Resources > Workloads > Statefulsets - Events');
+insert into tb_codes values ('LOG-PT','log-PJ-SR08','Search project pods','Projects > Resources > Pods');
+insert into tb_codes values ('LOG-PT','log-PJ-SR09','Search project pod status','Projects > Resources > Pods > Pods Information - Pod Status');
+insert into tb_codes values ('LOG-PT','log-PJ-SR10','Search project pod containters','Projects > Resources > Pods > Pods Information - Containters');
+insert into tb_codes values ('LOG-PT','log-PJ-SR11','Search project pod events','Projects > Resources > Pods > Pods Information - Events');
+insert into tb_codes values ('LOG-PT','log-PJ-SR12','Search project services','Projects > Resources > Services');
+insert into tb_codes values ('LOG-PT','log-PJ-SR13','Search project service workloads','Projects > Resources > Services > Pods Information - Pod Status');
+insert into tb_codes values ('LOG-PT','log-PJ-SR14','Search project service pods','Projects > Resources > Services > Pods Information - Containters');
+insert into tb_codes values ('LOG-PT','log-PJ-SR15','Search project services events','Projects > Resources > Services > Pods Information - Events');
+insert into tb_codes values ('LOG-PT','log-PJ-SR16','Search project ingress','Projects > Resources > Ingress');
+insert into tb_codes values ('LOG-PT','log-PJ-SR17','Search project ingress workloads','Projects > Resources > Ingress > Ingress Information - Rules');
+insert into tb_codes values ('LOG-PT','log-PJ-SR18','Search project ingress events','Projects > Resources > Ingress > Ingress Information - Events');
+insert into tb_codes values ('LOG-PT','log-PJ-SR19','Search project volumes','Projects > Volumes');
+insert into tb_codes values ('LOG-PT','log-PJ-SR20','Search project volumes workloads','Projects > Volumes > Volume Information - Rules');
+insert into tb_codes values ('LOG-PT','log-PJ-SR21','Search project volumes events','Projects > Volumes > Volume Information - Events');
+insert into tb_codes values ('LOG-PT','log-PJ-SR22','Search project secrets','Projects > Config > Secrets');
+insert into tb_codes values ('LOG-PT','log-PJ-SR23','Search project secrets mounted-by','Projects > Config > Secrets > Secrets Information - Mounted By');
+insert into tb_codes values ('LOG-PT','log-PJ-SR24','Search project secrets events','Projects > Config > Secrets > Secrets Information - Events');
+insert into tb_codes values ('LOG-PT','log-PJ-SR25','Search project configmaps','Projects > Config > ConfigMaps');
+insert into tb_codes values ('LOG-PT','log-PJ-SR26','Search project configmaps data','Projects > Config > ConfigMaps > ConfigMap Information - Data');
+insert into tb_codes values ('LOG-PT','log-PJ-CR01','Create project','Projects > Create Project');
+insert into tb_codes values ('LOG-PT','log-PJ-MD01','Migration deployment','Projects > Resources > Workloads > Deployments > Migration');
+
+-- Pods Pages
+insert into tb_codes values ('LOG-PT','log-PD-VW01','View pod list page','Pods');
+insert into tb_codes values ('LOG-PT','log-PD-VW02','View pod overview page','Pods > Pod Information');
+insert into tb_codes values ('LOG-PT','log-PD-SR01','Search pods','Pods');
+insert into tb_codes values ('LOG-PT','log-PD-SR02','Search pod status','Pods > Pod Information - Pod Status');
+insert into tb_codes values ('LOG-PT','log-PD-SR03','Search pod containers ','Pods > Pod Information - Containers');
+insert into tb_codes values ('LOG-PT','log-PD-SR04','Search pod events','Pods > Pod Information - Events');
+insert into tb_codes values ('LOG-PT','log-PD-MD01','Modify pod resources(cpu,memory)','Pod Information - Basic Info(Resource Config)');
+
+-- Accounts
+insert into tb_codes values ('LOG-PT','log-AC-VW01','View account list page','Settings > Accounts');
+insert into tb_codes values ('LOG-PT','log-AC-SR01','Search accounts','Settings > Accounts');
+insert into tb_codes values ('LOG-PT','log-AC-MD01','Modify account group','Settings > Accounts - edit');
+insert into tb_codes values ('LOG-PT','log-AC-CR01','Create accounts','Settings > Accounts - Create Account');
+
+-- policy
+insert into tb_codes values ('LOG-PT','log-PO-MD01','Modify OMCP Policy','Settings > Policy > OMCP Policy - Update');
+  -- 2021-03-29
+insert into tb_codes values ('LOG-PT','log-PO-CR01','Create Project Policy','Settings > Policy > Project Policy - Policy Create');
+insert into tb_codes values ('LOG-PT','log-PO-MD02','Modify Project Policy','Settings > Policy > Project Policy - Policy Update');
+
+-- Vendors
+insert into tb_codes values ('VENDOR','AWS','Cloud Service Vender - Amazon Wep Service','');
+insert into tb_codes values ('VENDOR','GCP','Cloud Service Vender - Google Cloud Platform','');
+
+--public cloud instance type
+insert into tb_codes values ('EC2-TYPE','t2.nano','AWS EC2 t2.nano instance type','cpu:1,memory:0.5');
+insert into tb_codes values ('EC2-TYPE','t2.micro','AWS EC2 t2.micro instance type','cpu:1,memory:1');
+insert into tb_codes values ('EC2-TYPE','t2.small','AWS EC2 t2.small instance type','cpu:1,memory:2');
+insert into tb_codes values ('EC2-TYPE','t2.medium','AWS EC2 t2.medium instance type','cpu:2,memory:4');
+insert into tb_codes values ('EC2-TYPE','t2.large','AWS EC2 t2.large instance type','cpu:2,memory:8');
+insert into tb_codes values ('EC2-TYPE','t2.xlarge','AWS EC2 t2.xlarge instance type','cpu:4,memory:16');
+insert into tb_codes values ('EC2-TYPE','t2.2xlarge','AWS EC2 t2.2xlarge instance type','cpu:8,memory:32');
+insert into tb_codes values ('EC2-TYPE','t3.nano','AWS EC2 t3.nano instance type','cpu:2,memory:0.5');
+insert into tb_codes values ('EC2-TYPE','t3.micro','AWS EC2 t3.micro instance type','cpu:2,memory:1');
+insert into tb_codes values ('EC2-TYPE','t3.small','AWS EC2 t3.small instance type','cpu:2,memory:2');
+insert into tb_codes values ('EC2-TYPE','t3.medium','AWS EC2 t3.medium instance type','cpu:2,memory:4');
+insert into tb_codes values ('EC2-TYPE','t3.large','AWS EC2 t2.large instance type','cpu:2,memory:8');
+insert into tb_codes values ('EC2-TYPE','t3.xlarge','AWS EC2 t2.xlarge instance type','cpu:4,memory:16');
+insert into tb_codes values ('EC2-TYPE','t3.2xlarge','AWS EC2 t2.2xlarge instance type','cpu:8,memory:32');
+insert into tb_codes values ('AKS-TYPE','Standard_B1ms','Standard','cpu:1 / memory:2');
+insert into tb_codes values ('AKS-TYPE','Standard_B1s','Standard','cpu:1 / memory:1');
+insert into tb_codes values ('AKS-TYPE','Standard_B2ms','Standard','cpu:2 / memory:8');
+insert into tb_codes values ('AKS-TYPE','Standard_B2s','Standard','cpu:2 / memory:4');
+insert into tb_codes values ('EKS-TYPE','EKS.t2.large','AWS EKS t2.large instance type','cpu:2 / memory:8');
+insert into tb_codes values ('EKS-TYPE','EKS.t2.micro','AWS EKS t2.micro instance type','cpu:1 / memory:1');
+insert into tb_codes values ('EKS-TYPE','EKS.t2.small','AWS EKS t2.small instance type','cpu:1 / memory:2');
+insert into tb_codes values ('EKS-TYPE','EKS.t3.large','AWS EKS t2.large instance type','cpu:2 / memory:8');
+insert into tb_codes values ('EKS-TYPE','EKS.t3.medium','AWS EKS t3.medium instance type','cpu:2 / memory:4');
+insert into tb_codes values ('EKS-TYPE','EKS.t3.micro','AWS EKS t3.micro instance type','cpu:2 / memory:1');
+insert into tb_codes values ('EKS-TYPE','EKS.t3.small','AWS EKS t3.small instance type','cpu:2 / memory:2');
+
+
+--tb_account_role
+INSERT INTO public.tb_account_role VALUES ('admin', 'Administrator', 'System Administrator');
+INSERT INTO public.tb_account_role VALUES ('user', 'User', 'Openmcp Portal User');
+
 --tb_accounts
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_accounts
-(
-    user_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    user_password character varying COLLATE pg_catalog."default",
-    role_id character varying(50)[] COLLATE pg_catalog."default",
-    created_time timestamp(6) without time zone,
-    last_login_time timestamp(6) without time zone,
-    projects character varying[] COLLATE pg_catalog."default",
-    CONSTRAINT tb_accounts_pkey PRIMARY KEY (user_id)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_accounts
-    OWNER to postgres;
-
---==================================================================================
---tb_codes
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_codes
-(
-    kinds character varying(20) COLLATE pg_catalog."default",
-    code character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    description character varying(100) COLLATE pg_catalog."default",
-    etc character varying(100) COLLATE pg_catalog."default",
-    CONSTRAINT tb_codes_pkey PRIMARY KEY (code)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_codes
-    OWNER to postgres;
-
-
-
---==================================================================================
---tb_config_aks
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_config_aks
-(
-    seq integer NOT NULL DEFAULT nextval('tb_config_aks_seq_seq'::regclass),
-    cluster character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    "clientId" character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    "clientSec" character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    "tenantId" character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    "subId" character varying(200) COLLATE pg_catalog."default" NOT NULL
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_config_aks
-    OWNER to postgres;
-
-
---==================================================================================
---tb_config_eks
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_config_eks
-(
-    seq integer NOT NULL DEFAULT nextval('tb_config_eks_seq_seq'::regclass),
-    cluster character varying(500) COLLATE pg_catalog."default" NOT NULL,
-    "accessKey" character varying(500) COLLATE pg_catalog."default" NOT NULL,
-    "secretKey" character varying(500) COLLATE pg_catalog."default" NOT NULL,
-    region character varying(100) COLLATE pg_catalog."default",
-    CONSTRAINT tb_config_eks_pkey PRIMARY KEY (seq)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_config_eks
-    OWNER to postgres;
-
-
---==================================================================================
---tb_config_gke
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_config_gke
-(
-    seq integer NOT NULL DEFAULT nextval('tb_config_gke_seq_seq'::regclass),
-    cluster character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    type character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    "clientEmail" character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    "projectID" character varying(200) COLLATE pg_catalog."default" NOT NULL,
-    "privateKey" character varying(3000) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT tb_config_gke_pkey PRIMARY KEY (seq)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_config_gke
-    OWNER to postgres;
-
-
---==================================================================================
---tb_config_kvm
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_config_kvm
-(
-    seq integer NOT NULL DEFAULT nextval('tb_config_kvm_seq_seq'::regclass),
-    cluster character varying COLLATE pg_catalog."default" NOT NULL,
-    "agentURL" character varying COLLATE pg_catalog."default" NOT NULL,
-    "mClusterName" character varying COLLATE pg_catalog."default" NOT NULL,
-    "mClusterPwd" character varying COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT tb_config_kvm_pkey PRIMARY KEY (seq)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_config_kvm
-    OWNER to postgres;
-
-
---==================================================================================
---tb_group_member
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_group_member
-(
-    group_id integer NOT NULL,
-    user_id character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT tb_group_member_pkey PRIMARY KEY (group_id, user_id),
-    CONSTRAINT fk_group_id FOREIGN KEY (group_id)
-        REFERENCES public.tb_group_role (group_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT fk_user_id FOREIGN KEY (user_id)
-        REFERENCES public.tb_accounts (user_id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_group_member
-    OWNER to postgres;
-
---==================================================================================
---tb_group_role
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_group_role
-(
-    group_id integer NOT NULL DEFAULT nextval('tb_group_auth_seq'::regclass),
-    group_name character varying COLLATE pg_catalog."default" NOT NULL,
-    role_id character varying[] COLLATE pg_catalog."default",
-    description character varying COLLATE pg_catalog."default",
-    member character varying[] COLLATE pg_catalog."default",
-    projects character varying[] COLLATE pg_catalog."default",
-    CONSTRAINT tb_group_role_pkey PRIMARY KEY (group_id)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_group_role
-    OWNER to postgres;
-
---==================================================================================
---tb_host_threshold
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_host_threshold
-(
-    node_name character varying COLLATE pg_catalog."default" NOT NULL,
-    cluster_name character varying COLLATE pg_catalog."default" NOT NULL,
-    cpu_warn double precision,
-    cpu_danger double precision,
-    ram_warn double precision,
-    ram_danger double precision,
-    storage_warn double precision,
-    storage_danger double precision,
-    created_time timestamp with time zone,
-    updated_time timestamp with time zone,
-    CONSTRAINT tb_host_threshold_pkey PRIMARY KEY (node_name, cluster_name)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_host_threshold
-    OWNER to scshin;
-
-
-
---==================================================================================
---tb_portal_logs
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_portal_logs
-(
-    user_id character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    code character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    created_time timestamp(6) without time zone NOT NULL,
-    CONSTRAINT tb_portal_logs_pkey PRIMARY KEY (user_id, code, created_time)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_portal_logs
-    OWNER to scshin;
-
---==================================================================================
---tb_replica_status
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_replica_status
-(
-    cluster character varying COLLATE pg_catalog."default" NOT NULL,
-    pod character varying COLLATE pg_catalog."default" NOT NULL,
-    status character varying(20) COLLATE pg_catalog."default",
-    created_time timestamp(6) without time zone,
-    CONSTRAINT tb_replica_status_pkey PRIMARY KEY (cluster, pod)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_replica_status
-    OWNER to scshin;
-
---==================================================================================
---tb_threshold_log
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_threshold_log
-(
-    cluster_name character varying COLLATE pg_catalog."default" NOT NULL,
-    node_name character varying COLLATE pg_catalog."default" NOT NULL,
-    created_time timestamp with time zone NOT NULL,
-    status character varying COLLATE pg_catalog."default",
-    message character varying COLLATE pg_catalog."default",
-    resource character varying COLLATE pg_catalog."default",
-    CONSTRAINT tb_threshold_log_pkey PRIMARY KEY (cluster_name, node_name, created_time)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_threshold_log
-    OWNER to scshin;
-
---==================================================================================
---tb_policy
---==================================================================================
--- CREATE TABLE IF NOT EXISTS public.tb_policy
--- (
---     policy_id character varying(10) COLLATE pg_catalog."default" NOT NULL,
---     policy_name character varying COLLATE pg_catalog."default",
---     rate character varying(10) COLLATE pg_catalog."default",
---     period character varying(10) COLLATE pg_catalog."default",
---     CONSTRAINT tb_policy_pkey PRIMARY KEY (policy_id)
--- )
--- WITH (
---     OIDS = FALSE
--- )
--- TABLESPACE pg_default;
-
-
--- ALTER TABLE public.tb_policy
---     OWNER to postgres;
-
-
---==================================================================================
---tb_policy_projects
---==================================================================================
--- CREATE TABLE IF NOT EXISTS public.tb_policy_projects
--- (
---     project character varying(100) COLLATE pg_catalog."default" NOT NULL,
---     cluster character varying(100) COLLATE pg_catalog."default" NOT NULL,
---     cls_cpu_trh_r numeric(100,0),
---     cls_mem_trh_r numeric(100,0),
---     pod_cpu_trh_r numeric(100,0),
---     pod_mem_trh_r numeric(100,0),
---     updated_time timestamp(6) with time zone,
---     CONSTRAINT tb_policy_projects_pkey PRIMARY KEY (project, cluster)
--- )
--- WITH (
---     OIDS = FALSE
--- )
--- TABLESPACE pg_default;
-
-
--- ALTER TABLE public.tb_policy_projects
---     OWNER to postgres;
+INSERT INTO public.tb_accounts VALUES ('openmcpadmin','$2b$10$nvkN2RtN5/8UNHhNEVGDiOF8WIwdiPp/P7SU/DibOtPzaRXUoBG8y','{omcp_monitor}','2021-10-12 13:43:24','2021-10-12 13:43:24')

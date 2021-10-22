@@ -149,7 +149,7 @@ class ExcuteMigration extends Component {
         "apiVersion": "openmcp.k8s.io/v1alpha1",
         "kind": "Migration",
         "metadata": {
-          "name": "migrations"+ dateFormat(new Date (), "%Y%m%d%H%M%S", false),
+          "name": "migration-"+ dateFormat(new Date (), "%Y%m%d%H%M%S", false),
           "namespace": "openmcp"
         },
         "spec": {

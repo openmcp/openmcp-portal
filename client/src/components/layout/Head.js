@@ -151,9 +151,9 @@ class Head extends Component {
 
         <nav className="navbar navbar-static-top">
           <div className="top-menu navbar-right">
-            <div>
+            {/* <div>
               <LanguageListMenu />
-            </div>
+            </div> */}
             <div
               className={"main-menu " + this.state.selectedMenu}
               id="accounts"

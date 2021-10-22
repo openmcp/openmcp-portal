@@ -146,11 +146,11 @@ class BasicInfo extends Component {
     return (
       <div className="content-box">
         <div className="cb-header">
-          <span>Basic Info</span>Basic Info
-          <PdPodResourceConfig
+          <span>Basic Info</span>
+          {/* <PdPodResourceConfig
             data={this.props.rowData}
             refresh={this.props.refresh}
-          />
+          /> */}
         </div>
         <div className="cb-body">
           <div style={{ display: "flex" }}>

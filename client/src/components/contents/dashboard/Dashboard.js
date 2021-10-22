@@ -100,7 +100,7 @@ class Dashboard extends Component {
           <h1>
             <i><RiDashboardFill/></i>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>Dashboard</span>
-            <span><DashboardSelectModule/></span>
+            {/* <span><DashboardSelectModule/></span> */}
             <small></small>
             
           </h1>
@@ -179,9 +179,9 @@ class Dashboard extends Component {
           )}
           
         </section>
-        <section className="content" style={{ minWidth: 1160 }}>
+        {/* <section className="content" style={{ minWidth: 1160 }}>
           <CustomDynamicView componentList={this.state.componentList}/>
-        </section>
+        </section> */}
       </div>
     );
   }

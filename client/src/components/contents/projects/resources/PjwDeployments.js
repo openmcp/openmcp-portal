@@ -9,7 +9,6 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  // EditingState,
   SelectionState,
   IntegratedSelection,
 } from "@devexpress/dx-react-grid";
@@ -21,19 +20,12 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
-  // TableEditRow,
-  // TableEditColumn,
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../../modules/Editor";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
-import PjDeploymentMigration from "./../../modal/PjDeploymentMigration";
-// import queryString from 'query-string';
 import axios from 'axios';
-// import ProgressTemp from './../../../modules/ProgressTemp';
-// import { NavigateNext} from '@material-ui/icons';
-import SnapShotControl from './../../modal/SnapShotControl';
 
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -42,7 +34,6 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
-//import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
 // let apiParams = "";
@@ -99,24 +90,9 @@ spec:
     };
   }
 
-  componentWillMount() {
-    
-    // console.log(this.props.match.params.project)
-    // const query = queryString.parse(this.props.location.search).cluster
-    // console.log(query);
-    // const result = {
-    //   menu : "clusters",
-    //   title : this.props.match.params.cluster
-    // }
-    // this.props.menuData(result);
-    // apiParams = this.props.param;
-  }
+  componentWillMount() {}
 
   callApi = async () => {
-
-    // var param = this.props.match.params.cluster;
-    // queryString = queryString.parse(this.props.location.search).cluster
-    // console.log(this.props.match.params.project, this.props.location.search);
     const response = await fetch(
       `/projects/${this.props.match.params.project}/resources/workloads/deployments${this.props.location.search}`
     );
@@ -129,9 +105,7 @@ spec:
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
-  //컴포넌트가 모두 마운트가 되었을때 실행된다.
   componentDidMount() {
-    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -182,10 +156,8 @@ spec:
     const data = {
       yaml:context
     };
-    // console.log(context)
     axios.post(url, data)
     .then((res) => {
-        // alert(res.data.message);
         this.setState({ open: false });
         this.onUpdateData();
     })
@@ -203,8 +175,6 @@ spec:
     this.callApi()
       .then((res) => {
         this.setState({ 
-          // selection : [],
-          // selectedRow : "",
           rows: res });
       })
       .catch((err) => console.log(err));
@@ -215,14 +185,10 @@ spec:
   }
 
   render() {
-    // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
         {...restProps}
         style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          // cursor: "pointer",
           ...style,
         }}
       >
@@ -245,15 +211,12 @@ spec:
       </Table.Cell>
     );
 
-    //셀
     const Cell = (props) => {
       const { column, row } = props;
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
-        // // console.log("name", props.value);
-        // console.log("this.props.match.params", this.props)
         return (
           <Table.Cell {...props} style={{ cursor: "pointer" }}>
             <Link
@@ -279,18 +242,14 @@ spec:
         style={{
           cursor: "pointer",
           backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
         }}
-        // onClick={()=> alert(JSON.stringify(row))}
       />
     );
     const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
       return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     const onSelectionChange = (selection) => {
-      // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
       this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
@@ -343,26 +302,6 @@ spec:
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
                               <MenuItem 
-                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
-                              >
-                                <SnapShotControl
-                                  title="create snapshot"
-                                  rowData={this.state.selectedRow}
-                                  onUpdateData = {this.onUpdateData}
-                                  menuClose={handleClose}
-                                />
-                              </MenuItem>
-                              <MenuItem 
-                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
-                              >
-                                <PjDeploymentMigration
-                                  title="pod migration"
-                                  rowData={this.state.selectedRow}
-                                  onUpdateData = {this.onUpdateData}
-                                  menuClose={handleClose}
-                                />
-                              </MenuItem>
-                              <MenuItem 
                                 // onClick={handleClose}
                                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
                               >
@@ -376,38 +315,24 @@ spec:
                 </div>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
-                  {/* 검색 */}
                   <SearchState defaultValue="" />
-
                   <SearchPanel style={{ marginLeft: 0 }} />
-
-                  {/* Sorting */}
                   <SortingState
                   defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
                   />
-
-                  {/* 페이징 */}
                   <PagingState
                     defaultCurrentPage={0}
                     defaultPageSize={this.state.pageSize}
                   />
-
                   <PagingPanel pageSizes={this.state.pageSizes} />
-
-                  {/* <EditingState
-                    onCommitChanges={commitChanges}
-                  /> */}
                   <SelectionState
                     selection={this.state.selection}
                     onSelectionChange={onSelectionChange}
                   />
-
                   <IntegratedFiltering />
                   <IntegratedSorting />
                   <IntegratedSelection />
                   <IntegratedPaging />
-
-                  {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
@@ -419,7 +344,6 @@ spec:
                   <TableSelection
                     selectByRowClick
                     highlightRow
-                    // showSelectionColumn={false}
                   />
                 </Grid>,
               ]

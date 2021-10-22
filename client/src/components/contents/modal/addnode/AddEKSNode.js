@@ -143,8 +143,6 @@ class AddEKSNode extends Component {
         nodePool: this.state.selectedRow.worker,
         region : "ap-northeast-2"
       };
-      // accessKey := "AKIAJGFO6OXHRN2H6DSA"
-      // secretkey := "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"
 
       axios.post(url, data)
         .then((res) => {

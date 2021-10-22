@@ -2273,3 +2273,15 @@ g {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   margin: 0 8px 0 8px;
 }
+
+.progressbar {
+  display: flex;
+}
+
+.progressbar .linear-progress{
+  width: 70px;
+}
+
+.progressbar .linear-progress .MuiLinearProgress-root{
+  height: 20px;
+}

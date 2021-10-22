@@ -25,7 +25,6 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
-
 class PcSetNumericPolicy extends Component {
   constructor(props) {
     super(props);
@@ -34,11 +33,23 @@ class PcSetNumericPolicy extends Component {
     this.state = {
       open: false,
       policyData: [],
+      g_marks: [],
     };
     this.onChange = this.onChange.bind(this);
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    let marks=[];
+    let step= this.props.step
+    for(let i=0; i <= this.props.max; i=i+step){
+      if(i===0 || i.toFixed(1)===this.props.max.toFixed(1)){
+        marks.push({value: i.toFixed(0), label: i.toFixed(0)});
+      } else {
+        marks.push({value: step < 1 ? i.toFixed(1) : i.toString(), label: step < 1 ? i.toFixed(1) : i.toString()});
+      }
+    }
+    this.setState({g_marks: marks})
+  }
 
   onChange(e, newValue) {
     if(e.target.id !== ""){
@@ -117,34 +128,34 @@ class PcSetNumericPolicy extends Component {
     this.setState({ open: false });
   };
 
-  g_float_marks = [
-    { value: 0, label: "0" },
-    { value: 0.1, label: "0.1" },
-    { value: 0.2, label: "0.2" },
-    { value: 0.3, label: "0.3" },
-    { value: 0.4, label: "0.4" },
-    { value: 0.5, label: "0.5" },
-    { value: 0.6, label: "0.6" },
-    { value: 0.7, label: "0.7" },
-    { value: 0.8, label: "0.8" },
-    { value: 0.9, label: "0.9" },
-    { value: 1, label: "1" },
-  ];
+  // g_float_marks = [
+  //   { value: 0, label: "0" },
+  //   { value: 0.1, label: "0.1" },
+  //   { value: 0.2, label: "0.2" },
+  //   { value: 0.3, label: "0.3" },
+  //   { value: 0.4, label: "0.4" },
+  //   { value: 0.5, label: "0.5" },
+  //   { value: 0.6, label: "0.6" },
+  //   { value: 0.7, label: "0.7" },
+  //   { value: 0.8, label: "0.8" },
+  //   { value: 0.9, label: "0.9" },
+  //   { value: 1, label: "1" },
+  // ];
 
   
-  g_int_marks = [
-    {value: 0,label: "0"},
-    {value: 1,label: "1"},
-    {value: 2,label: "2"},
-    {value: 3,label: "3"},
-    {value: 4,label: "4"},
-    {value: 5,label: "5"},
-    {value: 6,label: "6"},
-    {value: 7,label: "7"},
-    {value: 8,label: "8"},
-    {value: 9,label: "9"},
-    {value: 10,label: "10"},
-  ];
+  // g_int_marks = [
+  //   {value: 0,label: "0"},
+  //   {value: 1,label: "1"},
+  //   {value: 2,label: "2"},
+  //   {value: 3,label: "3"},
+  //   {value: 4,label: "4"},
+  //   {value: 5,label: "5"},
+  //   {value: 6,label: "6"},
+  //   {value: 7,label: "7"},
+  //   {value: 8,label: "8"},
+  //   {value: 9,label: "9"},
+  //   {value: 10,label: "10"},
+  // ];
 
   render() {
     const DialogTitle = withStyles(styles)((props) => {
@@ -227,8 +238,9 @@ class PcSetNumericPolicy extends Component {
                       // getAriaValueText={valuetext}
                       step={null}
                       min={0}
-                      max={this.props.isFloat ? 1 : 10}
-                      marks={this.props.isFloat ? this.g_float_marks : this.g_int_marks}
+                      max={this.props.max}
+                      // marks={this.props.isFloat ? this.g_float_marks : this.g_int_marks}
+                      marks={this.state.g_marks}
                     />
                     <div className="txt"></div>
                   </div>

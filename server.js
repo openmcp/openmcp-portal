@@ -7,6 +7,23 @@ var path = require("path");
 const data = fs.readFileSync("./config.json");
 const conf = JSON.parse(data);
 
+const isLocal = true;
+if (!isLocal) {
+  conf.api.url = process.env.api_url;
+  conf.db.user = process.env.db_user;
+  conf.db.host = process.env.db_host;
+  conf.db.database = process.env.db_database;
+  conf.db.password = process.env.db_password;
+  conf.db.port = process.env.db_port;
+}
+
+const createTableScript = fs
+  .readFileSync("./db_script/opencmp_portal_create_table_.sql")
+  .toString();
+const inertDataScript = fs
+  .readFileSync("./db_script/opencmp_portal_insert_data.sql")
+  .toString();
+
 const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,19 +46,75 @@ const connection = new Client({
   port: conf.db.port,
 });
 
-//데이터베이스 접속
 connection.connect();
+dbSettings();
+
+//최초 DB환경설정
+function dbSettings() {
+  //connection.connect();
+  connection.query(`select * from tb_account_role;`, (err, result) => {
+    var result_set = {
+      data: [],
+      message: "Please check your Password",
+    };
+    if (result === undefined) {
+      connection.query(createTableScript, (err, result) => {
+        connection.query(inertDataScript, (err, result) => {});
+      });
+      console.log("DB schemas create");
+    } else {
+      console.log("Skip DB schemas create");
+    }
+    //connection.end();
+  });
+}
+
+app.post("/user_login", (req, res) => {
+  const bcrypt = require("bcrypt");
+
+  //connection.connect();
+  connection.query(
+    `select * from tb_accounts where user_id = '${req.body.userid}';`,
+    (err, result) => {
+      var result_set = {
+        data: [],
+        message: "Please check your Password",
+      };
+      console.log(result);
+
+      if (result.rows.length < 1) {
+        result_set = {
+          data: [],
+          message: "There is no user, please check your account",
+        };
+        res.send(result_set);
+      } else {
+        const hashPassword = result.rows[0].user_password;
+        bcrypt.compare(req.body.password, hashPassword).then(function (r) {
+          if (r) {
+            // console.log("compare", r, result_set)
+            result_set = {
+              data: result,
+              message: "Login Successful !!",
+            };
+            // console.log("compare", r, result_set);
+          }
+          res.send(result_set);
+        });
+      }
+      //connection.end();
+    }
+  );
+});
 
 //데이터베이스에서 데이터 가져오기
 // app.get("/api/customers", (req, res) => {
 //   // res.send()
-//   connection.query("SELECT * FROM CUSTOMER", (err, result) => {
+//   //connection.connect();
+//connection.query("SELECT * FROM CUSTOMER", (err, result) => {
 //     res.send(result.rows);
 //   });
 // });
-
-
-
 
 function getDateTime() {
   var d = new Date();
@@ -67,11 +140,11 @@ function getDateTime() {
     // ":00";
     (d.getMinutes().toString().length == 2
       ? d.getMinutes().toString()
-      : "0" +d.getMinutes().toString()) +
-    ":" + 
+      : "0" + d.getMinutes().toString()) +
+    ":" +
     (d.getSeconds().toString().length == 2
       ? d.getSeconds().toString()
-      : "0" +d.getSeconds().toString());    
+      : "0" + d.getSeconds().toString());
   // console.log(date_format_str);
   return date_format_str;
 }
@@ -83,6 +156,7 @@ app.post("/apimcp/portal-log", (req, res) => {
   const bcrypt = require("bcrypt");
   var created_time = getDateTime();
 
+  //connection.connect();
   connection.query(
     `insert into tb_portal_logs values ('${req.body.userid}','${req.body.code}','${created_time}');`,
     (err, result) => {
@@ -92,14 +166,15 @@ app.post("/apimcp/portal-log", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err)
+        console.log(err);
         result_set = {
           data: [],
           message: "Update log failed : " + err,
         };
-      } 
+      }
 
       res.send(result_set);
+      //connection.end();
     }
   );
 });
@@ -111,6 +186,7 @@ app.post("/apimcp/portal-log", (req, res) => {
 app.post("/user_login", (req, res) => {
   const bcrypt = require("bcrypt");
 
+  //connection.connect();
   connection.query(
     `select * from tb_accounts where user_id = '${req.body.userid}';`,
     (err, result) => {
@@ -118,7 +194,7 @@ app.post("/user_login", (req, res) => {
         data: [],
         message: "Please check your Password",
       };
-      console.log(result)
+      console.log(result);
 
       if (result.rows.length < 1) {
         result_set = {
@@ -140,47 +216,45 @@ app.post("/user_login", (req, res) => {
           res.send(result_set);
         });
       }
+      //connection.end();
     }
   );
 });
 
-
 ///////////////////////
-// Dashboard APIs 
+// Dashboard APIs
 ///////////////////////
 app.get("/dashboard", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/dashboard`,
-  //   method: "GET",
-  //   // headers: {
-  //   //   Authorization:
-  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-  //   // },
-  // };
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/dashboard`,
+    method: "GET",
+    // headers: {
+    //   Authorization:
+    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
+    // },
+  };
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     // console.log("result", body);
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      // console.log("result", body);
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
 });
-
 
 app.get("/dashboard-master-cluster", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/dashboard_master_cluster.json");
   let overview = JSON.parse(rawdata);
   res.send(overview);
 });
-
 
 let token = "";
 // Projects 리스트 가져오기
@@ -190,8 +264,7 @@ app.get("/api/projects", (req, res) => {
   // var uri ="http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1";
 
   var options = {
-    uri:
-      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+    uri: "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
     method: "GET",
     headers: {
       Authorization:
@@ -200,8 +273,7 @@ app.get("/api/projects", (req, res) => {
   };
 
   var options = {
-    uri:
-      "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
+    uri: "http://192.168.0.152:31635/api/v1/namespaces/kube-system/pods?clustername=cluster1",
     method: "GET",
     headers: {
       Authorization:
@@ -227,13 +299,15 @@ app.get("/api/projects", (req, res) => {
   //     }
   //   });
 
+  //connection.connect();
   connection.query("SELECT * FROM PROJECT_LIST", (err, result) => {
     res.send(result.rows);
+    //connection.end();
   });
 });
 
 ///////////////////////
-// Projects APIs 
+// Projects APIs
 ///////////////////////
 
 // Prjects
@@ -258,7 +332,6 @@ app.get("/projects", (req, res) => {
       return error;
     }
   });
-
 });
 
 // Prjects > overview
@@ -285,27 +358,25 @@ app.get("/projects/:project/overview", (req, res) => {
   });
 });
 
-
 // Prjects > create
 app.post("/projects/create", (req, res) => {
   requestData = {
-    project : req.body.project,
-    clusters : req.body.clusters,
-  }
+    project: req.body.project,
+    clusters: req.body.clusters,
+  };
 
-  
   var data = JSON.stringify(requestData);
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/clusters/projects/create`,
     method: "POST",
-    body: data
+    body: data,
   };
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body)
+      console.log(body);
     } else {
       console.log("error", error);
       return error;
@@ -334,7 +405,6 @@ app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
     method: "GET",
   };
 
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -343,13 +413,11 @@ app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
       return error;
     }
   });
-
-
-  
 });
 
 // Prjects > Resources > Workloads > Deployments > detail
-app.get("/projects/:project/resources/workloads/deployments/:deployment",
+app.get(
+  "/projects/:project/resources/workloads/deployments/:deployment",
   (req, res) => {
     // let rawdata = fs.readFileSync(
     //   "./json_data/projects_deployment_detail.json"
@@ -358,14 +426,34 @@ app.get("/projects/:project/resources/workloads/deployments/:deployment",
     // // //console.log(overview);
     // res.send(overview);
 
-
     var request = require("request");
     var options = {
       uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}`,
     };
 
-    console.log(options.uri)
+    console.log(options.uri);
 
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        res.send(body);
+      } else {
+        console.log("error", error);
+        return error;
+      }
+    });
+  }
+);
+
+// Prjects > Resources > Workloads > Deployments > detail > replica status
+app.get(
+  "/projects/:project/resources/workloads/deployments/:deployment/replica_status",
+  (req, res) => {
+    var request = require("request");
+    var options = {
+      uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}/replica_status`,
+    };
+
+    console.log(options.uri);
 
     request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -376,31 +464,8 @@ app.get("/projects/:project/resources/workloads/deployments/:deployment",
       }
     });
 
-  }
-);
-
-// Prjects > Resources > Workloads > Deployments > detail > replica status
-app.get("/projects/:project/resources/workloads/deployments/:deployment/replica_status", (req, res) => {
-
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}/replica_status`,
-  };
-
-  console.log(options.uri)
-
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-
-
-    // connection.query(
+    // //connection.connect();
+    //connection.query(
     //   "select * from tb_replica_status order by cluster asc, created_time desc, status desc",
     //   (err, result) => {
     //     var result2 = result.rows.reduce(
@@ -433,35 +498,29 @@ app.get("/projects/:project/resources/workloads/deployments/:deployment/replica_
     // let overview = JSON.parse(rawdata);
     // //console.log(overview);
     // res.send(overview);
-
-
-
   }
 );
 
-app.post(
-  "/apis/deployments/replica_status/set_pod_num",
-  (req, res) => {
-    var data = JSON.stringify(req.body);
-    console.log(data);
-    var request = require("request");
-    var options = {
-      uri: `${apiServer}/apis/deployments/replica_status/set_pod_num`,
-      method: "POST",
-      body: data
-    };
-  
-    request(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        res.send(body);
-        console.log(body)
-      } else {
-        console.log("error", error);
-        return error;
-      }
-    });
-  }
-);
+app.post("/apis/deployments/replica_status/set_pod_num", (req, res) => {
+  var data = JSON.stringify(req.body);
+  console.log(data);
+  var request = require("request");
+  var options = {
+    uri: `${apiServer}/apis/deployments/replica_status/set_pod_num`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
 
 // Deployments 상세부터 구현해나가야 함
 // Prjects > Resources > Workloads > Statefulsets
@@ -477,9 +536,6 @@ app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
     method: "GET",
   };
 
-
-
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -490,29 +546,32 @@ app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
   });
 });
 
-app.get("/projects/:project/resources/workloads/statefulsets/:statefulset", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/projects_statefulsets.json");
-  // let overview = JSON.parse(rawdata);
-  // //console.log(overview);
-  // res.send(overview);
+app.get(
+  "/projects/:project/resources/workloads/statefulsets/:statefulset",
+  (req, res) => {
+    // let rawdata = fs.readFileSync("./json_data/projects_statefulsets.json");
+    // let overview = JSON.parse(rawdata);
+    // //console.log(overview);
+    // res.send(overview);
 
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/statefulsets/${req.params.statefulset}`,
-    method: "GET",
-  };
+    var request = require("request");
+    var options = {
+      uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/statefulsets/${req.params.statefulset}`,
+      method: "GET",
+    };
 
-  console.log(options.uri)
+    console.log(options.uri);
 
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-});
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        res.send(body);
+      } else {
+        console.log("error", error);
+        return error;
+      }
+    });
+  }
+);
 
 // Prjects > Resources > pods
 app.get("/projects/:project/resources/pods", (req, res) => {
@@ -536,7 +595,6 @@ app.get("/projects/:project/resources/pods", (req, res) => {
       return error;
     }
   });
-
 });
 
 // Prjects > Resources > Pods Detail
@@ -741,7 +799,6 @@ app.get("/projects/:project/config/secrets/:secret", (req, res) => {
       return error;
     }
   });
-
 });
 
 // Prjects > Config > ConfigMaps
@@ -797,7 +854,6 @@ app.get("/projects/:project/settings/members", (req, res) => {
   res.send(overview);
 });
 
-
 //////////////////////////
 // Deployments
 /////////////////////////
@@ -807,7 +863,7 @@ app.get("/deployments", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
-  
+
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/deployments`,
@@ -847,15 +903,14 @@ app.get("/deployments/:deployment", (req, res) => {
   });
 });
 
-
 app.post("/deployments/create", (req, res) => {
-  const YAML = req.body.yaml
-  
+  const YAML = req.body.yaml;
+
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/yamlapply`,
     method: "POST",
-    body: YAML
+    body: YAML,
   };
 
   request(options, function (error, response, body) {
@@ -875,7 +930,7 @@ app.post("/apis/deployments/resources", (req, res) => {
   var options = {
     uri: `${apiServer}/apis/deployments/resources`,
     method: "POST",
-    body: data
+    body: data,
   };
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -885,28 +940,6 @@ app.post("/apis/deployments/resources", (req, res) => {
       return error;
     }
   });
-});
-
-app.get("/snapshots", (req, res) => {
-  let deployment = req.query.deployment
-  let rawdata = fs.readFileSync("./json_data/snapshots.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/deployments`,
-  //   method: "GET",
-  // };
-
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     return error;
-  //   }
-  // });
 });
 
 ///////////////////////
@@ -996,7 +1029,7 @@ app.get("/clusters/:cluster/nodes", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters_nodes.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
-  const clusterName = req.params.cluster
+  const clusterName = req.params.cluster;
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/clusters/${clusterName}/nodes`,
@@ -1028,7 +1061,7 @@ app.get("/clusters/:cluster/pods", (req, res) => {
   // //console.log(overview);
   // res.send(overview);
 
-  const clusterName = req.params.cluster
+  const clusterName = req.params.cluster;
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/clusters/${clusterName}/pods`,
@@ -1071,13 +1104,12 @@ app.get("/clusters/:cluster/storage_class/:storage_class", (req, res) => {
   res.send(overview);
 });
 
-
 // cluster > join
 app.post("/cluster/join", (req, res) => {
   requestData = {
-		clusterName : req.body.clusterName,
-    clusterAddress : req.body.clusterAddress
-  }
+    clusterName: req.body.clusterName,
+    clusterAddress: req.body.clusterAddress,
+  };
 
   var data = JSON.stringify(requestData);
   var request = require("request");
@@ -1085,13 +1117,13 @@ app.post("/cluster/join", (req, res) => {
     // https://192.168.0.152:30000/apis/openmcp.k8s.io/v1alpha1/namespaces/openmcp/openmcpclusters/cluster2?clustername=openmcp
     uri: `${apiServer}/apis/clusters/join`,
     method: "POST",
-    body: data
+    body: data,
   };
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body)
+      console.log(body);
     } else {
       console.log("error", error);
       return error;
@@ -1103,8 +1135,8 @@ app.post("/cluster/join", (req, res) => {
 app.post("/cluster/unjoin", (req, res) => {
   console.log("cluster/unjoin");
   requestData = {
-		clusterName : req.body.clusterName
-  }
+    clusterName: req.body.clusterName,
+  };
 
   var data = JSON.stringify(requestData);
   var request = require("request");
@@ -1112,21 +1144,19 @@ app.post("/cluster/unjoin", (req, res) => {
     // https://192.168.0.152:30000/apis/openmcp.k8s.io/v1alpha1/namespaces/openmcp/openmcpclusters/cluster2?clustername=openmcp
     uri: `${apiServer}/apis/clusters/unjoin`,
     method: "POST",
-    body: data
+    body: data,
   };
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body)
+      console.log(body);
     } else {
       console.log("error", error);
       return error;
     }
   });
 });
-
-
 
 /////////////
 // Nodes
@@ -1154,15 +1184,16 @@ app.get("/nodes", (req, res) => {
 
 //asdasd
 app.post("/nodes/add/eks", (req, res) => {
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
           Settings > Config > Public cloud Auth > EKS`,
         };
@@ -1171,15 +1202,15 @@ app.post("/nodes/add/eks", (req, res) => {
       }
 
       requestData = {
-        region : req.body.region,
-        cluster:req.body.cluster,
+        region: req.body.region,
+        cluster: req.body.cluster,
         nodePool: req.body.nodePool,
-        desiredCnt:req.body.desiredCnt,
-        accessKey : result.rows[0].accessKey,
-        secretKey : result.rows[0].secretKey,
-      }
+        desiredCnt: req.body.desiredCnt,
+        accessKey: result.rows[0].accessKey,
+        secretKey: result.rows[0].secretKey,
+      };
 
-      console.log(requestData)
+      console.log(requestData);
       var data = JSON.stringify(requestData);
 
       var request = require("request");
@@ -1187,34 +1218,34 @@ app.post("/nodes/add/eks", (req, res) => {
         // uri: `${apiServer}/apis/addeksnode`,
         uri: `${apiServer}/apis/changeeksnode`,
         method: "POST",
-        body: data
+        body: data,
       };
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          console.log(body)
+          console.log(body);
         } else {
           console.log("error", error);
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
-  
 });
 
 app.post("/nodes/add/aks", (req, res) => {
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
           Settings > Config > Public cloud Auth > AKS`,
         };
@@ -1222,14 +1253,14 @@ app.post("/nodes/add/aks", (req, res) => {
       }
 
       requestData = {
-        cluster : req.body.cluster,
-        desiredCnt : req.body.desiredCnt,
-        nodePool : req.body.nodePool,
-        clientId : result.rows[0].clientId,
-        clientSec : result.rows[0].clientSec,
-        tenantId : result.rows[0].tenantId,
-        subId : result.rows[0].subId
-      }
+        cluster: req.body.cluster,
+        desiredCnt: req.body.desiredCnt,
+        nodePool: req.body.nodePool,
+        clientId: result.rows[0].clientId,
+        clientSec: result.rows[0].clientSec,
+        tenantId: result.rows[0].tenantId,
+        subId: result.rows[0].subId,
+      };
 
       console.log("addNodeAKS : ", requestData);
       var data = JSON.stringify(requestData);
@@ -1238,32 +1269,33 @@ app.post("/nodes/add/aks", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/addaksnode`,
         method: "POST",
-        body: data
+        body: data,
       };
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          console.log(body)
+          console.log(body);
         } else {
           console.log("error", error);
           return error;
         }
       });
-
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/add/gke", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_gke
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the GKE Auth Informations.\n
           Settings > Config > Public cloud Auth > GKE`,
         };
@@ -1274,11 +1306,11 @@ app.post("/nodes/add/gke", (req, res) => {
         projectId: result.rows[0].projectID,
         clientEmail: result.rows[0].clientEmail,
         privateKey: result.rows[0].privateKey,
-        cluster : req.body.cluster,
+        cluster: req.body.cluster,
         nodePool: req.body.nodePool,
-        desiredCnt : req.body.desiredCnt,
-      }
-     
+        desiredCnt: req.body.desiredCnt,
+      };
+
       // console.log("gke/addnode",requestData)
       var data = JSON.stringify(requestData);
 
@@ -1286,32 +1318,33 @@ app.post("/nodes/add/gke", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/gkechangenodecount`,
         method: "POST",
-        body: data
+        body: data,
       };
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          console.log("body",body)
+          console.log("body", body);
         } else {
           console.log("error", error);
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/add/kvm", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
           Settings > Config > Public cloud Auth > KVM`,
         };
@@ -1319,14 +1352,14 @@ app.post("/nodes/add/kvm", (req, res) => {
       }
 
       requestData = {
-        agentURL : result.rows[0].agentURL,
-        master : result.rows[0].mClusterName,
-        mpass : result.rows[0].mClusterPwd,
+        agentURL: result.rows[0].agentURL,
+        master: result.rows[0].mClusterName,
+        mpass: result.rows[0].mClusterPwd,
         newvm: req.body.newvm,
-        template : req.body.template,
-        wpass : req.body.newVmPassword,
-        cluster : req.body.cluster,
-      }
+        template: req.body.template,
+        wpass: req.body.newVmPassword,
+        cluster: req.body.cluster,
+      };
 
       // console.log(requestData);
 
@@ -1335,7 +1368,7 @@ app.post("/nodes/add/kvm", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/createkvmnode`,
         method: "POST",
-        body: data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1346,20 +1379,21 @@ app.post("/nodes/add/kvm", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/delete/kvm", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
           Settings > Config > Public cloud Auth > KVM`,
         };
@@ -1367,11 +1401,11 @@ app.post("/nodes/delete/kvm", (req, res) => {
       }
 
       requestData = {
-        agentURL : result.rows[0].agentURL,
-        targetvm : req.body.node,
-        mastervm : result.rows[0].mClusterName,
-        mastervmpwd : result.rows[0].mClusterPwd
-      }
+        agentURL: result.rows[0].agentURL,
+        targetvm: req.body.node,
+        mastervm: result.rows[0].mClusterName,
+        mastervmpwd: result.rows[0].mClusterPwd,
+      };
 
       // console.log(requestData, result.rows[0])
 
@@ -1382,7 +1416,7 @@ app.post("/nodes/delete/kvm", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/deletekvmnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1393,11 +1427,10 @@ app.post("/nodes/delete/kvm", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
-
 
 //////////////////
 // Nodes > datail
@@ -1424,15 +1457,16 @@ app.get("/nodes/:node", (req, res) => {
 });
 
 app.post("/nodes/eks/start", (req, res) => {
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
           Settings > Config > Public cloud Auth > EKS`,
         };
@@ -1440,11 +1474,11 @@ app.post("/nodes/eks/start", (req, res) => {
       }
 
       requestData = {
-        akid : result.rows[0].accessKey,
-        secretKey : result.rows[0].secretKey,
-        region : req.body.region,
-        node : req.body.node,
-      }
+        akid: result.rows[0].accessKey,
+        secretKey: result.rows[0].secretKey,
+        region: req.body.region,
+        node: req.body.node,
+      };
 
       // console.log(requestData, result.rows[0])
 
@@ -1455,7 +1489,7 @@ app.post("/nodes/eks/start", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/starteksnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1466,21 +1500,22 @@ app.post("/nodes/eks/start", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/eks/stop", (req, res) => {
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
           Settings > Config > Public cloud Auth > EKS`,
         };
@@ -1488,13 +1523,13 @@ app.post("/nodes/eks/stop", (req, res) => {
       }
 
       requestData = {
-        akid : result.rows[0].accessKey,
-        secretKey : result.rows[0].secretKey,
-        region : req.body.region,
-        node : req.body.node,
-      }
+        akid: result.rows[0].accessKey,
+        secretKey: result.rows[0].secretKey,
+        region: req.body.region,
+        node: req.body.node,
+      };
 
-      console.log(requestData)
+      console.log(requestData);
 
       // res.send(result.rows);
 
@@ -1503,7 +1538,7 @@ app.post("/nodes/eks/stop", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/stopeksnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1515,21 +1550,22 @@ app.post("/nodes/eks/stop", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/eks/change", (req, res) => {
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_eks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
           Settings > Config > Public cloud Auth > EKS`,
         };
@@ -1537,19 +1573,19 @@ app.post("/nodes/eks/change", (req, res) => {
       }
 
       requestData = {
-        akid : result.rows[0].accessKey,
-        secretKey : result.rows[0].secretKey,
-        region : req.body.region,
-        type : req.body.type,
-        node : req.body.node,
-      }
+        akid: result.rows[0].accessKey,
+        secretKey: result.rows[0].secretKey,
+        region: req.body.region,
+        type: req.body.type,
+        node: req.body.node,
+      };
 
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/changeekstype`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1561,20 +1597,21 @@ app.post("/nodes/eks/change", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/aks/start", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
           Settings > Config > Public cloud Auth > AKS`,
         };
@@ -1582,21 +1619,20 @@ app.post("/nodes/aks/start", (req, res) => {
       }
 
       requestData = {
-        cluster : req.body.cluster,
-        node : req.body.node,
-        clientId : result.rows[0].clientId,
-        clientSec : result.rows[0].clientSec,
-        tenantId : result.rows[0].tenantId,
-        subId : result.rows[0].subId
-      }
+        cluster: req.body.cluster,
+        node: req.body.node,
+        clientId: result.rows[0].clientId,
+        clientSec: result.rows[0].clientSec,
+        tenantId: result.rows[0].tenantId,
+        subId: result.rows[0].subId,
+      };
 
-      
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/startaksnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1607,21 +1643,22 @@ app.post("/nodes/aks/start", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/aks/stop", (req, res) => {
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
           Settings > Config > Public cloud Auth > AKS`,
         };
@@ -1629,20 +1666,20 @@ app.post("/nodes/aks/stop", (req, res) => {
       }
 
       requestData = {
-        cluster : req.body.cluster,
-        node : req.body.node,
-        clientId : result.rows[0].clientId,
-        clientSec : result.rows[0].clientSec,
-        tenantId : result.rows[0].tenantId,
-        subId : result.rows[0].subId
-      }
+        cluster: req.body.cluster,
+        node: req.body.node,
+        clientId: result.rows[0].clientId,
+        clientSec: result.rows[0].clientSec,
+        tenantId: result.rows[0].tenantId,
+        subId: result.rows[0].subId,
+      };
 
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/stopaksnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1653,20 +1690,21 @@ app.post("/nodes/aks/stop", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/clusters/aks/change", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_aks
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
           Settings > Config > Public cloud Auth > AKS`,
         };
@@ -1674,22 +1712,22 @@ app.post("/clusters/aks/change", (req, res) => {
       }
 
       requestData = {
-        clientId : result.rows[0].clientId,
-        clientSec : result.rows[0].clientSec,
-        tenantId : result.rows[0].tenantId,
-        subId : result.rows[0].subId,
-        cluster : req.body.cluster,
-        poolName : req.body.poolName,
-        skuTierStr : req.body.tier,
-        skuNameStr : req.body.type,
-      }
+        clientId: result.rows[0].clientId,
+        clientSec: result.rows[0].clientSec,
+        tenantId: result.rows[0].tenantId,
+        subId: result.rows[0].subId,
+        cluster: req.body.cluster,
+        poolName: req.body.poolName,
+        skuTierStr: req.body.tier,
+        skuNameStr: req.body.type,
+      };
 
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/akschangevmss`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1700,20 +1738,21 @@ app.post("/clusters/aks/change", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/kvm/stop", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
           Settings > Config > Public cloud Auth > KVM`,
         };
@@ -1721,16 +1760,16 @@ app.post("/nodes/kvm/stop", (req, res) => {
       }
 
       requestData = {
-        node : req.body.node,
-        agentURL : result.rows[0].agentURL
-      }
+        node: req.body.node,
+        agentURL: result.rows[0].agentURL,
+      };
 
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/stopkvmnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1741,20 +1780,21 @@ app.post("/nodes/kvm/stop", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/kvm/start", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
           Settings > Config > Public cloud Auth > KVM`,
         };
@@ -1762,16 +1802,16 @@ app.post("/nodes/kvm/start", (req, res) => {
       }
 
       requestData = {
-        node : req.body.node,
-        agentURL : result.rows[0].agentURL
-      }
+        node: req.body.node,
+        agentURL: result.rows[0].agentURL,
+      };
 
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/startkvmnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1782,20 +1822,21 @@ app.post("/nodes/kvm/start", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
 
 app.post("/nodes/kvm/change", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_kvm
      where cluster='${req.body.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the KVM Auth Informations.\n
           Settings > Config > Public cloud Auth > KVM`,
         };
@@ -1803,19 +1844,19 @@ app.post("/nodes/kvm/change", (req, res) => {
       }
 
       requestData = {
-        agentURL : result.rows[0].agentURL,
-        node : req.body.node,
-        cpu : req.body.cpu,
-        memory : req.body.memory,
-      }
+        agentURL: result.rows[0].agentURL,
+        node: req.body.node,
+        cpu: req.body.cpu,
+        memory: req.body.memory,
+      };
 
-      console.log(requestData)
+      console.log(requestData);
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/changekvmnode`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
@@ -1826,75 +1867,79 @@ app.post("/nodes/kvm/change", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
-
 
 /////////////////////////
 // Public Cloud Cluster
 //////////////////////////
 app.get("/aws/eks-type", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * from tb_codes where kinds='EKS-TYPE' order by etc;`,
     (err, result) => {
       res.send(result.rows);
+      //connection.end();
     }
   );
 });
 
 app.get("/azure/aks-type", (req, res) => {
+  //connection.connect();
   connection.query(
     `select * from tb_codes where kinds='AKS-TYPE' order by etc;`,
     (err, result) => {
-
       res.send(result.rows);
+      //connection.end();
     }
   );
 });
 
 app.get("/azure/pool/:cluster", (req, res) => {
-  var cluster = req.params.cluster
+  var cluster = req.params.cluster;
   console.log(req.params.cluster);
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_aks
      where cluster='${req.params.cluster}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
           Settings > Config > Public cloud Auth > AKS`,
         };
         return res.send(result_set);
       }
 
-      console.log(result.rows[0].clientId)
+      console.log(result.rows[0].clientId);
 
       requestData = {
-        clientId : result.rows[0].clientId,
-        clientSec : result.rows[0].clientSec,
-        tenantId : result.rows[0].tenantId,
-        subId : result.rows[0].subId
-      }
-      
+        clientId: result.rows[0].clientId,
+        clientSec: result.rows[0].clientSec,
+        tenantId: result.rows[0].tenantId,
+        subId: result.rows[0].subId,
+      };
+
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
         uri: `${apiServer}/apis/aksgetallres`,
         method: "POST",
-        body : data
+        body: data,
       };
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var clusterInfo = {};
-          console.log(body)
-          for (let value of JSON.parse(body)){
+          console.log(body);
+          for (let value of JSON.parse(body)) {
             // if(value.name == cluster){ //임시로 막음(일치하는 클러스터가 없음)
-            if(value.name === "aks-cluster-01"){ //임시로 하드코딩함
+            if (value.name === "aks-cluster-01") {
+              //임시로 하드코딩함
               clusterInfo = value;
             }
           }
@@ -1904,7 +1949,7 @@ app.get("/azure/pool/:cluster", (req, res) => {
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
@@ -1918,32 +1963,31 @@ app.get("/eks/clusters", (req, res) => {
 
 app.get("/eks/clusters/workers", (req, res) => {
   var clusterName = req.query.clustername;
-  console.log(req.query)
   // let rawdata = fs.readFileSync("./json_data/eks_workers.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_eks
      where cluster='${clusterName}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
           Settings > Config > Public cloud Auth > EKS`,
         };
-        console.log(result_set);
         return res.send(result_set);
       }
 
       requestData = {
-        region : result.rows[0].region,
-        accessKey : result.rows[0].accessKey,
-        secretKey : result.rows[0].secretKey,
-      }
+        region: result.rows[0].region,
+        accessKey: result.rows[0].accessKey,
+        secretKey: result.rows[0].secretKey,
+      };
 
       var data = JSON.stringify(requestData);
 
@@ -1952,28 +1996,25 @@ app.get("/eks/clusters/workers", (req, res) => {
         // uri: `${apiServer}/apis/addeksnode`,
         uri: `${apiServer}/apis/geteksclusterinfo`,
         method: "POST",
-        body: data
+        body: data,
       };
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          var result = JSON.parse(body)
-          result.map((item)=> {
-            if(item.name == clusterName){
+          var result = JSON.parse(body);
+          result.map((item) => {
+            if (item.name == clusterName) {
               res.send(item.nodegroups);
             }
-          })
-
-          // res.send(body);
+          });
         } else {
           console.log("error", error);
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
-
 });
 
 app.get("/gke/clusters", (req, res) => {
@@ -1984,19 +2025,20 @@ app.get("/gke/clusters", (req, res) => {
 
 app.get("/gke/clusters/pools", (req, res) => {
   var clusterName = req.query.clustername;
-  console.log(clusterName)
+  console.log(clusterName);
   // let rawdata = fs.readFileSync("./json_data/gke_node_pools.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
+  //connection.connect();
   connection.query(
     `select * 
      from tb_config_gke
      where cluster='${clusterName}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the GKE Auth Informations.\n
           Settings > Config > Public cloud Auth > GKE`,
         };
@@ -2007,8 +2049,8 @@ app.get("/gke/clusters/pools", (req, res) => {
         projectId: result.rows[0].projectID,
         clientEmail: result.rows[0].clientEmail,
         privateKey: result.rows[0].privateKey,
-      }
-     
+      };
+
       var data = JSON.stringify(requestData);
       // console.log("gke/addnode",data)
 
@@ -2016,23 +2058,23 @@ app.get("/gke/clusters/pools", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/getgkeclusters`,
         method: "POST",
-        body: data
+        body: data,
       };
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          var result = JSON.parse(body)
-          result.map((item)=> {
-            if(item.clusterName == clusterName){
+          var result = JSON.parse(body);
+          result.map((item) => {
+            if (item.clusterName == clusterName) {
               res.send(item.nodePools);
             }
-          })
+          });
         } else {
           console.log("error", error);
           return error;
         }
       });
-      
+      //connection.end();
     }
   );
 });
@@ -2049,15 +2091,16 @@ app.get("/aks/clusters/pools", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,accessKey,secretKey
     `select * 
      from tb_config_aks
      where cluster='${clusterName}';`,
     (err, result) => {
-      if (result.rows.length  === 0){
+      if (result.rows.length === 0) {
         const result_set = {
-          error : true,
+          error: true,
           message: `Auth Information does not Exist.\nPlease Enter the AKS Auth Informations.\n
           Settings > Config > Public cloud Auth > AKS`,
         };
@@ -2065,11 +2108,11 @@ app.get("/aks/clusters/pools", (req, res) => {
       }
 
       requestData = {
-        clientId : result.rows[0].clientId,
-        clientSec : result.rows[0].clientSec,
-        tenantId : result.rows[0].tenantId,
-        subId : result.rows[0].subId
-      }
+        clientId: result.rows[0].clientId,
+        clientSec: result.rows[0].clientSec,
+        tenantId: result.rows[0].tenantId,
+        subId: result.rows[0].subId,
+      };
 
       console.log("addNodeAKS : ", requestData);
 
@@ -2080,27 +2123,25 @@ app.get("/aks/clusters/pools", (req, res) => {
       var options = {
         uri: `${apiServer}/apis/aksgetallres`,
         method: "POST",
-        body: data
+        body: data,
       };
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          var result = JSON.parse(body)
-          result.map((item)=> {
-            if(item.name == clusterName){
+          var result = JSON.parse(body);
+          result.map((item) => {
+            if (item.name == clusterName) {
               res.send(item.agentpools);
             }
-          })
+          });
         } else {
           console.log("error", error);
           return error;
         }
       });
-
+      //connection.end();
     }
   );
-
-
 });
 
 app.get("/kvm/clusters", (req, res) => {
@@ -2147,7 +2188,7 @@ app.get("/pods/:pod", (req, res) => {
     method: "GET",
   };
 
-  console.log(options.uri)
+  console.log(options.uri);
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -2170,7 +2211,7 @@ app.get("/pods/:pod/physicalResPerMin", (req, res) => {
     method: "GET",
   };
 
-  console.log(options.uri)
+  console.log(options.uri);
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -2181,7 +2222,6 @@ app.get("/pods/:pod/physicalResPerMin", (req, res) => {
     }
   });
 });
-
 
 app.get("/hpa", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/hpa.json");
@@ -2223,8 +2263,6 @@ app.get("/vpa", (req, res) => {
   });
 });
 
-
-
 ////////////////////////
 // Ingress
 ////////////////////////
@@ -2258,7 +2296,6 @@ app.get("/ingress/:ingress", (req, res) => {
   res.send(overview);
 });
 
-
 ////////////////////////
 // Services
 ////////////////////////
@@ -2290,10 +2327,7 @@ app.get("/services/:service", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/service_detail.json");
   let overview = JSON.parse(rawdata);
   res.send(overview);
-
 });
-
-
 
 ////////////////////////
 // Network > DNS
@@ -2328,12 +2362,13 @@ app.get("/dns/:dns", (req, res) => {
   res.send(overview);
 });
 
-
 ///////////////////////
 //Settings > Accounts
 ///////////////////////
 app.get("/settings/accounts", (req, res) => {
-  connection.query(`select
+  //connection.connect();
+  connection.query(
+    `select
   user_id, 
   role_id,
   array(
@@ -2343,9 +2378,12 @@ app.get("/settings/accounts", (req, res) => {
       ) as role,
   last_login_time,
   created_time
-  from tb_accounts u`, (err, result) => {
-    res.send(result.rows);
-  });
+  from tb_accounts u`,
+    (err, result) => {
+      res.send(result.rows);
+      //connection.end();
+    }
+  );
 });
 
 app.post("/create_account", (req, res) => {
@@ -2356,6 +2394,7 @@ app.post("/create_account", (req, res) => {
   bcrypt.genSalt(saltRounds, function (err, salt) {
     bcrypt.hash(req.body.password, salt, function (err, hash_password) {
       var create_time = getDateTime();
+      //connection.connect();
       connection.query(
         `insert into tb_accounts values ('${req.body.userid}', '${hash_password}','${req.body.role}','${create_time}','${create_time}');`,
         (err, result) => {
@@ -2365,6 +2404,7 @@ app.post("/create_account", (req, res) => {
               message: "Account creation was successful !!",
             };
             res.send(result_set);
+            //connection.end();
           } else {
             const result_set = {
               data: [],
@@ -2372,6 +2412,7 @@ app.post("/create_account", (req, res) => {
             };
             res.send(result_set);
           }
+          //connection.end();
         }
       );
     });
@@ -2379,27 +2420,27 @@ app.post("/create_account", (req, res) => {
 });
 
 app.get("/account-roles", (req, res) => {
-  connection.query(
-    `select * from tb_account_role;`,
-    (err, result) => {
-      // var result_set = {
-      //   data: [],
-      //   message: "Update success",
-      // };
+  //connection.connect();
+  connection.query(`select * from tb_account_role;`, (err, result) => {
+    // var result_set = {
+    //   data: [],
+    //   message: "Update success",
+    // };
 
-      // if (err !== "null") {
-      //   console.log(err)
-      //   const result_set = {
-      //     data: [],
-      //     message: "Update log failed : " + err,
-      //   };
-      // } 
-      res.send(result.rows);
-    }
-  );
+    // if (err !== "null") {
+    //   console.log(err)
+    //   const result_set = {
+    //     data: [],
+    //     message: "Update log failed : " + err,
+    //   };
+    // }
+    res.send(result.rows);
+    //connection.end();
+  });
 });
 
 app.put("/update/account-roles", (req, res) => {
+  //connection.connect();
   connection.query(
     `update tb_accounts set role_id = '{"${req.body.role}"}' where user_id = '${req.body.userid}';`,
     (err, result) => {
@@ -2416,14 +2457,14 @@ app.put("/update/account-roles", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
-
 
   // bcrypt.genSalt(saltRounds, function (err, salt) {
   //   bcrypt.hash(req.body.password, salt, function (err, hash_password) {
   //     var create_time = getDateTime();
-      
+
   //   });
   // });
 });
@@ -2432,11 +2473,12 @@ app.put("/update/account-roles", (req, res) => {
 // Settings > Groups Role
 //////////////////////////
 app.get("/settings/group-role", (req, res) => {
-  // connection.query(`select
+  // //connection.connect();
+  //connection.query(`select
   // ga.group_id,
   // ga.group_name,
-  // array(select role_name 
-  //   from tb_account_role t 
+  // array(select role_name
+  //   from tb_account_role t
   //   where t.role_id = ANY(ga.role_id)) as role,
   //   projects,
   // ga.description,
@@ -2445,99 +2487,104 @@ app.get("/settings/group-role", (req, res) => {
   // order by group_id`, (err, result) => {
   //   res.send(result.rows);
   // });
-  connection.query(`select
+  //connection.connect();
+  connection.query(
+    `select
   ga.group_id,
   ga.group_name,
   ga.clusters,
   ga.description,
   ga.member
   from tb_group_role ga
-  order by group_id`, (err, result) => {
-    res.send(result.rows);
-  });
+  order by group_id`,
+    (err, result) => {
+      res.send(result.rows);
+      //connection.end();
+    }
+  );
 });
 
 app.post("/settings/group-role", (req, res) => {
   let query = `
   INSERT INTO tb_group_role (group_name, description, member, clusters)
   VALUES ('${req.body.groupName}', '${req.body.description}', '{${req.body.user_id}}', '{${req.body.clusters}}')
-  `
+  `;
   console.log(query);
-  connection.query(query, 
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Group role is saved !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Save was faild, please check policy : " + err,
-        };
-        res.send(result_set);
-      }
-    });
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Group role is saved !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Save was faild, please check policy : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
 });
 
 app.put("/settings/group-role", (req, res) => {
-  let query =  `update tb_group_role 
+  let query = `update tb_group_role 
       set group_name='${req.body.groupName}', 
           description='${req.body.description}',
           member='{${req.body.user_id}}',
           clusters = '{${req.body.clusters}}'
-      where group_id = ${req.body.group_id}`
-  // let query =  `update tb_group_role 
-  //     set group_name='${req.body.groupName}', 
+      where group_id = ${req.body.group_id}`;
+  // let query =  `update tb_group_role
+  //     set group_name='${req.body.groupName}',
   //         description='${req.body.description}',
   //         role_id='{${req.body.role_id}}',
   //         member='{${req.body.user_id}}',
   //         projects = '{${req.body.projects}}'
   //     where group_id = ${req.body.group_id}`
 
-  connection.query(query, 
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Group role is updated !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Update was faild, please check policy : " + err,
-        };
-        res.send(result_set);
-      }
-    });
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Group role is updated !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild, please check policy : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
 });
 
 app.delete("/settings/group-role", (req, res) => {
   let query = `delete from tb_group_role 
   where "group_id" = ${req.body.group_id};`;
   console.log(query);
-  connection.query(
-    query,
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Delete was successful!!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Delete was faild, please check error : " + err,
-        };
-        res.send(result_set);
-      }
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Delete was successful!!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Delete was faild, please check error : " + err,
+      };
+      res.send(result_set);
     }
-  );
+    //connection.end();
+  });
 });
-
 
 //////////////////////////
 // Settings > Policy
@@ -2550,7 +2597,8 @@ app.get("/settings/policy/openmcp-policy", (req, res) => {
   //                   rate, period
   //           from tb_policy`
 
-  // connection.query(sql, (err, result) => {
+  // //connection.connect();
+  //connection.query(sql, (err, result) => {
   //   res.send(result.rows);
   // });
   var request = require("request");
@@ -2571,16 +2619,16 @@ app.get("/settings/policy/openmcp-policy", (req, res) => {
 
 app.post("/settings/policy/openmcp-policy", (req, res) => {
   requestData = {
-    policyName : req.body.policyName,
-    values : req.body.values,
-  }
+    policyName: req.body.policyName,
+    values: req.body.values,
+  };
 
   var data = JSON.stringify(requestData);
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/policy/openmcp/edit`,
     method: "POST",
-    body: data
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -2594,12 +2642,14 @@ app.post("/settings/policy/openmcp-policy", (req, res) => {
 });
 
 app.get("/settings/policy/project-policy", (req, res) => {
-  let sql =`select  project, cluster, cls_cpu_trh_r, cls_mem_trh_r,
+  let sql = `select  project, cluster, cls_cpu_trh_r, cls_mem_trh_r,
             pod_cpu_trh_r, pod_mem_trh_r, updated_time
-            from tb_policy_projects`
+            from tb_policy_projects`;
 
+  //connection.connect();
   connection.query(sql, (err, result) => {
     res.send(result.rows);
+    //connection.end();
   });
 });
 
@@ -2618,25 +2668,25 @@ app.put("/settings/policy/project-policy", (req, res) => {
     pod_cpu_trh_r=${req.body.pod_cpu_trh_r},
     pod_mem_trh_r=${req.body.pod_mem_trh_r},
     updated_time='${updated_time}'
-  `
+  `;
+  //connection.connect();
   connection.query(sql, (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Update was successful !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Update was faild, please check data : " + err,
-        };
-        res.send(result_set);
-      }
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Update was successful !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild, please check data : " + err,
+      };
+      res.send(result_set);
     }
-  );
+    //connection.end();
+  });
 });
-
 
 // Settings > Config > Public Cloud Auth
 app.get("/settings/config/pca/eks", (req, res) => {
@@ -2644,11 +2694,13 @@ app.get("/settings/config/pca/eks", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,type,accessKey,secretKey
     `select * from tb_config_eks;`,
     (err, result) => {
       res.send(result.rows);
+      //connection.end();
     }
   );
 });
@@ -2657,6 +2709,7 @@ app.post("/settings/config/pca/eks", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+  //connection.connect();
   connection.query(
     `insert into tb_config_eks (cluster,"accessKey","secretKey","region") values ('${req.body.cluster}','${req.body.accessKey}','${req.body.secretKey}','${req.body.region}');`,
     (err, result) => {
@@ -2666,19 +2719,21 @@ app.post("/settings/config/pca/eks", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err)
+        console.log(err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
         };
-      } 
+      }
 
       res.send(result_set);
+      //connection.end();
     }
   );
 });
 
 app.put("/settings/config/pca/eks", (req, res) => {
+  //connection.connect();
   connection.query(
     `update tb_config_eks set 
       "cluster" = '${req.body.cluster}',
@@ -2700,11 +2755,13 @@ app.put("/settings/config/pca/eks", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
 
 app.delete("/settings/config/pca/eks", (req, res) => {
+  //connection.connect();
   connection.query(
     `delete from tb_config_eks 
       where "seq" = '${req.body.seq}' and
@@ -2723,6 +2780,7 @@ app.delete("/settings/config/pca/eks", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
@@ -2732,11 +2790,13 @@ app.get("/settings/config/pca/gke", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,type,accessKey,secretKey
     `select * from tb_config_gke;`,
     (err, result) => {
       res.send(result.rows);
+      //connection.end();
     }
   );
 });
@@ -2745,6 +2805,7 @@ app.post("/settings/config/pca/gke", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+  //connection.connect();
   connection.query(
     `insert into tb_config_gke (cluster,"type","clientEmail","projectID","privateKey") values ('${req.body.cluster}','${req.body.type}','${req.body.clientEmail}','${req.body.projectID}','${req.body.privateKey}');`,
     (err, result) => {
@@ -2754,19 +2815,21 @@ app.post("/settings/config/pca/gke", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err)
+        console.log(err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
         };
-      } 
+      }
 
       res.send(result_set);
+      //connection.end();
     }
   );
 });
 
 app.put("/settings/config/pca/gke", (req, res) => {
+  //connection.connect();
   connection.query(
     `update tb_config_gke set 
       "cluster" = '${req.body.cluster}',
@@ -2789,11 +2852,13 @@ app.put("/settings/config/pca/gke", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
 
 app.delete("/settings/config/pca/gke", (req, res) => {
+  //connection.connect();
   connection.query(
     `delete from tb_config_gke 
       where "seq" = '${req.body.seq}' and
@@ -2812,6 +2877,7 @@ app.delete("/settings/config/pca/gke", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
@@ -2822,11 +2888,13 @@ app.get("/settings/config/pca/aks", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
+  //connection.connect();
   connection.query(
     // tb_auth_eks > seq,cluster,type,accessKey,secretKey
     `select * from tb_config_aks;`,
     (err, result) => {
       res.send(result.rows);
+      //connection.end();
     }
   );
 });
@@ -2835,6 +2903,7 @@ app.post("/settings/config/pca/aks", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+  //connection.connect();
   connection.query(
     `insert into tb_config_aks (cluster,"clientId","clientSec","tenantId","subId") values ('${req.body.cluster}','${req.body.clientId}','${req.body.clientSec}','${req.body.tenantId}','${req.body.subId}');`,
     (err, result) => {
@@ -2844,20 +2913,21 @@ app.post("/settings/config/pca/aks", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err)
+        console.log(err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
         };
-      } 
+      }
 
       res.send(result_set);
+      //connection.end();
     }
   );
 });
 
-
 app.put("/settings/config/pca/aks", (req, res) => {
+  //connection.connect();
   connection.query(
     `update tb_config_aks set 
       "cluster" = '${req.body.cluster}',
@@ -2880,12 +2950,14 @@ app.put("/settings/config/pca/aks", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
 
 app.delete("/settings/config/pca/aks", (req, res) => {
-  console.log("ddd",req.body);
+  console.log("ddd", req.body);
+  //connection.connect();
   connection.query(
     `delete from tb_config_aks
       where "seq" = '${req.body.seq}' and
@@ -2904,16 +2976,19 @@ app.delete("/settings/config/pca/aks", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
 
 app.get("/settings/config/pca/kvm", (req, res) => {
+  //connection.connect();
   connection.query(
     // tb_auth_kvm > seq,cluster,
     `select * from tb_config_kvm;`,
     (err, result) => {
       res.send(result.rows);
+      //connection.end();
     }
   );
 });
@@ -2922,6 +2997,7 @@ app.post("/settings/config/pca/kvm", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/eks_auth.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+  //connection.connect();
   connection.query(
     `insert into tb_config_kvm (cluster,"agentURL","mClusterName","mClusterPwd") values ('${req.body.cluster}','${req.body.agentURL}','${req.body.mClusterName}','${req.body.mClusterPwd}');`,
     (err, result) => {
@@ -2931,19 +3007,21 @@ app.post("/settings/config/pca/kvm", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err)
+        console.log(err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
         };
-      } 
+      }
 
       res.send(result_set);
+      //connection.end();
     }
   );
 });
 
 app.put("/settings/config/pca/kvm", (req, res) => {
+  //connection.connect();
   connection.query(
     `update tb_config_kvm set 
       "cluster" = '${req.body.cluster}',
@@ -2965,11 +3043,13 @@ app.put("/settings/config/pca/kvm", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
 
 app.delete("/settings/config/pca/kvm", (req, res) => {
+  //connection.connect();
   connection.query(
     `delete from tb_config_kvm 
       where "seq" = '${req.body.seq}' and
@@ -2988,6 +3068,7 @@ app.delete("/settings/config/pca/kvm", (req, res) => {
         };
         res.send(result_set);
       }
+      //connection.end();
     }
   );
 });
@@ -2997,7 +3078,9 @@ app.delete("/settings/config/pca/kvm", (req, res) => {
 //////////////////////////
 app.get("/settings/threshold", (req, res) => {
   var create_time = getDateTime();
-  connection.query(`select
+  //connection.connect();
+  connection.query(
+    `select
     ht.node_name,
     ht.cluster_name,
     ht.cpu_warn,
@@ -3009,9 +3092,12 @@ app.get("/settings/threshold", (req, res) => {
     ht.created_time,
     ht.updated_time
     from tb_host_threshold ht
-    order by cluster_name, node_name;`, (err, result) => {
-    res.send(result.rows);
-  });
+    order by cluster_name, node_name;`,
+    (err, result) => {
+      res.send(result.rows);
+      //connection.end();
+    }
+  );
 });
 
 app.post("/settings/threshold", (req, res) => {
@@ -3020,79 +3106,82 @@ app.post("/settings/threshold", (req, res) => {
   INSERT INTO public.tb_host_threshold(
     node_name, cluster_name, cpu_warn, cpu_danger, ram_warn, ram_danger, storage_warn, storage_danger, created_time, updated_time)
     VALUES ('${req.body.nodeName}', '${req.body.clusterName}', ${req.body.cpuWarn}, ${req.body.cpuDanger}, ${req.body.ramWarn}, ${req.body.ramDanger}, ${req.body.storageWarn}, ${req.body.stroageDanger}, '${now}', '${now}');
-  `
+  `;
   console.log(query);
-  connection.query(query, 
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Host Threshold is saved !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Save was faild, please check Host Threshold : " + err,
-        };
-        res.send(result_set);
-      }
-    });
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Host Threshold is saved !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Save was faild, please check Host Threshold : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
 });
 
 app.put("/settings/threshold", (req, res) => {
   var now = getDateTime();
-  let query =  `
+  let query = `
   UPDATE public.tb_host_threshold
 	SET cpu_warn=${req.body.cpuWarn}, cpu_danger=${req.body.cpuDanger}, ram_warn=${req.body.ramWarn}, ram_danger=${req.body.ramDanger}, storage_warn=${req.body.storageWarn}, storage_danger=${req.body.storageDanger}, updated_time='${now}'	WHERE cluster_name='${req.body.clusterName}' AND node_name='${req.body.nodeName}';
-  `
+  `;
 
   console.log(query);
-  connection.query(query, 
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Host Threshold is updated !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Update was faild, please check threshold : " + err,
-        };
-        res.send(result_set);
-      }
-    });
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Host Threshold is updated !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild, please check threshold : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
 });
 
 app.delete("/settings/threshold", (req, res) => {
   let query = `delete from tb_host_threshold 
   where node_name = '${req.body.node}' and cluster_name = '${req.body.cluster}';`;
   // console.log(query);
-  connection.query(
-    query,
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Delete was successful!!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Delete was faild, please check error : " + err,
-        };
-        res.send(result_set);
-      }
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Delete was successful!!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Delete was faild, please check error : " + err,
+      };
+      res.send(result_set);
     }
-  );
+    //connection.end();
+  });
 });
 
 app.get("/settings/threshold/log", (req, res) => {
   var create_time = getDateTime();
-  connection.query(`select
+  //connection.connect();
+  connection.query(
+    `select
     tl.node_name,
     tl.cluster_name,
     tl.created_time,
@@ -3100,9 +3189,12 @@ app.get("/settings/threshold/log", (req, res) => {
     tl.message,
     tl.resource
     from tb_threshold_log tl
-    order by created_time desc, node_name;`, (err, result) => {
-    res.send(result.rows);
-  });
+    order by created_time desc, node_name;`,
+    (err, result) => {
+      res.send(result.rows);
+      //connection.end();
+    }
+  );
 });
 
 app.post("/settings/threshold/log", (req, res) => {
@@ -3112,24 +3204,25 @@ app.post("/settings/threshold/log", (req, res) => {
   INSERT INTO public.tb_threshold_log(
     cluster_name, node_name, created_time, status, message, resource)
     VALUES ('${req.body.clusterName}', '${req.body.nodeName}', '${now}', '${req.body.status}', '${req.body.message}', '${req.body.resource}');
-  `
+  `;
   console.log(query);
-  connection.query(query, 
-    (err, result) => {
-      if (err !== "null") {
-        const result_set = {
-          data: [],
-          message: "Host Threshold is saved !!",
-        };
-        res.send(result_set);
-      } else {
-        const result_set = {
-          data: [],
-          message: "Save was faild, please check Host Threshold : " + err,
-        };
-        res.send(result_set);
-      }
-    });
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Host Threshold is saved !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Save was faild, please check Host Threshold : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
 });
 
 //all nodes metrics
@@ -3202,8 +3295,6 @@ app.get("/apis/metering/bill", (req, res) => {
   // });
 });
 
-
-
 app.get("/apis/migration/log", (req, res) => {
   let request = require("request");
 
@@ -3215,7 +3306,7 @@ app.get("/apis/migration/log", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body)
+      console.log(body);
     } else {
       console.log("error", error);
       return error;
@@ -3224,20 +3315,18 @@ app.get("/apis/migration/log", (req, res) => {
 });
 
 app.post("/apis/migration", (req, res) => {
-  // const YAML = req.body.yaml
-  // console.log(YAML)
   let data = JSON.stringify(req.body);
   let request = require("request");
   let options = {
     uri: `${apiServer}/apis/migration`,
     method: "POST",
-    body: data
+    body: data,
   };
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body)
+      console.log(body);
     } else {
       console.log("error", error);
       return error;
@@ -3245,7 +3334,79 @@ app.post("/apis/migration", (req, res) => {
   });
 });
 
+app.get("/apis/snapshot", (req, res) => {
+  let request = require("request");
+
+  let options = {
+    uri: `${apiServer}/apis/snapshot`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+      console.log(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.post("/apis/snapshot", (req, res) => {
+  let data = JSON.stringify(req.body);
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/snapshot`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.post("/apis/snapshot/restore", (req, res) => {
+  let data = JSON.stringify(req.body);
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/snapshot/restore`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.get("/apis/snapshot/log", (req, res) => {
+  let request = require("request");
+
+  let options = {
+    uri: `${apiServer}/apis/snapshot/log`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
-
-

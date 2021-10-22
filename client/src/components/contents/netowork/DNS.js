@@ -288,41 +288,41 @@ spec:
           <Paper>
             {this.state.rows ? (
               [
-                <div style={{
-                  position: "absolute",
-                  right: "21px",
-                  top: "20px",
-                  zIndex: "10",
-                  textTransform: "capitalize",
-                }}>
-                  <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  {/* <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
-                    {({ TransitionProps, placement }) => (
-                      <Grow
-                      {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
-                      >
-                        <Paper>
-                          <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
-                                <Editor btTitle="create" title="Create DNS" context={this.state.editorContext} excuteScript={this.excuteScript}
-                                 menuClose={handleClose}
-                                 />
-                              </MenuItem>
-                            </MenuList>
-                          </Paper>
-                      </Grow>
-                    )}
-                  </Popper> */}
+                // <div style={{
+                //   position: "absolute",
+                //   right: "21px",
+                //   top: "20px",
+                //   zIndex: "10",
+                //   textTransform: "capitalize",
+                // }}>
+                //   <IconButton
+                //     aria-label="more"
+                //     aria-controls="long-menu"
+                //     aria-haspopup="true"
+                //     onClick={handleClick}
+                //   >
+                //     <MoreVertIcon />
+                //   </IconButton>
+                //    <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                //     {({ TransitionProps, placement }) => (
+                //       <Grow
+                //       {...TransitionProps}
+                //       style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                //       >
+                //         <Paper>
+                //           <MenuList autoFocusItem={open} id="menu-list-grow">
+                //               <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
+                //                 <Editor btTitle="create" title="Create DNS" context={this.state.editorContext} excuteScript={this.excuteScript}
+                //                  menuClose={handleClose}
+                //                  />
+                //               </MenuItem>
+                //             </MenuList>
+                //           </Paper>
+                //       </Grow>
+                //     )}
+                //   </Popper> 
                   
-                </div>,
+                // </div>,
                 <Grid
                   rows={this.state.rows}
                   columns={this.state.columns}

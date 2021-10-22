@@ -12,7 +12,6 @@ import Slider from "@material-ui/core/Slider";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
-import SelectBox from "../../../modules/SelectBox.js";
 import { TextField } from "@material-ui/core";
 
 const styles = (theme) => ({
@@ -27,21 +26,60 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
-
-class PcSetTextValuePolicy extends Component {
+class PcSetLoadbalancingControllerPolicy extends Component {
   constructor(props) {
     super(props);
     // this.g_rate_max = 10;
     // this.period_max = 10;
     this.state = {
-      textValue:"",
       open: false,
       policyData: [],
+      float_marks: [],
+      int_marks : []
     };
-    // this.onChange = this.onChange.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    let marks=[];
+    let step= 0.1;
+    for (let i = 0; i <= 1; i = i + step) {
+      if (i === 0 || i.toFixed(1) === "1.0") {
+        marks.push({ value: i, label: i.toFixed(0) });
+      } else {
+        marks.push({
+          value: i,
+          label: step < 1 ? i.toFixed(1) : i.toString(),
+        });
+      }
+    }
+    
+    let marks2=[];
+    let step2= 5;
+    for (let i = 0; i <= 100; i = i + step2) {
+      marks2.push({ value: i, label: i.toString() });
+    }
+
+    this.setState({ float_marks: marks, int_marks: marks2 });
+  }
+
+  onChange(e, newValue) {
+    if (e.target.id !== "") {
+      let tempData = this.state.policyData;
+      tempData[e.target.id].value = newValue;
+    }
+  }
+
+  onTxtChange = (e) => {
+    if(e.target.id !== ""){
+      let tempData = this.state.policyData;
+      tempData[e.target.id].value = e.target.value;
+
+      this.setState({
+        policyData: tempData,
+      });
+    }
+  };
 
   handleClickOpen = () => {
     if (Object.keys(this.props.policy).length === 0) {
@@ -58,34 +96,16 @@ class PcSetTextValuePolicy extends Component {
         let itemSplit = item.split(" : ");
         policyData.push({
           key: itemSplit[0],
-          value: itemSplit[1],
+          value: parseFloat(itemSplit[1]),
         });
       });
+    console.log(policyData);
 
     this.setState({
       open: true,
       policyData: policyData,
-      // textValue: policyData[0].value
     });
   };
-
-  onChange = (e) => {
-    // this.setState({
-    //   // [e.target.name]: e.target.value,
-    //   textValue: e.target.value,
-    // });
-
-    if(e.target.id !== ""){
-      let tempData = this.state.policyData;
-      tempData[0].value = e.target.value;
-
-      this.setState({
-        policyData: tempData,
-      });
-    }
-  };
-
-
 
   handleClose = () => {
     this.setState({ open: false });
@@ -93,18 +113,15 @@ class PcSetTextValuePolicy extends Component {
 
   handleSave = (e) => {
     let valueData = [];
-    this.state.policyData.forEach((item, index)=>{
-
-      // {"op": "replace", "path": "/spec/template/spec/policies/0/value/0", "value": "Unequal"}
-
+    this.state.policyData.forEach((item, index) => {
       let object = {
         op: "replace",
-        path: "/spec/template/spec/policies/"+index.toString()+"/value/0",
+        path: "/spec/template/spec/policies/" + index.toString() + "/value/0",
         value: item.value.toString(),
-      }
+      };
 
       valueData.push(object);
-    })
+    });
 
     // Save modification data (Policy Changed)
     const url = `/settings/policy/openmcp-policy`;
@@ -133,7 +150,7 @@ class PcSetTextValuePolicy extends Component {
       });
     this.setState({ open: false });
   };
-
+  
   render() {
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
@@ -154,7 +171,6 @@ class PcSetTextValuePolicy extends Component {
         </div>
       );
     });
-
 
     return (
       <div>
@@ -185,26 +201,58 @@ class PcSetTextValuePolicy extends Component {
             {this.props.policyName}
           </DialogTitle>
           <DialogContent dividers>
-            <div className="pd-resource-config select">
+            <div className="pd-resource-config">
               {this.state.policyData.map((item, index) => {
                 return (
                   <div className="res">
-                    <Typography id="select-mode" gutterBottom>
+                    <Typography id="range-slider" gutterBottom>
                       {item.key}
                     </Typography>
-
-                    <section className="md-content">
-                      <TextField
-                        id="outlined-multiline-static"
-                        rows={1}
-                        placeholder={item.key}
-                        variant="outlined"
-                        value={this.state.policyData[0].value}
-                        fullWidth={true}
-                        name={'textValue'+index.toString()}
+                    {
+                      item.key=== "GeoRate" ?
+                        <Slider
+                        id={index}
+                        className="sl"
+                        name="policyData"
+                        defaultValue={item.value}
                         onChange={this.onChange}
+                        valueLabelDisplay="auto"
+                        aria-labelledby="range-slider"
+                        // getAriaValueText={valuetext}
+                        step={null}
+                        min={0}
+                        max={1}
+                        // marks={this.props.isFloat ? this.g_float_marks : this.g_int_marks}
+                        marks={this.state.float_marks}
+                      /> : item.key === "Period" ? 
+                      <section className="md-content">
+                        <TextField
+                          id={index}
+                          rows={1}
+                          placeholder={item.key}
+                          variant="outlined"
+                          value={this.state.policyData[index].value}
+                          fullWidth={true}
+                          name={'textValue'+index.toString()}
+                          onChange={this.onTxtChange}
+                        />
+                      </section>
+                      : <Slider
+                        id={index}
+                        className="sl"
+                        name="policyData"
+                        defaultValue={item.value}
+                        onChange={this.onChange}
+                        valueLabelDisplay="auto"
+                        aria-labelledby="range-slider"
+                        // getAriaValueText={valuetext}
+                        step={null}
+                        min={0}
+                        max={100}
+                        // marks={this.props.isFloat ? this.g_float_marks : this.g_int_marks}
+                        marks={this.state.int_marks}
                       />
-                    </section>
+                    }
                   </div>
                 );
               })}
@@ -224,4 +272,4 @@ class PcSetTextValuePolicy extends Component {
   }
 }
 
-export default PcSetTextValuePolicy;
+export default PcSetLoadbalancingControllerPolicy;

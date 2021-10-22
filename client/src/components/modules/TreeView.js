@@ -175,47 +175,47 @@ class UnjoinedNodeLabel extends Component {
           : [
               <ContextMenuTrigger id={contextId}>
                 {/* <Link to={"/clusters/" + nodeData.name + "/overview"}> */}
-                  <FaServer
-                    style={{
-                      fontSize: "30px",
-                      color: "#a9a9a9",
-                      stroke: "none",
-                      background: "#ffffff",
-                    }}
-                  />
-                  <div
-                    class=""
+                <FaServer
+                  style={{
+                    fontSize: "30px",
+                    color: "#a9a9a9",
+                    stroke: "none",
+                    background: "#ffffff",
+                  }}
+                />
+                <div
+                  class=""
+                  style={{
+                    color: "#a9a9a9",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginTop: "-8px",
+                  }}
+                >
+                  {nodeData.name}
+                </div>
+                <div class="" style={{ fontSize: "14px", marginTop: "-6px" }}>
+                  <span
                     style={{
                       color: "#a9a9a9",
                       fontSize: "14px",
-                      fontWeight: "bold",
-                      marginTop: "-8px",
+                      marginRight: 0,
                     }}
                   >
-                    {nodeData.name}
-                  </div>
-                  <div class="" style={{ fontSize: "14px", marginTop: "-6px" }}>
-                    <span
-                      style={{
-                        color: "#a9a9a9",
-                        fontSize: "14px",
-                        marginRight: 0,
-                      }}
-                    >
-                      {nodeData.attributes.region}
-                    </span>
-                  </div>
-                  <div class="" style={{ fontSize: "14px", marginTop: "-6px" }}>
-                    <span
-                      style={{
-                        color: "#a9a9a9",
-                        fontSize: "12px",
-                        marginRight: 0,
-                      }}
-                    >
-                      {nodeData.attributes.zone}
-                    </span>
-                  </div>
+                    {nodeData.attributes.region}
+                  </span>
+                </div>
+                <div class="" style={{ fontSize: "14px", marginTop: "-6px" }}>
+                  <span
+                    style={{
+                      color: "#a9a9a9",
+                      fontSize: "12px",
+                      marginRight: 0,
+                    }}
+                  >
+                    {nodeData.attributes.zone}
+                  </span>
+                </div>
                 {/* </Link> */}
               </ContextMenuTrigger>,
               <ContextMenu
@@ -306,6 +306,7 @@ class TreeView extends React.Component {
       // <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
       <div style={{ width: "100%" }}>
         <div>
+        {this.state.data.length > 0 ? (
           <div style={containerStyles} ref={(tc) => (this.treeContainer = tc)}>
             <Tree
               data={this.state.data[0]}
@@ -333,33 +334,45 @@ class TreeView extends React.Component {
               styles={styles}
             />
           </div>
-          <div style={containerStyles} ref={(tc) => (this.treeContainer = tc)}>
-            <Tree
-              data={this.state.data[1]}
-              pathFunc="diagonal" //
-              nodeSvgShape={svgSquare}
-              collapsible={false}
-              zoomable={false}
-              separation={{ siblings: 0.5, nonSiblings: 2 }}
-              // nodeSvgShape={svgSquare2}
-              transitionDuration="0"
-              translate={this.state.translate}
-              orientation="vertical" //horizontal
-              allowForeignObjects
-              nodeLabelComponent={{
-                render: <UnjoinedNodeLabel className="myLabelComponentInSvg" />,
-                // <StorageIcon style={{ fontSize:"43px", color: "#367fa9", stroke: "none" }}/>,
-                foreignObjectWrapper: {
-                  // width:"250px",
-                  y: -30,
-                  // x: -60,
-                  x: -58,
-                  style: { textAlign: "center", cursor: "default" },
-                },
-              }}
-              styles={styles}
-            />
-          </div>
+          ) : (
+            <div></div>
+          )}
+          {this.state.data.length > 1 ? (
+            <div
+              style={containerStyles}
+              ref={(tc) => (this.treeContainer = tc)}
+            >
+              <Tree
+                data={this.state.data[1]}
+                pathFunc="diagonal" //
+                nodeSvgShape={svgSquare}
+                collapsible={false}
+                zoomable={false}
+                separation={{ siblings: 0.5, nonSiblings: 2 }}
+                // nodeSvgShape={svgSquare2}
+                transitionDuration="0"
+                translate={this.state.translate}
+                orientation="vertical" //horizontal
+                allowForeignObjects
+                nodeLabelComponent={{
+                  render: (
+                    <UnjoinedNodeLabel className="myLabelComponentInSvg" />
+                  ),
+                  // <StorageIcon style={{ fontSize:"43px", color: "#367fa9", stroke: "none" }}/>,
+                  foreignObjectWrapper: {
+                    // width:"250px",
+                    y: -30,
+                    // x: -60,
+                    x: -58,
+                    style: { textAlign: "center", cursor: "default" },
+                  },
+                }}
+                styles={styles}
+              />
+            </div>
+          ) : (
+            <div></div>
+          )}
         </div>
       </div>
     );

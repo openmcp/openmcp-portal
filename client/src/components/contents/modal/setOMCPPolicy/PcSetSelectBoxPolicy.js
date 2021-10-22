@@ -13,7 +13,6 @@ import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
 import SelectBox from "../../../modules/SelectBox.js";
-import { TextField } from "@material-ui/core";
 
 const styles = (theme) => ({
   root: {
@@ -28,13 +27,12 @@ const styles = (theme) => ({
   },
 });
 
-class PcSetTextValuePolicy extends Component {
+class PcSetSelectBoxPolicy extends Component {
   constructor(props) {
     super(props);
     // this.g_rate_max = 10;
     // this.period_max = 10;
     this.state = {
-      textValue:"",
       open: false,
       policyData: [],
     };
@@ -61,30 +59,20 @@ class PcSetTextValuePolicy extends Component {
           value: itemSplit[1],
         });
       });
+    console.log(policyData);
 
     this.setState({
       open: true,
       policyData: policyData,
-      // textValue: policyData[0].value
     });
   };
 
-  onChange = (e) => {
-    // this.setState({
-    //   // [e.target.name]: e.target.value,
-    //   textValue: e.target.value,
-    // });
+  selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}];
 
-    if(e.target.id !== ""){
+  onSelectBoxChange = (data) => {
       let tempData = this.state.policyData;
-      tempData[0].value = e.target.value;
-
-      this.setState({
-        policyData: tempData,
-      });
-    }
-  };
-
+      tempData[0].value = data;
+  }
 
 
   handleClose = () => {
@@ -192,19 +180,8 @@ class PcSetTextValuePolicy extends Component {
                     <Typography id="select-mode" gutterBottom>
                       {item.key}
                     </Typography>
-
-                    <section className="md-content">
-                      <TextField
-                        id="outlined-multiline-static"
-                        rows={1}
-                        placeholder={item.key}
-                        variant="outlined"
-                        value={this.state.policyData[0].value}
-                        fullWidth={true}
-                        name={'textValue'+index.toString()}
-                        onChange={this.onChange}
-                      />
-                    </section>
+                    <SelectBox rows={this.selectBoxData} onSelectBoxChange={this.onSelectBoxChange}
+                      defaultValue={item.value}></SelectBox>
                   </div>
                 );
               })}
@@ -224,4 +201,4 @@ class PcSetTextValuePolicy extends Component {
   }
 }
 
-export default PcSetTextValuePolicy;
+export default PcSetSelectBoxPolicy;

@@ -1,3 +1,5 @@
+
+
 --==================================================================================
 -- tb_account_role
 --==================================================================================
@@ -64,6 +66,16 @@ ALTER TABLE public.tb_codes
 --==================================================================================
 --tb_config_aks
 --==================================================================================
+CREATE SEQUENCE public.tb_config_aks_seq_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.tb_config_aks_seq_seq
+    OWNER TO postgres;
+
 CREATE TABLE IF NOT EXISTS public.tb_config_aks
 (
     seq integer NOT NULL DEFAULT nextval('tb_config_aks_seq_seq'::regclass),
@@ -86,6 +98,16 @@ ALTER TABLE public.tb_config_aks
 --==================================================================================
 --tb_config_eks
 --==================================================================================
+CREATE SEQUENCE public.tb_config_eks_seq_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.tb_config_eks_seq_seq
+    OWNER TO postgres;
+
 CREATE TABLE IF NOT EXISTS public.tb_config_eks
 (
     seq integer NOT NULL DEFAULT nextval('tb_config_eks_seq_seq'::regclass),
@@ -108,6 +130,16 @@ ALTER TABLE public.tb_config_eks
 --==================================================================================
 --tb_config_gke
 --==================================================================================
+CREATE SEQUENCE public.tb_config_gke_seq_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.tb_config_gke_seq_seq
+    OWNER TO postgres;
+
 CREATE TABLE IF NOT EXISTS public.tb_config_gke
 (
     seq integer NOT NULL DEFAULT nextval('tb_config_gke_seq_seq'::regclass),
@@ -131,6 +163,16 @@ ALTER TABLE public.tb_config_gke
 --==================================================================================
 --tb_config_kvm
 --==================================================================================
+CREATE SEQUENCE public.tb_config_kvm_seq_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public.tb_config_kvm_seq_seq
+    OWNER TO postgres;
+
 CREATE TABLE IF NOT EXISTS public.tb_config_kvm
 (
     seq integer NOT NULL DEFAULT nextval('tb_config_kvm_seq_seq'::regclass),
@@ -149,7 +191,39 @@ TABLESPACE pg_default;
 ALTER TABLE public.tb_config_kvm
     OWNER to postgres;
 
+--==================================================================================
+--tb_group_role
+--==================================================================================
+CREATE SEQUENCE public.tb_group_auth_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
+ALTER SEQUENCE public.tb_group_auth_seq
+    OWNER TO postgres;
+    
+CREATE TABLE IF NOT EXISTS public.tb_group_role
+(
+    group_id integer NOT NULL DEFAULT nextval('tb_group_auth_seq'::regclass),
+    group_name character varying COLLATE pg_catalog."default" NOT NULL,
+    role_id character varying[] COLLATE pg_catalog."default",
+    description character varying COLLATE pg_catalog."default",
+    member character varying[] COLLATE pg_catalog."default",
+    projects character varying[] COLLATE pg_catalog."default",
+    CONSTRAINT tb_group_role_pkey PRIMARY KEY (group_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+
+ALTER TABLE public.tb_group_role
+    OWNER to postgres;
+
+    
 --==================================================================================
 --tb_group_member
 --==================================================================================
@@ -177,28 +251,6 @@ ALTER TABLE public.tb_group_member
     OWNER to postgres;
 
 --==================================================================================
---tb_group_role
---==================================================================================
-CREATE TABLE IF NOT EXISTS public.tb_group_role
-(
-    group_id integer NOT NULL DEFAULT nextval('tb_group_auth_seq'::regclass),
-    group_name character varying COLLATE pg_catalog."default" NOT NULL,
-    role_id character varying[] COLLATE pg_catalog."default",
-    description character varying COLLATE pg_catalog."default",
-    member character varying[] COLLATE pg_catalog."default",
-    projects character varying[] COLLATE pg_catalog."default",
-    CONSTRAINT tb_group_role_pkey PRIMARY KEY (group_id)
-)
-WITH (
-    OIDS = FALSE
-)
-TABLESPACE pg_default;
-
-
-ALTER TABLE public.tb_group_role
-    OWNER to postgres;
-
---==================================================================================
 --tb_host_threshold
 --==================================================================================
 CREATE TABLE IF NOT EXISTS public.tb_host_threshold
@@ -222,7 +274,7 @@ TABLESPACE pg_default;
 
 
 ALTER TABLE public.tb_host_threshold
-    OWNER to scshin;
+    OWNER to postgres;
 
 
 
@@ -243,7 +295,7 @@ TABLESPACE pg_default;
 
 
 ALTER TABLE public.tb_portal_logs
-    OWNER to scshin;
+    OWNER to postgres;
 
 --==================================================================================
 --tb_replica_status
@@ -263,7 +315,7 @@ TABLESPACE pg_default;
 
 
 ALTER TABLE public.tb_replica_status
-    OWNER to scshin;
+    OWNER to postgres;
 
 --==================================================================================
 --tb_threshold_log
@@ -285,7 +337,7 @@ TABLESPACE pg_default;
 
 
 ALTER TABLE public.tb_threshold_log
-    OWNER to scshin;
+    OWNER to postgres;
 
 --==================================================================================
 --tb_policy
