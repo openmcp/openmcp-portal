@@ -221,34 +221,7 @@ app.post("/user_login", (req, res) => {
   );
 });
 
-///////////////////////
-// Dashboard APIs
-///////////////////////
-app.get("/dashboard", (req, res) => {
-  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
-  // let overview = JSON.parse(rawdata);
-  // res.send(overview);
 
-  var request = require("request");
-  var options = {
-    uri: `${apiServer}/apis/dashboard`,
-    method: "GET",
-    // headers: {
-    //   Authorization:
-    //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-    // },
-  };
-
-  request(options, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      // console.log("result", body);
-      res.send(body);
-    } else {
-      console.log("error", error);
-      return error;
-    }
-  });
-});
 
 app.get("/dashboard-master-cluster", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/dashboard_master_cluster.json");
@@ -3408,5 +3381,131 @@ app.get("/apis/snapshot/log", (req, res) => {
     }
   });
 });
+
+///////////////////////
+// Dashboard APIs
+///////////////////////
+app.get("/apis/dashboard/components", (req, res) => {
+  let userId = req.query.userId
+  let query = 
+  `select cd.code,cd.description, dash.mycomp
+  from tb_codes cd
+  left outer join (
+       select UNNEST( ds.component ::TEXT[] ) myComp
+    from tb_dashboard ds
+    where ds.user_id = '${userId}') dash on cd.code = dash.myComp
+  where cd.kinds = 'DASHBOARD'
+  order by cd.code;`
+  connection.query(
+    query,
+    (err, result) => {
+      res.send(result.rows);
+    }
+  );
+});
+
+
+app.put("/apis/dashboard/components", (req, res) => {
+  let query = `
+  update tb_dashboard set  component = '{${req.body.myComponents}}'
+  where user_id ='${req.body.userId}'`;
+
+  // console.log(query);
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Group role is updated !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild, please check policy : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
+});
+
+app.get("/apis/dashboard/status", (req, res) => {
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/dashboard/status`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.get("/apis/dashboard/region_groups", (req, res) => {
+
+  // let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/dashboard/region_groups`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.get("/apis/dashboard/omcp", (req, res) => {
+
+  //   let rawdata = fs.readFileSync("./json_data/dashboard.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/dashboard/omcp`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.get("/apis/dashboard/world_cluster_map", (req, res) => {
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/dashboard/world_cluster_map`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

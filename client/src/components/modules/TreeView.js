@@ -269,6 +269,7 @@ class TreeView extends React.Component {
         x: dimensions.width / 2,
         y: dimensions.height / 4.5,
       },
+      translateY : dimensions.height / 4.5
     });
   }
 
@@ -294,17 +295,25 @@ class TreeView extends React.Component {
     };
 
     const containerStyles = {
-      width: "100%",
+      width: 100*this.state.data[0].children.length+"px",
+      // width: "100%",
       height: "40vh",
-      float: "left",
-      // width: 100/myTreeData.length+"%",
       // border:"1px solid #000",
+      float:"left"
     };
+
+    // const containerStyles = {
+    //   width: "100%",
+    //   height: "40vh",
+    //   float: "left",
+    //   // width: 100/myTreeData.length+"%",
+    //   // border:"1px solid #000",
+    // };
 
     return (
       /* <Tree /> will fill width/height of its container; in this case `#treeWrapper` */
       // <div id="treeWrapper" style={{ width: "50em", height: "20em" }}>
-      <div style={{ width: "100%" }}>
+      <div>
         <div>
         {this.state.data.length > 0 ? (
           <div style={containerStyles} ref={(tc) => (this.treeContainer = tc)}>
@@ -317,7 +326,10 @@ class TreeView extends React.Component {
               separation={{ siblings: 0.5, nonSiblings: 2 }}
               // nodeSvgShape={svgSquare2}
               transitionDuration="0"
-              translate={this.state.translate}
+              translate={{
+                x: 100*this.state.data[0].children.length / 2,
+                y: this.state.translateY,
+              }}
               orientation="vertical" //horizontal
               allowForeignObjects
               nodeLabelComponent={{

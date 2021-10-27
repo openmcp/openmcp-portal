@@ -111,7 +111,7 @@ class LeftMenu2 extends Component {
       },
       {
         type: "multi",
-        title: "Advenced",
+        title: "Motions",
         path: "/maintenance/Migrations",
         icon : <AiFillDashboard className="leftMenu-main-icon"/>,
         sub: [

@@ -141,6 +141,11 @@ insert into tb_codes values ('EKS-TYPE','EKS.t3.medium','AWS EKS t3.medium insta
 insert into tb_codes values ('EKS-TYPE','EKS.t3.micro','AWS EKS t3.micro instance type','cpu:2 / memory:1');
 insert into tb_codes values ('EKS-TYPE','EKS.t3.small','AWS EKS t3.small instance type','cpu:2 / memory:2');
 
+-- Dashboard module
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP01','system_status','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP02','cluster_groups','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP03','openmcp_management_clusters','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP04','world_cluster_status','');
 
 --tb_account_role
 INSERT INTO public.tb_account_role VALUES ('admin', 'Administrator', 'System Administrator');
@@ -148,3 +153,4 @@ INSERT INTO public.tb_account_role VALUES ('user', 'User', 'Openmcp Portal User'
 
 --tb_accounts
 INSERT INTO public.tb_accounts VALUES ('openmcpadmin','$2b$10$nvkN2RtN5/8UNHhNEVGDiOF8WIwdiPp/P7SU/DibOtPzaRXUoBG8y','{omcp_monitor}','2021-10-12 13:43:24','2021-10-12 13:43:24')
+

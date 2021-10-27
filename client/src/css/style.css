@@ -2157,6 +2157,9 @@ g {
   margin-right: 5px;
 }
 
+.dashboard-main .dash-comp{
+  float:left;
+}
 
 .MuiSwitch-switchBase.Mui-checked {
   color : #ffffff;
@@ -2164,7 +2167,6 @@ g {
 .MuiSwitch-switchBase.Mui-checked:hover{
   background-color : rgba(255, 192, 203, 0);
 }
-
 
 .MuiSwitch-switchBase.Mui-checked {
   background-color : rgba(255, 192, 203, 0);

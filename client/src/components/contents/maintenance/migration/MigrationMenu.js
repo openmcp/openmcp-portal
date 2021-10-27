@@ -111,7 +111,7 @@ class MigrationMenu extends Component {
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                <NavLink to="/maintenance">Maintenance</NavLink>
+                <NavLink to="/maintenance">Motions</NavLink>
               </li>
               <li className="active">
                 <NavigateNext

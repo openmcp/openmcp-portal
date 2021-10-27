@@ -58,34 +58,55 @@ class DashboardSelectModule extends Component {
     }
   }
 
-  componentWillMount() {}
+  callApi = async () => {
+    //업데이트구문으로 수정
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    const response = await fetch(`/dashboard`);
+    const body = await response.json();
+    return body;
+  };
+
+  componentDidMount() {
+  }
 
   onChange(e) {}
 
   handleClickOpen = () => {
     this.setState({
-      open: true
+      open: true,
+      left: this.props.componentList,
+      right: this.props.myComponentList
     });
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({checked : [], open: false });
   };
 
   
   handleSave = (e) => {
     //DB에 대시보드 표시 항목을 저장
-    const url = `/settings/policy/openmcp-policy`;
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+
+    const url = `/apis/dashboard/components`;
+    let myComp = [];
+    this.props.componentCodes.forEach((item)=>{
+      for(let i=0; i<this.state.right.length; i++){
+        if(item.description === this.state.right[i]){
+          myComp.push(item.code);
+          break;
+        }
+      }
+    })
     const data = {
-      policyId: this.state.policyId,
-      rate: {
-        start: this.state.g_rate_value[0],
-        end: this.state.g_rate_value[1],
-      },
-      period: {
-        start: this.state.period_value[0],
-        end: this.state.period_value[1],
-      },
+      myComponents: myComp,
+      userId: userId,
     };
 
     axios
@@ -95,26 +116,17 @@ class DashboardSelectModule extends Component {
         if (res.data.data.rowCount > 0) {
           // log - policy update
         } else {
+          this.setState({checked : [], open: false });
           this.props.onUpdateData();
           // console.log("sdfsdf",this.props)
-          let userId = null;
-          AsyncStorage.getItem("userName", (err, result) => {
-            userId = result;
-          });
-          utilLog.fn_insertPLogs(userId, "log-PO-MD01");
+          
+          utilLog.fn_insertPLogs(userId, "log-DB-MD01");
           alert(res.data.message);
         }
       })
       .catch((err) => {
         alert(err);
       });
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-PD-MD01");
-    this.setState({ open: false });
   };
 
   render() {

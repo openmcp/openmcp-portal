@@ -339,6 +339,24 @@ TABLESPACE pg_default;
 ALTER TABLE public.tb_threshold_log
     OWNER to postgres;
 
+
+--==================================================================================
+--tb_dashboard
+--==================================================================================
+CREATE TABLE IF NOT EXISTS public.tb_dashboard
+(
+    user_id character varying COLLATE pg_catalog."default" NOT NULL,
+    component character varying[] COLLATE pg_catalog."default",
+    CONSTRAINT tb_dashboard_pkey PRIMARY KEY (user_id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.tb_dashboard
+    OWNER to postgres;
+
 --==================================================================================
 --tb_policy
 --==================================================================================

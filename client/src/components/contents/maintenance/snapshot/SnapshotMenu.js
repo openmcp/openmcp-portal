@@ -112,7 +112,7 @@ class SnapshotMenu extends Component {
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                <NavLink to="/settings">Maintenance</NavLink>
+                <NavLink to="/settings">Motions</NavLink>
               </li>
               <li className="active">
                 <NavigateNext
