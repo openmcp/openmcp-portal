@@ -153,16 +153,16 @@ class ExcuteMigration extends Component {
           "namespace": "openmcp"
         },
         "spec": {
-          "MigrationServiceSource": [
+          "migrationServiceSource": [
             {
-              "SourceCluster": this.props.rowData[0].cluster,
-              "TargetCluster": this.state.selectedRow[0].name,
-              "NameSpace": this.props.rowData[0].project,
-              "ServiceName": "migration-srv",
-              "MigrationSource": [
+              "sourceCluster": this.props.rowData[0].cluster,
+              "targetCluster": this.state.selectedRow[0].name,
+              "nameSpace": this.props.rowData[0].project,
+              "serviceName": "migration-srv",
+              "migrationSource": [
                 {
-                  "ResourceName": this.props.rowData[0].name,
-                  "ResourceType": "Deployment"
+                  "resourceName": this.props.rowData[0].name,
+                  "resourceType": "Deployment"
                 }
               ]
             }
@@ -171,30 +171,32 @@ class ExcuteMigration extends Component {
       }
     }
 
-    axios
-      .post(url, data)
-      .then((res) => {
-        alert(res.data.message);
-        this.setState({ open: false });
-        this.props.onUpdateData();
-        this.props.menuClose();
-      })
-      .catch((err) => {
-        alert(err);
-      });
+    console.log(data);
 
-    this.props.onUpdateData();
+    // axios
+    //   .post(url, data)
+    //   .then((res) => {
+    //     alert(res.data.message);
+    //     this.setState({ open: false });
+    //     this.props.onUpdateData();
+    //     this.props.menuClose();
+    //   })
+    //   .catch((err) => {
+    //     alert(err);
+    //   });
 
-    // loging deployment migration
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-MG-MD01");
+    // this.props.onUpdateData();
 
-    //close modal popup
-    this.setState({ open: false });
-    this.props.menuClose();
+    // // loging deployment migration
+    // let userId = null;
+    // AsyncStorage.getItem("userName", (err, result) => {
+    //   userId = result;
+    // });
+    // utilLog.fn_insertPLogs(userId, "log-MG-MD01");
+
+    // //close modal popup
+    // this.setState({ open: false });
+    // this.props.menuClose();
   };
 
   render() {

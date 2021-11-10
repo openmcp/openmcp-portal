@@ -1201,6 +1201,39 @@ tbody {
   display: "inline";
 }
 
+
+
+/* Grid 설정 */
+.MuiToolbar-root {
+  border: 0px !important;
+}
+
+.MuiToolbar-root > div:first-child {
+  margin-left: 0 !important;
+}
+
+.MuiTable-root {
+  /* padding: 0 19px 19px 19px; */
+  border-right: 1px solid rgba(224, 224, 224, 1);
+}
+.MuiTableHead-root .MuiTableCell-root {
+  text-align: center !important;
+}
+
+.MuiTableCell-head {
+  border-top: 1px solid rgba(224, 224, 224, 1);
+}
+
+.MuiTableSortLabel-root:hover .MuiTableSortLabel-icon {
+  display: block !important;
+}
+
+/* .MuiTableSortLabel-root:hover  */
+.MuiTableSortLabel-icon {
+  display: none !important;
+}
+
+
 /* Grid 테이블 수정 */
 .MuiPaper-elevation1 {
   /* box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12); */
@@ -1252,9 +1285,14 @@ tbody {
 }
 
 .MuiTableCell-root {
-  padding-top: 14px !important;
-  padding-bottom: 14px !important;
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
   font-size: 13px !important;
+  border-left: 1px solid rgba(224, 224, 224, 1);
+}
+
+.MuiTableCell-root:first-child {
+  border-left: 0px solid rgba(224, 224, 224, 1);
 }
 
 .MuiTableCell-root p {

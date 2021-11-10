@@ -7,15 +7,15 @@ var path = require("path");
 const data = fs.readFileSync("./config.json");
 const conf = JSON.parse(data);
 
-const isLocal = true;
-if (!isLocal) {
-  conf.api.url = process.env.api_url;
-  conf.db.user = process.env.db_user;
-  conf.db.host = process.env.db_host;
-  conf.db.database = process.env.db_database;
-  conf.db.password = process.env.db_password;
-  conf.db.port = process.env.db_port;
-}
+// const isLocal = true;
+// if (!isLocal) {
+//   conf.api.url = process.env.api_url;
+//   conf.db.user = process.env.db_user;
+//   conf.db.host = process.env.db_host;
+//   conf.db.database = process.env.db_database;
+//   conf.db.password = process.env.db_password;
+//   conf.db.port = process.env.db_port;
+// }
 
 const createTableScript = fs
   .readFileSync("./db_script/opencmp_portal_create_table_.sql")
@@ -928,7 +928,8 @@ app.get("/clusters", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  // console.log("cluster")
+  console.log("cluster")
+
 
   var request = require("request");
   var options = {
@@ -3407,10 +3408,11 @@ app.get("/apis/dashboard/components", (req, res) => {
 
 app.put("/apis/dashboard/components", (req, res) => {
   let query = `
-  update tb_dashboard set  component = '{${req.body.myComponents}}'
-  where user_id ='${req.body.userId}'`;
+  INSERT INTO tb_dashboard (user_id, component) VALUES ('${req.body.userId}', '{${req.body.myComponents}}') ON CONFLICT(user_id) DO
+  UPDATE SET component='{${req.body.myComponents}}'
+  `;
 
-  // console.log(query);
+  console.log(query);
   connection.query(query, (err, result) => {
     if (err !== "null") {
       const result_set = {
@@ -3506,6 +3508,5 @@ app.get("/apis/dashboard/world_cluster_map", (req, res) => {
     }
   });
 });
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

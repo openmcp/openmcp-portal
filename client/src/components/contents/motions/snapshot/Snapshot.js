@@ -24,7 +24,7 @@ import {
   TableRowDetail,
   TableColumnVisibility,
 } from "@devexpress/dx-react-grid-material-ui";
-import * as utilLog from "./../../../util/UtLogs.js";
+import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";

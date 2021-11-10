@@ -56,7 +56,7 @@ class LeftMenu2 extends Component {
             icon : <RiDashboardFill className="leftMenu-sub-icon"/>,
           },
           // {
-          //   title: "Multiple Metrics",
+          //   title: "Multiple Metrics", //수집정보
           //   path: "/dashboard",
           //   icon : <AiOutlineDashboard className="leftMenu-sub-icon"/>,
           // },
@@ -112,17 +112,17 @@ class LeftMenu2 extends Component {
       {
         type: "multi",
         title: "Motions",
-        path: "/maintenance/Migrations",
+        path: "/motions/Migrations",
         icon : <AiFillDashboard className="leftMenu-main-icon"/>,
         sub: [
           {
             title: "Migrations",
-            path: "/maintenance/migration",
+            path: "/motions/migration",
             icon : <RiInboxUnarchiveLine className="leftMenu-sub-icon"/>,
           },
           {
             title: "Snapshots",
-            path: "/maintenance/snapshot",
+            path: "/motions/snapshot",
             icon : <HiOutlineCamera className="leftMenu-sub-icon"/>,
           },
         ],
@@ -153,11 +153,11 @@ class LeftMenu2 extends Component {
             path: "/settings/alert",
             icon : <AiFillAlert className="leftMenu-sub-icon"/>,
           },
-          // {
-          //   title: "Meterings",
-          //   path: "/settings/meterings",
-          //   icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
-          // },
+          {
+            title: "Meterings", //미터링
+            path: "/settings/meterings",
+            icon : <AiOutlineAreaChart className="leftMenu-sub-icon"/>,
+          },
           {
             title: "Config",
             path: "/settings/config",

@@ -23,6 +23,7 @@ import { AsyncStorage } from 'AsyncStorage';
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { convertUTCTime } from "../../../util/Utitlity.js";
+import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
 
 class MigrationLog extends Component {
   constructor(props) {
@@ -32,24 +33,28 @@ class MigrationLog extends Component {
         // deployment, currentCluster, targetCluster, start, end, status
         { name: "name", title: "Migration"},
         { name: "deployment", title: "Deployment"},
+        { name: "progress", title: "progress"},
+        { name: "status", title: "status"},
+        { name: "isZeroDownTime", title: "IsZeroDownTime"},
+        { name: "description", title: "Description"},
         { name: "sourceCluster", title: "Source Cluster"},
         { name: "targetCluster", title: "Target Cluster"},
         { name: "namespace", title: "Namespace"},
-        { name: "status", title: "Status"},
-        { name: "reason", title: "Reason"},
-        { name: "elapsedTime", title: "Elapsed Time"},
         { name: "creationTime", title: "Created Time"},
+        { name: "elapsedTime", title: "Elapsed Time"},
       ],
       defaultColumnWidths: [
-        { columnName: "name", width: 200 },
-        { columnName: "deployment", width: 130 },
+        { columnName: "name", width: 300 },
+        { columnName: "deployment", width: 100 },
+        { columnName: "progress", width: 100 },
+        { columnName: "status", width: 120 },
+        { columnName: "isZeroDownTime", width: 100 },
+        { columnName: "description", width: 200 },
         { columnName: "sourceCluster", width: 130 },
         { columnName: "targetCluster", width: 130 },
         { columnName: "namespace", width: 120 },
-        { columnName: "status", width: 100 },
-        { columnName: "reason", width: 400 },
-        { columnName: "elapsedTime", width: 130 },
-        { columnName: "creationTime", width: 200 },
+        { columnName: "creationTime", width: 150 },
+        { columnName: "elapsedTime", width: 110 },
       ],
       rows: "",
       selectedRowData:"",
@@ -82,23 +87,40 @@ class MigrationLog extends Component {
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then((res) => {
-        if(res === null){
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
-      
-  let userId = null;
+    .then((res) => {
+      if(res === null){
+        this.setState({ rows: [] });
+      } else {
+        this.setState({ rows: res });
+      }
+      clearInterval(this.timer);
+      this.timer = setInterval(this.repeatApiCall, 5000);
+    })
+    .catch((err) => console.log(err));
+
+    let userId = null;
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-  utilLog.fn_insertPLogs(userId, 'log-MG-VW02');
-
+    utilLog.fn_insertPLogs(userId, 'log-MG-VW02');
   };
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  repeatApiCall=()=>{
+    this.callApi()
+    .then((res) => {
+      if(res === null){
+        this.setState({ rows: [] });
+      } else {
+        this.setState({ rows: res });
+        console.log("repeat");
+      }
+    })
+    .catch((err) => console.log(err));
+  }
 
   onUpdateData = () => {
     this.setState({
@@ -132,6 +154,25 @@ class MigrationLog extends Component {
     const Cell = (props) => {
       const { column } = props;
 
+      const fn_linearProgressBar = () =>{
+        var percent ='';
+        if(props.value.indexOf(".") > -1) {
+          percent = props.value.split(".")[0]
+        } else {
+          percent = props.value.split("%")[0];
+        }
+
+        
+        return (
+          <div>
+            <p>{percent + `%`}</p>
+            <p style={{marginTop:"5px"}}>
+              <LinearProgressBar2 value={percent} total={100}/>
+            </p>
+          </div>
+        )
+      }
+
       if (
         column.name === "status"
       ) {
@@ -150,6 +191,16 @@ class MigrationLog extends Component {
                         position: "relative",
                         top: "5px",
                         color: "#00B80F",
+                      }}
+                    />
+              : props.value === "Running" ? 
+                <CheckCircleIcon
+                        style={{
+                        fontSize: "24px",
+                        marginRight: "5px",
+                        position: "relative",
+                        top: "5px",
+                        color: "#2579E7",
                       }}
                     />
               :
@@ -174,6 +225,11 @@ class MigrationLog extends Component {
           >
               <span>{convertUTCTime(new Date(props.value), "%Y-%m-%d %H:%M:%S", false)}</span>
           </Table.Cell>)
+      } else if (column.name === "progress"){
+        return (<Table.Cell>
+        {fn_linearProgressBar()}
+        </Table.Cell>)
+      // 
       } else {
         return <Table.Cell>{props.value}</Table.Cell>;
       }

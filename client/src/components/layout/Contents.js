@@ -51,14 +51,14 @@ import IngressDetail from './../contents/netowork/IngressDetail';
 import DNSDetail from './../contents/netowork/DNSDetail';
 import Config from "../contents/settings/config/Config";
 import GroupRole from './../contents/settings/GroupRole';
-import Migration from "../contents/maintenance/migration/MigrationMenu";
-import Snapshot from "../contents/maintenance/snapshot/SnapshotMenu";
+import Migration from "../contents/motions/migration/MigrationMenu";
+import Snapshot from "../contents/motions/snapshot/SnapshotMenu";
 import Threshold from "../contents/settings/alert/Alert";
 import "react-toastify/dist/ReactToastify.css";
 
 import BgThresholdCheck from './../service/BgThresholdCheck';
-import MigrationMenu from "../contents/maintenance/migration/MigrationMenu";
-import SnapshotMenu from "../contents/maintenance/snapshot/SnapshotMenu";
+import MigrationMenu from "../contents/motions/migration/MigrationMenu";
+import SnapshotMenu from "../contents/motions/snapshot/SnapshotMenu";
 import ClustersMenu from "../contents/clusters/ClustersMenu";
 import PodMenu from "../contents/pods/PodMenu";
 import NetworkMenu from "../contents/netowork/NetworkMenu";
@@ -278,39 +278,39 @@ class Contents extends Component {
 
 
           {/* snapshot contents */}
-          <Route path="/maintenance/snapshot/:snapshot"
+          <Route path="/motions/snapshot/:snapshot"
               render={({match,location}) => <Snapshot  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* snapshot contents END*/}
 
           {/* migration contents */}
-          <Route path="/maintenance/migration/:migration"
+          <Route path="/motions/migration/:migration"
               render={({match,location}) => <Migration  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           {/* migration contents END*/}
 
 
 
 
-          <Route path="/maintenance/migration/execute"
+          <Route path="/motions/migration/execute"
             render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/maintenance/migration/log"
+          <Route path="/motions/migration/log"
             render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route exact path="/maintenance/migration"
+          <Route exact path="/motions/migration"
             render={({match,location}) => <Redirect to={{
-              pathname : `/maintenance/migration/execute`,
+              pathname : `/motions/migration/execute`,
             }}  />} >
           </Route>
 
-          <Route path="/maintenance/snapshot/execute"
+          <Route path="/motions/snapshot/execute"
             render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route path="/maintenance/snapshot/log"
+          <Route path="/motions/snapshot/log"
             render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData}/>} >
           </Route>
-          <Route exact path="/maintenance/snapshot"
+          <Route exact path="/motions/snapshot"
             render={({match,location}) => <Redirect to={{
-              pathname : `/maintenance/snapshot/execute`,
+              pathname : `/motions/snapshot/execute`,
             }}  />} >
           </Route>
 
@@ -480,8 +480,8 @@ class Contents extends Component {
           {/* <Route exact path="/network/services" ><Services menuData={this.onMenuData}/></Route>
           <Route exact path="/network/ingress" ><Ingress menuData={this.onMenuData}/></Route>
           <Route exact path="/network/dns" ><DNS menuData={this.onMenuData}/></Route> */}
-          <Route exact path="/maintenance/snapshot" ><Snapshot menuData={this.onMenuData}/></Route>
-          <Route exact path="/maintenance/migration" ><Migration menuData={this.onMenuData}/></Route>
+          <Route exact path="/motions/snapshot" ><Snapshot menuData={this.onMenuData}/></Route>
+          <Route exact path="/motions/migration" ><Migration menuData={this.onMenuData}/></Route>
           <Redirect from="/" to="/dashboard" />
           
 

@@ -9,9 +9,10 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from "@material-ui/icons";
-import MigrationLog from "./MigrationLog";
-import Migration from "./Migration";
-import { RiInboxUnarchiveLine } from "react-icons/ri";
+
+import Snapshot from "./Snapshot";
+import SnapshotLog from "./SnapshotLog";
+import { HiOutlineCamera } from "react-icons/hi";
 
 const styles = (theme) => ({
   root: {
@@ -63,15 +64,15 @@ function a11yProps(index) {
   };
 }
 
-class MigrationMenu extends Component {
+class SnapshotMenu extends Component {
   state = {
     // rows: "",
     // completed: 0,
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "migration", index: 1, param: "execute" },
-      { label: "migration log", index: 2, param: "log" },
+      { label: "snapshot", index: 1, param: "execute" },
+      { label: "snapshot log", index: 2, param: "log" },
       // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -98,9 +99,9 @@ class MigrationMenu extends Component {
           <section className="content-header">
             <h1>
               <i>
-                <RiInboxUnarchiveLine />
+                <HiOutlineCamera />
               </i>
-              <span>Migration</span>
+              <span>Snapshot</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
@@ -111,13 +112,13 @@ class MigrationMenu extends Component {
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                <NavLink to="/maintenance">Motions</NavLink>
+                <NavLink to="/settings">Motions</NavLink>
               </li>
               <li className="active">
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                Migration
+                Snapshot
               </li>
             </ol>
           </section>
@@ -147,7 +148,7 @@ class MigrationMenu extends Component {
                         {...a11yProps(i.index)}
                         component={Link}
                         to={{
-                          pathname: `/maintenance/migration/${i.param}`,
+                          pathname: `/motions/snapshot/${i.param}`,
                         }}
                         style={{
                           minHeight: "42px",
@@ -166,9 +167,9 @@ class MigrationMenu extends Component {
               >
                 <Switch>
                   <Route
-                    path="/maintenance/migration/execute"
+                    path="/motions/snapshot/execute"
                     render={({ match, location }) => (
-                      <Migration
+                      <Snapshot
                         match={match}
                         location={location}
                         menuData={this.onMenuData}
@@ -184,9 +185,9 @@ class MigrationMenu extends Component {
               >
                 <Switch>
                   <Route
-                    path="/maintenance/migration/log"
+                    path="/motions/snapshot/log"
                     render={({ match, location }) => (
-                      <MigrationLog
+                      <SnapshotLog
                         match={match}
                         location={location}
                         menuData={this.onMenuData}
@@ -217,4 +218,4 @@ class MigrationMenu extends Component {
 //   );
 // }
 
-export default withStyles(styles)(MigrationMenu);
+export default withStyles(styles)(SnapshotMenu);
