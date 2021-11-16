@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import DbClusterTopology from "./DbClusterTopology";
 import DbOmcp from "./DbOmcp";
 import DbRegionGroup from "./DbRegionGroup";
+import DbServiceRegionTopology from "./DbServiceRegionTopology";
+import DbServiceTopology from "./DbServiceTopology";
 import DbStatus from "./DbStatus";
 import DbWorldMapClusterStatus from "./DbWorldMapClusterStatus";
 
@@ -30,6 +33,15 @@ class CustomDynamicView extends Component {
           case "Management Clusters":
             componentsTag.push(<DbOmcp />);
             break;
+          case "Cluster Topology":
+            componentsTag.push(<DbClusterTopology />);
+            break;
+          case "Service Topology":
+            componentsTag.push(<DbServiceTopology />);
+            break;
+          case "Service-Region Topology":
+            componentsTag.push(<DbServiceRegionTopology />);
+            break;
         }
       });
   
@@ -52,6 +64,15 @@ class CustomDynamicView extends Component {
           break;
         case "Management Clusters":
           componentsTag.push(<DbOmcp />);
+          break;
+        case "Cluster Topology":
+          componentsTag.push(<DbClusterTopology />);
+          break;
+        case "Service Topology":
+          componentsTag.push(<DbServiceTopology />);
+          break;
+        case "Service-Region Topology":
+          componentsTag.push(<DbServiceRegionTopology />);
           break;
       }
     });

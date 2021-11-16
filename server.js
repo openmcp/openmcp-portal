@@ -1,21 +1,25 @@
 const fs = require("fs"); //database.json파일 접근
 const express = require("express");
+const OAuthServer = require('express-oauth-server');
 const bodyParser = require("body-parser");
 const app = express();
-var os = require("os");
-var path = require("path");
 const data = fs.readFileSync("./config.json");
 const conf = JSON.parse(data);
 
-// const isLocal = true;
-// if (!isLocal) {
-//   conf.api.url = process.env.api_url;
-//   conf.db.user = process.env.db_user;
-//   conf.db.host = process.env.db_host;
-//   conf.db.database = process.env.db_database;
-//   conf.db.password = process.env.db_password;
-//   conf.db.port = process.env.db_port;
-// }
+const util = require('util');
+var render = require('co-views')('views');
+// var os = require("os");
+// var path = require("path");
+
+const isLocal = true;
+if (!isLocal) {
+  conf.api.url = process.env.api_url;
+  conf.db.user = process.env.db_user;
+  conf.db.host = process.env.db_host;
+  conf.db.database = process.env.db_database;
+  conf.db.password = process.env.db_password;
+  conf.db.port = process.env.db_port;
+}
 
 const createTableScript = fs
   .readFileSync("./db_script/opencmp_portal_create_table_.sql")
@@ -27,6 +31,19 @@ const inertDataScript = fs
 const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.oauth = new OAuthServer({
+  model: require('./model.js'),
+  accessTokenLifetime: 4 * 60 * 60
+});
+
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: true }));
+// app.use(app.oauth.authorize());
+
+
+
 
 app.get("/api/hello", (req, res) => {
   res.send({ messge: "Hello Express!" });
@@ -69,52 +86,95 @@ function dbSettings() {
   });
 }
 
-app.post("/user_login", (req, res) => {
-  const bcrypt = require("bcrypt");
 
-  //connection.connect();
-  connection.query(
-    `select * from tb_accounts where user_id = '${req.body.userid}';`,
-    (err, result) => {
-      var result_set = {
-        data: [],
-        message: "Please check your Password",
-      };
-      console.log(result);
-
-      if (result.rows.length < 1) {
-        result_set = {
-          data: [],
-          message: "There is no user, please check your account",
-        };
-        res.send(result_set);
-      } else {
-        const hashPassword = result.rows[0].user_password;
-        bcrypt.compare(req.body.password, hashPassword).then(function (r) {
-          if (r) {
-            // console.log("compare", r, result_set)
-            result_set = {
-              data: result,
-              message: "Login Successful !!",
-            };
-            // console.log("compare", r, result_set);
-          }
-          res.send(result_set);
-        });
-      }
-      //connection.end();
-    }
-  );
+/////////////////////////////////////////////////////////////////
+// OAuth2.0 서비스
+/////////////////////////////////////////////////////////////////
+// Post token.
+app.post('/oauth/token', app.oauth.token(), function(req, res){
+  console.log("/oauth/token");
 });
 
-//데이터베이스에서 데이터 가져오기
-// app.get("/api/customers", (req, res) => {
-//   // res.send()
-//   //connection.connect();
-//connection.query("SELECT * FROM CUSTOMER", (err, result) => {
-//     res.send(result.rows);
-//   });
-// });
+// Get authorization.
+app.get('/oauth/authorize', function(req, res) {
+  // Redirect anonymous users to login page.
+  if (!req.app.locals.user) {
+    return res.redirect(util.format('/login?redirect=%s&client_id=%s&redirect_uri=%s', req.path, req.query.client_id, req.query.redirect_uri));
+  }
+
+  return render('authorize', {
+    client_id: req.query.client_id,
+    redirect_uri: req.query.redirect_uri
+  });
+});
+
+// Post authorization.
+app.post('/oauth/authorize', function(req, res) {
+  // Redirect anonymous users to login page.
+  if (!req.app.locals.user) {
+    console.log("req.app.locals.user :" + req.app)
+    return res.redirect(util.format('/login?client_id=%s&redirect_uri=%s', req.query.client_id, req.query.redirect_uri));
+  }
+
+  return app.oauth.authorize();
+});
+
+// Get login.
+app.get('/login', function(req) {
+  console.log("login");
+  return render('login', {
+    redirect: req.query.redirect,
+    client_id: req.query.client_id,
+    redirect_uri: req.query.redirect_uri
+  });
+});
+
+// Post login.
+app.post('/login', function(req, res) {
+  // @TODO: Insert your own login mechanism.
+  if (req.body.email !== 'thom@nightworld.com') {
+    return render('login', {
+      redirect: req.body.redirect,
+      client_id: req.body.client_id,
+      redirect_uri: req.body.redirect_uri
+    });
+  }
+
+  // Successful logins should send the user back to /oauth/authorize.
+  var path = req.body.redirect || '/home';
+
+  return res.redirect(util.format('/%s?client_id=%s&redirect_uri=%s', path, req.query.client_id, req.query.redirect_uri));
+});
+
+// Get secret.
+app.get('/secret', app.oauth.authenticate(), function(req, res) {
+  // Will require a valid access_token.
+  res.send('Secret get');
+});
+
+app.delete('/secret', app.oauth.authenticate(), function(req, res) {
+  // Will require a valid access_token.
+  res.send('Secret delete');
+});
+
+app.post('/secret', app.oauth.authenticate(), function(req, res) {
+  // Will require a valid access_token.
+  res.send('Secret post');
+});
+
+app.put('/secret', app.oauth.authenticate(), function(req, res) {
+  // Will require a valid access_token.
+  res.send('Secret put');
+});
+
+app.get('/public', function(req, res) {
+  // Does not require an access_token.
+  res.send('Public area');
+});
+
+/////////////////////////////////////////////////////////////////
+// END OAuth2.0 서비스 END
+/////////////////////////////////////////////////////////////////
 
 function getDateTime() {
   var d = new Date();
@@ -185,8 +245,6 @@ app.post("/apimcp/portal-log", (req, res) => {
 
 app.post("/user_login", (req, res) => {
   const bcrypt = require("bcrypt");
-
-  //connection.connect();
   connection.query(
     `select * from tb_accounts where user_id = '${req.body.userid}';`,
     (err, result) => {
@@ -194,7 +252,7 @@ app.post("/user_login", (req, res) => {
         data: [],
         message: "Please check your Password",
       };
-      console.log(result);
+      // console.log(result);
 
       if (result.rows.length < 1) {
         result_set = {
@@ -918,7 +976,7 @@ app.post("/apis/deployments/resources", (req, res) => {
 ///////////////////////
 // Clusters APIs
 ///////////////////////
-app.get("/clusters", (req, res) => {
+app.get("/clusters", app.oauth.authenticate(), (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters.json");
   // let rawdata = fs.readFileSync("./json_data/clusters2_warning.json");
   // let rawdata = fs.readFileSync("./json_data/clusters3-1_normal.json");
@@ -3508,5 +3566,77 @@ app.get("/apis/dashboard/world_cluster_map", (req, res) => {
     }
   });
 });
+
+app.post("/apis/dashboard/cluster_topology", (req, res) => {
+  //   let rawdata = fs.readFileSync("./json_data/dash_topology.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  console.log("cluster_topology")
+  let data = JSON.stringify(req.body);
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/dashboard/cluster_topology`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.post("/apis/dashboard/service_topology", (req, res) => {
+//   let rawdata = fs.readFileSync("./json_data/dash_service_topology.json");
+// let overview = JSON.parse(rawdata);
+// res.send(overview);
+
+console.log("cluster_topology")
+  let data = JSON.stringify(req.body);
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/dashboard/service_topology`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+app.post("/apis/dashboard/service_region_topology", (req, res) => {
+  //   let rawdata = fs.readFileSync("./json_data/dash_service_region_topology.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  
+  console.log("cluster_topology")
+    let data = JSON.stringify(req.body);
+    let request = require("request");
+    let options = {
+      uri: `${apiServer}/apis/dashboard/service_region_topology`,
+      method: "POST",
+      body: data,
+    };
+  
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        res.send(body);
+      } else {
+        console.log("error", error);
+        return error;
+      }
+    });
+  });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

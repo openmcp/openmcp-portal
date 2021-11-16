@@ -413,11 +413,7 @@ body {
 }
 
 .main-header .top-menu.navbar-right a {
-  padding: 9px 0 0 0;
-}
-
-.main-header .top-menu.navbar-right a {
-  padding: 9px 0 0 0;
+  padding: 7px 0;
 }
 
 .main-header .top-menu .main-menu:hover {
@@ -2324,4 +2320,9 @@ g {
 
 .progressbar .linear-progress .MuiLinearProgress-root{
   height: 20px;
+}
+
+
+.topology > div >  svg > g > g > g:nth-child(2){
+  display: none;
 }

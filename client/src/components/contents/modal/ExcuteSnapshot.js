@@ -118,6 +118,18 @@ class ExcuteSnapshot extends Component {
       cluster: "openmcp",
       // namespace: this.state.dpInfo[0].namespace,
       namespace: "default",
+
+//      apiVersion: openmcp.k8s.io/v1alpha1
+//      kind: Snapshot
+//      metadata:
+//        name: snapshottest-211115
+//      spec:
+//        snapshotSources:
+//        - resourceCluster: cluster1
+//          resourceNamespace: default
+//          resourceType: Deployment
+//          resourceName: wordpress-mysql-1
+
       value: {
         apiVersion: "openmcp.k8s.io/v1alpha1",
         kind: "Snapshot",
@@ -127,37 +139,10 @@ class ExcuteSnapshot extends Component {
         spec: {
           snapshotSources: [
             {
-              // resourceCluster: this.state.dpInfo[0].cluster,
-              // resourceNamespace: this.state.dpInfo[0].namespace,
-              resourceCluster: "cluster1",
-              resourceNamespace: "default",
-              resourceType: "PersistentVolume",
-              resourceName: "iot-gateway-pv",
-            },
-            {
-              // resourceCluster: this.state.dpInfo[0].cluster,
-              // resourceNamespace: this.state.dpInfo[0].namespace,
-              resourceCluster: "cluster1",
-              resourceNamespace: "default",
-              resourceType: "PersistentVolumeClaim",
-              resourceName: "iot-gateway-pvc",
-            },
-            {
-              // resourceCluster: this.state.dpInfo[0].cluster,
-              // resourceNamespace: this.state.dpInfo[0].namespace,
-              // resourceName: this.state.dpInfo[0].name,
               resourceCluster: "cluster1",
               resourceNamespace: "default",
               resourceType: "Deployment",
               resourceName: "iot-gateway",
-            },
-            {
-              // resourceCluster: this.state.dpInfo[0].cluster,
-              // resourceNamespace: this.state.dpInfo[0].namespace,
-              resourceCluster: "cluster1",
-              resourceNamespace: "default",
-              resourceType: "Service",
-              resourceName: "iot-gateway-sv",
             },
           ],
         },

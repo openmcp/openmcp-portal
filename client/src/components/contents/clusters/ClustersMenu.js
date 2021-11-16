@@ -166,6 +166,7 @@ class ClustersMenu extends Component {
                         match={match}
                         location={location}
                         menuData={this.onMenuData}
+                        propsData = {this.props.propsData}
                       />
                     )}
                   ></Route>

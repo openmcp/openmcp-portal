@@ -66,6 +66,7 @@ import Metering from "../contents/settings/metering/Metering";
 import BillList from "../contents/settings/metering/BillList";
 import MeteringMenu from "../contents/settings/metering/MeteringMenu";
 import BillDetail from "../contents/settings/metering/BillDetail";
+import SignIn from "../common/SignIn";
 
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
@@ -109,35 +110,35 @@ class Contents extends Component {
         <Switch>
           {/* Clusters contents */}
           <Route path="/clusters/:cluster/overview" 
-            render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/clusters/:cluster/nodes/:node" 
-            render={({match,location}) => <CsNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsNodeDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters/:cluster/nodes" 
-            render={({match,location}) => <CsNodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsNodes  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters/:cluster/pods/:pod" 
-            render={({match,location}) => <CsPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsPodDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters/:cluster/pods" 
-            render={({match,location}) => <CsPods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsPods  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters/:cluster/storage_class/:storage_class" 
             render={({match,location}) => <CsStorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/storage_class" 
-            render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData} propsData = {this.props} propsData = {this.props}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/overview" 
-            render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/clusters-joinable/:cluster/nodes/:node" 
-            render={({match,location}) => <CsNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsNodeDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/nodes" 
-            render={({match,location}) => <CsNodes  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsNodes  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/pods/:pod" 
-            render={({match,location}) => <CsPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsPodDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/pods" 
-            render={({match,location}) => <CsPods  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsPods  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/storage_class/:storage_class" 
-            render={({match,location}) => <CsStorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsStorageClassDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/storage_class" 
-            render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
             
           {/* <Route path="/clusters/:name/settings/" component={PjSettings} />
           <Redirect from="/clusters/:name/settings" to="/projects/:name/settings/members" /> */}
@@ -147,7 +148,7 @@ class Contents extends Component {
 
           {/* Projects contents */}
           <Route path="/projects/:project/overview" 
-            render={({match,location}) => <PjOverview  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjOverview  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           {/* 
               <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
@@ -161,16 +162,16 @@ class Contents extends Component {
               </Route> 
           */}
           <Route path="/projects/:project/resources/workloads/statefulsets" 
-            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/workloads/statefulsets/:statefulset" 
-            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/workloads/deployments" 
-            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
-            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjWorkloads  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/projects/:project/resources/workloads"
             render={({match,location}) => <Redirect to={{
@@ -188,22 +189,22 @@ class Contents extends Component {
 
 
           <Route path="/projects/:project/resources/pods/:pod" 
-            render={({match,location}) => <PjPodDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjPodDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/pods" 
-            render={({match,location}) => <PjPods  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjPods  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/services/:service" 
-            render={({match,location}) => <PjServicesDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjServicesDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/services" 
-            render={({match,location}) => <PjServices  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjServices  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/ingress/:ingress" 
-            render={({match,location}) => <PjIngressDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjIngressDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/resources/ingress" 
-            render={({match,location}) => <PjIngress  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjIngress  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/projects/:project/resources"
             render={({match,location}) => <Redirect to={{
@@ -213,23 +214,23 @@ class Contents extends Component {
           </Route>
 
           <Route path="/projects/:project/volumes/:volume" 
-            render={({match,location}) => <PjVolumeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjVolumeDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/volumes" 
-            render={({match,location}) => <PjVolumes  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjVolumes  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           
           <Route path="/projects/:project/config/secrets/:secret" 
-            render={({match,location}) => <PjSecretDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjSecretDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/config/secrets" 
-            render={({match,location}) => <PjSecrets  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjSecrets  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/config/config_maps/:config_map" 
-            render={({match,location}) => <PjConfigMapDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjConfigMapDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/projects/:project/config/config_maps" 
-            render={({match,location}) => <PjConfigMaps  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjConfigMaps  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           {/* <Redirect 
             from="/projects/:project/config" 
@@ -242,7 +243,7 @@ class Contents extends Component {
           </Route>
 
           <Route path="/projects/:project/settings/members" 
-            render={({match,location}) => <PjMembers  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PjMembers  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           {/* <Redirect 
             from="/projects/:project/settings" 
@@ -257,44 +258,44 @@ class Contents extends Component {
 
           {/* Deployments contents */}
           <Route path="/deployments/:deployment"
-              render={({match,location}) => <DeploymentDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+              render={({match,location}) => <DeploymentDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           {/* Deployments contents END*/}
 
           {/* Services contents */}
           <Route path="/network/services/:service"
-              render={({match,location}) => <ServicesDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+              render={({match,location}) => <ServicesDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           {/* Services contents END*/}
 
           {/* Ingress contents */}
           <Route path="/network/ingress/:ingress"
-              render={({match,location}) => <IngressDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+              render={({match,location}) => <IngressDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           {/* Ingress contents END*/}
 
           {/* Dns contents */}
           <Route path="/network/dns/:dns"
-              render={({match,location}) => <DNSDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+              render={({match,location}) => <DNSDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           {/* Dns contents END*/}
 
 
 
           {/* snapshot contents */}
           <Route path="/motions/snapshot/:snapshot"
-              render={({match,location}) => <Snapshot  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+              render={({match,location}) => <Snapshot  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           {/* snapshot contents END*/}
 
           {/* migration contents */}
           <Route path="/motions/migration/:migration"
-              render={({match,location}) => <Migration  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+              render={({match,location}) => <Migration  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           {/* migration contents END*/}
 
 
 
 
           <Route path="/motions/migration/execute"
-            render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/motions/migration/log"
-            render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/motions/migration"
             render={({match,location}) => <Redirect to={{
@@ -303,10 +304,10 @@ class Contents extends Component {
           </Route>
 
           <Route path="/motions/snapshot/execute"
-            render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/motions/snapshot/log"
-            render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <SnapshotMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/motions/snapshot"
             render={({match,location}) => <Redirect to={{
@@ -318,13 +319,13 @@ class Contents extends Component {
 
           {/* Nodes contents */}
           <Route path="/nodes/:node" 
-            render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <NdNodeDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           {/* Nodes contents END*/}
 
           {/* Pods contents */}
           <Route path="/pods/:pod/overview"
-              render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+              render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           {/* <Route path="/vpa/:vpa"
               render={({match,location}) => <PdPodDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/hpa/:hpa"
@@ -333,19 +334,19 @@ class Contents extends Component {
 
           {/* Settings contents */}
           <Route exact path="/settings/accounts" 
-            render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
 
           <Route path="/settings/group-role" 
-            render={({match,location}) => <GroupRole  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <GroupRole  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
       
           
           <Route path="/settings/policy/openmcp-policy"
-            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/settings/policy/project-policy"
-            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Policy  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/settings/policy"
             render={({match,location}) => <Redirect to={{
@@ -354,16 +355,16 @@ class Contents extends Component {
           </Route>
           
           <Route path="/settings/config/public-cloud/eks"
-            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/settings/config/public-cloud/gke"
-            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/settings/config/public-cloud/aks"
-            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/settings/config/public-cloud/kvm"
-            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/settings/config/public-cloud"
             render={({match,location}) => <Redirect to={{
@@ -392,10 +393,10 @@ class Contents extends Component {
 
           
           <Route path="/settings/alert/set-threshold"
-            render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/settings/alert/alert-log"
-            render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/settings/alert"
             render={({match,location}) => <Redirect to={{
@@ -405,12 +406,12 @@ class Contents extends Component {
 
           
           <Route path="/settings/meterings/metering"
-            render={({match,location}) => <MeteringMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <MeteringMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/settings/meterings/bill/:date" 
-            render={({match,location}) => <BillDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
+            render={({match,location}) => <BillDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/settings/meterings/bill"
-            render={({match,location}) => <MeteringMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <MeteringMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/settings/meterings"
             render={({match,location}) => <Redirect to={{
@@ -420,10 +421,10 @@ class Contents extends Component {
 
 
           <Route path="/clusters/joined"
-            render={({match,location}) => <ClustersMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <ClustersMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/clusters/joinable"
-            render={({match,location}) => <ClustersMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <ClustersMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/clusters"
             render={({match,location}) => <Redirect to={{
@@ -432,13 +433,13 @@ class Contents extends Component {
           </Route>
 
           <Route path="/pods/pod"
-            render={({match,location}) => <PodMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PodMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/pods/hpa"
-            render={({match,location}) => <PodMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PodMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/pods/vpa"
-            render={({match,location}) => <PodMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <PodMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/pods"
             render={({match,location}) => <Redirect to={{
@@ -447,13 +448,13 @@ class Contents extends Component {
           </Route>
 
           <Route path="/network/dns"
-            render={({match,location}) => <NetworkMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <NetworkMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/network/services"
-            render={({match,location}) => <NetworkMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <NetworkMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/network/ingress"
-            render={({match,location}) => <NetworkMenu  match={match} location={location} menuData={this.onMenuData}/>} >
+            render={({match,location}) => <NetworkMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/network"
             render={({match,location}) => <Redirect to={{
@@ -482,9 +483,9 @@ class Contents extends Component {
           <Route exact path="/network/dns" ><DNS menuData={this.onMenuData}/></Route> */}
           <Route exact path="/motions/snapshot" ><Snapshot menuData={this.onMenuData}/></Route>
           <Route exact path="/motions/migration" ><Migration menuData={this.onMenuData}/></Route>
+          <Route exact path="/login" ><SignIn/></Route>
           <Redirect from="/" to="/dashboard" />
           
-
           {/* <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route>
           <Route exact path="/storages" ><Storages menuData={this.onMenuData}/></Route> */}
         </Switch>
