@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS public.tb_accounts
     created_time timestamp(6) without time zone,
     last_login_time timestamp(6) without time zone,
     projects character varying[] COLLATE pg_catalog."default",
+    uuid uuid NOT NULL DEFAULT uuid_generate_v4(),
     CONSTRAINT tb_accounts_pkey PRIMARY KEY (user_id)
 )
 WITH (
@@ -37,9 +38,8 @@ WITH (
 )
 TABLESPACE pg_default;
 
-
 ALTER TABLE public.tb_accounts
-    OWNER to postgres;
+    OWNER to scshin;
 
 --==================================================================================
 --tb_codes
@@ -356,6 +356,57 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.tb_dashboard
     OWNER to postgres;
+
+
+
+CREATE EXTENSION "uuid-ossp"; -- uuid_generate_v4()를 사용하기 위함
+
+--==================================================================================
+--oauth_tokens
+--==================================================================================
+CREATE TABLE IF NOT EXISTS public.oauth_tokens
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    access_token text COLLATE pg_catalog."default" NOT NULL,
+    access_token_expires_on timestamp without time zone NOT NULL,
+    client_id text COLLATE pg_catalog."default" NOT NULL,
+    refresh_token text COLLATE pg_catalog."default" NOT NULL,
+    refresh_token_expires_on timestamp without time zone NOT NULL,
+    user_id character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT oauth_tokens_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.oauth_tokens
+    OWNER to postgres;
+
+
+--==================================================================================
+--oauth_clients
+--==================================================================================
+CREATE TABLE IF NOT EXISTS public.oauth_clients
+(
+    client_id text COLLATE pg_catalog."default" NOT NULL,
+    client_secret text COLLATE pg_catalog."default" NOT NULL,
+    redirect_uri text COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT oauth_clients_pkey PRIMARY KEY (client_id, client_secret)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.oauth_clients
+    OWNER to postgres;
+
+
+
+
+
+
 
 --==================================================================================
 --tb_policy
