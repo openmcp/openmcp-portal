@@ -31,14 +31,20 @@ class DbOmcp extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        this.timer = setInterval(this.onRefresh, 5000)
       })
       .catch((err) => console.log(err));
+    
     let userId = null;
     AsyncStorage.getItem("userName",(err, result) => { 
       userId = result;
     });
     
     utilLog.fn_insertPLogs(userId, 'log-DS-VW03');
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
 
@@ -58,7 +64,6 @@ class DbOmcp extends Component {
         } else {
           this.setState({ rows: res });
         }
-        clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };

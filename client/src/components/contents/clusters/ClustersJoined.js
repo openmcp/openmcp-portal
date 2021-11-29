@@ -481,7 +481,7 @@ class ClustersJoined extends Component {
         </section> */}
         {this.state.rows ? (
           [
-            <GoLogin />,
+            // <GoLogin />,
             <section className="content" style={{ position: "relative" }}>
               <Paper>
                 <div

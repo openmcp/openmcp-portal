@@ -367,8 +367,8 @@ body {
 
 .main-header .navbar-custom-menu,
 .main-header .navbar-right {
-  /* position: absolute; */
-  float:right;
+  position: absolute;
+  float: right;
   right: 14px;
   background: #3c8dbcdb;
 }
@@ -421,8 +421,8 @@ body {
   color: #ffffff;
 }
 
-.main-header .top-menu.navbar-right .main-menu>a {
-  display:flex
+.main-header .top-menu.navbar-right .main-menu > a {
+  display: flex;
 }
 
 .main-header .top-menu .main-menu.main-menu.dashboard#dashboard,
@@ -1194,10 +1194,8 @@ tbody {
 }
 
 .select-box {
-  display: "inline";
+  display: inline;
 }
-
-
 
 /* Grid 설정 */
 .MuiToolbar-root {
@@ -1228,7 +1226,6 @@ tbody {
 .MuiTableSortLabel-icon {
   display: none !important;
 }
-
 
 /* Grid 테이블 수정 */
 .MuiPaper-elevation1 {
@@ -1297,6 +1294,14 @@ tbody {
 
 .MuiTableCell-root > span[class*="TableSelectCell-checkbox"] {
   padding: 0px;
+}
+
+.MuiTableCell-paddingCheckbox {
+  padding: 0px !important;
+}
+
+.MuiTableCell-root[class*="TableDetailToggleCell-toggleCell"] {
+  padding-left: 12px;
 }
 
 .MuiTableCell-root > button[class*="TableDetailToggleCell-toggleCellButton"] {
@@ -1724,15 +1729,15 @@ g {
   min-width: 640px;
 }
 
-.pd-resource-config.select{
+.pd-resource-config.select {
   min-width: 222px;
 }
 
-.pd-resource-config.select .res:first-child{
+.pd-resource-config.select .res:first-child {
   margin-top: 9px;
 }
 
-.pd-resource-config.select .res #select-mode{
+.pd-resource-config.select .res #select-mode {
   font-weight: bold;
   color: #367fa9;
 }
@@ -1988,7 +1993,7 @@ g {
   padding: 5px 0;
 }
 .inner-table table tbody tr td {
-  padding: 0;
+  /* padding: 0; */
 }
 
 .cb-cloview-select select.MuiNativeSelect-select:focus,
@@ -2177,7 +2182,7 @@ g {
   top: 5px;
 }
 
-.dashboard-main .btn-worldmap-size{
+.dashboard-main .btn-worldmap-size {
   width: 61px;
   height: 29px;
   border: 0;
@@ -2187,26 +2192,27 @@ g {
   font-size: 20px;
 }
 
-.dashboard-main .btn-worldmap-size:first-child{
+.dashboard-main .btn-worldmap-size:first-child {
   margin-right: 5px;
 }
 
-.dashboard-main .dash-comp{
-  float:left;
+.dashboard-main .dash-comp {
+  float: left;
+  min-height: 404px;
 }
 
 .MuiSwitch-switchBase.Mui-checked {
-  color : #ffffff;
+  color: #ffffff;
 }
-.MuiSwitch-switchBase.Mui-checked:hover{
-  background-color : rgba(255, 192, 203, 0);
+.MuiSwitch-switchBase.Mui-checked:hover {
+  background-color: rgba(255, 192, 203, 0);
 }
 
 .MuiSwitch-switchBase.Mui-checked {
-  background-color : rgba(255, 192, 203, 0);
-} 
-.MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track{
-  background-color : #293e50;
+  background-color: rgba(255, 192, 203, 0);
+}
+.MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track {
+  background-color: #293e50;
   opacity: 1 !important;
 }
 
@@ -2215,22 +2221,19 @@ g {
   margin-top: 3px;
 }
 
-.language .lang-list-btn{
+.language .lang-list-btn {
   color: white;
   border-radius: 5px;
   padding: 8px 12px;
 }
 
-.language .language-icon{
+.language .language-icon {
   font-size: 20px;
 }
 
 .language li {
-  font-size : 14px;
+  font-size: 14px;
 }
-
-
-
 
 .mt-set-metering {
   margin: 20px 33px;
@@ -2272,7 +2275,6 @@ g {
   min-width: 124px;
 }
 
-
 .mt-set-metering .res.transfer-price .txt > span {
   min-width: 130px;
 }
@@ -2283,19 +2285,19 @@ g {
 
 .mt-set-metering .res .txt > span.price {
   min-width: 0;
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .mt-set-metering .res .txt > .input-txt {
   position: relative;
-}  
+}
 .mt-set-metering .res .txt > .input-txt > span {
   position: absolute;
   right: 17px;
   top: 9px;
   font-size: 13px;
   font-weight: bold;
-}  
+}
 
 .mt-set-metering .res .txt > .input-txt input {
   width: 100px;
@@ -2314,15 +2316,350 @@ g {
   display: flex;
 }
 
-.progressbar .linear-progress{
+.progressbar .linear-progress {
   width: 70px;
 }
 
-.progressbar .linear-progress .MuiLinearProgress-root{
+.progressbar .linear-progress .MuiLinearProgress-root {
   height: 20px;
 }
 
-
-.topology > div >  svg > g > g > g:nth-child(2){
+.topology > div > svg > g > g > g:nth-child(2) > g > g:nth-child(3) {
   display: none;
+}
+
+/* Multiple Metrics */
+
+.multiple-metrics .MuiInput-underline:before {
+  border: 1px solid #000000 !important;
+  border-radius: 4px !important;
+  padding: 5px !important;
+}
+
+.m-metrics {
+  /* display: flex; */
+}
+
+.m-metrics .m-area {
+  margin: 0px 0px 5px 6px;
+  float: left;
+}
+
+.m-metrics .m-area .m-area-header {
+  padding: 8px 0px 30px 10px;
+  font-size: 18px;
+  font-weight: bold;
+  height: 36px;
+  background-color: #e3e3e3;
+  margin-bottom: 5px;
+  color: #444444;
+}
+
+.m-metrics .m-area .m-area-header span:nth-child(2) {
+  font-size: 15px;
+  float: right;
+  font-weight: normal;
+}
+
+.m-metrics .m-content {
+  margin: 0 5px 5px 0;
+  background-color: #ffffff;
+}
+
+.m-metrics .m-content .m-c-header {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ececec;
+  font-size: 15px;
+  color: #6b6b6b;
+}
+
+.m-metrics .m-content .m-c-body {
+  position: relative;
+}
+
+.m-metrics .m-area .m-area-body {
+}
+
+.m-metrics .m-area .m-area-body .m-secondline-area {
+  display: flex;
+}
+
+/* pie-area */
+.m-metrics .m-area .m-area-body .m-pie-area {
+  display: flex;
+}
+
+.m-metrics .m-area .m-area-body .m-pie-area .m-content:last-child {
+  /* margin-right:0px; */
+}
+
+.m-metrics .m-area .m-area-body .m-pie-area .m-content .pie-chart {
+  margin: auto;
+}
+
+/* single-info-area */
+.m-metrics .m-area .m-area-body .m-single-info-area {
+  display: flex;
+}
+
+.m-metrics .m-area .m-area-body .m-single-info-area .m-content {
+  text-align: center;
+  width: 100%;
+}
+
+.m-metrics .m-area .m-area-body .m-single-info-area .m-content:last-child {
+  margin-right: 0px;
+}
+
+.m-metrics .m-area .m-area-body .m-single-info-area .m-content .m-c-body {
+  padding: 10px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+/* multiple-info-area */
+.m-metrics .m-area .m-area-body .m-multiple-info-area {
+  display: flex;
+}
+
+.m-metrics .m-area .m-area-body .m-multiple-info-area .m-content {
+  text-align: center;
+  width: 100%;
+}
+
+.m-metrics .m-area .m-area-body .m-multiple-info-area .m-content:last-child {
+  margin-right: 0px;
+}
+
+.m-metrics .m-area .m-area-body .m-multiple-info-area .m-content .m-c-body {
+  padding: 10px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.m-metrics
+  .m-area
+  .m-area-body
+  .m-multiple-info-area
+  .m-content
+  .m-c-body
+  span {
+  display: inline-block;
+  margin: 0 32px;
+}
+
+/* line-chart-area */
+.m-metrics .m-area .m-area-body .m-line-chart-area {
+}
+
+.m-metrics .m-area .m-area-body .m-line-chart-area .m-content .m-c-body {
+  /* min-height:267px; */
+}
+
+/* metric cluster */
+.m-metrics .cluster-metric {
+  min-width: 50%;
+  overflow: hidden;
+  min-height: 338px;
+}
+
+.m-metrics .cluster-metric .m-pie-area .m-content {
+  min-width: 50%;
+}
+
+/* metric api server */
+.m-metrics .api-server-metric {
+  min-width: 49%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* metric api server */
+
+.m-metrics .api-server-metric {
+  min-width: 49%;
+  height: 100%;
+  overflow: hidden;
+  /* margin-right:10px; */
+}
+
+.m-metrics
+  .m-area.api-server-metric
+  .m-area-body
+  .m-line-chart-area
+  .m-content {
+  margin-right: 0px;
+}
+
+/* metric namespace */
+.m-metrics .namespace-metric {
+  width: 100%;
+}
+
+.m-metrics .namespace-metric .m-linechart-area .m-content .m-c-body {
+  min-height: 171px;
+}
+
+.m-metrics .namespace-metric .m-left {
+  min-width: 49%;
+  float: left;
+  margin-right: 5px;
+  overflow: hidden;
+}
+
+.m-metrics .namespace-metric .m-right {
+  min-width: 49%;
+  display: flow-root;
+}
+
+.m-metrics .namespace-metric .m-left .m-area-body .m-pie-area {
+  display: contents;
+}
+
+.m-metrics .namespace-metric .m-left .m-pie-area .m-content {
+  min-width: 33.3%;
+}
+.m-metrics .namespace-metric .m-left .m-linechart-area {
+  display: contents;
+}
+
+.m-metrics .namespace-metric .m-left .m-linechart-area .m-content {
+  min-width: 67%;
+}
+
+/* barchart area */
+.m-metrics .namespace-metric .m-right .m-barchart-area {
+  display: flex;
+}
+
+.m-metrics .namespace-metric .m-right .m-barchart-area .m-content {
+  width: 50%;
+}
+
+.m-metrics .namespace-metric .m-right .m-barchart-area .m-content:last-child {
+  margin-right: 0;
+}
+
+.m-metrics
+  .namespace-metric
+  .m-right
+  .m-barchart-area
+  .m-content
+  .revers-bar-chart
+  tspan {
+  font-size: 10px;
+}
+
+/* metric node */
+.m-metrics .node-metric {
+  width: 100%;
+}
+.m-metrics .node-metric .m-linechart-area .m-content .m-c-body {
+  min-height: 200px;
+}
+
+.m-metrics .node-metric .m-left .m-linechart-area {
+  display: contents;
+}
+
+.m-metrics .node-metric .m-left .m-linechart-area .m-content {
+  /* min-width: 49%; */
+}
+
+.m-metrics .node-metric .m-left {
+  min-width: 50%;
+  float: left;
+}
+
+.m-metrics .node-metric .m-right {
+  min-width: 50%;
+  display: flow-root;
+}
+
+.m-metrics .node-metric .m-right .m-linechart-area {
+  display: flex;
+}
+
+.m-metrics .node-metric .m-right .m-linechart-area .m-content {
+  min-width: 100%;
+}
+.m-metrics .node-metric .m-right .m-linechart-area .m-content:last-child {
+  /* margin-right: 0; */
+}
+
+.m-metrics .node-metric .m-linechart-area .m-content .line-chart {
+  margin: auto;
+}
+
+.cluster-joined,
+.cluster-joinable,
+.dnd-navi {
+  float: left;
+}
+
+.dnd-navi{
+  text-align: center;
+  margin:100px 10px;
+  font-size: 50px;
+  font-weight: bold;
+  color:#3c8dbc;
+}
+
+.dnd-navi > div:nth-child(odd) {
+  font-size: 13px;
+  color:#000000;
+}
+
+
+.join-unjoin-title {
+  background: #0c8dfe;
+  padding: 5px 10px;
+  text-align: center;
+  color: #ffffff;
+}
+
+.dnd-list {
+  /* padding: 12px 8px 12px 6px;
+  width: 339px;
+  height: 272px;
+  overflow-y: scroll;
+  display: flex;
+  flex-wrap: wrap; */
+
+  padding: 12px 8px 12px 12px;
+  width: 285px;
+  height: 274px;
+  overflow-y: scroll;
+}
+.dnd-item {
+  /* border-radius: 4px;
+  margin: 0px 8px 0px;
+  height: 69px;
+  width: 86px;
+  text-align: center;
+  padding: 8px 0; */
+
+  border-radius: 4px;
+  margin: 0px 8px 0px;
+  height: 49px;
+  width: 246px;
+  text-align: left;
+  display: flex;
+  margin:5px 0;
+  padding: 10px 10px;
+}
+
+.dnd-item > div:nth-child(2) {
+  overflow: hidden;
+  /* float: left; */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dnd-cluster-icon {
+  margin : 0 8px;
+}
+
+.dnd-cluster-text {
+  padding : 2px;
 }

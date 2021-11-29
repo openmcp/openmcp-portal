@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { PieChart, Pie, Sector, Cell, Legend, ResponsiveContainer, Tooltip  } from "recharts";
 
-class PieReChart extends Component {
+class MetricPieChart extends Component {
   constructor(props) {
     super(props);
-    // console.log("pierechar constructor");
     this.state = {
       activeIndex: 0,
       rows: this.props.data.status,
@@ -27,26 +26,6 @@ class PieReChart extends Component {
   };
 
   render() {
-    // console.log("render", this.props.data.status);
-
-    // const {PieChart, Pie, Sector} = Recharts;
-    // const data = [
-    //   { name: "healthy", value: 400 },
-    //   { name: "partially_healthy", value: 100 },
-    //   { name: "converging", value: 10 },
-    //   { name: "unhealthy", value: 20 },
-    // ];
-    // const COLORS = [
-    //   "#0088FE",
-    //   "#00C49F",
-    //   "#FFBB28",
-    //   "#FF8042",
-    //   "#00C49F",
-    //   "#FFBB28",
-    //   "#00C49F",
-    //   "#FFBB28",
-    // ];
-    // console.log("color", this.props.color);
     const COLORS = this.props.colors;
     const renderActiveShape = (props) => {
       // const RADIAN = Math.PI / 180;
@@ -61,17 +40,8 @@ class PieReChart extends Component {
         fill,
         payload,
         percent,
-        // value,
       } = props;
-      // const sin = Math.sin(-RADIAN * midAngle);
-      // const cos = Math.cos(-RADIAN * midAngle);
-      // const sx = cx + (outerRadius + 10) * cos;
-      // const sy = cy + (outerRadius + 10) * sin;
-      // const mx = cx + (outerRadius + 30) * cos;
-      // const my = cy + (outerRadius + 30) * sin;
-      // const ex = mx + (cos >= 0 ? 1 : -1) * 22;
-      // const ey = my;
-      // const textAnchor = cos >= 0 ? "start" : "end";
+
 
       return (
         <g style={{fontSize:"14px"}}>
@@ -91,42 +61,24 @@ class PieReChart extends Component {
             endAngle={endAngle}
             fill={fill}
           />
-          {/* <Sector
-              cx={cx}
-              cy={cy}
-              startAngle={startAngle}
-              endAngle={endAngle}
-              innerRadius={outerRadius + 6}
-              outerRadius={outerRadius + 10}
-              fill={fill}
-            />
-            <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
-            <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-            <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`PV ${value}`}</text>
-            <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-              {`(Rate ${(percent * 100).toFixed(2)}%)`}
-            </text> */}
         </g>
       );
     };
     const style = {
-      // top: 48,
-      // left: 200,
-      // position: "relative",
       right:"8px",
       lineHeight: "25px",
       fontSize:"0.9vw",
     };
     return (
-      <div style={{ position: "relative", height: "150px"}} className="pie-chart">
+      <div style={{ position: "relative", width: `170px`,height: "171.3px"}} className="pie-chart">
         <ResponsiveContainer  width="100%" height="100%">
           <PieChart>
             <Pie
               activeIndex={this.state.activeIndex}
               activeShape={renderActiveShape}
               data={this.state.rows}
-              cx={70}
-              cy={70}
+              cx={80}
+              cy={80}
               startAngle={this.props.angle.startAngle}
               endAngle={this.props.angle.endAngle}
               innerRadius={35}
@@ -143,7 +95,7 @@ class PieReChart extends Component {
                 />
               ))}
             </Pie>
-            <Legend
+            {/* <Legend
               iconSize={10}
               // width={180}
               // height={140}
@@ -157,7 +109,7 @@ class PieReChart extends Component {
                 value: `${item.name} (${item.value}${this.props.unit})`,
                 color: COLORS[index % COLORS.length],
               }))}
-            />
+            /> */}
              <Tooltip />
           </PieChart>
         </ResponsiveContainer>
@@ -166,4 +118,4 @@ class PieReChart extends Component {
   }
 }
 
-export default PieReChart;
+export default MetricPieChart;

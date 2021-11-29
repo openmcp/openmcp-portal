@@ -20,6 +20,7 @@ class NodeLabel extends Component {
   }
   render() {
     const { className, nodeData } = this.props;
+    console.log(nodeData.name + nodeData.attributes.region + nodeData.attributes.zone + nodeData.attributes.status)
     const contextId =
       nodeData.name + nodeData.attributes.region + nodeData.attributes.zone;
     return (
@@ -241,6 +242,10 @@ class TreeView extends React.Component {
     };
   }
 
+  componentWillMount(){
+    console.log(this.state.data);
+  }
+
   componentWillUpdate(prevProps, prevState) {
     // console.log("componentWillUpdate")
     // console.log("this.props.data",prevProps)
@@ -274,7 +279,6 @@ class TreeView extends React.Component {
   }
 
   render() {
-    console.log("treeveiw");
     const svgSquare = {
       shape: "rect",
       shapeProps: {

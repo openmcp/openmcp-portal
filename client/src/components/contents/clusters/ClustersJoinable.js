@@ -33,7 +33,10 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import axios from "axios";
+import DndJoinUnjoin from "./dnd/DndJoinUnjoin.js";
+import DndJoinUnjoinThree from "./dnd/DndJoinUnjoinThree.js";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+
 
 
 class ClustersJoinable extends Component {
@@ -364,6 +367,8 @@ class ClustersJoinable extends Component {
                         highlightRow
                       />
                     </Grid>
+
+
         
               ) : (
                 <CircularProgress
@@ -378,5 +383,7 @@ class ClustersJoinable extends Component {
     );
   }
 }
+
+
 
 export default ClustersJoinable;

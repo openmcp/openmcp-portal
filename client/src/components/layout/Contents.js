@@ -67,6 +67,7 @@ import BillList from "../contents/settings/metering/BillList";
 import MeteringMenu from "../contents/settings/metering/MeteringMenu";
 import BillDetail from "../contents/settings/metering/BillDetail";
 import SignIn from "../common/SignIn";
+import MultipleMetrics from "../contents/metrics/MultipleMetrics";
 
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
@@ -468,7 +469,8 @@ class Contents extends Component {
             to="/settings/accounts" />
           {/* Settings contents END*/}
 
-          <Route exact path="/dashboard"><Dashboard menuData={this.onMenuData}/></Route>
+          <Route exact path="/dashboard"><Dashboard menuData={this.onMenuData} propsData = {this.props}/></Route>
+          <Route exact path="/multiple-metrics"><MultipleMetrics menuData={this.onMenuData}/></Route>
           {/* <Route exact path="/"><Dashboard menuData={this.onMenuData}/></Route> */}
           {/* <Route exact path="/clusters/joined" ><ClustersJoined menuData={this.onMenuData}/></Route>
           <Route exact path="/clusters/joinable" ><ClustersJoinable menuData={this.onMenuData}/></Route> */}

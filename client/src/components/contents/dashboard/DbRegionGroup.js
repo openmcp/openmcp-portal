@@ -30,6 +30,7 @@ class DbRegionGroup extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        this.timer = setInterval(this.onRefresh, 5000)
       })
       .catch((err) => console.log(err));
     let userId = null;
@@ -39,7 +40,10 @@ class DbRegionGroup extends Component {
     
     utilLog.fn_insertPLogs(userId, 'log-DS-VW02');
   }
-
+  
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
 
   callApi = async () => {
     const response = await fetch(`/apis/dashboard/region_groups`);
@@ -57,7 +61,6 @@ class DbRegionGroup extends Component {
         } else {
           this.setState({ rows: res });
         }
-        clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };

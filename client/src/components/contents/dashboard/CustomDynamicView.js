@@ -1,10 +1,12 @@
 import React, { Component } from "react";
+import DbClusterJoinUnjoin from "./DbClusterJoinUnjoin";
 import DbClusterTopology from "./DbClusterTopology";
 import DbOmcp from "./DbOmcp";
 import DbRegionGroup from "./DbRegionGroup";
 import DbServiceRegionTopology from "./DbServiceRegionTopology";
 import DbServiceTopology from "./DbServiceTopology";
 import DbStatus from "./DbStatus";
+import DbTopology from "./DbTopology";
 import DbWorldMapClusterStatus from "./DbWorldMapClusterStatus";
 
 class CustomDynamicView extends Component {
@@ -17,6 +19,7 @@ class CustomDynamicView extends Component {
   }
 
   componentWillUpdate(prevProps, prevState) {
+    
     if (this.props.myComponentList !== prevProps.myComponentList) {
       var componentsTag = [];
       prevProps.myComponentList.forEach((item) => {
@@ -30,18 +33,24 @@ class CustomDynamicView extends Component {
           case "World Cluster Status":
             componentsTag.push(<DbWorldMapClusterStatus />);
             break;
-          case "Management Clusters":
-            componentsTag.push(<DbOmcp />);
+          // case "Management Clusters":
+          //   componentsTag.push(<DbOmcp />);
+          //   break;
+          case "Topology":
+            componentsTag.push(<DbTopology propsData = {this.props.propsData}/>);
             break;
-          case "Cluster Topology":
-            componentsTag.push(<DbClusterTopology />);
+          case "Cluster Join/Unjoin":
+            componentsTag.push(<DbClusterJoinUnjoin propsData = {this.props.propsData} />);
             break;
-          case "Service Topology":
-            componentsTag.push(<DbServiceTopology />);
-            break;
-          case "Service-Region Topology":
-            componentsTag.push(<DbServiceRegionTopology />);
-            break;
+          // case "Cluster Topology":
+          //   componentsTag.push(<DbClusterTopology />);
+          //   break;
+          // case "Service Topology":
+          //   componentsTag.push(<DbServiceTopology />);
+          //   break;
+          // case "Service-Region Topology":
+          //   componentsTag.push(<DbServiceRegionTopology />);
+          //   break;
         }
       });
   
@@ -62,18 +71,24 @@ class CustomDynamicView extends Component {
         case "World Cluster Status":
           componentsTag.push(<DbWorldMapClusterStatus />);
           break;
-        case "Management Clusters":
-          componentsTag.push(<DbOmcp />);
+        // case "Management Clusters":
+        //   componentsTag.push(<DbOmcp />);
+        //   break;
+        case "Topology":
+          componentsTag.push(<DbTopology propsData = {this.props.propsData} />);
           break;
-        case "Cluster Topology":
-          componentsTag.push(<DbClusterTopology />);
+        case "Cluster Join/Unjoin":
+          componentsTag.push(<DbClusterJoinUnjoin propsData = {this.props.propsData} />);
           break;
-        case "Service Topology":
-          componentsTag.push(<DbServiceTopology />);
-          break;
-        case "Service-Region Topology":
-          componentsTag.push(<DbServiceRegionTopology />);
-          break;
+      // case "Cluster Topology":
+      //   componentsTag.push(<DbClusterTopology />);
+      //   break;
+      // case "Service Topology":
+      //   componentsTag.push(<DbServiceTopology />);
+      //   break;
+      // case "Service-Region Topology":
+      //   componentsTag.push(<DbServiceRegionTopology />);
+      //   break;
       }
     });
 

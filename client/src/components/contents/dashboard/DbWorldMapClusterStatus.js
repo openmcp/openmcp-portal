@@ -38,10 +38,10 @@ class DbWorldMapClusterStatus extends Component {
         if (res === null) {
           this.setState({ rows: "" });
         } else {
-          console.log(res);
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        this.timer = setInterval(this.onRefresh, 5000)
       })
       .catch((err) => console.log(err));
     let userId = null;
@@ -51,6 +51,24 @@ class DbWorldMapClusterStatus extends Component {
 
     utilLog.fn_insertPLogs(userId, "log-DS-VW04");
   }
+ 
+
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        if(res === null){
+          this.setState({ rows: "" });
+        } else {
+          this.setState({ rows: res });
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
 
   render() {
     // const data = [

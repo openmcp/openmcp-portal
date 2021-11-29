@@ -96,14 +96,25 @@ class DashboardSelectModule extends Component {
 
     const url = `/apis/dashboard/components`;
     let myComp = [];
-    this.props.componentCodes.forEach((item)=>{
-      for(let i=0; i<this.state.right.length; i++){
-        if(item.description === this.state.right[i]){
-          myComp.push(item.code);
+
+
+     
+    this.state.right.forEach((item)=>{
+      for(let i=0; i<this.props.componentCodes.length; i++){
+        if(item === this.props.componentCodes[i].description){
+          myComp.push(this.props.componentCodes[i].code);
           break;
         }
       }
     })
+    // this.props.componentCodes.forEach((item)=>{
+    //   for(let i=0; i<this.state.right.length; i++){
+    //     if(item.description === this.state.right[i]){
+    //       myComp.push(item.code);
+    //       break;
+    //     }
+    //   }
+    // })
     const data = {
       myComponents: myComp,
       userId: userId,

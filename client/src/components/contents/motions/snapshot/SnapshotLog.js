@@ -27,7 +27,9 @@ import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import PlayCircleFilledWhiteRoundedIcon from "@material-ui/icons/PlayCircleFilledWhiteRounded";
 import { convertUTCTime } from "../../../util/Utitlity.js";
+import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
 
 class SnapshotLog extends Component {
   constructor(props) {
@@ -39,8 +41,9 @@ class SnapshotLog extends Component {
         { name: "snapshot", title: "Snapshot" },
         { name: "deployment", title: "Deployment" },
         { name: "namespace", title: "Namespace" },
+        { name: "progress", title: "Progress" },
         { name: "status", title: "Status" },
-        { name: "reason", title: "Reason" },
+        { name: "description", title: "Description" },
         { name: "creationTime", title: "Created Time" },
         { name: "elapsedTime", title: "Elapsed Time" },
         { name: "snapshotkey", title: "Snapshot key" },
@@ -52,8 +55,9 @@ class SnapshotLog extends Component {
         { columnName: "snapshot", width: 250 },
         { columnName: "deployment", width: 130 },
         { columnName: "namespace", width: 120 },
+        { columnName: "progress", width: 100 },
         { columnName: "status", width: 100 },
-        { columnName: "reason", width: 400 },
+        { columnName: "description", width: 400 },
         { columnName: "creationTime", width: 200 },
         { columnName: "elapsedTime", width: 130 },
         { columnName: "snapshotkey", width: 150 },
@@ -65,8 +69,8 @@ class SnapshotLog extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 30,
-      pageSizes: [30, 40, 50, 0],
+      pageSize: 10,
+      pageSizes: [10, 20, 30, 40, 50, 0],
 
       completed: 0,
       onClickUpdatePolicy: false,
@@ -96,6 +100,7 @@ class SnapshotLog extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        this.timer = setInterval(this.repeatApiCall, 5000);
       })
       .catch((err) => console.log(err));
 
@@ -104,6 +109,23 @@ class SnapshotLog extends Component {
       userId = result;
     });
     utilLog.fn_insertPLogs(userId, "log-SS-VW02");
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+  repeatApiCall=()=>{
+    this.callApi()
+    .then((res) => {
+      if(res === null){
+        this.setState({ rows: [] });
+      } else {
+        this.setState({ rows: res });
+        console.log("repeat");
+      }
+    })
+    .catch((err) => console.log(err));
   }
 
   onUpdateData = () => {
@@ -139,18 +161,37 @@ class SnapshotLog extends Component {
     this.setState({ onClickUpdatePolicy: value });
   };
 
-  RowDetail = ({ row }) => (
-    <div>
-      <SnapshotLogDetail
-        row={row.sub_info}
-        onSelectionChange={this.onSelectionChange}
-      />
-    </div>
-  );
+  // RowDetail = ({ row }) => (
+  //   <div>
+  //     <SnapshotLogDetail
+  //       row={row.sub_info}
+  //       onSelectionChange={this.onSelectionChange}
+  //     />
+  //   </div>
+  // );
 
   render() {
     const Cell = (props) => {
       const { column } = props;
+
+      const fn_linearProgressBar = () =>{
+        var percent ='';
+        if(props.value.indexOf(".") > -1) {
+          percent = props.value.split(".")[0]
+        } else {
+          percent = props.value.split("%")[0];
+        }
+
+        
+        return (
+          <div>
+            <p>{percent + `%`}</p>
+            <p style={{marginTop:"5px"}}>
+              <LinearProgressBar2 value={percent} total={100}/>
+            </p>
+          </div>
+        )
+      }
 
       if (column.name === "status") {
         return (
@@ -160,7 +201,7 @@ class SnapshotLog extends Component {
             aria-haspopup="true"
           >
             <div style={{ position: "relative", top: "-3px" }}>
-              {props.value === "Success" ? (
+              {props.value === "True" ? ([
                 <CheckCircleIcon
                   style={{
                     fontSize: "24px",
@@ -169,8 +210,20 @@ class SnapshotLog extends Component {
                     top: "5px",
                     color: "#00B80F",
                   }}
-                />
-              ) : (
+                />,
+                <span>Success</span>]
+              ) : props.value === "Running" ? ([
+                <PlayCircleFilledWhiteRoundedIcon
+                  style={{
+                    fontSize: "24px",
+                    marginRight: "5px",
+                    position: "relative",
+                    top: "5px",
+                    color: "#0586DC",
+                  }}
+                />,
+                <span>Running</span>]
+              ) : ([
                 <WarningRoundedIcon
                   style={{
                     fontSize: "24px",
@@ -179,9 +232,9 @@ class SnapshotLog extends Component {
                     top: "5px",
                     color: "#dc0505",
                   }}
-                />
+                />,
+                <span>Fail</span>]
               )}
-              <span>{props.value}</span>
             </div>
           </Table.Cell>
         );
@@ -195,6 +248,14 @@ class SnapshotLog extends Component {
                 false
               )}
             </span>
+          </Table.Cell>
+        );
+      } else  if (column.name === "progress") {
+        let progress = parseFloat(props.value.split('%')[0]).toFixed(1);
+            
+        return (
+          <Table.Cell>
+           {fn_linearProgressBar()}
           </Table.Cell>
         );
       } else {
@@ -242,11 +303,11 @@ class SnapshotLog extends Component {
                   <IntegratedSorting />
                   <IntegratedPaging />
 
-                  <RowDetailState
+                  {/* <RowDetailState
                   // defaultExpandedRowIds={[2, 5]}
                   expandedRowIds={this.state.expandedRowIds}
                   onExpandedRowIdsChange={this.onExpandedRowIdsChange}
-                />
+                /> */}
                   <Table cellComponent={Cell} rowComponent={Row} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
@@ -258,7 +319,7 @@ class SnapshotLog extends Component {
                   <TableColumnVisibility
                     defaultHiddenColumnNames={['sub_info']}
                   />
-                  <TableRowDetail contentComponent={this.RowDetail} />
+                  {/* <TableRowDetail contentComponent={this.RowDetail} /> */}
                 </Grid>,
               ]
             ) : (

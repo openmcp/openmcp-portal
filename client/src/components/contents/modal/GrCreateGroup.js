@@ -88,7 +88,7 @@ class GrCreateGroup extends Component {
       userSelectionId : [],
 
       selectedClusters : [],
-      projectSelectionId : [],
+      clusterSelectionId : [],
 
       activeStep : 0,
     };
@@ -202,15 +202,15 @@ class GrCreateGroup extends Component {
     })
   }
 
-  onSelectProjects = (rows, selectionId) => {
-    let projects = [];
-    rows.forEach((project) => {
-      projects.push(project.name);
+  onSelectClusters = (rows, selectionId) => {
+    let clusters = [];
+    rows.forEach((cluster) => {
+      clusters.push(cluster.name);
     });
 
     this.setState({
-      selectedClusters : projects,
-      projectSelectionId : selectionId
+      selectedClusters : clusters,
+      clusterSelectionId : selectionId
     })
   }
 
@@ -233,7 +233,7 @@ class GrCreateGroup extends Component {
       );
     });
 
-    const steps = ['Set Group Informations', 'Select Projects', 'Select Group Users'];
+    const steps = ['Set Group Informations', 'Select Clusters', 'Select Group Users'];
     // const steps = ['Set Group Informations', 'Select Group Roles','Select Projects', 'Select Group Users'];
     const handleNext = () => {
       switch (this.state.activeStep){
@@ -258,7 +258,7 @@ class GrCreateGroup extends Component {
         //   }
         case 1:
           if (Object.keys(this.state.selectedClusters).length === 0) {
-            alert("Please select projects");
+            alert("Please select clusters");
             return;
           } else {
             this.setState({activeStep : this.state.activeStep + 1});
@@ -348,8 +348,8 @@ class GrCreateGroup extends Component {
               this.state.activeStep === 1 ? (
                 <section className="md-content">
                   <GrClusters 
-                    selection={this.state.projectSelectionId}
-                    onselectedClusters={this.onSelectProjects}
+                    selection={this.state.clusterSelectionId}
+                    onselectedClusters={this.onSelectClusters}
                   />
                 </section>
               ) : (
@@ -724,9 +724,11 @@ class GrClusters extends Component{
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
+        debugger;
         if(res === null){
           this.setState({ rows: [] });
         } else {
+          debugger;
           this.setState({ rows: res });
           let selectedRows = [];
           this.props.selection.forEach((index) => {
@@ -864,7 +866,7 @@ class GrClusters extends Component{
 
     return(
       <div>
-        <p>Select Projects</p>
+        <p>Select Clusters</p>
           <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
               {this.state.selectedRow.length > 0 
                 ? this.state.selectedRow.map((row)=>{

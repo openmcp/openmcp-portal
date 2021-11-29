@@ -151,7 +151,7 @@ class Dashboard extends Component {
         {this.state.myComponentList ? (
           [
             <section className="content" style={{ minWidth: 1160 }}>
-              <CustomDynamicView myComponentList={this.state.myComponentList} />
+              <CustomDynamicView myComponentList={this.state.myComponentList} propsData = {this.props.propsData}/>
             </section>,
           ]
         ) : (

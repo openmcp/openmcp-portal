@@ -373,6 +373,15 @@ class SnapshotDetail extends Component {
   confirmed = (result) => {
     if (result) {
       // Restore Snapshot
+
+      // apiVersion: openmcp.k8s.io/v1alpha1
+      // kind: SnapshotRestore
+      // metadata:
+      //   name: example-snapshotrestore-group
+      // spec:
+      //   groupSnapshotKey: "1636967136"
+      //   isGroupSnapshot: true
+
       const url = `/apis/snapshot/restore`;
       const data = {
         cluster: "openmcp",
@@ -429,11 +438,16 @@ class SnapshotDetail extends Component {
     const Cell = (props) => {
       const { column, row } = props;
       if (column.name === "increment") {
+        let mBtye = (props.value / Math.pow(1024, 2)).toFixed(2);
         return (
-          <Table.Cell>
+          <Table.Cell
+          {...props}
+            style={{
+              padding: "0px",
+            }}>
             <div className="progressbar" style={{ display: "float" }}>
-              <LinearProgressBar2 value={props.value} total={100} />
-              {props.value}
+              <LinearProgressBar2 value={mBtye} total={10} />
+              {mBtye} MB
             </div>
           </Table.Cell>
         );

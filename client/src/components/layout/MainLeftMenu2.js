@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { AiFillDashboard, AiOutlineDeploymentUnit, AiOutlineUser, AiFillAlert, AiOutlineSetting, AiOutlineAreaChart} from "react-icons/ai";
+import { AiOutlineDashboard, AiFillDashboard, AiOutlineDeploymentUnit, AiOutlineUser, AiFillAlert, AiOutlineSetting, AiOutlineAreaChart} from "react-icons/ai";
 import { RiDashboardFill } from "react-icons/ri";
 import { GrBundle } from "react-icons/gr";
 import { FaBuffer} from "react-icons/fa";
@@ -55,11 +55,11 @@ class LeftMenu2 extends Component {
             path: "/dashboard",
             icon : <RiDashboardFill className="leftMenu-sub-icon"/>,
           },
-          // {
-          //   title: "Multiple Metrics", //수집정보
-          //   path: "/dashboard",
-          //   icon : <AiOutlineDashboard className="leftMenu-sub-icon"/>,
-          // },
+          {
+            title: "Multiple Metrics", //수집정보
+            path: "/multiple-metrics",
+            icon : <AiOutlineDashboard className="leftMenu-sub-icon"/>,
+          },
         ],
       },
       {

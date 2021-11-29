@@ -35,6 +35,7 @@ class DbStatus extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        this.timer = setInterval(this.onRefresh, 5000)
       })
       .catch((err) => console.log(err));
     let userId = null;
@@ -43,6 +44,10 @@ class DbStatus extends Component {
     });
     
     utilLog.fn_insertPLogs(userId, 'log-DS-VW01');
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
 
@@ -62,7 +67,6 @@ class DbStatus extends Component {
         } else {
           this.setState({ rows: res });
         }
-        clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };

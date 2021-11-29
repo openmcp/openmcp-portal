@@ -32,28 +32,6 @@ class ExcuteSnapshot extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "nodes", title: "nodes" },
-        { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
-        { name: "region", title: "Region" },
-        { name: "zone", title: "Zone" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "name", width: 130 },
-        { columnName: "status", width: 130 },
-        { columnName: "nodes", width: 130 },
-        { columnName: "cpu", width: 100 },
-        { columnName: "ram", width: 120 },
-        { columnName: "region", width: 130 },
-        { columnName: "zone", width: 130 },
-      ],
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 5,
-      pageSizes: [5, 10, 15, 0],
       open: false,
       dpCount: 0,
       snapshotName: "",
@@ -86,10 +64,10 @@ class ExcuteSnapshot extends Component {
     let dpCnt = this.props.rowData.length;
     let info = [];
     this.props.rowData.forEach((dp) => {
-      info.push({ name: dp.name, cluster: dp.cluster, namespace: dp.project });
+      info.push({ deployment: dp.deployment, cluster: dp.cluster, namespace: dp.project });
     });
 
-    let snapshotName = `snapshot-${info[0].name}-${dateFormat(
+    let snapshotName = `snapshot-${info[0].deployment}-${dateFormat(
       new Date(),
       "%Y%m%d%H%M%S",
       false
@@ -130,6 +108,8 @@ class ExcuteSnapshot extends Component {
 //          resourceType: Deployment
 //          resourceName: wordpress-mysql-1
 
+// spec.snapshotSources.resourceCluster
+
       value: {
         apiVersion: "openmcp.k8s.io/v1alpha1",
         kind: "Snapshot",
@@ -139,14 +119,15 @@ class ExcuteSnapshot extends Component {
         spec: {
           snapshotSources: [
             {
-              resourceCluster: "cluster1",
-              resourceNamespace: "default",
+              resourceCluster: this.state.dpInfo[0].cluster,
+              resourceNamespace: this.state.dpInfo[0].namespace,
               resourceType: "Deployment",
-              resourceName: "iot-gateway",
+              resourceName: this.state.dpInfo[0].deployment,
             },
           ],
         },
       },
+
     };
 
     axios
@@ -166,7 +147,7 @@ class ExcuteSnapshot extends Component {
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    utilLog.fn_insertPLogs(userId, "log-MG-MD01");
+    utilLog.fn_insertPLogs(userId, "log-SS-MD01");
 
     //close modal popup
     this.setState({ open: false });

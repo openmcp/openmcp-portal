@@ -1,13 +1,13 @@
 const fs = require("fs"); //database.json파일 접근
 const express = require("express");
-const OAuthServer = require('express-oauth-server');
+const OAuthServer = require("express-oauth-server");
 const bodyParser = require("body-parser");
 const app = express();
 const data = fs.readFileSync("./config.json");
 const conf = JSON.parse(data);
 
-const util = require('util');
-var render = require('co-views')('views');
+const util = require("util");
+var render = require("co-views")("views");
 // var os = require("os");
 // var path = require("path");
 
@@ -32,18 +32,124 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 app.oauth = new OAuthServer({
-  model: require('./model.js'),
-  accessTokenLifetime: 4 * 60 * 60
+  model: require("./model.js"),
+  accessTokenLifetime: 4 * 60 * 60,
 });
+
+//////////////////////////////////////////////////////////
+// 함수
+//////////////////////////////////////////////////////////
+const groupBy = function (data, key) {
+  return data.reduce(function (carry, el) {
+      var group = el[key];
+
+      if (carry[group] === undefined) {
+          carry[group] = []
+      }
+
+      carry[group].push(el)
+      return carry
+  }, {})
+}
+
+const convertBytes = function(bytes) {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+
+  if (bytes == 0) {
+    return "n/a"
+  }
+
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+
+  if (i == 0) {
+    return bytes + " " + sizes[i]
+  }
+
+  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
+}
+
+function getDateTime() {
+  var d = new Date();
+  d = new Date(d.getTime());
+  var date_format_str =
+    d.getFullYear().toString() +
+    "-" +
+    ((d.getMonth() + 1).toString().length == 2
+      ? (d.getMonth() + 1).toString()
+      : "0" + (d.getMonth() + 1).toString()) +
+    "-" +
+    (d.getDate().toString().length == 2
+      ? d.getDate().toString()
+      : "0" + d.getDate().toString()) +
+    " " +
+    (d.getHours().toString().length == 2
+      ? d.getHours().toString()
+      : "0" + d.getHours().toString()) +
+    ":" +
+    // ((parseInt(d.getMinutes() / 5) * 5).toString().length == 2
+    //   ? (parseInt(d.getMinutes() / 5) * 5).toString()
+    //   : "0" + (parseInt(d.getMinutes() / 5) * 5).toString()) +
+    // ":00";
+    (d.getMinutes().toString().length == 2
+      ? d.getMinutes().toString()
+      : "0" + d.getMinutes().toString()) +
+    ":" +
+    (d.getSeconds().toString().length == 2
+      ? d.getSeconds().toString()
+      : "0" + d.getSeconds().toString());
+  // console.log(date_format_str);
+  return date_format_str;
+}
+
+function getDateBefore(type, time) {
+  var d = new Date();
+  d = new Date(d.getTime());
+  if(type === 'h') {
+    d.setHours(d.getHours() - time);
+  } else if(type === 'm') {
+    d.setMinutes(d.getMinutes() - time);
+  }
+
+  var date_format_str =
+    d.getFullYear().toString() +
+    "-" +
+    ((d.getMonth() + 1).toString().length == 2
+      ? (d.getMonth() + 1).toString()
+      : "0" + (d.getMonth() + 1).toString()) +
+    "-" +
+    (d.getDate().toString().length == 2
+      ? d.getDate().toString()
+      : "0" + d.getDate().toString()) +
+    " " +
+    (d.getHours().toString().length == 2
+      ? d.getHours().toString()
+      : "0" + d.getHours().toString()) +
+    ":" +
+    // ((parseInt(d.getMinutes() / 5) * 5).toString().length == 2
+    //   ? (parseInt(d.getMinutes() / 5) * 5).toString()
+    //   : "0" + (parseInt(d.getMinutes() / 5) * 5).toString()) +
+    // ":00";
+    (d.getMinutes().toString().length == 2
+      ? d.getMinutes().toString()
+      : "0" + d.getMinutes().toString()) +
+    ":" +
+    (d.getSeconds().toString().length == 2
+      ? d.getSeconds().toString()
+      : "0" + d.getSeconds().toString());
+  // console.log(date_format_str);
+  return date_format_str;
+}
+////////////////////////////////////////////////////////// 
+//  함수끝
+//////////////////////////////////////////////////////////
+
+
+
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 // app.use(app.oauth.authorize());
-
-
-
 
 app.get("/api/hello", (req, res) => {
   res.send({ messge: "Hello Express!" });
@@ -86,128 +192,116 @@ function dbSettings() {
   });
 }
 
-
 /////////////////////////////////////////////////////////////////
 // OAuth2.0 서비스
 /////////////////////////////////////////////////////////////////
 // Post token.
-app.post('/oauth/token', app.oauth.token(), function(req, res){
+app.post("/oauth/token", app.oauth.token(), function (req, res) {
   console.log("/oauth/token");
 });
 
 // Get authorization.
-app.get('/oauth/authorize', function(req, res) {
+app.get("/oauth/authorize", function (req, res) {
   // Redirect anonymous users to login page.
   if (!req.app.locals.user) {
-    return res.redirect(util.format('/login?redirect=%s&client_id=%s&redirect_uri=%s', req.path, req.query.client_id, req.query.redirect_uri));
+    return res.redirect(
+      util.format(
+        "/login?redirect=%s&client_id=%s&redirect_uri=%s",
+        req.path,
+        req.query.client_id,
+        req.query.redirect_uri
+      )
+    );
   }
 
-  return render('authorize', {
+  return render("authorize", {
     client_id: req.query.client_id,
-    redirect_uri: req.query.redirect_uri
+    redirect_uri: req.query.redirect_uri,
   });
 });
 
 // Post authorization.
-app.post('/oauth/authorize', function(req, res) {
+app.post("/oauth/authorize", function (req, res) {
   // Redirect anonymous users to login page.
   if (!req.app.locals.user) {
-    console.log("req.app.locals.user :" + req.app)
-    return res.redirect(util.format('/login?client_id=%s&redirect_uri=%s', req.query.client_id, req.query.redirect_uri));
+    console.log("req.app.locals.user :" + req.app);
+    return res.redirect(
+      util.format(
+        "/login?client_id=%s&redirect_uri=%s",
+        req.query.client_id,
+        req.query.redirect_uri
+      )
+    );
   }
 
   return app.oauth.authorize();
 });
 
 // Get login.
-app.get('/login', function(req) {
+app.get("/login", function (req) {
   console.log("login");
-  return render('login', {
+  return render("login", {
     redirect: req.query.redirect,
     client_id: req.query.client_id,
-    redirect_uri: req.query.redirect_uri
+    redirect_uri: req.query.redirect_uri,
   });
 });
 
 // Post login.
-app.post('/login', function(req, res) {
+app.post("/login", function (req, res) {
   // @TODO: Insert your own login mechanism.
-  if (req.body.email !== 'thom@nightworld.com') {
-    return render('login', {
+  if (req.body.email !== "thom@nightworld.com") {
+    return render("login", {
       redirect: req.body.redirect,
       client_id: req.body.client_id,
-      redirect_uri: req.body.redirect_uri
+      redirect_uri: req.body.redirect_uri,
     });
   }
 
   // Successful logins should send the user back to /oauth/authorize.
-  var path = req.body.redirect || '/home';
+  var path = req.body.redirect || "/home";
 
-  return res.redirect(util.format('/%s?client_id=%s&redirect_uri=%s', path, req.query.client_id, req.query.redirect_uri));
+  return res.redirect(
+    util.format(
+      "/%s?client_id=%s&redirect_uri=%s",
+      path,
+      req.query.client_id,
+      req.query.redirect_uri
+    )
+  );
 });
 
 // Get secret.
-app.get('/secret', app.oauth.authenticate(), function(req, res) {
+app.get("/secret", app.oauth.authenticate(), function (req, res) {
   // Will require a valid access_token.
-  res.send('Secret get');
+  res.send("Secret get");
 });
 
-app.delete('/secret', app.oauth.authenticate(), function(req, res) {
+app.delete("/secret", app.oauth.authenticate(), function (req, res) {
   // Will require a valid access_token.
-  res.send('Secret delete');
+  res.send("Secret delete");
 });
 
-app.post('/secret', app.oauth.authenticate(), function(req, res) {
+app.post("/secret", app.oauth.authenticate(), function (req, res) {
   // Will require a valid access_token.
-  res.send('Secret post');
+  res.send("Secret post");
 });
 
-app.put('/secret', app.oauth.authenticate(), function(req, res) {
+app.put("/secret", app.oauth.authenticate(), function (req, res) {
   // Will require a valid access_token.
-  res.send('Secret put');
+  res.send("Secret put");
 });
 
-app.get('/public', function(req, res) {
+app.get("/public", function (req, res) {
   // Does not require an access_token.
-  res.send('Public area');
+  res.send("Public area");
 });
 
 /////////////////////////////////////////////////////////////////
 // END OAuth2.0 서비스 END
 /////////////////////////////////////////////////////////////////
 
-function getDateTime() {
-  var d = new Date();
-  d = new Date(d.getTime());
-  var date_format_str =
-    d.getFullYear().toString() +
-    "-" +
-    ((d.getMonth() + 1).toString().length == 2
-      ? (d.getMonth() + 1).toString()
-      : "0" + (d.getMonth() + 1).toString()) +
-    "-" +
-    (d.getDate().toString().length == 2
-      ? d.getDate().toString()
-      : "0" + d.getDate().toString()) +
-    " " +
-    (d.getHours().toString().length == 2
-      ? d.getHours().toString()
-      : "0" + d.getHours().toString()) +
-    ":" +
-    // ((parseInt(d.getMinutes() / 5) * 5).toString().length == 2
-    //   ? (parseInt(d.getMinutes() / 5) * 5).toString()
-    //   : "0" + (parseInt(d.getMinutes() / 5) * 5).toString()) +
-    // ":00";
-    (d.getMinutes().toString().length == 2
-      ? d.getMinutes().toString()
-      : "0" + d.getMinutes().toString()) +
-    ":" +
-    (d.getSeconds().toString().length == 2
-      ? d.getSeconds().toString()
-      : "0" + d.getSeconds().toString());
-  // console.log(date_format_str);
-  return date_format_str;
-}
+
 
 ///////////////////////
 // Write Log
@@ -278,8 +372,6 @@ app.post("/user_login", (req, res) => {
     }
   );
 });
-
-
 
 app.get("/dashboard-master-cluster", (req, res) => {
   let rawdata = fs.readFileSync("./json_data/dashboard_master_cluster.json");
@@ -986,8 +1078,7 @@ app.get("/clusters", app.oauth.authenticate(), (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("cluster")
-
+  console.log("cluster");
 
   var request = require("request");
   var options = {
@@ -3377,7 +3468,7 @@ app.get("/apis/snapshot", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body);
+      // console.log(body);
     } else {
       console.log("error", error);
       return error;
@@ -3445,24 +3536,18 @@ app.get("/apis/snapshot/log", (req, res) => {
 // Dashboard APIs
 ///////////////////////
 app.get("/apis/dashboard/components", (req, res) => {
-  let userId = req.query.userId
-  let query = 
-  `select cd.code,cd.description, dash.mycomp
+  let userId = req.query.userId;
+  let query = `select cd.code,cd.description, dash.mycomp
   from tb_codes cd
   left outer join (
        select UNNEST( ds.component ::TEXT[] ) myComp
     from tb_dashboard ds
     where ds.user_id = '${userId}') dash on cd.code = dash.myComp
-  where cd.kinds = 'DASHBOARD'
-  order by cd.code;`
-  connection.query(
-    query,
-    (err, result) => {
-      res.send(result.rows);
-    }
-  );
+  where cd.kinds = 'DASHBOARD';`;
+  connection.query(query, (err, result) => {
+    res.send(result.rows);
+  });
 });
-
 
 app.put("/apis/dashboard/components", (req, res) => {
   let query = `
@@ -3507,7 +3592,6 @@ app.get("/apis/dashboard/status", (req, res) => {
 });
 
 app.get("/apis/dashboard/region_groups", (req, res) => {
-
   // let rawdata = fs.readFileSync("./json_data/dashboard.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
@@ -3529,7 +3613,6 @@ app.get("/apis/dashboard/region_groups", (req, res) => {
 });
 
 app.get("/apis/dashboard/omcp", (req, res) => {
-
   //   let rawdata = fs.readFileSync("./json_data/dashboard.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
@@ -3572,7 +3655,7 @@ app.post("/apis/dashboard/cluster_topology", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("cluster_topology")
+  console.log("cluster_topology");
   let data = JSON.stringify(req.body);
   let request = require("request");
   let options = {
@@ -3592,11 +3675,11 @@ app.post("/apis/dashboard/cluster_topology", (req, res) => {
 });
 
 app.post("/apis/dashboard/service_topology", (req, res) => {
-//   let rawdata = fs.readFileSync("./json_data/dash_service_topology.json");
-// let overview = JSON.parse(rawdata);
-// res.send(overview);
+  //   let rawdata = fs.readFileSync("./json_data/dash_service_topology.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-console.log("cluster_topology")
+  console.log("cluster_topology");
   let data = JSON.stringify(req.body);
   let request = require("request");
   let options = {
@@ -3619,24 +3702,665 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
   //   let rawdata = fs.readFileSync("./json_data/dash_service_region_topology.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
-  
-  console.log("cluster_topology")
-    let data = JSON.stringify(req.body);
-    let request = require("request");
-    let options = {
-      uri: `${apiServer}/apis/dashboard/service_region_topology`,
-      method: "POST",
-      body: data,
-    };
-  
-    request(options, function (error, response, body) {
-      if (!error && response.statusCode == 200) {
-        res.send(body);
-      } else {
-        console.log("error", error);
-        return error;
-      }
-    });
+
+  console.log("cluster_topology");
+  let data = JSON.stringify(req.body);
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/dashboard/service_region_topology`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
   });
+});
+
+app.get("/apis/metric/clusterlist", (req, res) => {
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/metric/clusterlist`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+async function excuteQuery(query) {
+  let response;
+  try {
+    response = await connection.query(query);
+    return response.rows;
+  } catch (error) {}
+}
+
+app.get("/apis/metric/clusterState", async (req, res) => {
+  console.log("clusterState");
+  let resultData = {
+    nodeState: {
+    },
+    podState: {
+    },
+    workloadState: {
+      deployment: "0",
+      replicaset: "0",
+      statefulset: "0",
+    },
+    serviceState: {
+      service: "0",
+      endpoint: "0",
+    },
+  };
+
+  let query = `select * from cluster_node_state
+    where cluster_name = '${req.query.cluster}'
+    order by collected_time desc
+    limit 1;
+    `;
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    let data = queryResult[0];
+
+    // console.log("cluster_node_state : ", data)
+    resultData.nodeState = {
+      status: [
+        {
+          name: "online",
+          value: parseInt(data.node_online_cnt),
+        },
+        {
+          name: "offline",
+          value: parseInt(data.node_offline_cnt),
+        },
+      ],
+    };
+  }
+
+  query = `select * from cluster_pod_state
+    where cluster_name = '${req.query.cluster}'
+    order by collected_time desc
+    limit 1;    
+    `;
+
+  let queryResult2 = await excuteQuery(query);
+  if (queryResult2.length > 0) {
+    let data = queryResult2[0];
+    // console.log("cluster_pod_state : ", data)
+    resultData.podState = {
+      status: [
+        {
+          name: "running",
+          value: parseInt(data.pod_running),
+        },
+        {
+          name: "abnormal",
+          value: parseInt(data.pod_abnormal),
+        },
+        {
+          name: "etc",
+          value:
+            parseInt(data.pod_total) -
+            parseInt(data.pod_running) -
+            parseInt(data.pod_abnormal),
+        }
+      ],
+    };
+  }
+
+  query = `select * from cluster_service_state
+    where cluster_name = '${req.query.cluster}'
+    order by collected_time desc
+    limit 1;
+    `;
+
+  let queryResult3 = await excuteQuery(query);
+  if (queryResult3.length > 0) {
+    let data = queryResult3[0];
+    // console.log("cluster_service_state : ",data)
+    resultData.serviceState = {
+      service: data.service_cnt,
+      endpoint: data.endpoint_cnt,
+    };
+  }
+
+  query = `select * from cluster_workload_state
+    where cluster_name = '${req.query.cluster}'
+    order by collected_time desc
+    limit 1;
+    `;
+  let queryResult4 = await excuteQuery(query);
+  if (queryResult4.length > 0) {
+    let data = queryResult4[0];
+    // console.log("cluster_workload_state : ",data)
+    resultData.workloadState = {
+      deployment: data.deployment_cnt,
+      replicaset: data.replicaset_cnt,
+      statefulset: data.statefulset_cnt,
+    };
+  }
+
+  // console.log("end", resultData);
+  res.send(resultData);
+});
+
+app.get("/apis/metric/apiServer", async (req, res) => {
+  var date = getDateTime();
+  var dateBefore = getDateBefore("h", 1);
+  console.log("apiServer");
+  let resultData = [];
+
+  let query = `SELECT *
+  FROM apiserver_state
+  where reqests_per_sec <> '' and latency <> '' 
+  and cluster_name = '${req.query.cluster}' 
+  and collected_time >= '2021-11-17 15:00:00' 
+  and collected_time < '2021-11-17 16:00:00'
+  order by collected_time desc;
+    `;
+
+   let query2 = `SELECT *
+  FROM apiserver_state
+  where reqests_per_sec <> '' and latency <> '' 
+  and cluster_name = '${req.query.cluster}' 
+  and collected_time >= '${dateBefore}' 
+  and collected_time < '${date}'
+  order by collected_time desc;
+  `;
+  
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    
+    var data = {};
+    queryResult.forEach((item) => {
+      data = {
+        unit : "sec",
+        requests_per_sec : parseFloat(item.reqests_per_sec).toFixed(2),
+        latency : parseFloat(item.latency).toFixed(2),
+        time : item.collected_time
+      }
+      resultData.push(data);
+    });
+
+  }
+  res.send(resultData);
+});
+
+app.get("/apis/metric/namespacelist", (req, res) => {
+  console.log("/apis/metric/namespacelist")
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/metric/namespacelist?cluster=${req.query.cluster}`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+// Metric Namespace
+app.get("/apis/metric/namespaceState", async (req, res) => {
+  var date = getDateTime();
+  var dateBeforeHour = getDateBefore("h", 1);
+  var dateBeforeMinute = getDateBefore("m", 20);
+  console.log("namespace");
+  let resultData = {
+    volumeState: {
+      pvc_cnt : "0"
+    },
+    workloadState: {
+      deployment: "0",
+      replicaset: "0",
+      statefulset: "0",
+    },
+    serviceState: {
+      service: "0",
+      endpoint: "0",
+    },
+    podState: {},
+    netState: [],
+    cpuTop5 : [],
+    memoryTop5 : [],
+  };
+
+  let query = `SELECT *
+                FROM namespace_volume_state
+                where cluster_name <> '' and namespace_name <> ''
+                and cluster_name = '${req.query.cluster}' 
+                and namespace_name = '${req.query.namespace}'
+                order by collected_time desc
+                limit 1;
+              `;
+              console.log(query);
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    let data = queryResult[0];
+    
+    resultData.volumeState = 
+    {
+      pvc_cnt: parseInt(data.pvc_cnt),
+    };
+  }
+
+  query = `  SELECT *
+  FROM namespace_workload_state
+  where cluster_name <> '' and namespace_name <> ''
+  and cluster_name = '${req.query.cluster}' 
+  and namespace_name = '${req.query.namespace}'
+  order by collected_time desc
+  limit 1;;
+  `;
+  let queryResult2 = await excuteQuery(query);
+  if (queryResult2.length > 0) {
+  let data = queryResult2[0];
+  resultData.workloadState = {
+    deployment: data.deployment_cnt,
+    replicaset: data.replicaset_cnt,
+    statefulset: data.statefulset_cnt,
+  };
+}
+
+  query = `  
+    SELECT *
+    FROM namespace_service_state
+    where cluster_name <> '' and namespace_name <> ''
+    and cluster_name = '${req.query.cluster}' 
+    and namespace_name = '${req.query.namespace}'
+    order by collected_time desc
+    limit 1;
+    `;
+
+  let queryResult3 = await excuteQuery(query);
+  if (queryResult3.length > 0) {
+    let data = queryResult3[0];
+    console.log("namespace_service_state : ",data)
+    resultData.serviceState = {
+      service: data.service_cnt,
+      endpoint: data.endpoint_cnt,
+    };
+  }
+
+
+  query = `SELECT *
+    FROM namespace_pod_state
+    where cluster_name <> '' and namespace_name <> ''
+    and cluster_name = '${req.query.cluster}' 
+    and namespace_name = '${req.query.namespace}'
+    order by collected_time desc
+    limit 1;    
+    `;
+
+  let queryResult4 = await excuteQuery(query);
+  if (queryResult4.length > 0) {
+    let data = queryResult4[0];
+    resultData.podState = {
+      status: [
+        {
+          name: "running",
+          value: parseInt(data.pod_running),
+        },
+        {
+          name: "abnormal",
+          value: parseInt(data.pod_abnormal),
+        },
+        {
+          name: "etc",
+          value:
+            parseInt(data.pod_total) -
+            parseInt(data.pod_running) -
+            parseInt(data.pod_abnormal),
+        }
+      ],
+    };
+  }
+
+
+  // 10분단위로 해야함
+  query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
+            FROM namespace_resources
+            where cluster_name <> '' and namespace_name <> ''
+            and cluster_name = '${req.query.cluster}' 
+            and namespace_name = '${req.query.namespace}' 
+            and collected_time >= '2021-11-17 15:40:00' 
+            and collected_time < '2021-11-17 16:00:00'
+            order by collected_time desc;
+          `;
+
+  //  query2 = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
+  //  FROM namespace_resources
+  //  where cluster_name <> '' and namespace_name <> ''
+  //  and cluster_name = '${req.query.cluster}' 
+  // and collected_time >= '${dateBeforeMinute}' 
+  // and collected_time < '${date}'
+  // order by collected_time desc;
+  // `;
+
+  let queryResult5 = await excuteQuery(query);
+  if (queryResult5.length > 0) {
+    queryResult5.forEach((item) =>{
+      let data = {
+        unit: "ms",
+        rx : parseFloat(item.n_rx).toFixed(4),
+        tx : parseFloat(item.n_tx).toFixed(4),
+        time : item.collected_time
+      }
+      resultData.netState.push(data)
+    })
+  }
+
+
+  
+  query = `SELECT distinct cluster_name, namespace_name, trim(cpu_usage)::float cpu_usage, collected_time
+            FROM namespace_resources
+            where cluster_name = '${req.query.cluster}' and
+            (namespace_name, collected_time ) in
+            (select namespace_name, MAX(collected_time) AS max_date
+            from namespace_resources
+            group by namespace_name
+            order by max_date desc) 
+            order by cpu_usage desc
+            limit 5;
+          `;
+
+  let queryResult6 = await excuteQuery(query);
+  if (queryResult6.length > 0) {
+    queryResult6.forEach((item) =>{
+      let data = {
+        name: item.namespace_name,
+        usage : parseFloat(item.cpu_usage).toFixed(4),
+      }
+      resultData.cpuTop5.push(data)
+    })
+  }
+
+  
+  query = `SELECT distinct cluster_name, namespace_name, trim(memory_usage)::float memory_usage, collected_time
+            FROM namespace_resources
+            where cluster_name = '${req.query.cluster}' and
+            (namespace_name, collected_time ) in
+            (select namespace_name, MAX(collected_time) AS max_date
+            from namespace_resources
+            group by namespace_name
+            order by max_date desc) 
+            order by memory_usage desc
+            limit 5;
+          `;
+
+  let queryResult7 = await excuteQuery(query);
+  if (queryResult7.length > 0) {
+    queryResult7.forEach((item) =>{
+      let data = {
+        name: item.namespace_name,
+        usage : parseFloat(item.memory_usage).toFixed(4),
+      }
+      resultData.memoryTop5.push(data)
+    })
+  }
+
+  res.send(resultData);
+});
+
+app.get("/apis/metric/nodelist", (req, res) => {
+  console.log("/apis/metric/nodelist")
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/metric/nodelist?cluster=${req.query.cluster}`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      return error;
+    }
+  });
+});
+
+
+// Metric Node
+app.get("/apis/metric/nodeState", async (req, res) => {
+  var date = getDateTime();
+  var dateBeforeHour = getDateBefore("h", 1);
+  var dateBeforeMinute = getDateBefore("m", 20);
+  console.log("namespace");
+  let resultData = {
+    cpuCount: {
+      value : "0"
+    },
+    memoryCount: {
+      value : "0"
+    },
+    podState: {},
+    diskState: [],
+    netState: [],
+    cpuUsage : [],
+    memoryUsage : [],
+  };
+
+  let query = `SELECT *
+                FROM node_cpu_usage
+                where cluster_name = '${req.query.cluster}'
+                and node_name = '${req.query.node}'
+                order by collected_time desc
+                limit 1;
+              `;
+
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    let data = queryResult[0];
+    resultData.cpuCount = 
+    {
+      value: parseInt(data.total_cpu_cnt) + " cpu",
+    };
+  }
+
+  query = `SELECT *
+            FROM node_memory_usage
+            where cluster_name = '${req.query.cluster}'
+            and node_name = '${req.query.node}'
+            order by collected_time desc
+            limit 1;
+            `;
+  let queryResult2 = await excuteQuery(query);
+  if (queryResult2.length > 0) {
+    let data = queryResult2[0];
+    resultData.memoryCount = 
+    {
+      value: convertBytes(data.node_memory_total),
+    };
+  }
+
+  query = `SELECT *
+          FROM node_pod_state
+          where cluster_name = '${req.query.cluster}' 
+          and node_name = '${req.query.node}'
+          order by collected_time desc
+          limit 1;    
+          `;
+    
+  let queryResult3 = await excuteQuery(query);
+  if (queryResult3.length > 0) {
+    let data = queryResult3[0];
+    resultData.podState = {
+          quota: parseInt(data.node_pod_quota.trim()),
+          running: parseInt(data.node_pod_running_count.trim()),
+          abnormal: data.node_pod_abnormal_count.trim() === '' ? 0 : parseInt(data.node_pod_abnormal_count) ,
+    };
+  }
+
+    // 10분단위로 해야함
+    query = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
+    node_disk_size_usage usage, collected_time
+    FROM node_disk_usage
+    where cluster_name = '${req.query.cluster}' 
+    and node_name = '${req.query.node}' 
+    and collected_time >= '2021-11-17 15:40:00' 
+    and collected_time < '2021-11-17 16:00:00'
+    order by collected_time desc;
+  `;
+//  query2 = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
+      //        node_disk_size_usage usage, collected_time
+      // FROM node_disk_usage
+      // where cluster_name = '${req.query.cluster}' 
+      // and node_name = '${req.query.namespace}' 
+      // and collected_time >= '2021-11-17 15:50:00' 
+      // and collected_time < '2021-11-17 16:00:00'
+      // order by collected_time desc;
+      // `;
+
+    let queryResult4 = await excuteQuery(query);
+    if (queryResult4.length > 0) {
+    queryResult4.forEach((item) =>{
+    let data = {
+    unit: "GB",
+    capacity : parseFloat((parseFloat(item.capacity.trim()) / Math.pow(1024, 3)).toFixed(1)),
+    usage : parseFloat((parseFloat(item.usage.trim()) / Math.pow(1024, 3)).toFixed(1)),
+    time : item.collected_time
+    }
+    resultData.diskState.push(data)
+    })
+    }
+
+  // 10분단위로 해야함
+  query = ` SELECT cluster_name, node_name, node_net_bytes_received rx,
+                   node_net_bytes_transmitted tx, collected_time
+            FROM node_net_usage
+            where cluster_name = '${req.query.cluster}' 
+            and node_name = '${req.query.node}' 
+            and collected_time >= '2021-11-17 15:40:00' 
+            and collected_time < '2021-11-17 16:00:00'
+            order by collected_time desc;
+          `;
+
+  //  query2 = ` SELECT cluster_name, node_name, 
+              //        node_net_bytes_transmitted tx, node_net_bytes_received rx, collected_time
+              // FROM node_net_usage
+              // where cluster_name = '${req.query.cluster}' 
+              // and node_name = '${req.query.namespace}' 
+              // and collected_time >= '2021-11-17 15:50:00' 
+              // and collected_time < '2021-11-17 16:00:00'
+              // order by collected_time desc;
+              // `;
+              
+  let queryResult5 = await excuteQuery(query);
+  if (queryResult5.length > 0) {
+    queryResult5.forEach((item) =>{
+      let data = {
+        unit: "KB",
+        rx : parseFloat((parseFloat(item.rx.trim()) / Math.pow(1024, 1)).toFixed(1)),
+        tx : parseFloat((parseFloat(item.tx.trim()) / Math.pow(1024, 1)).toFixed(1)), 
+        time : item.collected_time
+      }
+      resultData.netState.push(data)
+    })
+  }
+  
+
+  
+  query = ` SELECT cluster_name, node_name, avg1m, collected_time
+            FROM node_cpu_usage
+            where cluster_name = '${req.query.cluster}' 
+            and collected_time >= '2021-11-17 15:40:00' 
+            and collected_time < '2021-11-17 16:00:00'
+            order by collected_time desc, node_name asc;
+          `;
+
+  let queryResult6 = await excuteQuery(query);
+  
+  if (queryResult6.length > 0) {
+    let tempData = [];
+    queryResult6.forEach((item) =>{
+      // arr[item.collected_time] = [item.namespace_name] = parseFloat(item.avg1m)
+      
+      let data = {
+        [item.node_name]: item.avg1m,
+        time : item.collected_time
+      }
+      tempData.push(data)
+    })
+
+    let dataGroupBy = groupBy(tempData, "time")
+    Object.keys([dataGroupBy][0]).map((key) => {
+      var dataObject = {}
+      dataObject["unit"] = "bytes";
+      [dataGroupBy][0][key].forEach((item)=>{
+        dataObject["time"] = item.collected_time;
+        Object.keys(item).map((key) => {
+          dataObject[key.trim()]= item[key]
+        });
+      })
+      // [Number(key), resultData.memoryUsage[0][key]]
+      resultData.cpuUsage.push(dataObject);
+    });
+  }
+
+  query = ` SELECT cluster_name, node_name, node_memory_utilisation, collected_time
+            FROM node_memory_usage
+            where cluster_name = '${req.query.cluster}' 
+            and collected_time >= '2021-11-17 15:40:00' 
+            and collected_time < '2021-11-17 16:00:00'
+            order by collected_time desc, node_name asc;
+          `;
+
+  let queryResult7 = await excuteQuery(query);
+  
+  if (queryResult7.length > 0) {
+    let tempData = [];
+    queryResult7.forEach((item) =>{
+      let data = {
+        [item.node_name]: item.node_memory_utilisation,
+        time : item.collected_time
+      }
+      tempData.push(data)
+    })
+
+    let dataGroupBy = groupBy(tempData, "time")
+    Object.keys([dataGroupBy][0]).map((key) => {
+      var dataObject = {}
+      dataObject["unit"] = "bytes";
+      [dataGroupBy][0][key].forEach((item)=>{
+        dataObject["time"] = item.collected_time;
+        Object.keys(item).map((key) => {
+          dataObject[key.trim()]= item[key]
+        });
+      })
+      // [Number(key), resultData.memoryUsage[0][key]]
+      resultData.memoryUsage.push(dataObject);
+    });
+  }
+
+
+  
+
+
+
+  res.send(resultData);
+});
+
+
+
+
+
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

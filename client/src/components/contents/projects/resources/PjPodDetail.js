@@ -126,7 +126,11 @@ class BasicInfo extends Component {
       <div className="content-box">
         <div className="cb-header">
           <span>Basic Info</span>
-          <PdPodResourceConfig name={this.props.rowData.name} resources={this.props.rowData.resources}/>
+          {/* <PdPodResourceConfig name={this.props.rowData.name} resources={this.props.rowData.resources}/> */}
+          {/* <PdPodResourceConfig
+            data={this.props.rowData}
+            refresh={this.props.refresh}
+          /> */}
         </div>
         <div className="cb-body">
           <div>
