@@ -719,16 +719,14 @@ class GrClusters extends Component{
     const { completed } = this.state;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
-
+  
   componentDidMount(){
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        debugger;
         if(res === null){
           this.setState({ rows: [] });
         } else {
-          debugger;
           this.setState({ rows: res });
           let selectedRows = [];
           this.props.selection.forEach((index) => {
