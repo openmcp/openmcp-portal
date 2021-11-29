@@ -339,7 +339,7 @@ class GroupRole extends Component {
                             <MenuItem
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
-                              <GrCreateGroup onUpdateData={this.onUpdateData} menuClose={this.handleClose}/>
+                              <GrCreateGroup onUpdateData={this.onUpdateData} menuClose={this.handleClose} propsData={this.props.propsData}/>
                             </MenuItem>
                             <MenuItem
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}

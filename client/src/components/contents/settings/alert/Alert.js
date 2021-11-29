@@ -12,6 +12,7 @@ import { NavigateNext } from '@material-ui/icons';
 import AlertLog from './AlertLog';
 import SetThreshold from './SetThreshold';
 import { AiFillAlert} from "react-icons/ai";
+import { AsyncStorage } from "AsyncStorage";
 
 const styles = (theme) => ({
   root: {
@@ -72,8 +73,8 @@ class Threshold extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "threshold", index: 1, param:"set-threshold" },
-      { label: "alert log", index: 2, param:"alert-log" },
+      { label: "alert log", index: 1, param:"alert-log" },
+      { label: "threshold", index: 2, param:"set-threshold" },
     // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -81,9 +82,9 @@ class Threshold extends Component {
   componentWillMount() {
 
      if(this.props.match.url.indexOf("log") > 0 ){
-       this.setState({ value: 1 });
+       this.setState({ value: 0 });
      } else {
-      this.setState({ value: 0 });
+      this.setState({ value: 1 });
      }
      this.props.menuData("none");
   }
@@ -94,7 +95,10 @@ class Threshold extends Component {
     };
     const { classes } = this.props;
 
-
+    let role;
+    AsyncStorage.getItem("roles", (err, result) => {
+      role = result;
+    });
     
 
 
@@ -142,29 +146,29 @@ class Threshold extends Component {
                   TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
                 >
                   {this.state.tabHeader.map((i) => {
-                    return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
-                          component={Link}
-                          to={{
-                            pathname: `/settings/alert/${i.param}`
-                          }}
-                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
-                    />
-                    );
+                      return (
+                      <Tab label={i.label} {...a11yProps(i.index)}
+                            component={Link}
+                            to={{
+                              pathname: `/settings/alert/${i.param}`
+                            }}
+                            style={{minHeight:"42px", fontSize: "13px", minWidth:"100px", display: role !== 'admin' && i.index === 2 ? 'none' : "" }}
+                      />
+                      );
                   })}
                 </Tabs>
               </AppBar>
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
-                <Switch>
-                <Route path="/settings/alert/set-threshold"
-                    render={({match,location}) => <SetThreshold  match={match} location={location} menuData={this.onMenuData}/>} >
+               <Switch>
+                  <Route path="/settings/alert/alert-log"
+                    render={({match,location}) => <AlertLog  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
-               <Switch>
-                  <Route path="/settings/alert/alert-log"
-                    render={({match,location}) => <AlertLog  match={match} location={location} menuData={this.onMenuData}/>} >
+                <Switch>
+                <Route path="/settings/alert/set-threshold"
+                    render={({match,location}) => <SetThreshold  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
               </TabPanel>

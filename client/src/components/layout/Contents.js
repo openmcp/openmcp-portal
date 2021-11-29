@@ -392,21 +392,33 @@ class Contents extends Component {
             }}  />} >
           </Route> */}
 
-          
-          <Route path="/settings/alert/set-threshold"
+<Route path="/settings/alert/alert-log"
             render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
-          <Route path="/settings/alert/alert-log"
+          <Route path="/settings/alert/set-threshold"
             render={({match,location}) => <Threshold  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route exact path="/settings/alert"
             render={({match,location}) => <Redirect to={{
-              pathname : `/settings/alert/set-threshold`,
+              pathname : `/settings/alert/alert-log`,
             }}  />} >
           </Route>
 
           
-          <Route path="/settings/meterings/metering"
+          <Route path="/settings/metering"
+            render={({match,location}) => <Metering  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
+          </Route>
+          <Route path="/settings/billing/:date" 
+            render={({match,location}) => <BillDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
+          <Route path="/settings/billing"
+            render={({match,location}) => <BillList  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
+          </Route>
+          {/* <Route exact path="/settings/meterings"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/meterings/metering`,
+            }}  />} >
+          </Route> */}
+          {/* <Route path="/settings/meterings/metering"
             render={({match,location}) => <MeteringMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
           <Route path="/settings/meterings/bill/:date" 
@@ -418,7 +430,7 @@ class Contents extends Component {
             render={({match,location}) => <Redirect to={{
               pathname : `/settings/meterings/metering`,
             }}  />} >
-          </Route>
+          </Route> */}
 
 
           <Route path="/clusters/joined"

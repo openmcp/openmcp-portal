@@ -43,6 +43,8 @@ import Confirm2 from "./../../../modules/Confirm2";
 import ThCreateThreshold from "../../modal/ThCreateThreshold.js";
 import ThEditThreshold from "../../modal/ThEditThreshold.js";
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
+import { BiDollarCircle } from "react-icons/bi";
+import { NavigateNext } from "@material-ui/icons";
 
 class BillList extends Component {
   constructor(props) {
@@ -247,7 +249,7 @@ class BillList extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/settings/meterings/bill/${row.date}`,
+            pathname: `/settings/billing/${row.date}`,
             state: {
               data : row
             }
@@ -258,7 +260,23 @@ class BillList extends Component {
     };
 
     return (
-      <div className="sub-content-wrapper fulled">
+      <div className="content-wrapper fulled">
+        <section className="content-header">
+          <h1>
+          <i><BiDollarCircle/></i>
+          <span>Billing</span>
+            <small></small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <NavLink to="/dashboard">Home</NavLink>
+            </li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Settings
+            </li>
+          </ol>
+        </section>
         <Confirm2
           confirmInfo={this.state.confirmInfo}
           confrimTarget={this.state.confrimTarget}

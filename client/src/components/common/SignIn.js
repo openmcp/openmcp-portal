@@ -81,22 +81,20 @@ class SignIn extends Component {
         if (res.data.access_token !== "fail") {
           AsyncStorage.setItem("token", res.data.access_token);
           AsyncStorage.setItem("refreshToken", res.data.refresh_token);
-
+          
           const url = `/user_login`;
           const data = {
             userid: username,
             password: password,
           };
           axios
-            .post(url, data)
-            .then((res, err) => {
-              if (res.data.data.rowCount > 0) {
-                AsyncStorage.setItem("userName", username);
-                AsyncStorage.setItem("roles", res.data.data.rows[0].roles);
-                AsyncStorage.setItem(
-                  "projects",
-                  res.data.data.rows[0].projects
-                );
+          .post(url, data)
+          .then((res, err) => {
+            if (res.data.data.rowCount > 0) {
+              AsyncStorage.setItem("userName", username);
+              AsyncStorage.setItem("roles", res.data.data.rows[0].role_id);
+              AsyncStorage.setItem("refreshToken", res.data.refresh_token);
+              AsyncStorage.setItem("projects",res.data.data.rows[0].projects);
 
                 // var projects;
                 // AsyncStorage.getItem("projects",(err, result) => {

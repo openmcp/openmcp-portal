@@ -164,7 +164,7 @@ class Head extends Component {
                 <div
                   style={{
                     display: "inline-block",
-                    padding: "1px 11px 0px 5px"
+                    padding: "3px 11px 0px 5px"
                   }}
                 >
                   {userName}

@@ -23,6 +23,9 @@ import { AsyncStorage } from "AsyncStorage";
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
 import PdPodResourceConfig from "../../modal/PdPodResourceConfig.js";
 import MtSetMetering from "../../modal/metering/MtSetMetering.js";
+import { AiOutlineAreaChart } from "react-icons/ai";
+import { NavLink } from "react-router-dom";
+import { NavigateNext } from "@material-ui/icons";
 
 class Metering extends Component {
   constructor(props) {
@@ -68,7 +71,7 @@ class Metering extends Component {
   }
 
   componentWillMount() {
-    // this.props.menuData("none");
+    this.props.menuData("none");
   }
 
   callApi = async () => {
@@ -180,7 +183,23 @@ class Metering extends Component {
     // };
 
     return (
-      <div className="sub-content-wrapper fulled">
+      <div className="content-wrapper fulled">
+        <section className="content-header">
+          <h1>
+          <i><AiOutlineAreaChart/></i>
+          <span>Metrings</span>
+            <small></small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <NavLink to="/dashboard">Home</NavLink>
+            </li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              Settings
+            </li>
+          </ol>
+        </section>
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
