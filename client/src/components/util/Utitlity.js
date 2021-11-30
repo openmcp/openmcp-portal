@@ -96,3 +96,10 @@ export function fn_goLoginPage(history){
   AsyncStorage.setItem("projects", null);
   history.push("/login");
 }
+
+export function fn_refreshAsyncStorage(){
+  AsyncStorage.setItem("token", null);
+  AsyncStorage.setItem("userName", null);
+  AsyncStorage.setItem("roles", null);
+  AsyncStorage.setItem("projects", null);
+}

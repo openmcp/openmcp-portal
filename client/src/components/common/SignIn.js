@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import axios from "axios";
 import * as utilLog from "./../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
+import { fn_refreshAsyncStorage } from "../util/Utitlity.js";
 
 // AsyncStorage 사용방법
 // var username = "test"
@@ -88,6 +89,7 @@ class SignIn extends Component {
             userid: username,
             password: password,
           };
+          debugger;
           axios
           .post(url, data)
           .then((res, err) => {
@@ -95,20 +97,40 @@ class SignIn extends Component {
               AsyncStorage.setItem("userName", username);
               AsyncStorage.setItem("roles", res.data.data.rows[0].role_id);
               AsyncStorage.setItem("refreshToken", res.data.refresh_token);
-              const g_clusters = Array.from(new Set(res.data.data.rows[0].g_clusters.toString().split(',')));
+              let g_clusters
+              if(res.data.data.rows[0].role_id[0] === 'admin'){
+                g_clusters = ['allClusters']
+              } else {
+                g_clusters = Array.from(new Set(res.data.data.rows[0].g_clusters.toString().split(',')));
+              }
               AsyncStorage.setItem("g_clusters", g_clusters);
 
-              // var projects;
-              // AsyncStorage.getItem("projects",(err, result) => {
-              //   projects = result.split(",");
-              // })
-
-              this.setState({
-                loggedIn: true,
+              let role ;
+              AsyncStorage.getItem("roles", (err, result) => {
+                role = result;
               });
 
-                // log - logined
-              utilLog.fn_insertPLogs(username, "log-LG-LG01");
+              if(res.data.data.rows[0].role_id[0] === 'user'){
+                if( g_clusters[0].length <= 0){
+                  alert('You cannot log in because there is no assigned cluster.\nPlease ask the manager.');
+                  fn_refreshAsyncStorage();
+                } else {
+                  this.setState({
+                    loggedIn: true,
+                  });
+                  utilLog.fn_insertPLogs(username, "log-LG-LG01");
+                }
+              } else if (res.data.data.rows[0].role_id[0] === 'admin'){
+                this.setState({
+                  loggedIn: true,
+                });
+                    // log - logined
+                utilLog.fn_insertPLogs(username, "log-LG-LG01");
+              } else {
+                alert('You cannot log in because there is no assigned cluster.\nPlease ask the manager.');
+                fn_refreshAsyncStorage();
+              }
+
             } else {
               alert(res.data.data.message);
             }
