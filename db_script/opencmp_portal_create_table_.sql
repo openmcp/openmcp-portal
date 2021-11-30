@@ -1,11 +1,4 @@
-
-
-
-
-
-
-
-
+CREATE EXTENSION "uuid-ossp"; -- uuid_generate_v4()를 사용하기 위함
 
 --==================================================================================
 -- tb_account_role
@@ -46,7 +39,7 @@ WITH (
 TABLESPACE pg_default;
 
 ALTER TABLE public.tb_accounts
-    OWNER to scshin;
+    OWNER to postgres;
 
 --==================================================================================
 --tb_codes
@@ -371,7 +364,7 @@ ALTER TABLE public.tb_dashboard
 --==================================================================================
 --oauth_tokens
 --==================================================================================
-CREATE EXTENSION "uuid-ossp"; -- uuid_generate_v4()를 사용하기 위함
+
 
 CREATE TABLE IF NOT EXISTS public.oauth_tokens
 (

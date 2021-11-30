@@ -58,8 +58,15 @@ class DbServiceTopology extends Component {
   onRefresh = () => {
     this.timer = setInterval(this.progress, 20);
 
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => { 
+      g_clusters = result.split(',');
+    });
+    
+
     const url = `/apis/dashboard/service_topology`;
     const data = {
+      g_clusters : g_clusters,
       pathService:
         "M163.565,144H155.3a.436.436,0,0,0-.435.435V152.7a.436.436,0,0,0,.435.435h8.261A.436.436,0,0,0,164,152.7v-8.261A.436.436,0,0,0,163.565,144Zm0,10.87H155.3a.436.436,0,0,0-.435.435v8.261a.436.436,0,0,0,.435.435h8.261a.436.436,0,0,0,.435-.435V155.3A.436.436,0,0,0,163.565,154.87ZM152.7,144h-8.261a.436.436,0,0,0-.435.435V152.7a.436.436,0,0,0,.435.435H152.7a.436.436,0,0,0,.435-.435v-8.261A.436.436,0,0,0,152.7,144Zm0,10.87h-8.261a.436.436,0,0,0-.435.435v8.261a.436.436,0,0,0,.435.435H152.7a.436.436,0,0,0,.435-.435V155.3A.436.436,0,0,0,152.7,154.87Z",
       pathCluster:

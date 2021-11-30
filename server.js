@@ -142,9 +142,6 @@ function getDateBefore(type, time) {
 //  함수끝
 //////////////////////////////////////////////////////////
 
-
-
-
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 // app.use(app.oauth.authorize());
@@ -175,13 +172,6 @@ dbSettings();
 function dbSettings() {
   //connection.connect();
   connection.query(`select * from tb_account_role;`, (err, result) => {
-    if (err !== null){
-      console.log(err);
-    } else {
-      var result_set = {
-        data: [],
-        message: "Please check your Password",
-      };
       if (result === undefined) {
         connection.query(createTableScript, (err, result) => {
           if(err != null) {
@@ -197,7 +187,6 @@ function dbSettings() {
       } else {
         console.log("Skip DB schemas create");
       }
-    }
     //connection.end();
   });
 }
@@ -1063,7 +1052,7 @@ app.post("/apis/deployments/resources", (req, res) => {
 // Clusters APIs
 ///////////////////////
 // app.get("/clusters", app.oauth.authenticate(), (req, res) => {
-app.get("/clusters", (req, res) => {
+app.post("/clusters", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters.json");
   // let rawdata = fs.readFileSync("./json_data/clusters2_warning.json");
   // let rawdata = fs.readFileSync("./json_data/clusters3-1_normal.json");
@@ -1074,9 +1063,11 @@ app.get("/clusters", (req, res) => {
   // res.send(overview);
 
   var request = require("request");
+  let data = JSON.stringify(req.body);
   var options = {
     uri: `${apiServer}/apis/clusters`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -3529,7 +3520,6 @@ app.post("/apis/dashboard/status", (req, res) => {
   let data = JSON.stringify(req.body);
   let request = require("request");
 
-  console.log("DD",req.body);
   let options = {
     uri: `${apiServer}/apis/dashboard/status`,
     method: "POST",
@@ -3546,15 +3536,17 @@ app.post("/apis/dashboard/status", (req, res) => {
   });
 });
 
-app.get("/apis/dashboard/region_groups", (req, res) => {
+app.post("/apis/dashboard/region_groups", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/dashboard.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
   let request = require("request");
+  let data = JSON.stringify(req.body);
   let options = {
     uri: `${apiServer}/apis/dashboard/region_groups`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -3591,11 +3583,13 @@ app.post("/apis/dashboard/omcp", (req, res) => {
   });
 });
 
-app.get("/apis/dashboard/world_cluster_map", (req, res) => {
+app.post("/apis/dashboard/world_cluster_map", (req, res) => {
   let request = require("request");
+  let data = JSON.stringify(req.body);
   let options = {
     uri: `${apiServer}/apis/dashboard/world_cluster_map`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -3659,8 +3653,8 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  let data = JSON.stringify(req.body);
   let request = require("request");
+  let data = JSON.stringify(req.body);
   let options = {
     uri: `${apiServer}/apis/dashboard/service_region_topology`,
     method: "POST",
@@ -3677,11 +3671,13 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
   });
 });
 
-app.get("/apis/metric/clusterlist", (req, res) => {
+app.post("/apis/metric/clusterlist", (req, res) => {
   let request = require("request");
+  let data = JSON.stringify(req.body);
   let options = {
     uri: `${apiServer}/apis/metric/clusterlist`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {

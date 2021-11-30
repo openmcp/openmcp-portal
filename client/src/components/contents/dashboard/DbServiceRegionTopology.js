@@ -36,8 +36,14 @@ class DbServiceRegionTopology extends Component {
   
   onRefresh = () => {
     this.timer = setInterval(this.progress, 20);
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => { 
+      g_clusters = result.split(',');
+    });
+    
     const url = `/apis/dashboard/service_region_topology`;
     const data = {
+      g_clusters : g_clusters,
       pathRegion:
         "M13,23l5.5-5.5a7.778,7.778,0,1,0-11,0Zm0,3.142L5.929,19.071a10,10,0,1,1,14.142,0Zm0-11.92A2.222,2.222,0,1,0,10.778,12,2.222,2.222,0,0,0,13,14.222Zm0,2.222A4.444,4.444,0,1,1,17.444,12,4.444,4.444,0,0,1,13,16.444Z",
       pathCluster:
