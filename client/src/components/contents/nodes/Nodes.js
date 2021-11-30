@@ -347,7 +347,9 @@ class Nodes extends Component {
                       >
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
+                              <MenuItem 
+                              onKeyDown={(e) => e.stopPropagation()}
+                              style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
                                 <NdAddNode onUpdateData = {this.onUpdateData}
                                  menuClose={handleClose}/>
                               </MenuItem>

@@ -374,6 +374,7 @@ spec:
                                 />
                               </MenuItem> */}
                               <MenuItem 
+                              onKeyDown={(e) => e.stopPropagation()}
                                 // onClick={handleClose}
                                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
                               >

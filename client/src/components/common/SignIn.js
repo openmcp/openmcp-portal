@@ -82,6 +82,7 @@ class SignIn extends Component {
           AsyncStorage.setItem("token", res.data.access_token);
           AsyncStorage.setItem("refreshToken", res.data.refresh_token);
           
+          
           const url = `/user_login`;
           const data = {
             userid: username,
@@ -91,10 +92,14 @@ class SignIn extends Component {
           .post(url, data)
           .then((res, err) => {
             if (res.data.data.rowCount > 0) {
+              debugger;
               AsyncStorage.setItem("userName", username);
               AsyncStorage.setItem("roles", res.data.data.rows[0].role_id);
               AsyncStorage.setItem("refreshToken", res.data.refresh_token);
-              AsyncStorage.setItem("projects",res.data.data.rows[0].projects);
+
+              const g_clusters = Array.from(new Set(res.data.data.rows[0].g_clusters.toString().split(',')));
+
+              AsyncStorage.setItem("g_clusters", g_clusters);
 
                 // var projects;
                 // AsyncStorage.getItem("projects",(err, result) => {

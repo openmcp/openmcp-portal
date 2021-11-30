@@ -339,8 +339,18 @@ app.post("/apimcp/portal-log", (req, res) => {
 
 app.post("/user_login", (req, res) => {
   const bcrypt = require("bcrypt");
+
+  let query = `select *, 
+  array(
+        select distinct array_to_string(clusters,',')
+        from tb_group_role t 
+        where ta.user_id = ANY(t.member)
+        ) as g_clusters
+  from tb_accounts ta where ta.user_id = '${req.body.userid}';`
+
   connection.query(
-    `select * from tb_accounts where user_id = '${req.body.userid}';`,
+    // `select * from tb_accounts where user_id = '${req.body.userid}';`,
+    query,
     (err, result) => {
       var result_set = {
         data: [],
@@ -1068,7 +1078,8 @@ app.post("/apis/deployments/resources", (req, res) => {
 ///////////////////////
 // Clusters APIs
 ///////////////////////
-app.get("/clusters", app.oauth.authenticate(), (req, res) => {
+// app.get("/clusters", app.oauth.authenticate(), (req, res) => {
+app.get("/clusters", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters.json");
   // let rawdata = fs.readFileSync("./json_data/clusters2_warning.json");
   // let rawdata = fs.readFileSync("./json_data/clusters3-1_normal.json");
@@ -2518,6 +2529,7 @@ app.post("/create_account", (req, res) => {
     bcrypt.hash(req.body.password, salt, function (err, hash_password) {
       var create_time = getDateTime();
       //connection.connect();
+      console.log(req.body.role);
       connection.query(
         `insert into tb_accounts values ('${req.body.userid}', '${hash_password}','${req.body.role}','${create_time}','${create_time}');`,
         (err, result) => {

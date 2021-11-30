@@ -63,13 +63,13 @@ class AddMembers extends Component {
       const data = {
         userid:this.state.userid,
         password:this.state.password,
-        role:"{omcp_monitor}",
+        role:"{user}",
       };
       axios.post(url, data)
       .then((res) => {
           alert(res.data.message);
           this.setState({ open: false });
-          this.props.menuClose();
+          this.props.onUpdateData();
       })
       .catch((err) => {
           alert(err);

@@ -41,7 +41,7 @@ import LensIcon from '@material-ui/icons/Lens';
 import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-
+import { fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -797,7 +797,19 @@ class Grclusters extends Component{
   }
 
   callApi = async () => {
-    const response = await fetch("/clusters");
+    let accessToken;
+    AsyncStorage.getItem("token", (err, result) => {
+      accessToken = result;
+    });
+
+    const options = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        // Authorization: `Bearer 1bdd36071778dbbc4cc4e818108d22fe80b5d4a7`,
+      },
+    };
+
+    const response = await fetch("/clusters", options);
     const body = await response.json();
     return body;
   };
@@ -809,22 +821,55 @@ class Grclusters extends Component{
 
   componentDidMount(){
     this.timer = setInterval(this.progress, 20);
+
     this.callApi()
-      .then((res) => {
+      .then(async (res) => {
         if(res === null){
           this.setState({ rows: [] });
         } else {
-          this.setState({ rows: res });
-          let selectedRows = [];
-          this.props.selection.forEach((index) => {
-            selectedRows.push(res[index]);
-          });
-          this.setState({ selectedRow: selectedRows});
+
+          let resData = res;
+          let result = await fn_tokenValid(res);
+
+          if(result === "valid"){
+            this.setState({ rows: res });
+            let selectedRows = [];
+            this.props.selection.forEach((index) => {
+              selectedRows.push(res[index]);
+            });
+            this.setState({ selectedRow: selectedRows});
+          } else if (result === "refresh"){
+            this.onRefresh();
+          } else {
+            console.log("expired-pront");
+            fn_goLoginPage(this.props.propsData.info.history);
+          }
         }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   }
+
+  onRefresh = () => {
+    this.timer = setInterval(this.progress, 20);
+
+    this.callApi()
+    .then(async (res) => {
+      if(res === null){
+        this.setState({ rows: [] });
+      } else {
+        this.setState({ rows: res });
+        let selectedRows = [];
+        this.props.selection.forEach((index) => {
+          selectedRows.push(res[index]);
+        });
+        this.setState({ selectedRow: selectedRows});
+      }
+      clearInterval(this.timer);
+    })
+    .catch((err) => console.log(err));
+  };
+
 
   render(){
 

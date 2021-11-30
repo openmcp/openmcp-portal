@@ -287,6 +287,7 @@ class ConfigKVM extends Component {
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
                             <MenuItem
+                              onKeyDown={(e) => e.stopPropagation()}
                               onClick={handleClose}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
@@ -297,6 +298,7 @@ class ConfigKVM extends Component {
                                 New </div>
                             </MenuItem>
                             <MenuItem
+                            onKeyDown={(e) => e.stopPropagation()}
                               onClick={handleClose}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
@@ -308,6 +310,7 @@ class ConfigKVM extends Component {
                               </div>
                             </MenuItem>
                             <MenuItem
+                            onKeyDown={(e) => e.stopPropagation()}
                               onClick={handleClose}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >

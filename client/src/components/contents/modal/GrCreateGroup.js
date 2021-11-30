@@ -745,7 +745,7 @@ class GrClusters extends Component{
         } else {
           let resData = res;
           let result = await fn_tokenValid(res);
-          console.log("result : ", result);
+          
           if(result === "valid"){
             this.setState({ rows: resData });
             let selectedRows = [];
@@ -773,12 +773,10 @@ class GrClusters extends Component{
       if(res === null){
         this.setState({ rows: [] });
       } else {
-        let resData = res;
-
-          this.setState({ rows: resData });
+          this.setState({ rows: res });
           let selectedRows = [];
           this.props.selection.forEach((index) => {
-            selectedRows.push(resData[index]);
+            selectedRows.push(res[index]);
           });
           this.setState({ selectedRow: selectedRows});
       }

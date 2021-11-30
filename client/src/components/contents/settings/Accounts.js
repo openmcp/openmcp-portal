@@ -98,16 +98,14 @@ class Accounts extends Component {
       })
       .catch((err) => console.log(err));
       
-  let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-  utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
-
+    let userId = null;
+      AsyncStorage.getItem("userName",(err, result) => { 
+        userId= result;
+      })
+    utilLog.fn_insertPLogs(userId, 'log-AC-VW01');
   };
 
   onUpdateData = () => {
-    this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
         this.setState({ 
@@ -115,8 +113,6 @@ class Accounts extends Component {
           selectedRow : "",
           rows: res 
         });
-
-        clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };
@@ -233,11 +229,13 @@ class Accounts extends Component {
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
                             <MenuItem
+                            onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
-                              <AddMembers onUpdateData={this.onUpdateData} menuClose={handleClose}/>
+                              <AddMembers onUpdateData={this.onUpdateData} menuClose={handleClose} onRefresh={this.onRefresh}/>
                             </MenuItem>
                             <MenuItem
+                            onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
                               <AcChangeRole rowData={this.state.selectedRow} onUpdateData={this.onUpdateData} menuClose={handleClose}/>

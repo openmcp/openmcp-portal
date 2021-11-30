@@ -166,7 +166,6 @@ class AcChangeRole extends Component {
       .then((res) => {
           alert(res.data.message);
           this.setState({ open: false });
-          // this.props.menuClose();
           this.props.onUpdateData();
       })
       .catch((err) => {

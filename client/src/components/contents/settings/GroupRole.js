@@ -26,16 +26,12 @@ import {
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-// import AddMembers from "./AddMembers";
-// import Editor from "../../modules/Editor";
-// import AcChangeRole from './../modal/AcChangeRole';
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
-//import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import GrCreateGroup from './../modal/GrCreateGroup';
 import GrEditGroup from './../modal/GrEditGroup';
 import axios from 'axios';
@@ -328,7 +324,8 @@ class GroupRole extends Component {
                 >
                   <MoreVertIcon />
                 </IconButton>
-                <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                <Popper open={open} anchorEl={this.state.anchorEl} 
+                disableEnforceFocus role={undefined} transition disablePortal placement={'bottom-end'}>
                     {({ TransitionProps, placement }) => (
                       <Grow
                       {...TransitionProps}
@@ -337,17 +334,20 @@ class GroupRole extends Component {
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
                             <MenuItem
+                              onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                             >
                               <GrCreateGroup onUpdateData={this.onUpdateData} menuClose={this.handleClose} propsData={this.props.propsData}/>
                             </MenuItem>
                             <MenuItem
+                              onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                               >
                               <GrEditGroup rowData={this.state.selectedRow} onUpdateData={this.onUpdateData} menuClose={this.handleClose}
                               />
                             </MenuItem>
                             <MenuItem
+                              onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                               >
                               <div onClick={this.handleDeleteClick}>Delete Group</div>

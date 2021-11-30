@@ -314,7 +314,9 @@ class ClustersJoinable extends Component {
                       >
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
+                              <MenuItem 
+                              onKeyDown={(e) => e.stopPropagation()}
+                              style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
                                 <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}
                                 menuClose={handleClose}
                                 />
