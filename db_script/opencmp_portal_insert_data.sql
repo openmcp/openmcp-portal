@@ -157,7 +157,7 @@ INSERT INTO public.tb_account_role VALUES ('admin', 'Administrator', 'System Adm
 INSERT INTO public.tb_account_role VALUES ('user', 'User', 'Openmcp Portal User');
 
 --tb_accounts
-INSERT INTO public.tb_accounts VALUES ('openmcpadmin','$2b$10$nvkN2RtN5/8UNHhNEVGDiOF8WIwdiPp/P7SU/DibOtPzaRXUoBG8y','{omcp_monitor}','2021-10-12 13:43:24','2021-10-12 13:43:24');
+INSERT INTO public.tb_accounts VALUES ('openmcpadmin','$2b$10$nvkN2RtN5/8UNHhNEVGDiOF8WIwdiPp/P7SU/DibOtPzaRXUoBG8y','{admin}','2021-10-12 13:43:24','2021-10-12 13:43:24');
 
 --oauth_clients
 INSERT INTO public.oauth_clients(client_id, client_secret, redirect_uri) VALUES ('openmcp-client', 'openmcp-secret', 'http://localhost:3000/oauth/callback');
