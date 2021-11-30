@@ -184,7 +184,14 @@ function dbSettings() {
       };
       if (result === undefined) {
         connection.query(createTableScript, (err, result) => {
-          connection.query(inertDataScript, (err, result) => {});
+          if(err != null) {
+            console.log("table script : ", err);
+          }
+          connection.query(inertDataScript, (err, result) => {
+            if(err != null) {
+              console.log("insert script : ", err);
+            }
+          });
         });
         console.log("DB schemas create");
       } else {
@@ -3560,15 +3567,18 @@ app.get("/apis/dashboard/region_groups", (req, res) => {
   });
 });
 
-app.get("/apis/dashboard/omcp", (req, res) => {
+app.post("/apis/dashboard/omcp", (req, res) => {
   //   let rawdata = fs.readFileSync("./json_data/dashboard.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
-
   let request = require("request");
+  let data = JSON.stringify(req.body);
+  console.log(data)
+
   let options = {
     uri: `${apiServer}/apis/dashboard/omcp`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {

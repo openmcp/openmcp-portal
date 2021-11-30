@@ -43,7 +43,18 @@ class DbClusterJoinUnjoin extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch(`/apis/dashboard/omcp`);
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => { 
+      g_clusters = result.split(',');
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ g_clusters : g_clusters })
+    };
+
+    const response = await fetch(`/apis/dashboard/omcp`, requestOptions);
     const body = await response.json();
     return body;
   };
