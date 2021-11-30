@@ -92,33 +92,30 @@ class SignIn extends Component {
           .post(url, data)
           .then((res, err) => {
             if (res.data.data.rowCount > 0) {
-              debugger;
               AsyncStorage.setItem("userName", username);
               AsyncStorage.setItem("roles", res.data.data.rows[0].role_id);
               AsyncStorage.setItem("refreshToken", res.data.refresh_token);
-
               const g_clusters = Array.from(new Set(res.data.data.rows[0].g_clusters.toString().split(',')));
-
               AsyncStorage.setItem("g_clusters", g_clusters);
 
-                // var projects;
-                // AsyncStorage.getItem("projects",(err, result) => {
-                //   projects = result.split(",");
-                // })
+              // var projects;
+              // AsyncStorage.getItem("projects",(err, result) => {
+              //   projects = result.split(",");
+              // })
 
-                this.setState({
-                  loggedIn: true,
-                });
+              this.setState({
+                loggedIn: true,
+              });
 
                 // log - logined
-                utilLog.fn_insertPLogs(username, "log-LG-LG01");
-              } else {
-                alert(res.data.data.message);
-              }
-            })
-            .catch((err) => {
-              alert(err);
-            });
+              utilLog.fn_insertPLogs(username, "log-LG-LG01");
+            } else {
+              alert(res.data.data.message);
+            }
+          })
+          .catch((err) => {
+            alert(err);
+          });
         } else {
           alert(res.data.refresh_token);
         }

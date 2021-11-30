@@ -11,7 +11,7 @@ var render = require("co-views")("views");
 // var os = require("os");
 // var path = require("path");
 
-const isLocal = true;
+const isLocal = false;
 if (!isLocal) {
   conf.api.url = process.env.api_url;
   conf.db.user = process.env.db_user;
@@ -98,7 +98,6 @@ function getDateTime() {
     (d.getSeconds().toString().length == 2
       ? d.getSeconds().toString()
       : "0" + d.getSeconds().toString());
-  // console.log(date_format_str);
   return date_format_str;
 }
 
@@ -137,7 +136,6 @@ function getDateBefore(type, time) {
     (d.getSeconds().toString().length == 2
       ? d.getSeconds().toString()
       : "0" + d.getSeconds().toString());
-  // console.log(date_format_str);
   return date_format_str;
 }
 ////////////////////////////////////////////////////////// 
@@ -161,6 +159,7 @@ const apiServer = conf.api.url; //로컬 API 서버
 const { Client } = require("pg");
 const { toNamespacedPath } = require("path");
 
+
 const connection = new Client({
   user: conf.db.user,
   host: conf.db.host,
@@ -176,17 +175,21 @@ dbSettings();
 function dbSettings() {
   //connection.connect();
   connection.query(`select * from tb_account_role;`, (err, result) => {
-    var result_set = {
-      data: [],
-      message: "Please check your Password",
-    };
-    if (result === undefined) {
-      connection.query(createTableScript, (err, result) => {
-        connection.query(inertDataScript, (err, result) => {});
-      });
-      console.log("DB schemas create");
+    if (err !== null){
+      console.log(err);
     } else {
-      console.log("Skip DB schemas create");
+      var result_set = {
+        data: [],
+        message: "Please check your Password",
+      };
+      if (result === undefined) {
+        connection.query(createTableScript, (err, result) => {
+          connection.query(inertDataScript, (err, result) => {});
+        });
+        console.log("DB schemas create");
+      } else {
+        console.log("Skip DB schemas create");
+      }
     }
     //connection.end();
   });
@@ -224,7 +227,6 @@ app.get("/oauth/authorize", function (req, res) {
 app.post("/oauth/authorize", function (req, res) {
   // Redirect anonymous users to login page.
   if (!req.app.locals.user) {
-    console.log("req.app.locals.user :" + req.app);
     return res.redirect(
       util.format(
         "/login?client_id=%s&redirect_uri=%s",
@@ -239,7 +241,6 @@ app.post("/oauth/authorize", function (req, res) {
 
 // Get login.
 app.get("/login", function (req) {
-  console.log("login");
   return render("login", {
     redirect: req.query.redirect,
     client_id: req.query.client_id,
@@ -356,7 +357,6 @@ app.post("/user_login", (req, res) => {
         data: [],
         message: "Please check your Password",
       };
-      // console.log(result);
 
       if (result.rows.length < 1) {
         result_set = {
@@ -368,12 +368,10 @@ app.post("/user_login", (req, res) => {
         const hashPassword = result.rows[0].user_password;
         bcrypt.compare(req.body.password, hashPassword).then(function (r) {
           if (r) {
-            // console.log("compare", r, result_set)
             result_set = {
               data: result,
               message: "Login Successful !!",
             };
-            // console.log("compare", r, result_set);
           }
           res.send(result_set);
         });
@@ -416,7 +414,6 @@ app.get("/api/projects", (req, res) => {
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log("result", body);
     } else {
       console.log("error", error);
       return error;
@@ -425,7 +422,7 @@ app.get("/api/projects", (req, res) => {
 
   //   request(url, function (error, response, body) {
   //     if (!error && response.statusCode == 200) {
-  //         console.log(body);
+  //         
   //         token = body.token;
   //     } else {
   //         return error
@@ -449,7 +446,6 @@ app.get("/projects", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  // console.log("projects")
 
   var request = require("request");
   var options = {
@@ -479,7 +475,6 @@ app.get("/projects/:project/overview", (req, res) => {
     method: "GET",
   };
 
-  // console.log(options.uri)
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -509,7 +504,6 @@ app.post("/projects/create", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body);
     } else {
       console.log("error", error);
       return error;
@@ -564,7 +558,6 @@ app.get(
       uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}`,
     };
 
-    console.log(options.uri);
 
     request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -585,8 +578,6 @@ app.get(
     var options = {
       uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}/replica_status`,
     };
-
-    console.log(options.uri);
 
     request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -620,9 +611,7 @@ app.get(
     //     var arr = [];
     //     for (i = 0; i < Object.keys(result2).length; i++) {
     //       arr.push(result2[Object.keys(result2)[i]]);
-    //       // console.log(result2[Object.keys(result2)[i]]);
     //     }
-    //     // console.log(arr)
 
     //     res.send(arr);
     //   }
@@ -636,7 +625,6 @@ app.get(
 
 app.post("/apis/deployments/replica_status/set_pod_num", (req, res) => {
   var data = JSON.stringify(req.body);
-  console.log(data);
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/deployments/replica_status/set_pod_num`,
@@ -647,7 +635,7 @@ app.post("/apis/deployments/replica_status/set_pod_num", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body);
+      
     } else {
       console.log("error", error);
       return error;
@@ -693,8 +681,6 @@ app.get(
       method: "GET",
     };
 
-    console.log(options.uri);
-
     request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         res.send(body);
@@ -718,8 +704,6 @@ app.get("/projects/:project/resources/pods", (req, res) => {
     method: "GET",
   };
 
-  // console.log(options.uri)
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -741,8 +725,6 @@ app.get("/projects/:project/resources/pods/:pod", (req, res) => {
     uri: `${apiServer}/apis/pods/${req.params.pod}?cluster=${req.query.cluster}&project=${req.query.project}`,
     method: "GET",
   };
-
-  // console.log(options.uri)
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -766,8 +748,6 @@ app.get("/projects/:project/resources/services", (req, res) => {
     method: "GET",
   };
 
-  // console.log(options.uri)
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -784,7 +764,6 @@ app.get("/projects/:project/resources/services/:service", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  // console.log(`${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`)
   var request = require("request");
   var options = {
     uri: `${apiServer}/apis/clusters/${req.query.cluster}/projects/${req.params.project}/services/${req.params.service}`,
@@ -1024,8 +1003,6 @@ app.get("/deployments/:deployment", (req, res) => {
     method: "GET",
   };
 
-  // console.log(`${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.query.project}/deployments/${req.params.deployment}`)
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -1088,8 +1065,6 @@ app.get("/clusters", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters3-1_80.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
-
-  console.log("cluster");
 
   var request = require("request");
   var options = {
@@ -1257,7 +1232,7 @@ app.post("/cluster/join", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body);
+      
     } else {
       console.log("error", error);
       return error;
@@ -1267,7 +1242,6 @@ app.post("/cluster/join", (req, res) => {
 
 // cluster > unjoin
 app.post("/cluster/unjoin", (req, res) => {
-  console.log("cluster/unjoin");
   requestData = {
     clusterName: req.body.clusterName,
   };
@@ -1284,7 +1258,7 @@ app.post("/cluster/unjoin", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body);
+      
     } else {
       console.log("error", error);
       return error;
@@ -1331,7 +1305,6 @@ app.post("/nodes/add/eks", (req, res) => {
           message: `Auth Information does not Exist.\nPlease Enter the EKS Auth Informations.\n
           Settings > Config > Public cloud Auth > EKS`,
         };
-        console.log(result_set);
         return res.send(result_set);
       }
 
@@ -1344,7 +1317,6 @@ app.post("/nodes/add/eks", (req, res) => {
         secretKey: result.rows[0].secretKey,
       };
 
-      console.log(requestData);
       var data = JSON.stringify(requestData);
 
       var request = require("request");
@@ -1358,7 +1330,7 @@ app.post("/nodes/add/eks", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          console.log(body);
+          
         } else {
           console.log("error", error);
           return error;
@@ -1396,7 +1368,6 @@ app.post("/nodes/add/aks", (req, res) => {
         subId: result.rows[0].subId,
       };
 
-      console.log("addNodeAKS : ", requestData);
       var data = JSON.stringify(requestData);
 
       var request = require("request");
@@ -1409,7 +1380,7 @@ app.post("/nodes/add/aks", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          console.log(body);
+          
         } else {
           console.log("error", error);
           return error;
@@ -1445,7 +1416,6 @@ app.post("/nodes/add/gke", (req, res) => {
         desiredCnt: req.body.desiredCnt,
       };
 
-      // console.log("gke/addnode",requestData)
       var data = JSON.stringify(requestData);
 
       var request = require("request");
@@ -1458,7 +1428,6 @@ app.post("/nodes/add/gke", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          console.log("body", body);
         } else {
           console.log("error", error);
           return error;
@@ -1495,8 +1464,6 @@ app.post("/nodes/add/kvm", (req, res) => {
         cluster: req.body.cluster,
       };
 
-      // console.log(requestData);
-
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
@@ -1509,7 +1476,6 @@ app.post("/nodes/add/kvm", (req, res) => {
         if (!error && response.statusCode == 200) {
           res.send(body);
         } else {
-          console.log(response);
           return error;
         }
       });
@@ -1541,10 +1507,6 @@ app.post("/nodes/delete/kvm", (req, res) => {
         mastervmpwd: result.rows[0].mClusterPwd,
       };
 
-      // console.log(requestData, result.rows[0])
-
-      // res.send(result.rows);
-
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
@@ -1561,7 +1523,6 @@ app.post("/nodes/delete/kvm", (req, res) => {
           return error;
         }
       });
-      //connection.end();
     }
   );
 });
@@ -1614,10 +1575,6 @@ app.post("/nodes/eks/start", (req, res) => {
         node: req.body.node,
       };
 
-      // console.log(requestData, result.rows[0])
-
-      // res.send(result.rows);
-
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
@@ -1663,9 +1620,6 @@ app.post("/nodes/eks/stop", (req, res) => {
         node: req.body.node,
       };
 
-      console.log(requestData);
-
-      // res.send(result.rows);
 
       var data = JSON.stringify(requestData);
       var request = require("request");
@@ -1677,7 +1631,7 @@ app.post("/nodes/eks/stop", (req, res) => {
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          console.log(body);
+          
           res.send(body);
         } else {
           console.log("error", error);
@@ -1724,7 +1678,7 @@ app.post("/nodes/eks/change", (req, res) => {
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          console.log(body);
+          
           res.send(body);
         } else {
           console.log("error", error);
@@ -1984,7 +1938,6 @@ app.post("/nodes/kvm/change", (req, res) => {
         memory: req.body.memory,
       };
 
-      console.log(requestData);
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
@@ -2033,8 +1986,6 @@ app.get("/azure/aks-type", (req, res) => {
 
 app.get("/azure/pool/:cluster", (req, res) => {
   var cluster = req.params.cluster;
-  console.log(req.params.cluster);
-  //connection.connect();
   connection.query(
     `select * 
      from tb_config_aks
@@ -2048,8 +1999,6 @@ app.get("/azure/pool/:cluster", (req, res) => {
         };
         return res.send(result_set);
       }
-
-      console.log(result.rows[0].clientId);
 
       requestData = {
         clientId: result.rows[0].clientId,
@@ -2069,7 +2018,7 @@ app.get("/azure/pool/:cluster", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var clusterInfo = {};
-          console.log(body);
+          
           for (let value of JSON.parse(body)) {
             // if(value.name == cluster){ //임시로 막음(일치하는 클러스터가 없음)
             if (value.name === "aks-cluster-01") {
@@ -2159,7 +2108,6 @@ app.get("/gke/clusters", (req, res) => {
 
 app.get("/gke/clusters/pools", (req, res) => {
   var clusterName = req.query.clustername;
-  console.log(clusterName);
   // let rawdata = fs.readFileSync("./json_data/gke_node_pools.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
@@ -2186,7 +2134,6 @@ app.get("/gke/clusters/pools", (req, res) => {
       };
 
       var data = JSON.stringify(requestData);
-      // console.log("gke/addnode",data)
 
       var request = require("request");
       var options = {
@@ -2248,10 +2195,8 @@ app.get("/aks/clusters/pools", (req, res) => {
         subId: result.rows[0].subId,
       };
 
-      console.log("addNodeAKS : ", requestData);
 
       var data = JSON.stringify(requestData);
-      // console.log("aks/addnode",data)
 
       var request = require("request");
       var options = {
@@ -2322,8 +2267,6 @@ app.get("/pods/:pod", (req, res) => {
     method: "GET",
   };
 
-  console.log(options.uri);
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -2344,8 +2287,6 @@ app.get("/pods/:pod/physicalResPerMin", (req, res) => {
     uri: `${apiServer}/apis/pods/${req.params.pod}/physicalResPerMin?cluster=${req.query.cluster}&project=${req.query.project}`,
     method: "GET",
   };
-
-  console.log(options.uri);
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -2529,7 +2470,6 @@ app.post("/create_account", (req, res) => {
     bcrypt.hash(req.body.password, salt, function (err, hash_password) {
       var create_time = getDateTime();
       //connection.connect();
-      console.log(req.body.role);
       connection.query(
         `insert into tb_accounts values ('${req.body.userid}', '${hash_password}','${req.body.role}','${create_time}','${create_time}');`,
         (err, result) => {
@@ -2644,7 +2584,6 @@ app.post("/settings/group-role", (req, res) => {
   INSERT INTO tb_group_role (group_name, description, member, clusters)
   VALUES ('${req.body.groupName}', '${req.body.description}', '{${req.body.user_id}}', '{${req.body.clusters}}')
   `;
-  console.log(query);
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -2701,7 +2640,6 @@ app.put("/settings/group-role", (req, res) => {
 app.delete("/settings/group-role", (req, res) => {
   let query = `delete from tb_group_role 
   where "group_id" = ${req.body.group_id};`;
-  console.log(query);
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -3091,7 +3029,6 @@ app.put("/settings/config/pca/aks", (req, res) => {
 });
 
 app.delete("/settings/config/pca/aks", (req, res) => {
-  console.log("ddd", req.body);
   //connection.connect();
   connection.query(
     `delete from tb_config_aks
@@ -3242,7 +3179,7 @@ app.post("/settings/threshold", (req, res) => {
     node_name, cluster_name, cpu_warn, cpu_danger, ram_warn, ram_danger, storage_warn, storage_danger, created_time, updated_time)
     VALUES ('${req.body.nodeName}', '${req.body.clusterName}', ${req.body.cpuWarn}, ${req.body.cpuDanger}, ${req.body.ramWarn}, ${req.body.ramDanger}, ${req.body.storageWarn}, ${req.body.stroageDanger}, '${now}', '${now}');
   `;
-  console.log(query);
+  
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -3269,7 +3206,7 @@ app.put("/settings/threshold", (req, res) => {
 	SET cpu_warn=${req.body.cpuWarn}, cpu_danger=${req.body.cpuDanger}, ram_warn=${req.body.ramWarn}, ram_danger=${req.body.ramDanger}, storage_warn=${req.body.storageWarn}, storage_danger=${req.body.storageDanger}, updated_time='${now}'	WHERE cluster_name='${req.body.clusterName}' AND node_name='${req.body.nodeName}';
   `;
 
-  console.log(query);
+  
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -3292,8 +3229,6 @@ app.put("/settings/threshold", (req, res) => {
 app.delete("/settings/threshold", (req, res) => {
   let query = `delete from tb_host_threshold 
   where node_name = '${req.body.node}' and cluster_name = '${req.body.cluster}';`;
-  // console.log(query);
-  //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
       const result_set = {
@@ -3340,7 +3275,7 @@ app.post("/settings/threshold/log", (req, res) => {
     cluster_name, node_name, created_time, status, message, resource)
     VALUES ('${req.body.clusterName}', '${req.body.nodeName}', '${now}', '${req.body.status}', '${req.body.message}', '${req.body.resource}');
   `;
-  console.log(query);
+  
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -3395,7 +3330,6 @@ app.get("/apis/metering", (req, res) => {
 
   // request(options, function (error, response, body) {
   //   if (!error && response.statusCode == 200) {
-  //     // console.log("result", body);
   //     res.send(body);
   //   } else {
   //     console.log("error", error);
@@ -3421,7 +3355,6 @@ app.get("/apis/metering/bill", (req, res) => {
 
   // request(options, function (error, response, body) {
   //   if (!error && response.statusCode == 200) {
-  //     // console.log("result", body);
   //     res.send(body);
   //   } else {
   //     console.log("error", error);
@@ -3441,7 +3374,7 @@ app.get("/apis/migration/log", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body);
+      
     } else {
       console.log("error", error);
       return error;
@@ -3461,7 +3394,7 @@ app.post("/apis/migration", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log(body);
+      
     } else {
       console.log("error", error);
       return error;
@@ -3480,7 +3413,6 @@ app.get("/apis/snapshot", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      // console.log(body);
     } else {
       console.log("error", error);
       return error;
@@ -3567,7 +3499,7 @@ app.put("/apis/dashboard/components", (req, res) => {
   UPDATE SET component='{${req.body.myComponents}}'
   `;
 
-  console.log(query);
+  
   connection.query(query, (err, result) => {
     if (err !== "null") {
       const result_set = {
@@ -3586,11 +3518,15 @@ app.put("/apis/dashboard/components", (req, res) => {
   });
 });
 
-app.get("/apis/dashboard/status", (req, res) => {
+app.post("/apis/dashboard/status", (req, res) => {
+  let data = JSON.stringify(req.body);
   let request = require("request");
+
+  console.log("DD",req.body);
   let options = {
     uri: `${apiServer}/apis/dashboard/status`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -3667,7 +3603,6 @@ app.post("/apis/dashboard/cluster_topology", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("cluster_topology");
   let data = JSON.stringify(req.body);
   let request = require("request");
   let options = {
@@ -3691,7 +3626,6 @@ app.post("/apis/dashboard/service_topology", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("cluster_topology");
   let data = JSON.stringify(req.body);
   let request = require("request");
   let options = {
@@ -3715,7 +3649,6 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("cluster_topology");
   let data = JSON.stringify(req.body);
   let request = require("request");
   let options = {
@@ -3760,7 +3693,6 @@ async function excuteQuery(query) {
 }
 
 app.get("/apis/metric/clusterState", async (req, res) => {
-  console.log("clusterState");
   let resultData = {
     nodeState: {
     },
@@ -3786,7 +3718,6 @@ app.get("/apis/metric/clusterState", async (req, res) => {
   if (queryResult.length > 0) {
     let data = queryResult[0];
 
-    // console.log("cluster_node_state : ", data)
     resultData.nodeState = {
       status: [
         {
@@ -3810,7 +3741,6 @@ app.get("/apis/metric/clusterState", async (req, res) => {
   let queryResult2 = await excuteQuery(query);
   if (queryResult2.length > 0) {
     let data = queryResult2[0];
-    // console.log("cluster_pod_state : ", data)
     resultData.podState = {
       status: [
         {
@@ -3841,7 +3771,6 @@ app.get("/apis/metric/clusterState", async (req, res) => {
   let queryResult3 = await excuteQuery(query);
   if (queryResult3.length > 0) {
     let data = queryResult3[0];
-    // console.log("cluster_service_state : ",data)
     resultData.serviceState = {
       service: data.service_cnt,
       endpoint: data.endpoint_cnt,
@@ -3856,7 +3785,6 @@ app.get("/apis/metric/clusterState", async (req, res) => {
   let queryResult4 = await excuteQuery(query);
   if (queryResult4.length > 0) {
     let data = queryResult4[0];
-    // console.log("cluster_workload_state : ",data)
     resultData.workloadState = {
       deployment: data.deployment_cnt,
       replicaset: data.replicaset_cnt,
@@ -3864,14 +3792,12 @@ app.get("/apis/metric/clusterState", async (req, res) => {
     };
   }
 
-  // console.log("end", resultData);
   res.send(resultData);
 });
 
 app.get("/apis/metric/apiServer", async (req, res) => {
   var date = getDateTime();
   var dateBefore = getDateBefore("h", 1);
-  console.log("apiServer");
   let resultData = [];
 
   let query = `SELECT *
@@ -3911,7 +3837,6 @@ app.get("/apis/metric/apiServer", async (req, res) => {
 });
 
 app.get("/apis/metric/namespacelist", (req, res) => {
-  console.log("/apis/metric/namespacelist")
   let request = require("request");
   let options = {
     uri: `${apiServer}/apis/metric/namespacelist?cluster=${req.query.cluster}`,
@@ -3933,7 +3858,6 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
   var date = getDateTime();
   var dateBeforeHour = getDateBefore("h", 1);
   var dateBeforeMinute = getDateBefore("m", 20);
-  console.log("namespace");
   let resultData = {
     volumeState: {
       pvc_cnt : "0"
@@ -3961,7 +3885,7 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
                 order by collected_time desc
                 limit 1;
               `;
-              console.log(query);
+              
   let queryResult = await excuteQuery(query);
   if (queryResult.length > 0) {
     let data = queryResult[0];
@@ -4003,7 +3927,6 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
   let queryResult3 = await excuteQuery(query);
   if (queryResult3.length > 0) {
     let data = queryResult3[0];
-    console.log("namespace_service_state : ",data)
     resultData.serviceState = {
       service: data.service_cnt,
       endpoint: data.endpoint_cnt,
@@ -4131,7 +4054,6 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
 });
 
 app.get("/apis/metric/nodelist", (req, res) => {
-  console.log("/apis/metric/nodelist")
   let request = require("request");
   let options = {
     uri: `${apiServer}/apis/metric/nodelist?cluster=${req.query.cluster}`,
@@ -4154,7 +4076,6 @@ app.get("/apis/metric/nodeState", async (req, res) => {
   var date = getDateTime();
   var dateBeforeHour = getDateBefore("h", 1);
   var dateBeforeMinute = getDateBefore("m", 20);
-  console.log("namespace");
   let resultData = {
     cpuCount: {
       value : "0"

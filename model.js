@@ -10,8 +10,19 @@ const conf = JSON.parse(data);
 // var os = require("os");
 // var path = require("path");
 
+
+const isLocal = false;
+if (!isLocal) {
+  conf.db.user = process.env.db_user;
+  conf.db.host = process.env.db_host;
+  conf.db.database = process.env.db_database;
+  conf.db.password = process.env.db_password;
+  conf.db.port = process.env.db_port;
+}
+
+
 /*
- * Get access token.
+ * Get access token.d
  */
 const pg = new Client({
   user: conf.db.user,

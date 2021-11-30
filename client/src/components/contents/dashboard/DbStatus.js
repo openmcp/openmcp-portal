@@ -24,6 +24,9 @@ class DbStatus extends Component {
   }
   
   componentDidMount() {
+
+
+
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
@@ -31,11 +34,10 @@ class DbStatus extends Component {
         if(res === null){
           this.setState({ rows: "" });
         } else {
-          console.log(res)
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
-        this.timer = setInterval(this.onRefresh, 5000)
+        this.timer = setInterval(this.onRefresh, 5000);
       })
       .catch((err) => console.log(err));
     let userId = null;
@@ -52,7 +54,18 @@ class DbStatus extends Component {
 
 
   callApi = async () => {
-    const response = await fetch(`/apis/dashboard/status`);
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => { 
+      g_clusters = result.split(',');
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ g_clusters : g_clusters })
+    };
+
+    const response = await fetch(`/apis/dashboard/status`, requestOptions);
     const body = await response.json();
     return body;
   };
