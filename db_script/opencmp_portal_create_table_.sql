@@ -1,5 +1,12 @@
 
 
+
+
+
+
+
+
+
 --==================================================================================
 -- tb_account_role
 --==================================================================================
@@ -359,11 +366,13 @@ ALTER TABLE public.tb_dashboard
 
 
 
-CREATE EXTENSION "uuid-ossp"; -- uuid_generate_v4()를 사용하기 위함
+
 
 --==================================================================================
 --oauth_tokens
 --==================================================================================
+CREATE EXTENSION "uuid-ossp"; -- uuid_generate_v4()를 사용하기 위함
+
 CREATE TABLE IF NOT EXISTS public.oauth_tokens
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -452,8 +461,776 @@ ALTER TABLE public.oauth_clients
 -- ALTER TABLE public.tb_policy_projects
 --     OWNER to postgres;
 
---==============================================================================
---==============================================================================
+--##############################################################################
 -- METERING TABLES
+--##############################################################################
+
 --==============================================================================
+-- apiserver_state
 --==============================================================================
+CREATE TABLE IF NOT EXISTS public.apiserver_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone,
+    running_cnt character(30) COLLATE pg_catalog."default",
+    reqests_per_sec character(50) COLLATE pg_catalog."default",
+    latency character(50) COLLATE pg_catalog."default"
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.apiserver_state
+    OWNER to postgres;
+
+--==============================================================================
+-- cluster_node_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.cluster_node_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    node_total_cnt bigint,
+    node_online_cnt bigint,
+    collected_time timestamp with time zone,
+    node_offline_cnt bigint
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.cluster_node_state
+    OWNER to postgres;
+
+--==============================================================================
+-- cluster_pod_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.cluster_pod_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    pod_total bigint,
+    pod_running bigint,
+    pod_abnormal bigint,
+    pod_quota bigint,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.cluster_pod_state
+    OWNER to postgres;
+
+--==============================================================================
+-- cluster_service_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.cluster_service_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    service_cnt bigint,
+    endpoint_cnt bigint,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.cluster_service_state
+    OWNER to postgres;
+
+
+--==============================================================================
+-- cluster_workload_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.cluster_workload_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    deployment_cnt bigint,
+    replicaset_cnt bigint,
+    statefulset_cnt bigint,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.cluster_workload_state
+    OWNER to postgres;
+
+
+--==============================================================================
+-- daemonset_cpu_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.daemonset_cpu_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(30) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    cpu_usage character(50) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.daemonset_cpu_usage
+    OWNER to postgres;
+
+--==============================================================================
+-- daemonset_memory_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.daemonset_memory_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    mem_usage character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.daemonset_memory_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- daemonset_net_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.daemonset_net_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    workload_net_bytes_transmitted character(100) COLLATE pg_catalog."default",
+    workload_net_bytes_received character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.daemonset_net_usage
+    OWNER to postgres;
+
+--==============================================================================
+-- daemonset_replica_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.daemonset_replica_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    workload_daemonset_replica character(100) COLLATE pg_catalog."default",
+    workload_daemonset_replica_available character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.daemonset_replica_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- deploy_cpu_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.deploy_cpu_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(30) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    cpu_usage character(50) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.deploy_cpu_usage
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- deploy_memory_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.deploy_memory_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    mem_usage character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.deploy_memory_usage
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- deploy_net_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.deploy_net_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    workload_net_bytes_transmitted character(100) COLLATE pg_catalog."default",
+    workload_net_bytes_received character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.deploy_net_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- deploy_replica_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.deploy_replica_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    workload_deployment_replica_available character(100) COLLATE pg_catalog."default",
+    workload_deployment_replica character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.deploy_replica_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- namespace_pod_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.namespace_pod_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    namespace_name character(30) COLLATE pg_catalog."default",
+    pod_total bigint,
+    pod_running bigint,
+    pod_abnormal bigint,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.namespace_pod_state
+    OWNER to postgres;
+
+
+--==============================================================================
+-- namespace_resources
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.namespace_resources
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    namespace_name character(30) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone,
+    cpu_usage character(50) COLLATE pg_catalog."default",
+    memory_usage character(50) COLLATE pg_catalog."default",
+    n_tx character(50) COLLATE pg_catalog."default",
+    n_rx character(50) COLLATE pg_catalog."default"
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.namespace_resources
+    OWNER to postgres;
+
+
+--==============================================================================
+-- namespace_service_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.namespace_service_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    namespace_name character(30) COLLATE pg_catalog."default",
+    service_cnt bigint,
+    endpoint_cnt bigint,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.namespace_service_state
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- namespace_volume_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.namespace_volume_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    namespace_name character(30) COLLATE pg_catalog."default",
+    pvc_cnt bigint,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.namespace_volume_state
+    OWNER to postgres;
+
+
+--==============================================================================
+-- namespace_workload_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.namespace_workload_state
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    namespace_name character(30) COLLATE pg_catalog."default",
+    deployment_cnt bigint,
+    replicaset_cnt bigint,
+    statefulset_cnt bigint,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.namespace_workload_state
+    OWNER to postgres;
+
+--==============================================================================
+-- node_cpu_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.node_cpu_usage
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    node_name character(30) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone,
+    total_cpu_cnt bigint,
+    avg1m double precision
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.node_cpu_usage
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- node_disk_usage
+--==============================================================================
+
+CREATE TABLE IF NOT EXISTS public.node_disk_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    node_name character(100) COLLATE pg_catalog."default",
+    node_disk_read_iops character(100) COLLATE pg_catalog."default",
+    node_disk_write_iops character(100) COLLATE pg_catalog."default",
+    node_disk_read_throughput character(100) COLLATE pg_catalog."default",
+    node_disk_write_throughput character(100) COLLATE pg_catalog."default",
+    node_disk_size_capacity character(100) COLLATE pg_catalog."default",
+    node_disk_size_available character(100) COLLATE pg_catalog."default",
+    node_disk_size_usage character(100) COLLATE pg_catalog."default",
+    node_disk_size_utilisation character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.node_disk_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- node_memory_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.node_memory_usage
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    node_name character(30) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone,
+    node_memory_available character(50) COLLATE pg_catalog."default",
+    node_memory_utilisation character(50) COLLATE pg_catalog."default",
+    node_memory_total character(50) COLLATE pg_catalog."default",
+    node_memory_usage_wo_cache character(50) COLLATE pg_catalog."default"
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.node_memory_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- node_net_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.node_net_usage
+(
+    cluster_name character(30) COLLATE pg_catalog."default",
+    node_name character(30) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone,
+    node_net_utilisation character(50) COLLATE pg_catalog."default",
+    node_net_bytes_transmitted character(50) COLLATE pg_catalog."default",
+    node_net_bytes_received character(50) COLLATE pg_catalog."default"
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.node_net_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- node_pod_state
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.node_pod_state
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    node_name character(100) COLLATE pg_catalog."default",
+    node_pod_count character(100) COLLATE pg_catalog."default",
+    node_pod_quota character(100) COLLATE pg_catalog."default",
+    node_pod_running_count character(100) COLLATE pg_catalog."default",
+    node_pod_succeeded_count character(100) COLLATE pg_catalog."default",
+    node_pod_abnormal_count character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.node_pod_state
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- node_power_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.node_power_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    node_name character(100) COLLATE pg_catalog."default",
+    power double precision,
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.node_power_usage
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- node_workload_prediction
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.node_workload_prediction
+(
+    cluster character(100) COLLATE pg_catalog."default",
+    node character(150) COLLATE pg_catalog."default",
+    cpu double precision,
+    memory double precision,
+    collected_time timestamp without time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.node_workload_prediction
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- nodeuptime
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.nodeuptime
+(
+    node_name character(100) COLLATE pg_catalog."default",
+    last_boot_time timestamp with time zone,
+    collect_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.nodeuptime
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- pod_cpu_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.pod_cpu_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    node_name character(100) COLLATE pg_catalog."default",
+    owner_name character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    pod character(100) COLLATE pg_catalog."default",
+    cpu_usage character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.pod_cpu_usage
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- pod_memory_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.pod_memory_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    node_name character(100) COLLATE pg_catalog."default",
+    owner_name character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    pod character(100) COLLATE pg_catalog."default",
+    mem_usage character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.pod_memory_usage
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- pod_net_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.pod_net_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    node_name character(100) COLLATE pg_catalog."default",
+    owner_name character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    pod character(100) COLLATE pg_catalog."default",
+    pod_net_bytes_transmitted character(100) COLLATE pg_catalog."default",
+    pod_net_bytes_received character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.pod_net_usage
+    OWNER to postgres;
+
+
+
+
+--==============================================================================
+-- pod_workload_prediction
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.pod_workload_prediction
+(
+    cluster character(100) COLLATE pg_catalog."default",
+    node character(150) COLLATE pg_catalog."default",
+    pod character(150) COLLATE pg_catalog."default",
+    cpu double precision,
+    memory double precision,
+    collected_time timestamp without time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.pod_workload_prediction
+    OWNER to postgres;
+
+
+
+
+
+--==============================================================================
+-- readynode
+--==============================================================================
+CREATE SEQUENCE public."ready-node_id_seq"
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
+
+ALTER SEQUENCE public."ready-node_id_seq"
+    OWNER TO postgres;
+
+CREATE TABLE IF NOT EXISTS public.readynode
+(
+    id integer NOT NULL DEFAULT nextval('"ready-node_id_seq"'::regclass),
+    node_nm character(300) COLLATE pg_catalog."default",
+    cluster_nm character(300) COLLATE pg_catalog."default",
+    ip_addr character(300) COLLATE pg_catalog."default",
+    provider character(300) COLLATE pg_catalog."default",
+    status character(100) COLLATE pg_catalog."default",
+    CONSTRAINT "ready-node_pkey" PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.readynode
+    OWNER to postgres;
+-- Index: unique_cluster_node
+
+-- DROP INDEX public.unique_cluster_node;
+
+CREATE UNIQUE INDEX unique_cluster_node
+    ON public.readynode USING btree
+    (cluster_nm COLLATE pg_catalog."default" ASC NULLS LAST, node_nm COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default
+    WHERE COALESCE(cluster_nm, node_nm) IS NOT NULL;
+
+
+--==============================================================================
+-- statefulset_cpu_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.statefulset_cpu_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(30) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    cpu_usage character(50) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.statefulset_cpu_usage
+    OWNER to postgres;
+
+
+    
+--==============================================================================
+-- statefulset_memory_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.statefulset_memory_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    mem_usage character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.statefulset_memory_usage
+    OWNER to postgres;
+--==============================================================================
+-- statefulset_net_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.statefulset_net_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    workload_net_bytes_transmitted character(100) COLLATE pg_catalog."default",
+    workload_net_bytes_received character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.statefulset_net_usage
+    OWNER to postgres;
+
+
+--==============================================================================
+-- statefulset_replica_usage
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.statefulset_replica_usage
+(
+    cluster_name character(100) COLLATE pg_catalog."default",
+    namespace character(100) COLLATE pg_catalog."default",
+    owner_kind character(100) COLLATE pg_catalog."default",
+    workload character(100) COLLATE pg_catalog."default",
+    workload_statefulset_replica character(100) COLLATE pg_catalog."default",
+    workload_statefulset_replica_available character(100) COLLATE pg_catalog."default",
+    collected_time timestamp with time zone
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.statefulset_replica_usage
+    OWNER to postgres;
