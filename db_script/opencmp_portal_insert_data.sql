@@ -144,12 +144,12 @@ insert into tb_codes values ('EKS-TYPE','EKS.t3.small','AWS EKS t3.small instanc
 -- Dashboard module
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP01','System Status','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP02','Cluster Regions','');
-INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP03','Management Clusters','');
-INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP04','world_cluster_status','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP03','Management Clusters','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP04','World Cluster Status','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP05','Topology','');
-INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP06','Cluster Topology','');
-INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP07','Service Topology','');
-INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP08','Service-Region Topology','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP06','Cluster Topology','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP07','Service Topology','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP08','Service-Region Topology','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP09','Cluster Join/Unjoin','');
 
 --tb_account_role
