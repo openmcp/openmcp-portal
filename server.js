@@ -1269,15 +1269,18 @@ app.post("/cluster/unjoin", (req, res) => {
 /////////////
 // Nodes
 /////////////
-app.get("/nodes", (req, res) => {
+app.post("/nodes", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/nodes.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
   var request = require("request");
+  let data = JSON.stringify(req.body);
+
   var options = {
     uri: `${apiServer}/apis/nodes`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {

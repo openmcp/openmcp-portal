@@ -208,17 +208,15 @@ CREATE TABLE IF NOT EXISTS public.tb_group_role
 (
     group_id integer NOT NULL DEFAULT nextval('tb_group_auth_seq'::regclass),
     group_name character varying COLLATE pg_catalog."default" NOT NULL,
-    role_id character varying[] COLLATE pg_catalog."default",
     description character varying COLLATE pg_catalog."default",
     member character varying[] COLLATE pg_catalog."default",
-    projects character varying[] COLLATE pg_catalog."default",
+    clusters character varying[] COLLATE pg_catalog."default",
     CONSTRAINT tb_group_role_pkey PRIMARY KEY (group_id)
 )
 WITH (
     OIDS = FALSE
 )
 TABLESPACE pg_default;
-
 
 ALTER TABLE public.tb_group_role
     OWNER to postgres;
