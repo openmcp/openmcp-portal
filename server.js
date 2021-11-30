@@ -1080,15 +1080,17 @@ app.post("/clusters", (req, res) => {
   });
 });
 
-app.get("/clusters-joinable", (req, res) => {
+app.post("/clusters-joinable", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters_joinable.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
   var request = require("request");
+  let data = JSON.stringify(req.body);
   var options = {
     uri: `${apiServer}/apis/joinableclusters`,
-    method: "GET",
+    method: "POST",
+    body : data,
   };
 
   request(options, function (error, response, body) {

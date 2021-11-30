@@ -32,7 +32,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
-import { dateFormat } from "../../util/Utitlity.js";
+import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
 
 const styles = (theme) => ({
   root: {
@@ -83,8 +83,29 @@ class ExcuteMigration extends Component {
     };
   }
 
+  componentWillMount() {}
+
   callApi = async () => {
-    const response = await fetch("/clusters");
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => { 
+      g_clusters = result.split(',');
+    });
+
+    let accessToken;
+    AsyncStorage.getItem("token", (err, result) => {
+      accessToken = result;
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ g_clusters : g_clusters })
+    };
+
+    const response = await fetch("/clusters", requestOptions);
     const body = await response.json();
     return body;
   };
@@ -116,14 +137,38 @@ class ExcuteMigration extends Component {
     });
 
     this.callApi()
-      .then((res) => {
-        this.setState({ clusters: res });
+      .then(async (res) => {
+        if(res === null){
+          this.setState({ clusters: [] });
+        } else {
+          let result = await fn_tokenValid(res);
+          if(result === "valid"){
+            this.setState({ clusters: res });
+          } else if (result === "refresh"){
+            this.onRefresh();
+          } else {
+            console.log("expired-pront");
+            fn_goLoginPage(this.props.propsData.info.history);
+          }
+        }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };
 
-  componentWillMount() {}
+  onRefresh = () => {
+    this.callApi()
+    .then((res) => {
+      if(res === null){
+        this.setState({ clusters: [] });
+      } else {
+        this.setState({ clusters: res });
+      }
+    })
+    .catch((err) => console.log(err));
+  };
+
+
 
   handleClose = () => {
     this.setState({

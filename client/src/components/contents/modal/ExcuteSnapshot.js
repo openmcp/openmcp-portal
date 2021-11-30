@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import axios from "axios";
-import { dateFormat } from "../../util/Utitlity.js";
+import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
 
 const styles = (theme) => ({
   root: {
@@ -43,11 +43,7 @@ class ExcuteSnapshot extends Component {
     };
   }
 
-  callApi = async () => {
-    const response = await fetch("/clusters");
-    const body = await response.json();
-    return body;
-  };
+  componentWillMount() {}
 
   progress = () => {
     const { completed } = this.state;
@@ -82,7 +78,6 @@ class ExcuteSnapshot extends Component {
     });
   };
 
-  componentWillMount() {}
 
   handleClose = () => {
     this.setState({

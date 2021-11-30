@@ -796,20 +796,29 @@ class Grclusters extends Component{
     }
   }
 
+  componentWillMount() {}
   callApi = async () => {
+
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => { 
+      g_clusters = result.split(',');
+    });
+
     let accessToken;
     AsyncStorage.getItem("token", (err, result) => {
       accessToken = result;
     });
 
-    const options = {
+    const requestOptions = {
+      method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
-        // Authorization: `Bearer 1bdd36071778dbbc4cc4e818108d22fe80b5d4a7`,
       },
+      body: JSON.stringify({ g_clusters : g_clusters })
     };
 
-    const response = await fetch("/clusters", options);
+    const response = await fetch("/clusters", requestOptions);
     const body = await response.json();
     return body;
   };

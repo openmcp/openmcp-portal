@@ -38,6 +38,7 @@ import LensIcon from "@material-ui/icons/Lens";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
+import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
 
 const styles = (theme) => ({
   root: {
@@ -524,7 +525,26 @@ class ThCluseter extends Component {
   }
 
   callApi = async () => {
-    const response = await fetch("/clusters");
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => { 
+      g_clusters = result.split(',');
+    });
+
+    let accessToken;
+    AsyncStorage.getItem("token", (err, result) => {
+      accessToken = result;
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ g_clusters : g_clusters })
+    };
+
+    const response = await fetch("/clusters", requestOptions);
     const body = await response.json();
     return body;
   };
@@ -537,17 +557,47 @@ class ThCluseter extends Component {
   componentWillMount() {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then((res) => {
+      .then(async (res) => {
+        if(res === null){
+          this.setState({ rows: "" });
+        } else {
+          let result = await fn_tokenValid(res);
+          if(result === "valid"){
+            this.setState({ rows: res });
+            let selectedRows = [];
+            this.props.selection.forEach((id) => {
+              selectedRows.push(res[id]);
+            });
+            this.setState({ selectedRow: selectedRows });
+          } else if (result === "refresh"){
+            this.onRefresh();
+          } else {
+            console.log("expired-pront");
+            fn_goLoginPage(this.props.propsData.info.history);
+          }
+        }
+       
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  onRefresh = () => {
+    this.callApi()
+    .then((res) => {
+      if(res === null){
+        this.setState({ rows: "" });
+      } else {
         this.setState({ rows: res });
         let selectedRows = [];
         this.props.selection.forEach((id) => {
           selectedRows.push(res[id]);
         });
         this.setState({ selectedRow: selectedRows });
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
-  }
+      }
+    })
+    .catch((err) => console.log(err));
+  };
 
   render() {
     const HeaderRow = ({ row, ...restProps }) => (
