@@ -11,6 +11,7 @@ import { Container } from "@material-ui/core";
 import { NavigateNext } from '@material-ui/icons';
 import PublicCloud from './public-cloud/PublicCloud';
 import { AiOutlineSetting} from "react-icons/ai";
+import DashBoardConfig from "./dashboard/DashBoardConfig";
 
 const styles = (theme) => ({
   root: {
@@ -72,6 +73,7 @@ class Config extends Component {
     value: 0,
     tabHeader: [
       { label: "Public Cloud Auth", index: 1, param:"public-cloud" },
+      { label: "Dashboard Config", index: 2, param:"dashbaord-config" },
     // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -142,11 +144,14 @@ class Config extends Component {
                 </Tabs>
               </AppBar>
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
-                <Switch>
-                  <Route path="/settings/config/public-cloud"
-                      render={({match,location}) => <PublicCloud  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
-                </Switch>
+                <Route path="/settings/config/public-cloud"
+                    render={({match,location}) => <PublicCloud  match={match} location={location} menuData={this.onMenuData}/>} >
+                </Route>
+              </TabPanel>
+              <TabPanel className="tab-panel" value={this.state.value} index={1}>
+                <Route path="/settings/config/dashbaord-config"
+                    render={({match,location}) => <DashBoardConfig  match={match} location={location} menuData={this.onMenuData}/>} >
+                </Route>
               </TabPanel>
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
                 Item Three

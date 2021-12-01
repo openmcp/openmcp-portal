@@ -17,13 +17,23 @@ class DbClusterJoinUnjoin extends Component {
       reRender: "",
       masterCluster: "",
       componentList: [],
+      refreshCycle: 5000,
     };
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    let cycle = 5000;
+    AsyncStorage.getItem("dashboard-cycle", (err, result) => {
+      cycle = result*1000;
+    });
+
+    this.setState({
+      refreshCycle : cycle,
+    });
+  }
 
   componentDidMount() {
-    this.timer2 = setInterval(this.onRefresh, 50000);
+    this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -65,6 +75,7 @@ class DbClusterJoinUnjoin extends Component {
   };
 
   onRefresh = () => {
+   
     this.callApi()
       .then((res) => {
         if (res === null) {

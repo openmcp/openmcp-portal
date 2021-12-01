@@ -3,11 +3,11 @@
         "url" : "http://192.168.0.48:4885"
     },
     "db" : {
-        "host":"192.168.0.4",
+        "host":"192.168.0.4",   
         "user":"postgres",
         "password":"Rnalek19!",
         "port":"5432",
-        "database":"portal-test2"
+        "database":"portal-controller"
     },
     "deleteData" : {
         "url1" : "http://192.168.0.51:4885  로컬 API 서버",

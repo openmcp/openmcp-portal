@@ -354,7 +354,12 @@ class Contents extends Component {
               pathname : `/settings/policy/openmcp-policy`,
             }}  />} >
           </Route>
+
+
           
+          <Route path="/settings/config/dashbaord-config"
+            render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
+          </Route>
           <Route path="/settings/config/public-cloud/eks"
             render={({match,location}) => <Config  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>

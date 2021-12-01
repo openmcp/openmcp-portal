@@ -216,8 +216,6 @@ class ExcuteMigration extends Component {
       }
     }
 
-    console.log(data);
-
     // axios
     //   .post(url, data)
     //   .then((res) => {

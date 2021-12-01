@@ -2597,19 +2597,18 @@ g {
   float: left;
 }
 
-.dnd-navi{
+.dnd-navi {
   text-align: center;
-  margin:100px 10px;
+  margin: 100px 10px;
   font-size: 50px;
   font-weight: bold;
-  color:#3c8dbc;
+  color: #3c8dbc;
 }
 
 .dnd-navi > div:nth-child(odd) {
   font-size: 13px;
-  color:#000000;
+  color: #000000;
 }
-
 
 .join-unjoin-title {
   background: #0c8dfe;
@@ -2645,7 +2644,7 @@ g {
   width: 246px;
   text-align: left;
   display: flex;
-  margin:5px 0;
+  margin: 5px 0;
   padding: 10px 10px;
 }
 
@@ -2657,9 +2656,25 @@ g {
 }
 
 .dnd-cluster-icon {
-  margin : 0 8px;
+  margin: 0 8px;
 }
 
 .dnd-cluster-text {
-  padding : 2px;
+  padding: 2px;
+}
+
+.dash-config {
+  padding: 10px;
+  min-height: 200px;
+  display: flex;
+}
+.dash-config > span {
+  min-width: 200px;
+  margin: 11px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.dash-config input {
+  padding: 10.5px 14px !important;
 }

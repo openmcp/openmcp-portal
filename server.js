@@ -4330,6 +4330,43 @@ app.get("/apis/metric/nodeState", async (req, res) => {
 });
 
 
+app.get("/apis/config-codes", async (req, res) => {
+  let userId = req.query.userId;
+  let query = `select *
+  from tb_codes cd
+  where cd.kinds = 'CONFIG';`;
+  connection.query(query, (err, result) => {
+    res.send(result.rows);
+  });
+});
+
+app.put("/apis/config-codes/dashboard-config", (req, res) => {
+  let query = `
+  UPDATE public.tb_codes
+	SET description='${req.body.config}'
+  WHERE kinds='CONFIG' AND code='DASHBOARD-CYCLE';
+  `;
+  
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Dashboard Cycle config is updated !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild, please check value : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
+});
+
+
 
 
 

@@ -16,12 +16,24 @@ class DbStatus extends Component {
       completed: 0,
       reRender: "",
       masterCluster: "",
-      componentList: []
+      componentList: [],
+      refreshCycle: 5000,
     };
   }
-  
+
   componentWillMount() {
-    this.timer2 = setInterval(this.onRefresh, 5000);
+    let cycle = 5000;
+    AsyncStorage.getItem("dashboard-cycle", (err, result) => {
+      cycle = result*1000;
+    });
+
+    this.setState({
+      refreshCycle : cycle,
+    });
+  }
+  
+  componentDidMount() {
+    this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
 
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
@@ -69,6 +81,7 @@ class DbStatus extends Component {
   
 
   onRefresh = () => {
+    
     this.callApi()
       .then((res) => {
         if(res === null){

@@ -151,6 +151,7 @@ INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx',
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP07','Service Topology','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP08','Service-Region Topology','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP09','Cluster Join/Unjoin','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('CONFIG', 'DASHBOARD-CYCLE', '5', 'Dashboard Refresh Cycle / Sec');
 
 --tb_account_role
 INSERT INTO public.tb_account_role VALUES ('admin', 'Administrator', 'System Administrator');

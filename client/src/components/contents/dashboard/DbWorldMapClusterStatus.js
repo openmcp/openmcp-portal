@@ -12,7 +12,20 @@ class DbWorldMapClusterStatus extends Component {
       mapSize: Math.min(window.innerHeight - 363, window.innerWidth),
       rows: "",
       completed: 0,
+      refreshCycle: 5000,
     };
+  }
+
+   
+  componentWillMount() {
+    let cycle = 5000;
+    AsyncStorage.getItem("dashboard-cycle", (err, result) => {
+      cycle = result*1000;
+    });
+
+    this.setState({
+      refreshCycle : cycle,
+    });
   }
 
   onSizeUp = () => {
@@ -41,9 +54,10 @@ class DbWorldMapClusterStatus extends Component {
     const body = await response.json();
     return body;
   };
+ 
 
-  componentWillMount() {
-    this.timer2 = setInterval(this.onRefresh, 5000)
+  componentDidMount() {
+    this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -66,6 +80,7 @@ class DbWorldMapClusterStatus extends Component {
  
 
   onRefresh = () => {
+    
     this.callApi()
       .then((res) => {
         if(res === null){
