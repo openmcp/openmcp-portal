@@ -437,16 +437,18 @@ app.get("/api/projects", (req, res) => {
 ///////////////////////
 
 // Prjects
-app.get("/projects", (req, res) => {
+app.post("/projects", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/projects.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-
   var request = require("request");
+  let data = JSON.stringify(req.body);
+
   var options = {
     uri: `${apiServer}/apis/projects`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
