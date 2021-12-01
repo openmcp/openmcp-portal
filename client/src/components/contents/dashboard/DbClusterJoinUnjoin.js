@@ -23,6 +23,7 @@ class DbClusterJoinUnjoin extends Component {
   componentWillMount() {}
 
   componentDidMount() {
+    this.timer2 = setInterval(this.onRefresh, 50000);
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -40,6 +41,10 @@ class DbClusterJoinUnjoin extends Component {
       userId = result;
     });
     utilLog.fn_insertPLogs(userId, "log-DS-VW09");
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer2);
   }
 
   callApi = async () => {

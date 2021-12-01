@@ -89,7 +89,6 @@ class SignIn extends Component {
             userid: username,
             password: password,
           };
-          debugger;
           axios
           .post(url, data)
           .then((res, err) => {

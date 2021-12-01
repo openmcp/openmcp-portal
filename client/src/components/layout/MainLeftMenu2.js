@@ -119,7 +119,7 @@ class LeftMenu2 extends Component {
           {
             role: "all",
             title: "Network",
-            path: "/network/dns",
+            path: "/network",
             icon : <BiNetworkChart className="leftMenu-sub-icon"/>,
           },
         ],

@@ -43,6 +43,7 @@ class DbWorldMapClusterStatus extends Component {
   };
 
   componentWillMount() {
+    this.timer2 = setInterval(this.onRefresh, 5000)
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -52,7 +53,7 @@ class DbWorldMapClusterStatus extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
-        this.timer = setInterval(this.onRefresh, 5000)
+        
       })
       .catch((err) => console.log(err));
     let userId = null;
@@ -77,7 +78,7 @@ class DbWorldMapClusterStatus extends Component {
   };
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    clearInterval(this.timer2);
   }
 
 

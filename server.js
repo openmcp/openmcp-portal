@@ -969,15 +969,17 @@ app.get("/projects/:project/settings/members", (req, res) => {
 /////////////////////////
 
 // Deployments
-app.get("/deployments", (req, res) => {
+app.post("/deployments", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/projects_deployments.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
   var request = require("request");
+  let data = JSON.stringify(req.body);
   var options = {
     uri: `${apiServer}/apis/deployments`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -2239,15 +2241,17 @@ app.get("/kvm/clusters", (req, res) => {
 /////////////////////////
 
 // Pods
-app.get("/pods", (req, res) => {
+app.post("/pods", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/pods.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
   var request = require("request");
+  let data = JSON.stringify(req.body);
   var options = {
     uri: `${apiServer}/apis/pods`,
-    method: "GET",
+    method: "POST",
+    body:data,
   };
 
   request(options, function (error, response, body) {
@@ -2303,14 +2307,16 @@ app.get("/pods/:pod/physicalResPerMin", (req, res) => {
   });
 });
 
-app.get("/hpa", (req, res) => {
+app.post("/hpa", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/hpa.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
   var request = require("request");
+  let data = JSON.stringify(req.body);
   var options = {
     uri: `${apiServer}/apis/hpa`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -2323,14 +2329,16 @@ app.get("/hpa", (req, res) => {
   });
 });
 
-app.get("/vpa", (req, res) => {
+app.post("/vpa", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/vpa.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
   var request = require("request");
+  let data = JSON.stringify(req.body);
   var options = {
     uri: `${apiServer}/apis/vpa`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -2348,15 +2356,18 @@ app.get("/vpa", (req, res) => {
 ////////////////////////
 
 // Prjects > Resources > Ingress
-app.get("/ingress", (req, res) => {
+app.post("/ingress", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/ingress.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
   var request = require("request");
+  let data = JSON.stringify(req.body);
+
   var options = {
     uri: `${apiServer}/apis/ingress`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -2381,15 +2392,17 @@ app.get("/ingress/:ingress", (req, res) => {
 ////////////////////////
 
 // Services
-app.get("/services", (req, res) => {
+app.post("/services", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/services.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
   var request = require("request");
+  let data = JSON.stringify(req.body);
   var options = {
     uri: `${apiServer}/apis/services`,
-    method: "GET",
+    method: "POST",
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -3252,22 +3265,34 @@ app.delete("/settings/threshold", (req, res) => {
   });
 });
 
-app.get("/settings/threshold/log", (req, res) => {
+app.post("/settings/threshold/log", (req, res) => {
   var create_time = getDateTime();
   //connection.connect();
-  connection.query(
-    `select
-    tl.node_name,
-    tl.cluster_name,
-    tl.created_time,
-    tl.status,
-    tl.message,
-    tl.resource
-    from tb_threshold_log tl
-    order by created_time desc, node_name;`,
-    (err, result) => {
+  let data = req.body.g_clusters;
+
+  let clusters = ''
+  data.forEach((item, index)=>{
+    if(index === data.length-1){
+      clusters = clusters + `'${item}'`
+    } else {
+      clusters = clusters + `'${item}',`
+    }
+  });
+  
+  let condition = `cluster_name in (${clusters})`
+
+  let queryString = `select
+  tl.node_name,
+  tl.cluster_name,
+  tl.created_time,
+  tl.status,
+  tl.message,
+  tl.resource
+  from tb_threshold_log tl
+  where ${condition}
+  order by created_time desc, node_name;`
+  connection.query(queryString, (err, result) => {
       res.send(result.rows);
-      //connection.end();
     }
   );
 });
@@ -3407,12 +3432,13 @@ app.post("/apis/migration", (req, res) => {
   });
 });
 
-app.get("/apis/snapshot", (req, res) => {
+app.post("/apis/snapshot/list", (req, res) => {
   let request = require("request");
-
+  let data = JSON.stringify(req.body);
   let options = {
-    uri: `${apiServer}/apis/snapshot`,
-    method: "GET",
+    uri: `${apiServer}/apis/snapshot/list`,
+    method: "POST",
+    body : data,
   };
 
   request(options, function (error, response, body) {

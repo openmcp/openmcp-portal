@@ -50,10 +50,19 @@ class DbServiceTopology extends Component {
   };
 
   componentDidMount() {
+    // this.timer2 = setInterval(this.onRefresh, 5000);
     this.onInitTopology();
     this.onRefresh();
     urlHistory = this.props.propsData.info.history;
   }
+
+  componentWillUnmount() {
+    // clearInterval(this.timer2);
+    if (this.chart) {
+      this.chart.dispose();
+    }
+  }
+
 
   onRefresh = () => {
     this.timer = setInterval(this.progress, 20);

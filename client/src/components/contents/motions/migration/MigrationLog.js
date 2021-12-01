@@ -70,8 +70,7 @@ class MigrationLog extends Component {
     };
   }
 
-  componentWillMount() {
-  }
+  componentWillMount() {}
 
   callApi = async () => {
     const response = await fetch(`/apis/migration/log`);

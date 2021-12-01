@@ -19,6 +19,7 @@ class DbRegionGroup extends Component {
   componentWillMount() {}
   
   componentDidMount() {
+    this.timer2 = setInterval(this.onRefresh, 5000)
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
@@ -30,7 +31,6 @@ class DbRegionGroup extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
-        this.timer = setInterval(this.onRefresh, 5000)
       })
       .catch((err) => console.log(err));
     let userId = null;
@@ -42,7 +42,7 @@ class DbRegionGroup extends Component {
   }
   
   componentWillUnmount() {
-    clearInterval(this.timer);
+    clearInterval(this.timer2);
   }
 
   callApi = async () => {

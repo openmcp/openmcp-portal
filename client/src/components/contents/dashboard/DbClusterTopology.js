@@ -32,10 +32,10 @@ class DbClusterTopology extends Component {
   };
 
   componentDidMount() {
+    // this.timer2 = setInterval(this.onRefresh, 50000);
     this.onInitTopology();
     this.onRefresh();
     urlHistory = this.props.propsData.info.history;
-    // this.timer2 = setInterval(this.onRefresh, 60000);
   }
 
   callApi = async () => {
@@ -45,10 +45,10 @@ class DbClusterTopology extends Component {
   };
 
   componentWillUnmount() {
+    // clearInterval(this.timer2);
     if (this.chart) {
       this.chart.dispose();
     }
-    clearInterval(this.timer2);
   }
 
   onRefresh=()=>{

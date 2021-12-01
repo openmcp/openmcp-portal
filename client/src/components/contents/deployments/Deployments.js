@@ -113,10 +113,22 @@ spec:
   }
 
   callApi = async () => {
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters",(err, result) => {
+      g_clusters = result.split(',');
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ g_clusters : g_clusters })
+    };
     // var param = this.props.match.params.cluster;
     // queryString = queryString.parse(this.props.location.search).cluster
     // console.log(query);
-    const response = await fetch(`/deployments`);
+    const response = await fetch(`/deployments`,requestOptions);
     const body = await response.json();
     return body;
   };
