@@ -62,7 +62,7 @@ class DbStatus extends Component {
 
 
   callApi = async () => {
-    let g_clusters;
+    let g_clusters; 
     AsyncStorage.getItem("g_clusters",(err, result) => { 
       g_clusters = result.split(',');
     });
