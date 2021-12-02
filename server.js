@@ -2044,11 +2044,29 @@ app.get("/azure/pool/:cluster", (req, res) => {
   );
 });
 
-app.get("/eks/clusters", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/eks_clusters.json");
-  let overview = JSON.parse(rawdata);
-  //console.log(overview);
-  res.send(overview);
+app.post("/clusters/public-cloud", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/eks_clusters.json");
+  // let overview = JSON.parse(rawdata);
+  // //console.log(overview);
+  // res.send(overview);
+
+  var request = require("request");
+  let data = JSON.stringify(req.body);
+
+  var options = {
+    uri: `${apiServer}/apis/clusters/public-cloud`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+      res.send(error);
+    }
+  });
 });
 
 app.get("/eks/clusters/workers", (req, res) => {
@@ -2079,6 +2097,7 @@ app.get("/eks/clusters/workers", (req, res) => {
         secretKey: result.rows[0].secretKey,
       };
 
+      
       var data = JSON.stringify(requestData);
 
       var request = require("request");
@@ -2092,14 +2111,17 @@ app.get("/eks/clusters/workers", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var result = JSON.parse(body);
+          console.log(result);
           result.map((item) => {
+            
             if (item.name == clusterName) {
               res.send(item.nodegroups);
             }
           });
         } else {
           console.log("error", error);
-          return error;
+          res.send(error);
+          // return error;
         }
       });
       //connection.end();
@@ -2201,7 +2223,6 @@ app.get("/aks/clusters/pools", (req, res) => {
         tenantId: result.rows[0].tenantId,
         subId: result.rows[0].subId,
       };
-
 
       var data = JSON.stringify(requestData);
 

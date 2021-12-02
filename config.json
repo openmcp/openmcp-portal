@@ -3,6 +3,20 @@
         "url" : "http://192.168.0.48:4885"
     },
     "db" : {
+        "host":"115.94.141.62",
+        "user":"postgres",
+        "password":"postgres123",
+        "port":"30901",
+        "database":"portal-controller"
+    },
+    "db2" : {
+        "host":"115.94.141.62",
+        "user":"postgres",
+        "password":"postgres123",
+        "port":"30901",
+        "database":"portal-controller"
+    },
+    "db3" : {
         "host":"192.168.0.4",   
         "user":"postgres",
         "password":"Rnalek19!",
@@ -12,12 +26,6 @@
     "deleteData" : {
         "url1" : "http://192.168.0.51:4885  로컬 API 서버",
         "url2" : "http://10.0.3.40:4885",
-        "url3" : "http://192.168.0.4:4885 kvm API 서버",
-        "host":"115.94.141.62",
-        "user":"postgres",
-        "password":"postgres123",
-        "port":"30901",
-        "database":"portal-controller"
-
+        "url3" : "http://192.168.0.4:4885 kvm API 서버"
     }
 }

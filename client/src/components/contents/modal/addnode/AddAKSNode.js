@@ -40,27 +40,29 @@ class AddAKSNode extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        { name: "pools", title: "Pools" },
+        { name: "provider", title: "Type" },
+        // { name: "pools", title: "Pools" },
         { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
+        { name: "memory", title: "Memory(%)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
-        { columnName: "pools", width: 130 },
+        { columnName: "provider", width: 130 },
+        // { columnName: "pools", width: 130 },
         { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 120 },
+        { columnName: "memory", width: 120 },
       ],
       currentPage: 0,
       setCurrentPage: 0,
       pageSize: 3,
       pageSizes: [3, 6, 12, 0],
       open: false,
-      clusters: [],
+      clusters:"",
       selection: [],
       selectedRow : "",
       value: 0,
-      expandedRowIds : [0],
+      expandedRowIds : [],
 
       confirmOpen: false,
       confirmInfo : {
@@ -73,20 +75,24 @@ class AddAKSNode extends Component {
         }
       },
       confrimTarget : "",
-      confirmTargetKeyname:""
+      confirmTargetKeyname:"",
+      completed: 0,
     };
   }
 
   componentDidMount() {
+    let provider = 'aks';
+    this.timer = setInterval(this.progress, 20);
     this.initState();
-    this.setState({ 
+    this.setState({
       open: true,
     });
-    this.callApi("/aks/clusters")
-    .then((res) => {
-      this.setState({ clusters: res });
-    })
-    .catch((err) => console.log(err));
+    this.callApi(`/clusters/public-cloud?provider=${provider}`)
+      .then((res) => {
+        this.setState({ clusters: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
   }
   
   initState = () => {
@@ -99,9 +105,15 @@ class AddAKSNode extends Component {
       subId: "",
       nodeName:"",
       desiredNumber:0,
-      expandedRowIds : [0],
+      expandedRowIds : [],
     });
   }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
 
   handleSaveClick = () => {
     // console.log(this.state.selectedRow)
@@ -144,9 +156,9 @@ class AddAKSNode extends Component {
       const url = `/nodes/add/aks`;
       const data = {
         desiredCnt:this.state.desiredNumber,
-        // cluster:this.state.selectedRow.cluster,
         cluster:this.state.clusters[selectedRowId].name,
-        nodePool:this.state.selectedRow.name
+        nodePool:this.state.selectedRow.name,
+        region: this.state.selectedRow.region,
       };
 
       // clientID = "1edadbd7-d466-43b1-ad73-15a2ee9080ff"
@@ -181,7 +193,23 @@ class AddAKSNode extends Component {
 
 
   callApi = async (uri) => {
-    const response = await fetch(uri);
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        g_clusters: g_clusters,
+        provider: "AKS",
+      }),
+    };
+
+    const response = await fetch(uri, requestOptions);
     const body = await response.json();
     return body;
   };
@@ -238,6 +266,9 @@ class AddAKSNode extends Component {
           confirmTargetKeyname = {this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
           confirmOpen={this.state.confirmOpen}/>
+
+{this.state.clusters ? (
+          [
         <section className="md-content">
           <div className="outer-table">
             <p>Clusters</p>
@@ -291,7 +322,7 @@ class AddAKSNode extends Component {
             </Grid>
             </Paper>
           </div>
-        </section>
+        </section>,
         <section className="md-content">
           <div style={{display:"flex"}}>
             <div className="props" style={{width:"30%"}}>
@@ -310,6 +341,14 @@ class AddAKSNode extends Component {
             </div>
           </div>
         </section>
+        ]
+        ) : (
+          <CircularProgress
+            variant="determinate"
+            value={this.state.completed}
+            style={{ position: "relative", left: "48%", marginTop: "10px"}}
+          ></CircularProgress>
+        )}
       </div>
     );
   }
@@ -326,6 +365,7 @@ class AKSNodePools extends Component {
         // { name: "min", title: "Min" },
         // { name: "max", title: "Max" },
         { name: "nodecount", title: "Desired" },
+        { name: "region", title: "Region" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
@@ -333,11 +373,13 @@ class AKSNodePools extends Component {
         // { columnName: "min", width: 100 },
         // { columnName: "max", width: 100 },
         { columnName: "nodecount", width: 130 },
+        { columnName: "region", width: 130 },
       ],
 
       selection: [],
       selectedRow : "",
       value: 0,
+      completed: 0,
     }
   }
 
@@ -345,11 +387,10 @@ class AKSNodePools extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        // var result = [];
-        // console.log(res);
-        // res.map(item=>
-        //   item.cluster == this.props.rowData ? result.push(item) : ""
-        // )
+        var result = [];
+        res.map(item=>
+          item.cluster == this.props.rowData ? result.push(item) : ""
+        )
         this.setState({ rows: res });
         clearInterval(this.timer);
       })
@@ -362,6 +403,12 @@ class AKSNodePools extends Component {
       selectedRow:"",
     });
   }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
 
   callApi = async () => {
     const response = await fetch(`/aks/clusters/pools?clustername=${this.props.cluster}`);
@@ -432,7 +479,7 @@ class AKSNodePools extends Component {
           <CircularProgress
             variant="determinate"
             value={this.state.completed}
-            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+            style={{ position: "relative", left: "48%", marginTop: "10px"}}
           ></CircularProgress>
         )}
       </div>

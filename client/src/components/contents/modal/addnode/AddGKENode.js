@@ -35,27 +35,29 @@ class AddGKENode extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
+        { name: "provider", title: "Type" },
         // { name: "pools", title: "Pools" },
         { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
+        { name: "memory", title: "Memory(%)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
+        { columnName: "provider", width: 130 },
         // { columnName: "pools", width: 130 },
         { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 120 },
+        { columnName: "memory", width: 120 },
       ],
       currentPage: 0,
       setCurrentPage: 0,
       pageSize: 3,
       pageSizes: [3, 6, 12, 0],
       open: false,
-      clusters: [],
+      clusters: "",
       selection: [],
       selectedRow : "",
       value: 0,
-      expandedRowIds : [0],
+      expandedRowIds : [],
 
       confirmOpen: false,
       confirmInfo : {
@@ -68,20 +70,24 @@ class AddGKENode extends Component {
         }
       },
       confrimTarget : "",
-      confirmTargetKeyname:""
+      confirmTargetKeyname:"",
+      completed: 0,
     };
   }
 
   componentDidMount() {
+     let provider = 'gke';
+    this.timer = setInterval(this.progress, 20);
     this.initState();
-    this.setState({ 
+    this.setState({
       open: true,
     });
-    this.callApi("/gke/clusters")
-    .then((res) => {
-      this.setState({ clusters: res });
-    })
-    .catch((err) => console.log(err));
+    this.callApi(`/clusters/public-cloud?provider=${provider}`)
+      .then((res) => {
+        this.setState({ clusters: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
   }
   
   initState = () => {
@@ -91,9 +97,15 @@ class AddGKENode extends Component {
       // privateKey:"", 
       nodeName:"",
       desiredNumber:0,
-      expandedRowIds : [0],
+      expandedRowIds : [],
     });
   }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
 
   handleSaveClick = () => {
     if (Object.keys(this.state.selectedRow).length === 0){
@@ -156,7 +168,23 @@ class AddGKENode extends Component {
 
 
   callApi = async (uri) => {
-    const response = await fetch(uri);
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        g_clusters: g_clusters,
+        provider: "GKE",
+      }),
+    };
+
+    const response = await fetch(uri, requestOptions);
     const body = await response.json();
     return body;
   };
@@ -202,12 +230,16 @@ class AddGKENode extends Component {
       <div>
         {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
 
+
         <Confirm2
           confirmInfo={this.state.confirmInfo} 
           confrimTarget ={this.state.confrimTarget} 
           confirmTargetKeyname = {this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
           confirmOpen={this.state.confirmOpen}/>
+          {this.state.clusters ? (
+          [
+
         <section className="md-content">
           <div className="outer-table">
             <p>Clusters</p>
@@ -261,7 +293,7 @@ class AddGKENode extends Component {
             </Grid>
             </Paper>
           </div>
-        </section>
+        </section>,
         <section className="md-content">
           <div style={{display:"flex"}}>
             <div className="props" style={{width:"30%"}}>
@@ -280,6 +312,14 @@ class AddGKENode extends Component {
             </div>
           </div>
         </section>
+        ]
+        ) : (
+          <CircularProgress
+            variant="determinate"
+            value={this.state.completed}
+            style={{ position: "relative", left: "48%", marginTop: "10px"}}
+          ></CircularProgress>
+        )}
       </div>
     );
   }
@@ -304,6 +344,7 @@ class GKENodePools extends Component {
       selection: [],
       selectedRow : "",
       value: 0,
+      completed: 0,
     }
   }
 
@@ -312,7 +353,6 @@ class GKENodePools extends Component {
     this.callApi()
       .then((res) => {
         // var result = [];
-        console.log(res);
         // res.map(item=>
         //   item.cluster == this.props.rowData ? result.push(item) : ""
         // )
@@ -328,6 +368,11 @@ class GKENodePools extends Component {
       selectedRow:"",
     });
   }
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
 
   callApi = async () => {
     const response = await fetch(`/gke/clusters/pools?clustername=${this.props.cluster}`);
@@ -398,7 +443,7 @@ class GKENodePools extends Component {
           <CircularProgress
             variant="determinate"
             value={this.state.completed}
-            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+            style={{ position: "relative", left: "48%", marginTop: "10px"}}
           ></CircularProgress>
         )}
       </div>

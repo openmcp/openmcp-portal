@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { TextField } from "@material-ui/core";
 import * as utilLog from "../../../util/UtLogs.js";
-import { AsyncStorage } from 'AsyncStorage';
+import { AsyncStorage } from "AsyncStorage";
 import {
   PagingState,
   SortingState,
@@ -22,9 +22,9 @@ import {
   TableRowDetail,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios';
-import ProgressTemp from './../../../modules/ProgressTemp';
-import Confirm2 from './../../../modules/Confirm2';
+import axios from "axios";
+import ProgressTemp from "./../../../modules/ProgressTemp";
+import Confirm2 from "./../../../modules/Confirm2";
 
 class AddEKSNode extends Component {
   constructor(props) {
@@ -38,53 +38,57 @@ class AddEKSNode extends Component {
       columns: [
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
-        // { name: "pools", title: "Pools" },
+        { name: "provider", title: "Type" },
         { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
+        { name: "memory", title: "Memory(%)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
-        // { columnName: "pools", width: 130 },
+        { columnName: "provider", width: 130 },
         { columnName: "cpu", width: 130 },
-        { columnName: "ram", width: 120 },
+        { columnName: "memory", width: 120 },
       ],
       currentPage: 0,
       setCurrentPage: 0,
       pageSize: 3,
       pageSizes: [3, 6, 12, 0],
       open: false,
-      clusters: [],
+      clusters:"",
       selection: [],
       selectedRow: "",
       value: 0,
-      expandedRowIds: [0],
+      expandedRowIds: [],
 
       confirmOpen: false,
-      confirmInfo : {
-        title :"Add Node Confirm",
-        context :"Are you sure you want to add Node?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
+      confirmInfo: {
+        title: "Add Node Confirm",
+        context: "Are you sure you want to add Node?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
       },
-      confrimTarget : "",
-      confirmTargetKeyname:""
+      confrimTarget: "",
+      confirmTargetKeyname: "",
+      completed: 0,
     };
   }
 
   componentDidMount() {
+    let provider = 'eks';
+    this.timer = setInterval(this.progress, 20);
     this.initState();
     this.setState({
       open: true,
     });
-    this.callApi("/eks/clusters")
-    .then((res) => {
-      this.setState({ clusters: res });
-    })
-    .catch((err) => console.log(err));
+    this.callApi(`/clusters/public-cloud?provider=${provider}`)
+      .then((res) => {
+        this.setState({ clusters: res });
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
   }
 
   initState = () => {
@@ -95,9 +99,15 @@ class AddEKSNode extends Component {
       // accessKey: "",
       nodeName: "",
       desiredNumber: 0,
-      expandedRowIds: [0],
+      expandedRowIds: [],
     });
   };
+
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
 
   handleSaveClick = () => {
     // if (this.state.secretKey === ""){
@@ -107,71 +117,81 @@ class AddEKSNode extends Component {
     //   alert("Please enter Access Key");
     //   return;
     //else if (Object.keys(this.state.selectedRow).length  === 0){
-    if (Object.keys(this.state.selectedRow).length === 0){
+    if (Object.keys(this.state.selectedRow).length === 0) {
       alert("Please select target Cluster");
       return;
-    } else if (this.state.desiredNumber === 0){
-      alert("Desired number must be a number greater than 0")
+    } else if (this.state.desiredNumber === 0) {
+      alert("Desired number must be a number greater than 0");
     } else {
       this.setState({
         confirmOpen: true,
-      })
-      
+      });
     }
   };
 
   //callback
   confirmed = (result) => {
-    this.setState({confirmOpen:false})
+    this.setState({ confirmOpen: false });
 
     //show progress loading...
-    this.setState({openProgress:true})
+    this.setState({ openProgress: true });
 
-    
-    
-    if(result) {
+    if (result) {
       var selectedRowId = this.state.expandedRowIds;
 
       //Add Node excution
       const url = `/nodes/add/eks`;
       const data = {
-        // accessKey:this.state.accessKey,
-        // secretkey:this.state.secretKey,
         desiredCnt: this.state.desiredNumber,
-        // cluster:this.state.selectedRow.cluster,
         cluster: this.state.clusters[selectedRowId].name,
-        nodePool: this.state.selectedRow.worker,
-        region : "ap-northeast-2"
+        nodePool: this.state.selectedRow.name,
+        region: this.state.selectedRow.region,
       };
-
-      axios.post(url, data)
+      
+      axios
+        .post(url, data)
         .then((res) => {
-          if(res.data.error){
+          if (res.data.error) {
             alert(res.data.message);
           } else {
             this.props.handleClose();
             //write log
             let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
+            AsyncStorage.getItem("userName", (err, result) => {
+              userId = result;
+            });
             utilLog.fn_insertPLogs(userId, "log-ND-CR01");
           }
-          this.setState({openProgress:false});
+          this.setState({ openProgress: false });
         })
         .catch((err) => {
-          this.setState({openProgress:false})
-          this.props.handleClose()
+          this.setState({ openProgress: false });
+          this.props.handleClose();
         });
     } else {
-      this.setState({confirmOpen:false})
-      this.setState({openProgress:false})
+      this.setState({ confirmOpen: false });
+      this.setState({ openProgress: false });
     }
-  }
+  };
 
   callApi = async (uri) => {
-    // const response = await fetch("/aws/clusters");
-    const response = await fetch(uri);
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        g_clusters: g_clusters,
+        provider: "EKS",
+      }),
+    };
+
+    const response = await fetch(uri, requestOptions);
     const body = await response.json();
     return body;
   };
@@ -180,7 +200,6 @@ class AddEKSNode extends Component {
     this.setState({
       [e.target.name]: e.target.value,
     });
-    
   };
 
   HeaderRow = ({ row, ...restProps }) => (
@@ -196,9 +215,12 @@ class AddEKSNode extends Component {
   );
 
   onSelectionChange = (selection) => {
-    this.setState({ 
-      desiredNumber: selection.desired_size === undefined ? "0" : selection.desired_size.toString(),
-      selectedRow: selection
+    this.setState({
+      desiredNumber:
+        selection.desired_size === undefined
+          ? "0"
+          : selection.desired_size.toString(),
+      selectedRow: selection,
     });
   };
 
@@ -219,14 +241,22 @@ class AddEKSNode extends Component {
   render() {
     return (
       <div>
-        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        {this.state.openProgress ? (
+          <ProgressTemp
+            openProgress={this.state.openProgress}
+            closeProgress={this.closeProgress}
+          />
+        ) : (
+          ""
+        )}
 
         <Confirm2
-          confirmInfo={this.state.confirmInfo} 
-          confrimTarget ={this.state.confrimTarget} 
-          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmInfo={this.state.confirmInfo}
+          confrimTarget={this.state.confrimTarget}
+          confirmTargetKeyname={this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
-          confirmOpen={this.state.confirmOpen}/>
+          confirmOpen={this.state.confirmOpen}
+        />
 
         {/* <section className="md-content">
           <div style={{ display: "flex" }}>
@@ -261,75 +291,88 @@ class AddEKSNode extends Component {
             </div>
           </div>
         </section> */}
-        <section className="md-content">
-          <div className="outer-table">
-            <p>Cluster</p>
-            {/* cluster selector */}
-            <Paper>
-              <Grid rows={this.state.clusters} columns={this.state.columns}>
-                {/* Sorting */}
-                <SortingState
-                  defaultSorting={[{ columnName: "status", direction: "asc" }]}
-                />
 
-                {/* 페이징 */}
-                <PagingState
-                  defaultCurrentPage={0}
-                  defaultPageSize={this.state.pageSize}
-                />
-                <PagingPanel pageSizes={this.state.pageSizes} />
-                {/* <SelectionState
+        {this.state.clusters ? (
+          [
+            <section className="md-content">
+              <div className="outer-table">
+                <p>Cluster</p>
+                {/* cluster selector */}
+                <Paper>
+                  <Grid rows={this.state.clusters} columns={this.state.columns}>
+                    {/* Sorting */}
+                    <SortingState
+                      defaultSorting={[
+                        { columnName: "status", direction: "asc" },
+                      ]}
+                    />
+
+                    {/* 페이징 */}
+                    <PagingState
+                      defaultCurrentPage={0}
+                      defaultPageSize={this.state.pageSize}
+                    />
+                    <PagingPanel pageSizes={this.state.pageSizes} />
+                    {/* <SelectionState
                         selection={this.state.selection}
                         onSelectionChange={this.onSelectionChange}
                       /> */}
 
-                <IntegratedFiltering />
-                <IntegratedSorting />
-                {/* <IntegratedSelection /> */}
-                <IntegratedPaging />
+                    <IntegratedFiltering />
+                    <IntegratedSorting />
+                    {/* <IntegratedSelection /> */}
+                    <IntegratedPaging />
 
-                {/* 테이블 */}
-                <RowDetailState
-                  // defaultExpandedRowIds={[2, 5]}
-                  expandedRowIds={this.state.expandedRowIds}
-                  onExpandedRowIdsChange={this.onExpandedRowIdsChange}
-                />
-                <Table />
-                <TableColumnResizing
-                  defaultColumnWidths={this.state.defaultColumnWidths}
-                />
-                <TableHeaderRow
-                  showSortingControls
-                  rowComponent={this.HeaderRow}
-                />
-                <TableRowDetail contentComponent={this.RowDetail} />
-                {/* <TableSelection
+                    {/* 테이블 */}
+                    <RowDetailState
+                      // defaultExpandedRowIds={[2, 5]}
+                      expandedRowIds={this.state.expandedRowIds}
+                      onExpandedRowIdsChange={this.onExpandedRowIdsChange}
+                    />
+                    <Table />
+                    <TableColumnResizing
+                      defaultColumnWidths={this.state.defaultColumnWidths}
+                    />
+                    <TableHeaderRow
+                      showSortingControls
+                      rowComponent={this.HeaderRow}
+                    />
+                    <TableRowDetail contentComponent={this.RowDetail} />
+                    {/* <TableSelection
                         selectByRowClick
                         highlightRow
                         // showSelectionColumn={false}
                       /> */}
-              </Grid>
-            </Paper>
-          </div>
-        </section>
-        <section className="md-content">
-          <div style={{ display: "flex" }}>
-            <div className="props" style={{ width: "30%" }}>
-              <p>Selected Desired Number</p>
-              <TextField
-                id="outlined-multiline-static"
-                rows={1}
-                type="number"
-                placeholder="workers count"
-                variant="outlined"
-                value={this.state.desiredNumber}
-                fullWidth={true}
-                name="desiredNumber"
-                onChange={this.onChange}
-              />
-            </div>
-          </div>
-        </section>
+                  </Grid>
+                </Paper>
+              </div>
+            </section>,
+            <section className="md-content">
+              <div style={{ display: "flex" }}>
+                <div className="props" style={{ width: "30%" }}>
+                  <p>Selected Desired Number</p>
+                  <TextField
+                    id="outlined-multiline-static"
+                    rows={1}
+                    type="number"
+                    placeholder="workers count"
+                    variant="outlined"
+                    value={this.state.desiredNumber}
+                    fullWidth={true}
+                    name="desiredNumber"
+                    onChange={this.onChange}
+                  />
+                </div>
+              </div>
+            </section>,
+          ]
+        ) : (
+          <CircularProgress
+            variant="determinate"
+            value={this.state.completed}
+            style={{ position: "relative", left: "48%", marginTop: "10px"}}
+          ></CircularProgress>
+        )}
       </div>
     );
   }
@@ -360,6 +403,7 @@ class EKSWorkerGroups extends Component {
         { name: "min_size", title: "Min" },
         { name: "max_size", title: "Max" },
         { name: "desired_size", title: "Desired" },
+        { name: "region", title: "Region" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 150 },
@@ -367,11 +411,13 @@ class EKSWorkerGroups extends Component {
         { columnName: "min_size", width: 100 },
         { columnName: "max_size", width: 100 },
         { columnName: "desired_size", width: 130 },
+        { columnName: "region", width: 130 },
       ],
 
       selection: [],
       selectedRow: "",
       value: 0,
+      completed: 0,
     };
   }
 
@@ -396,8 +442,12 @@ class EKSWorkerGroups extends Component {
     });
   };
 
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
   callApi = async () => {
-    console.log(this.props.cluster)
     const response = await fetch(
       `/eks/clusters/workers?clustername=${this.props.cluster}`
     );
@@ -465,7 +515,7 @@ class EKSWorkerGroups extends Component {
           <CircularProgress
             variant="determinate"
             value={this.state.completed}
-            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+            style={{ position: "relative", left: "48%", marginTop: "10px"}}
           ></CircularProgress>
         )}
       </div>
