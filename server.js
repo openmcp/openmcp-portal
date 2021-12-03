@@ -3726,6 +3726,7 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
 });
 
 app.post("/apis/metric/clusterlist", (req, res) => {
+  console.log("apis/metric/clusterlist")
   let request = require("request");
   let data = JSON.stringify(req.body);
   let options = {
@@ -3733,9 +3734,11 @@ app.post("/apis/metric/clusterlist", (req, res) => {
     method: "POST",
     body: data,
   };
+  console.log(options)
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
+      console.log(body);
       res.send(body);
     } else {
       console.log("error", error);
@@ -3860,16 +3863,16 @@ app.get("/apis/metric/apiServer", async (req, res) => {
   var dateBefore = getDateBefore("h", 1);
   let resultData = [];
 
-  let query = `SELECT *
-  FROM apiserver_state
-  where reqests_per_sec <> '' and latency <> '' 
-  and cluster_name = '${req.query.cluster}' 
-  and collected_time >= '2021-11-17 15:00:00' 
-  and collected_time < '2021-11-17 16:00:00'
-  order by collected_time desc;
-    `;
+  // let query = `SELECT *
+  // FROM apiserver_state
+  // where reqests_per_sec <> '' and latency <> '' 
+  // and cluster_name = '${req.query.cluster}' 
+  // and collected_time >= '2021-11-17 15:00:00' 
+  // and collected_time < '2021-11-17 16:00:00'
+  // order by collected_time desc;
+  //   `;
 
-   let query2 = `SELECT *
+   let query = `SELECT *
   FROM apiserver_state
   where reqests_per_sec <> '' and latency <> '' 
   and cluster_name = '${req.query.cluster}' 
@@ -4029,24 +4032,24 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
 
 
   // 10분단위로 해야함
-  query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
-            FROM namespace_resources
-            where cluster_name <> '' and namespace_name <> ''
-            and cluster_name = '${req.query.cluster}' 
-            and namespace_name = '${req.query.namespace}' 
-            and collected_time >= '2021-11-17 15:40:00' 
-            and collected_time < '2021-11-17 16:00:00'
-            order by collected_time desc;
-          `;
+  // query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
+  //           FROM namespace_resources
+  //           where cluster_name <> '' and namespace_name <> ''
+  //           and cluster_name = '${req.query.cluster}' 
+  //           and namespace_name = '${req.query.namespace}' 
+  //           and collected_time >= '2021-11-17 15:40:00' 
+  //           and collected_time < '2021-11-17 16:00:00'
+  //           order by collected_time desc;
+  //         `;
 
-  //  query2 = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
-  //  FROM namespace_resources
-  //  where cluster_name <> '' and namespace_name <> ''
-  //  and cluster_name = '${req.query.cluster}' 
-  // and collected_time >= '${dateBeforeMinute}' 
-  // and collected_time < '${date}'
-  // order by collected_time desc;
-  // `;
+   query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
+   FROM namespace_resources
+   where cluster_name <> '' and namespace_name <> ''
+   and cluster_name = '${req.query.cluster}' 
+  and collected_time >= '${dateBeforeMinute}' 
+  and collected_time < '${date}'
+  order by collected_time desc;
+  `;
 
   let queryResult5 = await excuteQuery(query);
   if (queryResult5.length > 0) {
@@ -4202,24 +4205,24 @@ app.get("/apis/metric/nodeState", async (req, res) => {
   }
 
     // 10분단위로 해야함
-    query = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
-    node_disk_size_usage usage, collected_time
-    FROM node_disk_usage
-    where cluster_name = '${req.query.cluster}' 
-    and node_name = '${req.query.node}' 
-    and collected_time >= '2021-11-17 15:40:00' 
-    and collected_time < '2021-11-17 16:00:00'
-    order by collected_time desc;
-  `;
-//  query2 = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
-      //        node_disk_size_usage usage, collected_time
-      // FROM node_disk_usage
-      // where cluster_name = '${req.query.cluster}' 
-      // and node_name = '${req.query.namespace}' 
-      // and collected_time >= '2021-11-17 15:50:00' 
-      // and collected_time < '2021-11-17 16:00:00'
-      // order by collected_time desc;
-      // `;
+  //   query = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
+  //   node_disk_size_usage usage, collected_time
+  //   FROM node_disk_usage
+  //   where cluster_name = '${req.query.cluster}' 
+  //   and node_name = '${req.query.node}' 
+  //   and collected_time >= '2021-11-17 15:40:00' 
+  //   and collected_time < '2021-11-17 16:00:00'
+  //   order by collected_time desc;
+  // `;
+ query = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
+             node_disk_size_usage usage, collected_time
+      FROM node_disk_usage
+      where cluster_name = '${req.query.cluster}' 
+      and node_name = '${req.query.namespace}' 
+      and collected_time >= '${dateBeforeMinute}' 
+      and collected_time < '${date}'
+      order by collected_time desc;
+      `;
 
     let queryResult4 = await excuteQuery(query);
     if (queryResult4.length > 0) {
@@ -4235,25 +4238,25 @@ app.get("/apis/metric/nodeState", async (req, res) => {
     }
 
   // 10분단위로 해야함
-  query = ` SELECT cluster_name, node_name, node_net_bytes_received rx,
-                   node_net_bytes_transmitted tx, collected_time
-            FROM node_net_usage
-            where cluster_name = '${req.query.cluster}' 
-            and node_name = '${req.query.node}' 
-            and collected_time >= '2021-11-17 15:40:00' 
-            and collected_time < '2021-11-17 16:00:00'
-            order by collected_time desc;
-          `;
+  // query = ` SELECT cluster_name, node_name, node_net_bytes_received rx,
+  //                  node_net_bytes_transmitted tx, collected_time
+  //           FROM node_net_usage
+  //           where cluster_name = '${req.query.cluster}' 
+  //           and node_name = '${req.query.node}' 
+  //           and collected_time >= '2021-11-17 15:40:00' 
+  //           and collected_time < '2021-11-17 16:00:00'
+  //           order by collected_time desc;
+  //         `;
 
-  //  query2 = ` SELECT cluster_name, node_name, 
-              //        node_net_bytes_transmitted tx, node_net_bytes_received rx, collected_time
-              // FROM node_net_usage
-              // where cluster_name = '${req.query.cluster}' 
-              // and node_name = '${req.query.namespace}' 
-              // and collected_time >= '2021-11-17 15:50:00' 
-              // and collected_time < '2021-11-17 16:00:00'
-              // order by collected_time desc;
-              // `;
+   query = ` SELECT cluster_name, node_name, 
+                     node_net_bytes_transmitted tx, node_net_bytes_received rx, collected_time
+              FROM node_net_usage
+              where cluster_name = '${req.query.cluster}' 
+              and node_name = '${req.query.namespace}' 
+              and collected_time >= '${dateBeforeMinute}' 
+              and collected_time < '${date}'
+              order by collected_time desc;
+              `;
               
   let queryResult5 = await excuteQuery(query);
   if (queryResult5.length > 0) {
@@ -4273,8 +4276,8 @@ app.get("/apis/metric/nodeState", async (req, res) => {
   query = ` SELECT cluster_name, node_name, avg1m, collected_time
             FROM node_cpu_usage
             where cluster_name = '${req.query.cluster}' 
-            and collected_time >= '2021-11-17 15:40:00' 
-            and collected_time < '2021-11-17 16:00:00'
+            and collected_time >= '${dateBeforeMinute}' 
+            and collected_time < '${date}'
             order by collected_time desc, node_name asc;
           `;
 
@@ -4310,8 +4313,8 @@ app.get("/apis/metric/nodeState", async (req, res) => {
   query = ` SELECT cluster_name, node_name, node_memory_utilisation, collected_time
             FROM node_memory_usage
             where cluster_name = '${req.query.cluster}' 
-            and collected_time >= '2021-11-17 15:40:00' 
-            and collected_time < '2021-11-17 16:00:00'
+            and collected_time >= '${dateBeforeMinute}' 
+            and collected_time < '${date}'
             order by collected_time desc, node_name asc;
           `;
 
