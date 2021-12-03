@@ -11,7 +11,7 @@ var render = require("co-views")("views");
 // var os = require("os");
 // var path = require("path");
 
-const isLocal = true;
+const isLocal = false;
 if (!isLocal) {
   conf.api.url = process.env.api_url;
   conf.db.user = process.env.db_user;

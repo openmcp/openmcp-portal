@@ -11,7 +11,7 @@ const conf = JSON.parse(data);
 // var path = require("path");
 
 
-const isLocal = true;
+const isLocal = false;
 if (!isLocal) {
   conf.db.user = process.env.db_user;
   conf.db.host = process.env.db_host;
