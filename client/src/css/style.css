@@ -2467,12 +2467,13 @@ g {
   min-width: 50%;
 }
 
-/* metric api server */
-.m-metrics .api-server-metric {
-  min-width: 49%;
-  height: 100%;
-  overflow: hidden;
+
+.m-metrics .cluster-metric .m-pie-area .m-content .m-c-body
+{
+  min-height: 171px;
 }
+
+
 
 /* metric api server */
 

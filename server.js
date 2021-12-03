@@ -4117,6 +4117,7 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
 });
 
 app.get("/apis/metric/nodelist", (req, res) => {
+  console.log("apis/metric/nodelist")
   let request = require("request");
   let options = {
     uri: `${apiServer}/apis/metric/nodelist?cluster=${req.query.cluster}`,
@@ -4126,6 +4127,8 @@ app.get("/apis/metric/nodelist", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
+      console.log("body:", body)
+
     } else {
       console.log("error", error);
       return error;
