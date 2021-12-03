@@ -33,22 +33,27 @@ class MetricNode extends Component {
   onApiExcute = (node) => {
     this.callApi(node)
       .then((res) => {
+        console.log("onAPi : ", res);
         if (res === null) {
           this.setState({ row: {} });
         } else {
           let cpuLineTitles = [];
           let memoryLineTitles = [];
-          Object.keys(res.cpuUsage[0]).map((key) => {
-            if (key !== "unit" && key !== "time") {
-              cpuLineTitles.push(key);
-            }
-          });
+          if(res.cpuUsage.length > 0){
+            Object.keys(res.cpuUsage[0]).map((key) => {
+              if (key !== "unit" && key !== "time") {
+                cpuLineTitles.push(key);
+              }
+            });
+          }
+          if(res.memoryUsage.length > 0 ){
+            Object.keys(res.memoryUsage[0]).map((key) => {
+              if (key !== "unit" && key !== "time") {
+                memoryLineTitles.push(key);
+              }
+            });
+          }
 
-          Object.keys(res.memoryUsage[0]).map((key) => {
-            if (key !== "unit" && key !== "time") {
-              memoryLineTitles.push(key);
-            }
-          });
           this.setState({
             row: res,
             cpuLineTitles: cpuLineTitles,
@@ -68,9 +73,11 @@ class MetricNode extends Component {
   componentDidMount() {
     this.callApiFirst()
       .then((res) => {
+        console.log(res);
         if (res === null) {
           this.setState({ rows: [] });
         } else {
+         
           let selectBoxData = [];
           res.forEach((item) => {
             selectBoxData.push({ name: item, value: item });
