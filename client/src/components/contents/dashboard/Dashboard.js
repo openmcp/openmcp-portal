@@ -61,7 +61,6 @@ class Dashboard extends Component {
   };
 
   onRefresh = () => {
-    console.log('onRefresh')
     this.callApi()
       .then((res) => {
         var mycomp = [];
@@ -104,7 +103,6 @@ class Dashboard extends Component {
   };
 
   render() {
-    console.log("dash render")
     return (
       <div className="content-wrapper dashboard-main">
         {/* 컨텐츠 헤더 */}

@@ -24,9 +24,9 @@ class SignIn extends Component {
       token = result;
     });
 
-    let loggedIn = true;
-    if (token === null || token === "null" || token === "") {
-      loggedIn = false;
+    let loggedIn = false;
+    if (token !== "null" && token !== undefined) {
+      loggedIn = true;
     }
 
     this.state = {
@@ -53,17 +53,14 @@ class SignIn extends Component {
     e.preventDefault();
 
     var originText = "openmcp-client:openmcp-secret";
-    console.log("Original : ", originText);
 
     // Base64 Encoding
     let base64EncodedText = Buffer.from(originText, "utf8").toString("base64");
-    console.log("Base64 Encoded Text : ", base64EncodedText);
 
     // Base64 Decoding
     let base64DecodedText = Buffer.from(base64EncodedText, "base64").toString(
       "utf8"
     );
-    console.log("Base64 Decoded Text : ", base64DecodedText);
 
     const config = {
       headers: {

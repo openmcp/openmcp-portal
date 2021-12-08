@@ -1225,3 +1225,73 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.statefulset_replica_usage
     OWNER to postgres;
+
+
+
+--==============================================================================
+-- tb_metering_cluster
+--==============================================================================
+
+CREATE TABLE IF NOT EXISTS public.tb_metering_cluster
+(
+    region character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    cost bigint,
+    CONSTRAINT tb_metering_cluster_pkey PRIMARY KEY (region)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.tb_metering_cluster
+    OWNER to postgres;
+
+
+
+--==============================================================================
+-- tb_metering_worker
+--==============================================================================
+
+CREATE TABLE IF NOT EXISTS public.tb_metering_worker
+(
+    region character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    cpu bigint NOT NULL,
+    memory bigint NOT NULL,
+    disk bigint NOT NULL,
+    cost bigint,
+    CONSTRAINT tb_metering_worker_pkey PRIMARY KEY (region, cpu, memory, disk),
+    CONSTRAINT fk_tb_metering_woker FOREIGN KEY (region)
+        REFERENCES public.tb_metering_cluster (region) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.tb_metering_worker
+    OWNER to postgres;
+
+
+--==============================================================================
+-- tb_billings
+--==============================================================================
+CREATE TABLE IF NOT EXISTS public.tb_billings
+(
+    date date NOT NULL,
+    region character varying(20) COLLATE pg_catalog."default" NOT NULL,
+    clusters bigint,
+    worker_spec character varying(100) COLLATE pg_catalog."default",
+    wokers bigint,
+    hours bigint,
+    cost double precision,
+    CONSTRAINT tb_billings_pkey PRIMARY KEY (date, region)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.tb_billings
+    OWNER to postgres;

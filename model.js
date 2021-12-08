@@ -11,7 +11,8 @@ const conf = JSON.parse(data);
 // var path = require("path");
 
 
-const isLocal = false;
+// const isLocal = true;
+const isLocal = process.env.api_url === undefined;
 if (!isLocal) {
   conf.db.user = process.env.db_user;
   conf.db.host = process.env.db_host;
@@ -146,8 +147,6 @@ module.exports.getRefreshToken = function* (bearerToken) {
  */
 //3.
 module.exports.saveToken = function* (token, client, user) {
-  console.log("saveAccessToken");
-  console.log("saveAccessToken", client, user);
   //  var query = `INSERT INTO oauth_tokens(access_token, access_token_expires_on, client_id, refresh_token, refresh_token_expires_on, user_id) VALUES ('${token.accessToken}', '${token.accessTokenExpiresAt}', '${client.clientId}', '${token.refreshToken}', '${token.refreshTokenExpiresAt}', '${user.id}')`
   //  console.log(query);
   

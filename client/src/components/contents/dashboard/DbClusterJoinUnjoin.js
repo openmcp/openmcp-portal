@@ -13,6 +13,7 @@ class DbClusterJoinUnjoin extends Component {
     super(props);
     this.state = {
       rows: "",
+      loadErr: "",
       completed: 0,
       reRender: "",
       masterCluster: "",
@@ -24,28 +25,19 @@ class DbClusterJoinUnjoin extends Component {
   componentWillMount() {
     let cycle = 5000;
     AsyncStorage.getItem("dashboard-cycle", (err, result) => {
-      cycle = result*1000;
+      cycle = result * 1000;
     });
 
     this.setState({
-      refreshCycle : cycle,
+      refreshCycle: cycle,
     });
   }
 
   componentDidMount() {
     this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
     this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        if (res === null) {
-          this.setState({ rows: "" });
-        } else {
-          console.log(res);
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
+    this.onRefresh();
+
     let userId = null;
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
@@ -59,14 +51,14 @@ class DbClusterJoinUnjoin extends Component {
 
   callApi = async () => {
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => { 
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
 
     const response = await fetch(`/apis/dashboard/omcp`, requestOptions);
@@ -75,13 +67,21 @@ class DbClusterJoinUnjoin extends Component {
   };
 
   onRefresh = () => {
-   
     this.callApi()
       .then((res) => {
         if (res === null) {
           this.setState({ rows: "" });
         } else {
-          this.setState({ rows: res });
+          if (res.hasOwnProperty("errno")) {
+            if (res.code === "ECONNREFUSED") {
+              clearInterval(this.timer2);
+              this.setState({ loadErr: "Connection Failed" });
+            }
+
+            this.setState({ rows: "" });
+          } else {
+            this.setState({ rows: res });
+          }
         }
         clearInterval(this.timer);
       })
@@ -107,31 +107,44 @@ class DbClusterJoinUnjoin extends Component {
     return (
       <div className="dash-comp">
         {/* 컨텐츠 내용 */}
-        {this.state.rows ? (
-          <div style={{ display: "flex" }}>
-            <div className="content-box">
-              <div className="cb-header" onClick={this.onRefresh}>
-                <span style={{ cursor: "pointer" }}>Cluster Join/Unjoin</span>
-              </div>
-              <div
-                className="cb-body"
-                style={{
-                  position: "relative",
-                  width: "100%",
-                  display: "flex",
-                }}
-              >
+        <div style={{ display: "flex" }}>
+          <div className="content-box">
+            <div className="cb-header" onClick={this.onRefresh}>
+              <span style={{ cursor: "pointer" }}>Cluster Join/Unjoin</span>
+            </div>
+            <div
+              className="cb-body"
+              style={{
+                position: "relative",
+                width: "100%",
+                display: "flex",
+              }}
+            >
+              {this.state.rows ? (
                 <ClusterDnd data={this.state.rows.joined_clusters} />
-              </div>
+              ) : (
+                <div  style={{
+                  // position:"relative",
+                  // margin: "20px 10px 10px",
+                  // textAlign:"center",
+                  position: "relative",
+                  margin: "10px auto",
+                  left: "0px",
+                  right: "0px"
+                }}>
+                {this.state.loadErr ? 
+                  <div>{this.state.loadErr}</div>
+                  :
+                <CircularProgress
+                  variant="determinate"
+                  value={this.state.completed}
+                 
+                ></CircularProgress>}
+                </div>
+              )}
             </div>
           </div>
-        ) : (
-          <CircularProgress
-            variant="determinate"
-            value={this.state.completed}
-            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-          ></CircularProgress>
-        )}
+        </div>
       </div>
     );
   }
@@ -254,27 +267,26 @@ class ClusterDnd extends Component {
       let url = "";
       let data = {};
 
-      let droppableIdArr = result.draggableId.split('||');
-      let cluster = droppableIdArr[droppableIdArr.length -2];
-      let endpoint = droppableIdArr[droppableIdArr.length -1];
+      let droppableIdArr = result.draggableId.split("||");
+      let cluster = droppableIdArr[droppableIdArr.length - 2];
+      let endpoint = droppableIdArr[droppableIdArr.length - 1];
 
-      if(destination.droppableId === 'joinable'){
-         url = `/cluster/unjoin`;
-         data = {
+      if (destination.droppableId === "joinable") {
+        url = `/cluster/unjoin`;
+        data = {
           clusterName: cluster,
         };
-      } else if(destination.droppableId === 'joined') {
+      } else if (destination.droppableId === "joined") {
         url = `/cluster/join`;
         data = {
           clusterName: cluster,
-          clusterAddress : endpoint
+          clusterAddress: endpoint,
         };
       }
 
-      Axios
-        .post(url, data)
+      Axios.post(url, data)
         .then((res) => {
-          if(res.status === 200){
+          if (res.status === 200) {
             const result = this.move(
               this.getList(source.droppableId),
               this.getList(destination.droppableId),
@@ -287,7 +299,6 @@ class ClusterDnd extends Component {
               joinable: result.joinable,
             });
           }
-
         })
         .catch((err) => {
           alert(err);

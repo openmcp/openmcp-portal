@@ -11,20 +11,20 @@ class DbWorldMapClusterStatus extends Component {
     this.state = {
       mapSize: Math.min(window.innerHeight - 363, window.innerWidth),
       rows: "",
+      loadErr:"",
       completed: 0,
       refreshCycle: 5000,
     };
   }
 
-   
   componentWillMount() {
     let cycle = 5000;
     AsyncStorage.getItem("dashboard-cycle", (err, result) => {
-      cycle = result*1000;
+      cycle = result * 1000;
     });
 
     this.setState({
-      refreshCycle : cycle,
+      refreshCycle: cycle,
     });
   }
 
@@ -40,36 +40,29 @@ class DbWorldMapClusterStatus extends Component {
 
   callApi = async () => {
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => { 
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
 
-    const response = await fetch(`/apis/dashboard/world_cluster_map`, requestOptions);
+    const response = await fetch(
+      `/apis/dashboard/world_cluster_map`,
+      requestOptions
+    );
     const body = await response.json();
     return body;
   };
- 
 
   componentDidMount() {
     this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
     this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        if (res === null) {
-          this.setState({ rows: "" });
-        } else {
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-        
-      })
-      .catch((err) => console.log(err));
+    this.onRefresh();
+
     let userId = null;
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
@@ -77,17 +70,26 @@ class DbWorldMapClusterStatus extends Component {
 
     utilLog.fn_insertPLogs(userId, "log-DS-VW04");
   }
- 
 
   onRefresh = () => {
-    
     this.callApi()
       .then((res) => {
-        if(res === null){
+        console.log("res", res);
+        if (res === null) {
           this.setState({ rows: "" });
         } else {
-          this.setState({ rows: res });
+          if (res.hasOwnProperty("errno")) {
+            if (res.code === "ECONNREFUSED") {
+              clearInterval(this.timer2);
+              this.setState({loadErr : "Connection Failed"})
+            }
+
+            this.setState({ rows: "" });
+          } else {
+            this.setState({ rows: res });
+          }
         }
+        clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };
@@ -96,6 +98,10 @@ class DbWorldMapClusterStatus extends Component {
     clearInterval(this.timer2);
   }
 
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
 
   render() {
     // const data = [
@@ -112,26 +118,26 @@ class DbWorldMapClusterStatus extends Component {
     // ];
     return (
       <div className="dash-comp">
-        {this.state.rows ? (
-          <div
-            className="content-box"
-            style={{ width: this.props.width, display: "inline-block" }}
-          >
-            <div className="cb-header">
-              <span>World Cluster Status</span>
-              <div style={{float:"right"}}>
-                <button class="btn-worldmap-size" onClick={this.onSizeUp}>
-                  +
-                </button>
-                <button class="btn-worldmap-size" onClick={this.onSizeDown}>
-                  -
-                </button>
-              </div>
+        <div
+          className="content-box"
+          style={{ width: this.props.width, display: "inline-block" }}
+        >
+          <div className="cb-header">
+            <span>World Cluster Status</span>
+            <div style={{ float: "right" }}>
+              <button class="btn-worldmap-size" onClick={this.onSizeUp}>
+                +
+              </button>
+              <button class="btn-worldmap-size" onClick={this.onSizeDown}>
+                -
+              </button>
             </div>
-            <div
-              className="cb-body"
-              style={{ position: "relative", width: "100%" }}
-            >
+          </div>
+          <div
+            className="cb-body"
+            style={{ position: "relative", width: "100%"}}
+          >
+            {this.state.rows ? (
               <div style={{ textAlign: "center" }}>
                 <WorldMap
                   color="#0088fe"
@@ -143,15 +149,24 @@ class DbWorldMapClusterStatus extends Component {
                   data={this.state.rows}
                 />
               </div>
-            </div>
+            ) : (
+              <div  style={{
+                position:"relative",
+                margin: "20px 10px 10px",
+                textAlign:"center",
+              }}>
+              {this.state.loadErr ? 
+                <div>{this.state.loadErr}</div>
+                :
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+               
+              ></CircularProgress>}
+              </div>
+            )}
           </div>
-        ) : (
-          <CircularProgress
-            variant="determinate"
-            value={this.state.completed}
-            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-          ></CircularProgress>
-        )}
+        </div>
       </div>
     );
   }

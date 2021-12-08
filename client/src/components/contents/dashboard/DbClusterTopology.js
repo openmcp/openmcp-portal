@@ -16,6 +16,7 @@ class DbClusterTopology extends Component {
     super(props);
     this.state = {
       rows: "",
+      loadErr:"",
       completed: 0,
       reRender: "",
       masterCluster: "",
@@ -51,7 +52,15 @@ class DbClusterTopology extends Component {
     }
   }
 
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
+
+
   onRefresh=()=>{
+    this.setState({ loadErr:"" });
+
     this.timer = setInterval(this.progress, 20);
 
     let g_clusters;
@@ -76,8 +85,15 @@ class DbClusterTopology extends Component {
         if (res === null) {
           this.setState({ rows: "" });
         } else {
-          this.setState({ rows: res.data.topology });
-          series.data = res.data.topology;
+          if (res.data.hasOwnProperty("errno")) {
+            if (res.data.code === "ECONNREFUSED") {
+              this.setState({loadErr : "Connection Failed"})
+            }
+            this.setState({ rows: "" });
+          } else {
+            this.setState({ rows: res.data.topology });
+            series.data = res.data.topology;
+          }
         }
         clearInterval(this.timer);
       })
@@ -252,6 +268,7 @@ class DbClusterTopology extends Component {
 
   render() {
     return (
+      
       <div className="dash-comp" style={{ width: "100%" }}>
         <Button variant="outlined" color="primary" onClick={this.onRefresh} style={{position:"absolute", right:"2px", top:"-42px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
                     refresh
@@ -263,7 +280,27 @@ class DbClusterTopology extends Component {
           style={{ width: "100%", height: "600px" }}
         >
         </div>
-         
+        {this.state.rows ? (
+         null
+          ) : (
+            <div  style={{
+              position:"absolute",
+              textAlign:"center",
+              top : "0px",
+              left : "0px",
+              right: "0px",
+              margin: "25% auto",
+            }}>
+            {this.state.loadErr ? 
+              <div>{this.state.loadErr}</div>
+              :
+            <CircularProgress
+              variant="determinate"
+              value={this.state.completed}
+             
+            ></CircularProgress>}
+            </div>
+          )}
       </div>
     );
   }

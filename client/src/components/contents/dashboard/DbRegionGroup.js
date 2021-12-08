@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import TreeView2 from '../../modules/TreeView2';
-import * as utilLog from '../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
+import TreeView2 from "../../modules/TreeView2";
+import * as utilLog from "../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
 
 class DbRegionGroup extends Component {
   constructor(props) {
     super(props);
     this.state = {
       rows: "",
+      loadErr:"",
       completed: 0,
       reRender: "",
       masterCluster: "",
@@ -17,74 +18,73 @@ class DbRegionGroup extends Component {
     };
   }
 
-  
   componentWillMount() {
     let cycle = 5000;
     AsyncStorage.getItem("dashboard-cycle", (err, result) => {
-      cycle = result*1000;
+      cycle = result * 1000;
     });
 
     this.setState({
-      refreshCycle : cycle,
+      refreshCycle: cycle,
     });
   }
-  
+
   componentDidMount() {
     this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
-    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        if(res === null){
-          this.setState({ rows: "" });
-        } else {
-          console.log(res)
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
+    this.onRefresh();
+
     let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
+    AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    
-    utilLog.fn_insertPLogs(userId, 'log-DS-VW02');
+
+    utilLog.fn_insertPLogs(userId, "log-DS-VW02");
   }
-  
+
   componentWillUnmount() {
     clearInterval(this.timer2);
   }
 
   callApi = async () => {
-
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => { 
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
 
-    const response = await fetch(`/apis/dashboard/region_groups`, requestOptions);
+    const response = await fetch(
+      `/apis/dashboard/region_groups`,
+      requestOptions
+    );
     const body = await response.json();
     return body;
   };
-
-  
 
   onRefresh = () => {
     console.log("refresh", this.state.refreshCycle);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: "" });
         } else {
-          this.setState({ rows: res });
+          if (res.hasOwnProperty("errno")) {
+            if (res.code === "ECONNREFUSED") {
+              clearInterval(this.timer2);
+              this.setState({loadErr : "Connection Failed"})
+            }
+
+            this.setState({ rows: "" });
+          } else {
+            this.setState({ rows: res });
+          }
         }
+        clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };
@@ -93,65 +93,87 @@ class DbRegionGroup extends Component {
     const { completed } = this.state;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
+
   angle = {
-    full : {
-      startAngle : 0,
-      endAngle : 360
+    full: {
+      startAngle: 0,
+      endAngle: 360,
     },
-    half : {
-      startAngle : 0,
-      endAngle : 180
-    }  
-  }
+    half: {
+      startAngle: 0,
+      endAngle: 180,
+    },
+  };
 
   render() {
     return (
       <div className="dash-comp">
         {/* 컨텐츠 내용 */}
-          {this.state.rows ? (
-            [
-              <div style={{ display: "flex" }}>
-                <DashboardCard04
-                  title="Cluster Regions"
-                  // width="100%"
-                  data={this.state.rows.regions}
-                ></DashboardCard04>
-              </div>
-            ]
-          ) : (
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-              style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-            ></CircularProgress>
-          )}
-          
+
+        <div style={{ display: "flex" }}>
+          {/* <DashboardCard04
+                   title="Cluster Regions"
+                   // width="100%"
+                   data={this.state.rows.regions}
+                 ></DashboardCard04>
+                */}
+          <div className="content-box">
+            <div className="cb-header">
+              <span>Cluster Regions</span>
+              {/* <div className="cb-btn">
+                      <Link to={this.props.path}>detail</Link>
+                    </div> */}
+            </div>
+            <div
+              className="cb-body"
+              style={{ position: "relative", display: "flex" }}
+            >
+              {this.state.rows ? (
+                [<TreeView2 data={this.state.rows.regions} />]
+              ) : (
+                <div  style={{
+                  position:"relative",
+                  margin: "10px auto",
+                  left:0,
+                  right:0,
+                }}>
+                {this.state.loadErr ? 
+                  <div>{this.state.loadErr}</div>
+                  :
+                <CircularProgress
+                  variant="determinate"
+                  value={this.state.completed}
+                 
+                ></CircularProgress>}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 }
-
 
 class DashboardCard04 extends Component {
   render() {
     return (
       <div className="content-box">
-      <div className="cb-header">
-        <span>{this.props.title}</span>
-        {/* <div className="cb-btn">
+        <div className="cb-header">
+          <span>{this.props.title}</span>
+          {/* <div className="cb-btn">
           <Link to={this.props.path}>detail</Link>
         </div> */}
+        </div>
+        <div
+          className="cb-body"
+          style={{ position: "relative", display: "flex" }}
+        >
+          <TreeView2 data={this.props.data} />
+        </div>
       </div>
-      <div
-        className="cb-body"
-        style={{ position: "relative", display:"flex"}}
-      >
-        <TreeView2 data={this.props.data}/>
-      </div>
-    </div>
     );
   }
 }
 
-
-export default DbRegionGroup
+export default DbRegionGroup;

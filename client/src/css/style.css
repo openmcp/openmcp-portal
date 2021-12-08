@@ -1376,6 +1376,7 @@ div[class*="ResizingControl-resizeHandle"] {
 
 .content-box .cb-body {
   line-height: 1.5em;
+  min-height: 36px;
 }
 
 .content-box .cb-body .cb-body-left {
@@ -2198,7 +2199,7 @@ g {
 
 .dashboard-main .dash-comp {
   float: left;
-  min-height: 404px;
+  /* min-height: 404px; */
 }
 
 .MuiSwitch-switchBase.Mui-checked {

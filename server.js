@@ -11,7 +11,8 @@ var render = require("co-views")("views");
 // var os = require("os");
 // var path = require("path");
 
-const isLocal = false;
+const isLocal = process.env.api_url === undefined;
+
 if (!isLocal) {
   conf.api.url = process.env.api_url;
   conf.db.user = process.env.db_user;
@@ -196,7 +197,7 @@ function dbSettings() {
 /////////////////////////////////////////////////////////////////
 // Post token.
 app.post("/oauth/token", app.oauth.token(), function (req, res) {
-  console.log("/oauth/token");
+  // console.log("/oauth/token");
 });
 
 // Get authorization.
@@ -412,7 +413,7 @@ app.get("/api/projects", (req, res) => {
     if (!error && response.statusCode == 200) {
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 
@@ -456,7 +457,7 @@ app.post("/projects", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -479,7 +480,7 @@ app.get("/projects/:project/overview", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -504,7 +505,7 @@ app.post("/projects/create", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -535,7 +536,7 @@ app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -562,7 +563,7 @@ app.get(
         res.send(body);
       } else {
         console.log("error", error);
-        return error;
+        
       }
     });
   }
@@ -582,7 +583,7 @@ app.get(
         res.send(body);
       } else {
         console.log("error", error);
-        return error;
+        
       }
     });
 
@@ -636,7 +637,7 @@ app.post("/apis/deployments/replica_status/set_pod_num", (req, res) => {
       
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -660,7 +661,7 @@ app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -684,7 +685,7 @@ app.get(
         res.send(body);
       } else {
         console.log("error", error);
-        return error;
+        
       }
     });
   }
@@ -707,7 +708,7 @@ app.get("/projects/:project/resources/pods", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -729,7 +730,7 @@ app.get("/projects/:project/resources/pods/:pod", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -751,7 +752,7 @@ app.get("/projects/:project/resources/services", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -773,7 +774,7 @@ app.get("/projects/:project/resources/services/:service", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -795,7 +796,7 @@ app.get("/projects/:project/resources/ingress", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -818,7 +819,7 @@ app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -840,7 +841,7 @@ app.get("/projects/:project/volumes", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -862,7 +863,7 @@ app.get("/projects/:project/volumes/:volume", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -884,7 +885,7 @@ app.get("/projects/:project/config/secrets", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -906,7 +907,7 @@ app.get("/projects/:project/config/secrets/:secret", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -929,7 +930,7 @@ app.get("/projects/:project/config/config_maps", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -951,7 +952,7 @@ app.get("/projects/:project/config/config_maps/:config_map", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -987,7 +988,7 @@ app.post("/deployments", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1008,7 +1009,7 @@ app.get("/deployments/:deployment", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1028,7 +1029,7 @@ app.post("/deployments/create", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1047,7 +1048,7 @@ app.post("/apis/deployments/resources", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1079,7 +1080,7 @@ app.post("/clusters", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1102,7 +1103,7 @@ app.post("/clusters-joinable", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1124,7 +1125,7 @@ app.get("/clusters/:cluster/overview", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1154,7 +1155,7 @@ app.get("/clusters/:cluster/nodes", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1186,7 +1187,7 @@ app.get("/clusters/:cluster/pods", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1239,7 +1240,7 @@ app.post("/cluster/join", (req, res) => {
       
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1265,7 +1266,7 @@ app.post("/cluster/unjoin", (req, res) => {
       
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1292,7 +1293,7 @@ app.post("/nodes", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1340,7 +1341,7 @@ app.post("/nodes/add/eks", (req, res) => {
           
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1390,7 +1391,7 @@ app.post("/nodes/add/aks", (req, res) => {
           
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1437,7 +1438,7 @@ app.post("/nodes/add/gke", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1483,7 +1484,7 @@ app.post("/nodes/add/kvm", (req, res) => {
         if (!error && response.statusCode == 200) {
           res.send(body);
         } else {
-          return error;
+          
         }
       });
       //connection.end();
@@ -1527,7 +1528,7 @@ app.post("/nodes/delete/kvm", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
     }
@@ -1553,7 +1554,7 @@ app.get("/nodes/:node", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -1595,7 +1596,7 @@ app.post("/nodes/eks/start", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1642,7 +1643,7 @@ app.post("/nodes/eks/stop", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1689,7 +1690,7 @@ app.post("/nodes/eks/change", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1735,7 +1736,7 @@ app.post("/nodes/aks/start", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1782,7 +1783,7 @@ app.post("/nodes/aks/stop", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1830,7 +1831,7 @@ app.post("/clusters/aks/change", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1872,7 +1873,7 @@ app.post("/nodes/kvm/stop", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1914,7 +1915,7 @@ app.post("/nodes/kvm/start", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -1958,7 +1959,7 @@ app.post("/nodes/kvm/change", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -2036,7 +2037,7 @@ app.get("/azure/pool/:cluster", (req, res) => {
           res.send(clusterInfo);
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -2121,7 +2122,7 @@ app.get("/eks/clusters/workers", (req, res) => {
         } else {
           console.log("error", error);
           res.send(error);
-          // return error;
+          // 
         }
       });
       //connection.end();
@@ -2181,7 +2182,7 @@ app.get("/gke/clusters/pools", (req, res) => {
           });
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -2243,7 +2244,7 @@ app.get("/aks/clusters/pools", (req, res) => {
           });
         } else {
           console.log("error", error);
-          return error;
+          
         }
       });
       //connection.end();
@@ -2280,7 +2281,7 @@ app.post("/pods", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2302,7 +2303,7 @@ app.get("/pods/:pod", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2323,7 +2324,7 @@ app.get("/pods/:pod/physicalResPerMin", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2345,7 +2346,7 @@ app.post("/hpa", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2367,7 +2368,7 @@ app.post("/vpa", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2396,7 +2397,7 @@ app.post("/ingress", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2431,7 +2432,7 @@ app.post("/services", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2464,7 +2465,7 @@ app.get("/dns", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2724,7 +2725,7 @@ app.get("/settings/policy/openmcp-policy", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -2748,7 +2749,7 @@ app.post("/settings/policy/openmcp-policy", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3359,7 +3360,7 @@ app.get("/apis/nodes_metric", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3384,7 +3385,7 @@ app.get("/apis/metering", (req, res) => {
   //     res.send(body);
   //   } else {
   //     console.log("error", error);
-  //     return error;
+  //     
   //   }
   // });
 });
@@ -3409,7 +3410,7 @@ app.get("/apis/metering/bill", (req, res) => {
   //     res.send(body);
   //   } else {
   //     console.log("error", error);
-  //     return error;
+  //     
   //   }
   // });
 });
@@ -3428,7 +3429,7 @@ app.get("/apis/migration/log", (req, res) => {
       
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3448,7 +3449,7 @@ app.post("/apis/migration", (req, res) => {
       
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3467,7 +3468,7 @@ app.post("/apis/snapshot/list", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3486,7 +3487,7 @@ app.post("/apis/snapshot", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3505,7 +3506,7 @@ app.post("/apis/snapshot/restore", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3523,7 +3524,7 @@ app.get("/apis/snapshot/log", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3585,7 +3586,7 @@ app.post("/apis/dashboard/status", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      res.send(error);
     }
   });
 });
@@ -3595,6 +3596,7 @@ app.post("/apis/dashboard/region_groups", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
+  console.log("ddd")
   let request = require("request");
   let data = JSON.stringify(req.body);
   let options = {
@@ -3608,7 +3610,7 @@ app.post("/apis/dashboard/region_groups", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      res.send(error);
     }
   });
 });
@@ -3632,7 +3634,7 @@ app.post("/apis/dashboard/omcp", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      res.send(error);
     }
   });
 });
@@ -3651,7 +3653,7 @@ app.post("/apis/dashboard/world_cluster_map", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      res.send(error);
     }
   });
 });
@@ -3674,7 +3676,7 @@ app.post("/apis/dashboard/cluster_topology", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      res.send(error);
     }
   });
 });
@@ -3697,7 +3699,8 @@ app.post("/apis/dashboard/service_topology", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      res.send(error);
+      
     }
   });
 });
@@ -3720,7 +3723,7 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      res.send(error);
     }
   });
 });
@@ -3742,7 +3745,7 @@ app.post("/apis/metric/clusterlist", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -3911,7 +3914,7 @@ app.get("/apis/metric/namespacelist", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });
@@ -4131,7 +4134,7 @@ app.get("/apis/metric/nodelist", (req, res) => {
 
     } else {
       console.log("error", error);
-      return error;
+      
     }
   });
 });

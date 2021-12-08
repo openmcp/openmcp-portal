@@ -90,16 +90,16 @@ export async function fn_tokenValid (res){
 
 export function fn_goLoginPage(history){
   alert("인증이 만료되어 로그인페이지로 이동합니다.");
-  AsyncStorage.setItem("token", null);
-  AsyncStorage.setItem("userName", null);
-  AsyncStorage.setItem("roles", null);
-  AsyncStorage.setItem("projects", null);
+  AsyncStorage.setItem("token", "null");
+  AsyncStorage.setItem("userName", "null");
+  AsyncStorage.setItem("roles", "null");
+  AsyncStorage.setItem("projects", "null");
   history.push("/login");
 }
 
 export function fn_refreshAsyncStorage(){
-  AsyncStorage.setItem("token", null);
-  AsyncStorage.setItem("userName", null);
-  AsyncStorage.setItem("roles", null);
-  AsyncStorage.setItem("projects", null);
+  AsyncStorage.setItem("token", "null");
+  AsyncStorage.setItem("userName", "null");
+  AsyncStorage.setItem("roles", "null");
+  AsyncStorage.setItem("projects", "null");
 }

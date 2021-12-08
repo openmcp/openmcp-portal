@@ -6,7 +6,7 @@ import * as am4plugins_forceDirected from "@amcharts/amcharts4/plugins/forceDire
 import * as utilLog from "../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
-import { Button } from "@material-ui/core";
+import { Button, CircularProgress } from "@material-ui/core";
 
 am4core.useTheme(am4themes_animated);
 let series;
@@ -16,6 +16,7 @@ class DbServiceRegionTopology extends Component {
     super(props);
     this.state = {
       rows: "",
+      loadErr:"",
       completed: 0,
       reRender: "",
       masterCluster: "",
@@ -23,10 +24,6 @@ class DbServiceRegionTopology extends Component {
     };
   }
 
-  progress = () => {
-    const { completed } = this.state;
-    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  };
 
   componentDidMount() {
     // this.timer2 = setInterval(this.onRefresh, 5000);
@@ -41,9 +38,13 @@ class DbServiceRegionTopology extends Component {
     }
   }
 
-
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
   
   onRefresh = () => {
+    this.setState({ loadErr:"" });
     this.timer = setInterval(this.progress, 20);
     let g_clusters;
     AsyncStorage.getItem("g_clusters",(err, result) => { 
@@ -67,9 +68,15 @@ class DbServiceRegionTopology extends Component {
         if (res === null) {
           this.setState({ rows: "" });
         } else {
-          console.log(res);
-          series.data = res.data.topology;
-          // series.data = res.data;
+          if (res.data.hasOwnProperty("errno")) {
+            if (res.data.code === "ECONNREFUSED") {
+              this.setState({loadErr : "Connection Failed"})
+            }
+            this.setState({ rows: "" });
+          } else {
+            this.setState({ rows: res.data.topology });
+            series.data = res.data.topology;
+          }
         }
         clearInterval(this.timer);
       })
@@ -236,8 +243,6 @@ class DbServiceRegionTopology extends Component {
 
   };
 
-
-
   componentWillUnmount() {
     if (this.chart) {
       this.chart.dispose();
@@ -255,6 +260,27 @@ class DbServiceRegionTopology extends Component {
           id="serviceRegionTopology"
           style={{ width: "100%", height: "600px" }}
         ></div>
+        {this.state.rows ? (
+         null
+          ) : (
+            <div  style={{
+              position:"absolute",
+              textAlign:"center",
+              top : "0px",
+              left : "0px",
+              right: "0px",
+              margin: "25% auto",
+            }}>
+            {this.state.loadErr ? 
+              <div>{this.state.loadErr}</div>
+              :
+            <CircularProgress
+              variant="determinate"
+              value={this.state.completed}
+             
+            ></CircularProgress>}
+            </div>
+          )}
       </div>
     );
   }

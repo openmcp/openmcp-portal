@@ -32,17 +32,7 @@ class DbOmcp extends Component {
     this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle)
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
-    this.callApi()
-      .then((res) => {
-        if(res === null){
-          this.setState({ rows: "" });
-        } else {
-          console.log(res)
-          this.setState({ rows: res });
-        }
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
+    this.onRefresh();
     
     let userId = null;
     AsyncStorage.getItem("userName",(err, result) => { 
@@ -71,8 +61,18 @@ class DbOmcp extends Component {
         if(res === null){
           this.setState({ rows: "" });
         } else {
-          this.setState({ rows: res });
+          if (res.hasOwnProperty("errno")) {
+            if (res.code === "ECONNREFUSED") {
+              clearInterval(this.timer2);
+              this.setState({loadErr : "Connection Failed"})
+            }
+
+            this.setState({ rows: "" });
+          } else {
+            this.setState({ rows: res });
+          }
         }
+        clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };

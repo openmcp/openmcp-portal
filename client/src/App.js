@@ -3,7 +3,7 @@ import "./css/style.css";
 import SignIn from "./components/common/SignIn";
 import Main from './Main';
 import { Switch, Route } from "react-router-dom";
-import { fn_refreshAsyncStorage } from "./components/util/Utitlity";
+// import { fn_refreshAsyncStorage } from "./components/util/Utitlity";
 import { AsyncStorage } from "AsyncStorage";
 
 class App extends Component {

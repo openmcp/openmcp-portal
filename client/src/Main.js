@@ -13,14 +13,14 @@ class Main extends Component {
       token = result;
     })
 
-    let loggedIn = true;
-    if (token === null || token === "null" || token==="") {
-      loggedIn = false;
+    let loggedIn = false;
+    if (token !== "null" && token !== undefined) {
+      loggedIn = true;
     }
 
     this.state = {
-      isLeftMenuOn: false,
-      isLogined: true,
+      // isLeftMenuOn: false,
+      // isLogined: true,
       loggedIn,
       windowHeight: undefined,
       windowWidth: undefined
@@ -38,6 +38,7 @@ class Main extends Component {
   });
 
   componentDidMount() {
+    console.log("Main");
     this.handleResize();
     window.addEventListener('resize', this.handleResize)
   }
