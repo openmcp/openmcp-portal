@@ -2668,9 +2668,18 @@ g {
 .dash-config {
   padding: 10px;
   min-height: 200px;
-  display: flex;
 }
-.dash-config > span {
+.dash-config section {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.dash-config section > span {
+  margin: 11px;
+  font-size: 14px;
+}
+
+.dash-config section > span:first-child {
   min-width: 200px;
   margin: 11px;
   font-weight: bold;
@@ -2679,4 +2688,11 @@ g {
 
 .dash-config input {
   padding: 10.5px 14px !important;
+  width:100px;
+}
+
+
+
+.range path {
+  stroke : none !important
 }

@@ -38,7 +38,6 @@ class Main extends Component {
   });
 
   componentDidMount() {
-    console.log("Main");
     this.handleResize();
     window.addEventListener('resize', this.handleResize)
   }

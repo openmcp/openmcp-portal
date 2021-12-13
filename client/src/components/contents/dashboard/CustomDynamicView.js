@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import DbClusterJoinUnjoin from "./DbClusterJoinUnjoin";
 import DbClusterTopology from "./DbClusterTopology";
 import DbOmcp from "./DbOmcp";
+import DbPowerUsage from "./DbPowerUsage";
 import DbRegionGroup from "./DbRegionGroup";
 import DbServiceRegionTopology from "./DbServiceRegionTopology";
 import DbServiceTopology from "./DbServiceTopology";
@@ -42,6 +43,9 @@ class CustomDynamicView extends Component {
           case "Cluster Join/Unjoin":
             componentsTag.push(<DbClusterJoinUnjoin propsData = {this.props.propsData} />);
             break;
+          case "Cluster Power Usage":
+            componentsTag.push(<DbPowerUsage propsData = {this.props.propsData} />);
+            break;
           // case "Cluster Topology":
           //   componentsTag.push(<DbClusterTopology />);
           //   break;
@@ -79,6 +83,9 @@ class CustomDynamicView extends Component {
           break;
         case "Cluster Join/Unjoin":
           componentsTag.push(<DbClusterJoinUnjoin propsData = {this.props.propsData} />);
+          break;
+        case "Cluster Power Usage":
+          componentsTag.push(<DbPowerUsage propsData = {this.props.propsData} />);
           break;
       // case "Cluster Topology":
       //   componentsTag.push(<DbClusterTopology />);

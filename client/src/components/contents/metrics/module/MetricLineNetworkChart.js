@@ -13,6 +13,9 @@ class MetricLineNetworkChart extends Component {
     rows: this.props.rowData,
   };
 
+  componentWillMount(){
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({

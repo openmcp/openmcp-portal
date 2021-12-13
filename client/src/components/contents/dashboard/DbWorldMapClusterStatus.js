@@ -74,7 +74,6 @@ class DbWorldMapClusterStatus extends Component {
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        console.log("res", res);
         if (res === null) {
           this.setState({ rows: "" });
         } else {

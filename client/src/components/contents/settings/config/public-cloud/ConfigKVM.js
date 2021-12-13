@@ -42,6 +42,7 @@ class ConfigKVM extends Component {
         { name: "seq", title:"No"},
         { name: "cluster", title: "Cluster" },
         { name: "agentURL", title: "Agent URL" },
+        { name: "agentPort", title: "Agent Port" },
         { name: "mClusterName", title: "MCluster VM Name" },
         { name: "mClusterPwd", title: "MCluster Passwd" },
       ],
@@ -49,6 +50,7 @@ class ConfigKVM extends Component {
         { columnName: "seq", width: 100 },
         { columnName: "cluster", width: 200 },
         { columnName: "agentURL", width: 300 },
+        { columnName: "agentPort", width: 300 },
         { columnName: "mClusterName", width: 300 },
         { columnName: "mClusterPwd", width: 300 },
       ],
@@ -140,6 +142,7 @@ class ConfigKVM extends Component {
         seq : this.state.selectedRow.seq,
         cluster: this.state.selectedRow.cluster,
         agentURL: this.state.selectedRow.agentURL,
+        agentPort: this.state.selectedRow.agentPort,
         mClusterName: this.state.selectedRow.mClusterName,
         mClusterPwd: this.state.selectedRow.mClusterPwd,
       }

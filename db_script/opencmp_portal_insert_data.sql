@@ -151,7 +151,12 @@ INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx',
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP07','Service Topology','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARDx','DBCOMP08','Service-Region Topology','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP09','Cluster Join/Unjoin','');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('DASHBOARD','DBCOMP10','Cluster Power Usage','');
 INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('CONFIG', 'DASHBOARD-CYCLE', '5', 'Dashboard Refresh Cycle / Sec');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('CONFIG', 'POWER-HIGH', '100', 'Power Usage Range 71~100');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('CONFIG', 'POWER-MEDIUM', '70', 'Power Usage Range 31~70');
+INSERT INTO public.tb_codes(kinds, code, description, etc) VALUES ('CONFIG', 'POWER-LOW', '30', 'Power Usage Range 0~30');
+
 
 --tb_account_role
 INSERT INTO public.tb_account_role VALUES ('admin', 'Administrator', 'System Administrator');

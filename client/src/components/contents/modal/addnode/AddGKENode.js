@@ -72,6 +72,7 @@ class AddGKENode extends Component {
       confrimTarget : "",
       confirmTargetKeyname:"",
       completed: 0,
+     
     };
   }
 
@@ -345,21 +346,23 @@ class GKENodePools extends Component {
       selectedRow : "",
       value: 0,
       completed: 0,
+      loadErr:false
     }
   }
 
   componentDidMount() {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then((res) => {
-        // var result = [];
-        // res.map(item=>
-        //   item.cluster == this.props.rowData ? result.push(item) : ""
-        // )
+    .then((res) => {
+      if (res.hasOwnProperty('error')){
+          this.setState({loadErr:true});
+      } else {
+        this.setState({loadErr:false});
         this.setState({ rows: res });
-        clearInterval(this.timer);
-      })
-      .catch((err) => console.log(err));
+      }
+      clearInterval(this.timer);
+    })
+    .catch((err) => console.log(err));
   }
 
   initState = () => {
@@ -439,13 +442,13 @@ class GKENodePools extends Component {
             // showSelectionColumn={false}
           />
         </Grid>
-        ) : (
-          <CircularProgress
-            variant="determinate"
-            value={this.state.completed}
-            style={{ position: "relative", left: "48%", marginTop: "10px"}}
-          ></CircularProgress>
-        )}
+        ) : this.state.loadErr ? (
+          <div style={{textAlign:"center"}}>Data not exists.<br/> Please check public-cloud config settings</div>
+        ): <CircularProgress
+        variant="determinate"
+        value={this.state.completed}
+        style={{ position: "relative", left: "48%", marginTop: "10px"}}
+      ></CircularProgress>}
       </div>
     )
   }

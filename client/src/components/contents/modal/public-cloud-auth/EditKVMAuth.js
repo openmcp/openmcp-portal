@@ -37,6 +37,7 @@ class EditKVMAuth extends Component {
       seq: "",
       cluster : "",
       agentURL : "",
+      agentPort : "",
       mClusterName : "",
       mClusterPwd : "",
     };
@@ -55,6 +56,7 @@ class EditKVMAuth extends Component {
           seq : this.props.data.seq,
           cluster : this.props.data.cluster,
           agentURL : this.props.data.agentURL,
+          agentPort : this.props.data.agentPort,
           mClusterName : this.props.data.mClusterName,
           mClusterPwd : this.props.data.mClusterPwd,
         });
@@ -64,6 +66,7 @@ class EditKVMAuth extends Component {
           open: this.props.open,
           cluster : "",
           agentURL : "",
+          agentPort : "",
           mClusterName : "",
           mClusterPwd : "",
         });
@@ -88,6 +91,9 @@ class EditKVMAuth extends Component {
     } else if (this.state.agentURL === ""){
       alert("Please enter Agent URL");
       return;
+    } else if (this.state.agentPort === ""){
+      alert("Please enter Agent Port");
+      return;
     } else if (this.state.mClusterName === ""){
       alert("Please enter Master Cluster VM Name");
       return;
@@ -103,6 +109,7 @@ class EditKVMAuth extends Component {
         seq : this.state.seq,
         cluster : this.state.cluster,
         agentURL : this.state.agentURL,
+        agentPort : this.state.agentPort,
         mClusterName : this.state.mClusterName,
         mClusterPwd : this.state.mClusterPwd,
       };
@@ -120,6 +127,7 @@ class EditKVMAuth extends Component {
         seq : this.props.data.seq,
         cluster : this.state.cluster,
         agentURL : this.state.agentURL,
+        agentPort : this.state.agentPort,
         mClusterName : this.state.mClusterName,
         mClusterPwd : this.state.mClusterPwd,
       };
@@ -203,11 +211,11 @@ class EditKVMAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Agent URL</p>
+                  <p>KVM Agent URL</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
-                    placeholder="agentURL"
+                    placeholder="kvm agent url"
                     variant="outlined"
                     value={this.state.agentURL}
                     fullWidth={true}
@@ -216,11 +224,24 @@ class EditKVMAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Master Cluster VM Name</p>
+                  <p>KVM Agent Port</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
-                    placeholder="master cluster VM Name"
+                    placeholder="kvm agent port"
+                    variant="outlined"
+                    value={this.state.agentPort}
+                    fullWidth={true}
+                    name="agentPort"
+                    onChange={this.onChange}
+                  />
+                </div>
+                <div className="props">
+                  <p>Cluster Master VM Name</p>
+                  <TextField
+                    id="outlined-multiline-static"
+                    rows={1}
+                    placeholder="cluster master vm name"
                     variant="outlined"
                     value={this.state.mClusterName}
                     fullWidth={true}
@@ -229,11 +250,11 @@ class EditKVMAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Master Cluster Password</p>
+                  <p>Cluster Master VM Password</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
-                    placeholder="master cluster VM Password"
+                    placeholder="cluster master vm password"
                     variant="outlined"
                     value={this.state.mClusterPwd}
                     fullWidth={true}

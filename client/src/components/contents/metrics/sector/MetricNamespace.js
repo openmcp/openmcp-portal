@@ -78,6 +78,9 @@ class MetricNamespace extends Component {
     if (this.props.cluster !== prevProps.cluster) {
       this.callApiFirst()
       .then((res) => {
+        this.setState({ 
+          selectBoxData: "" 
+        });
         if(res === null){
           this.setState({ rows: [] });
         } else {

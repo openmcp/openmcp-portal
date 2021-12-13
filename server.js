@@ -41,6 +41,16 @@ app.oauth = new OAuthServer({
 //////////////////////////////////////////////////////////
 // 함수
 //////////////////////////////////////////////////////////
+
+async function excuteQuery(query) {
+  let response;
+  try {
+    response = await connection.query(query);
+    return response.rows;
+  } catch (error) {}
+}
+
+
 const groupBy = function (data, key) {
   return data.reduce(function (carry, el) {
       var group = el[key];
@@ -109,6 +119,8 @@ function getDateBefore(type, time) {
     d.setHours(d.getHours() - time);
   } else if(type === 'm') {
     d.setMinutes(d.getMinutes() - time);
+  } else if(type === 'd') {
+    d.setDate(d.getDate() - time);
   }
 
   var date_format_str =
@@ -3111,7 +3123,7 @@ app.post("/settings/config/pca/kvm", (req, res) => {
   // res.send(overview);
   //connection.connect();
   connection.query(
-    `insert into tb_config_kvm (cluster,"agentURL","mClusterName","mClusterPwd") values ('${req.body.cluster}','${req.body.agentURL}','${req.body.mClusterName}','${req.body.mClusterPwd}');`,
+    `insert into tb_config_kvm (cluster,"agentURL","agentPort","mClusterName","mClusterPwd") values ('${req.body.cluster}','${req.body.agentURL}','${req.body.agentPort}','${req.body.mClusterName}','${req.body.mClusterPwd}');`,
     (err, result) => {
       var result_set = {
         data: [],
@@ -3138,6 +3150,7 @@ app.put("/settings/config/pca/kvm", (req, res) => {
     `update tb_config_kvm set 
       "cluster" = '${req.body.cluster}',
       "agentURL" = '${req.body.agentURL}',
+      "agentPort" = '${req.body.agentPort}',
       "mClusterName" = '${req.body.mClusterName}',
       "mClusterPwd" = '${req.body.mClusterPwd}'
     where seq = ${req.body.seq};`,
@@ -3728,6 +3741,91 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
   });
 });
 
+
+app.post("/apis/dashboard/power_usage", async (req, res) => {
+  var date = getDateTime();
+  var dateBeforeDay = getDateBefore("d", 1);
+
+  let resultData = {
+    range: [],
+    rows: []
+  };
+  let totalRange = 0;
+
+  let query = `select CASE WHEN code = 'POWER-LOW' THEN 'low'
+                WHEN code = 'POWER-MEDIUM' THEN 'medium'
+                ELSE 'high' END as name, description as value from tb_codes
+              where kinds = 'CONFIG'
+              and code like 'POWER%'
+              order by code desc;
+    `;
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    let low = 0;
+    let medium = 0;
+    let high = 0;
+    queryResult.forEach((item) => {
+      if(item.name === 'high'){
+        totalRange = item.value
+        high = item.value;
+      } else if (item.name === 'medium'){
+        medium = item.value;
+      } else {
+        low = item.value;
+      }
+    });
+    resultData.range = [
+      { name : "low", value : parseFloat(low)},
+      { name : "medium", value : medium-low},
+      { name : "high", value : high-medium},
+    ]
+  }
+
+  query = `SELECT AVG(power) AS usage
+          FROM (
+            select cluster_name, sum(power) power, collected_time
+            from node_power_usage 
+            group by cluster_name, collected_time
+          ) AS node_power_usage
+          WHERE (cluster_name, collected_time) in (
+          select cluster_name, MAX(collected_time) as max_date
+          from node_power_usage group by cluster_name order by max_date desc
+          );
+    `;
+  // query = `select avg(power) usage
+  // from node_power_usage
+  // where collected_time >= '${dateBeforeDay}' 
+  // and collected_time < '${date}';   
+  //   `;
+
+  let queryResult2 = await excuteQuery(query);
+  if (queryResult2.length > 0) {
+    let data = queryResult2[0];
+    let usage = parseFloat(parseFloat(data.usage).toFixed(1));
+    console.log("usage : ", data.usage);
+    if(data.usage === null){
+      usage = 0
+    }
+    resultData.rows.push({
+      name : "usage",
+      value : usage
+    })
+
+    resultData.rows.push({
+      name: "available",
+      value: totalRange - usage
+    }); 
+  }
+
+  res.send(resultData);
+});
+
+
+
+// #######################
+// Multiple Metric
+// #######################
+
 app.post("/apis/metric/clusterlist", (req, res) => {
   console.log("apis/metric/clusterlist")
   let request = require("request");
@@ -3749,14 +3847,6 @@ app.post("/apis/metric/clusterlist", (req, res) => {
     }
   });
 });
-
-async function excuteQuery(query) {
-  let response;
-  try {
-    response = await connection.query(query);
-    return response.rows;
-  } catch (error) {}
-}
 
 app.get("/apis/metric/clusterState", async (req, res) => {
   let resultData = {
@@ -4035,32 +4125,34 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
 
 
   // 10분단위로 해야함
-  // query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
-  //           FROM namespace_resources
-  //           where cluster_name <> '' and namespace_name <> ''
-  //           and cluster_name = '${req.query.cluster}' 
-  //           and namespace_name = '${req.query.namespace}' 
-  //           and collected_time >= '2021-11-17 15:40:00' 
-  //           and collected_time < '2021-11-17 16:00:00'
-  //           order by collected_time desc;
-  //         `;
+  query = `SELECT cluster_name, namespace_name, trim(n_rx)::float n_rx, trim(n_tx)::float n_tx, collected_time
+            FROM namespace_resources
+            where cluster_name <> '' and namespace_name <> ''
+            and cluster_name = '${req.query.cluster}' 
+            and namespace_name = '${req.query.namespace}'
+            and collected_time >= '${dateBeforeMinute}'
+            and collected_time < '${date}'
+            order by collected_time;
+          `;
 
-   query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
-   FROM namespace_resources
-   where cluster_name <> '' and namespace_name <> ''
-   and cluster_name = '${req.query.cluster}' 
-  and collected_time >= '${dateBeforeMinute}' 
-  and collected_time < '${date}'
-  order by collected_time desc;
-  `;
+  //  query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
+  //  FROM namespace_resources
+  //  where cluster_name <> '' and namespace_name <> ''
+  //  and cluster_name = '${req.query.cluster}' 
+  //  and namespace_name = '${req.query.namespace}' 
+  // and collected_time >= '${dateBeforeMinute}' 
+  // and collected_time < '${date}'
+  // order by collected_time desc;
+  // `;
+
 
   let queryResult5 = await excuteQuery(query);
   if (queryResult5.length > 0) {
     queryResult5.forEach((item) =>{
       let data = {
         unit: "ms",
-        rx : parseFloat(item.n_rx).toFixed(4),
-        tx : parseFloat(item.n_tx).toFixed(4),
+        rx : parseFloat(parseFloat(item.n_rx).toFixed(4)),
+        tx : parseFloat(parseFloat(item.n_tx).toFixed(4)),
         time : item.collected_time
       }
       resultData.netState.push(data)
@@ -4086,7 +4178,7 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
     queryResult6.forEach((item) =>{
       let data = {
         name: item.namespace_name,
-        usage : parseFloat(item.cpu_usage).toFixed(4),
+        usage : parseFloat(parseFloat(item.cpu_usage).toFixed(4)),
       }
       resultData.cpuTop5.push(data)
     })
@@ -4110,7 +4202,7 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
     queryResult7.forEach((item) =>{
       let data = {
         name: item.namespace_name,
-        usage : parseFloat(item.memory_usage).toFixed(4),
+        usage : parseFloat(parseFloat(item.memory_usage).toFixed(4)),
       }
       resultData.memoryTop5.push(data)
     })
@@ -4120,7 +4212,6 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
 });
 
 app.get("/apis/metric/nodelist", (req, res) => {
-  console.log("apis/metric/nodelist")
   let request = require("request");
   let options = {
     uri: `${apiServer}/apis/metric/nodelist?cluster=${req.query.cluster}`,
@@ -4227,7 +4318,7 @@ app.get("/apis/metric/nodeState", async (req, res) => {
       and node_name = '${req.query.namespace}' 
       and collected_time >= '${dateBeforeMinute}' 
       and collected_time < '${date}'
-      order by collected_time desc;
+      order by collected_time;
       `;
 
     let queryResult4 = await excuteQuery(query);
@@ -4261,7 +4352,7 @@ app.get("/apis/metric/nodeState", async (req, res) => {
               and node_name = '${req.query.namespace}' 
               and collected_time >= '${dateBeforeMinute}' 
               and collected_time < '${date}'
-              order by collected_time desc;
+              order by collected_time;
               `;
               
   let queryResult5 = await excuteQuery(query);
@@ -4284,7 +4375,7 @@ app.get("/apis/metric/nodeState", async (req, res) => {
             where cluster_name = '${req.query.cluster}' 
             and collected_time >= '${dateBeforeMinute}' 
             and collected_time < '${date}'
-            order by collected_time desc, node_name asc;
+            order by collected_time, node_name;
           `;
 
   let queryResult6 = await excuteQuery(query);
@@ -4321,7 +4412,7 @@ app.get("/apis/metric/nodeState", async (req, res) => {
             where cluster_name = '${req.query.cluster}' 
             and collected_time >= '${dateBeforeMinute}' 
             and collected_time < '${date}'
-            order by collected_time desc, node_name asc;
+            order by collected_time, node_name;
           `;
 
   let queryResult7 = await excuteQuery(query);
@@ -4351,11 +4442,6 @@ app.get("/apis/metric/nodeState", async (req, res) => {
     });
   }
 
-
-  
-
-
-
   res.send(resultData);
 });
 
@@ -4370,7 +4456,7 @@ app.get("/apis/config-codes", async (req, res) => {
   });
 });
 
-app.put("/apis/config-codes/dashboard-config", (req, res) => {
+app.put("/apis/config-codes/dashboard-config/refresh-cycle", (req, res) => {
   let query = `
   UPDATE public.tb_codes
 	SET description='${req.body.config}'
@@ -4383,6 +4469,40 @@ app.put("/apis/config-codes/dashboard-config", (req, res) => {
       const result_set = {
         data: [],
         message: "Dashboard Cycle config is updated !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild, please check value : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
+});
+
+app.put("/apis/config-codes/dashboard-config/power-usage-range", (req, res) => {
+  let query = `
+  UPDATE public.tb_codes
+	SET description='${req.body.low}'
+  WHERE kinds='CONFIG' AND code='POWER-LOW';
+
+  UPDATE public.tb_codes
+	SET description='${req.body.medium}'
+  WHERE kinds='CONFIG' AND code='POWER-MEDIUM';
+
+  UPDATE public.tb_codes
+	SET description='${req.body.high}'
+  WHERE kinds='CONFIG' AND code='POWER-HIGH';
+  `;
+  
+  //connection.connect();
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Dashboard Power Usage config is updated !!",
       };
       res.send(result_set);
     } else {

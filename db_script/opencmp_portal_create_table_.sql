@@ -180,6 +180,7 @@ CREATE TABLE IF NOT EXISTS public.tb_config_kvm
     "agentURL" character varying COLLATE pg_catalog."default" NOT NULL,
     "mClusterName" character varying COLLATE pg_catalog."default" NOT NULL,
     "mClusterPwd" character varying COLLATE pg_catalog."default" NOT NULL,
+    "agentPort" character varying COLLATE pg_catalog."default" NOT NULL,
     CONSTRAINT tb_config_kvm_pkey PRIMARY KEY (seq)
 )
 WITH (

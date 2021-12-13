@@ -33,7 +33,6 @@ class MetricNode extends Component {
   onApiExcute = (node) => {
     this.callApi(node)
       .then((res) => {
-        console.log("onAPi : ", res);
         if (res === null) {
           this.setState({ row: {} });
         } else {
@@ -96,6 +95,9 @@ class MetricNode extends Component {
     if (this.props.cluster !== prevProps.cluster) {
       this.callApiFirst()
         .then((res) => {
+          this.setState({
+            selectBoxData: "",
+          });
           if (res === null) {
             this.setState({ rows: [] });
           } else {
