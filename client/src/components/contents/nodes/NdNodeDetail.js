@@ -629,7 +629,6 @@ class NodePowerUsage extends Component {
 
             this.setState({ rows: "", range: "", timeline: "" });
           } else {
-            debugger;
             this.setState({
               rows: res.rows,
               range: res.range,
