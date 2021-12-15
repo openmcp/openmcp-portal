@@ -167,3 +167,10 @@ INSERT INTO public.tb_accounts VALUES ('openmcpadmin','$2b$10$nvkN2RtN5/8UNHhNEV
 
 --oauth_clients
 INSERT INTO public.oauth_clients(client_id, client_secret, redirect_uri) VALUES ('openmcp-client', 'openmcp-secret', 'http://localhost:3000/oauth/callback');
+
+-- metering default regions 
+ INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('KR', 0.1, 'Korea', current_timestamp, current_timestamp);
+ INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('US', 0.1, 'US',current_timestamp, current_timestamp);
+ INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('JP', 0.1, 'Japen',current_timestamp, current_timestamp);
+ INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('HK', 0.1, 'Hongkong',current_timestamp,current_timestamp);
+ INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('CN', 0.1, 'China',current_timestamp,current_timestamp);

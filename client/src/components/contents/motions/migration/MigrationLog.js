@@ -166,7 +166,7 @@ class MigrationLog extends Component {
           <div>
             <p>{percent + `%`}</p>
             <p style={{marginTop:"5px"}}>
-              <LinearProgressBar2 value={percent} total={100}/>
+              <LinearProgressBar2 value={percent} total={100} mColor={"normalColor"} bColor={"normalBaseColor"}/>
             </p>
           </div>
         )

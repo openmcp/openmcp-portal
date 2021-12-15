@@ -34,6 +34,7 @@ import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import LinearProgressBar from './../../modules/LinearProgressBar';
 import { CgServer} from "react-icons/cg";
+import LinearProgressBar2 from "../../modules/LinearProgressBar2.js";
 
 
 class Nodes extends Component {
@@ -67,6 +68,7 @@ class Nodes extends Component {
         { columnName: "zone", width: 80 },
       ],
       rows: "",
+      rows2:"",
 
       // Paging Settings
       currentPage: 0,
@@ -103,6 +105,12 @@ class Nodes extends Component {
     return body;
   };
 
+  callPredictApi = async () => {
+    const response = await fetch(`/nodes/predict`);
+    const body = await response.json();
+    return body;
+  };
+
   progress = () => {
     const { completed } = this.state;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
@@ -117,7 +125,25 @@ class Nodes extends Component {
         if(res === null){
           this.setState({ rows: [] });
         } else {
-          this.setState({ rows: res });
+          this.callPredictApi()
+          .then((res2) => {
+            if(res2 === null){
+              this.setState({ rows: res });
+            } else {
+              res.forEach(nodeItem => {
+                res2.forEach(predictItem => {
+                  if (nodeItem.cluster === predictItem.cluster && nodeItem.name === predictItem.node) {
+                    nodeItem.cpu = nodeItem.cpu + "|" + predictItem.cpu;
+                    nodeItem.memory = nodeItem.memory + "|" +predictItem.memory;
+                  }
+                })
+              });
+              console.log(res);
+              this.setState({ rows: res });
+            }
+          })
+          .catch((err) => console.log(err));
+          
         }
         clearInterval(this.timer);
       })
@@ -128,6 +154,10 @@ class Nodes extends Component {
       userId= result;
     })
     utilLog.fn_insertPLogs(userId, 'log-ND-VW01');
+
+
+    
+    
   };
 
   onUpdateData = () => {
@@ -217,14 +247,15 @@ class Nodes extends Component {
         if(props.value === undefined){
           return ""
         } else {
-          props.value.indexOf("|") > 0 ? 
+          props.value.indexOf("|") > -1 ? 
             props.value.split("|").map( (item,index) => 
                 data[index] = item
-            ) : data[0] = props.value
-          return data.length > 1 ? <p>{data[1] + " ("+data[0]+")" }</p> : props.value
+            )
+            : data[0] = props.value
+          return data.length > 1 ? <p>{data[1] + " ("+data[0]+")"}</p> : props.value
         }
       }
-
+      // "2.5%|1.0 / 40 Core | 1.1073843200000002"
       const fn_linearProgressBar = () =>{
         var data = [];
         if(props.value.indexOf("|") > -1) {
@@ -240,6 +271,37 @@ class Nodes extends Component {
         return (
           <p style={{marginTop:"5px"}}>
             <LinearProgressBar value={data[0]} total={data[2]}/>
+          </p>
+        )
+      }
+    //  var s = `6.9%|2.2 / 32 Core 2.291166976`;
+      const fn_linearProgressBar2 = () =>{
+        var data = [];
+        var predict = [];
+        if(props.value.indexOf("|") > -1) {
+          props.value.split("|").map((item, idx) => {
+            if(item.indexOf(" ") > -1) {
+              item.split(" ").map((i, index) => data[index] = i);
+            }
+
+            if(idx === 2){
+              predict = item;
+            }
+          });
+        } else {
+          data = [];
+        }
+        
+        return (
+          <p style={{marginTop:"5px"}}>
+            {predict.length > 0 ? [
+              <div style={{color:"#afafaf"}}>
+                {parseFloat(predict).toFixed(2) + ' (prediction)'}
+              </div>,
+              <LinearProgressBar2 value={predict} total={data[2]} mColor={"gray"} bColor={"bgGray"}/>
+            ]
+              :null
+            }
           </p>
         )
       }
@@ -274,6 +336,7 @@ class Nodes extends Component {
         return <Table.Cell>
           {fnEnterCheck()}
           {fn_linearProgressBar()}
+          {fn_linearProgressBar2()}
           </Table.Cell>
         // 
       };

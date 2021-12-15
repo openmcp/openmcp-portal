@@ -8,6 +8,9 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  SelectionState,
+  IntegratedSelection,
+  RowDetailState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -17,62 +20,67 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
+  TableSelection,
+  TableRowDetail,
+  TableColumnVisibility,
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
-import PdPodResourceConfig from "../../modal/PdPodResourceConfig.js";
-import MtSetMetering from "../../modal/metering/MtSetMetering.js";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
+import Grow from "@material-ui/core/Grow";
+import ExcuteMigration from "../../modal/ExcuteMigration";
+import { Button } from "@material-ui/core";
+import ExcuteSnapshot from "../../modal/ExcuteSnapshot.js";
+import LinearProgressBar from "../../../modules/LinearProgressBar.js";
+import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
+import Confirm2 from "../../../modules/Confirm2.js";
+import axios from "axios";
+import { dateFormat } from "../../../util/Utitlity.js";
 import { AiOutlineAreaChart } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { NavigateNext } from "@material-ui/icons";
+import MtAddRegionCost from "../../modal/metering/MtAddRegionCost.js";
+import MtEditMetering from "../../modal/metering/MtEditMetering.js";
 
 class Metering extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
+        { name: "region", title: "Region" },
+        { name: "region_name", title: "Region Name" },
+        { name: "cost", title: "Cost" },
         { name: "created_time", title: "Created Time" },
-        { name: "res_cpu_price", title: "CPU Price" },
-        { name: "res_memory_price", title: "Memory Price" },
-        { name: "res_disk_price", title: "Disk Price" },
-        { name: "data_trsf_in", title: "Transfer In" },
-        { name: "data_trsf_in_price", title: "Transfer In Price" },
-        { name: "data_trsf_out", title: "Transfer Out" },
-        { name: "data_trsf_out_price", title: "Transfer Out Price" },
+        { name: "workers", title: "workers" },
       ],
       defaultColumnWidths: [
+        { columnName: "region", width: 160 },
+        { columnName: "region_name", width: 160 },
+        { columnName: "cost", width: 100 },
         { columnName: "created_time", width: 200 },
-        { columnName: "res_cpu_price", width: 130 },
-        { columnName: "res_memory_price", width: 130 },
-        { columnName: "res_disk_price", width: 130 },
-        { columnName: "data_trsf_in", width: 130 },
-        { columnName: "data_trsf_in_price", width: 160 },
-        { columnName: "data_trsf_out", width: 130 },
-        { columnName: "data_trsf_out_price", width: 160 },
+        { columnName: "workers", width: 1 },
       ],
-      // defaultHiddenColumnNames :[
-      //   "rate", "period", "policy_id"
-      // ],
       rows: "",
-      selectedRowData: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 30,
-      pageSizes: [30, 40, 50, 0],
+      pageSize: 5,
+      pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      onClickUpdatePolicy: false,
-      // selection: [],
-      // selectedRow: "",
+      selection: [],
+      selectedRow: "",
+
+      openProgress: false,
     };
   }
 
-  componentWillMount() {
-    this.props.menuData("none");
-  }
+  componentWillMount() {}
 
   callApi = async () => {
     const response = await fetch(`/apis/metering`);
@@ -85,15 +93,14 @@ class Metering extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
+  //컴포넌트가 모두 마운트가 되었을때 실행된다.
   componentDidMount() {
+    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-      .then((res) => {
-        if (res == null) {
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
+      .then((result) => {
+        console.log(result)
+        this.setState({ rows: result });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -102,101 +109,108 @@ class Metering extends Component {
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    utilLog.fn_insertPLogs(userId, "log-AC-VW01");
+    utilLog.fn_insertPLogs(userId, "log-SS-VW01");
   }
 
   onUpdateData = () => {
-    this.setState({
-      selection: [],
-      selectedRow: "",
-    });
+    this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if (res == null) {
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
+        this.setState({
+          selection: [],
+          selectedRow: "",
+          rows: res,
+        });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  };
 
-  onClickUpdatePolicy = (rowData) => {
-    this.setState({
-      onClickUpdatePolicy: true,
-      selectedRowData: rowData,
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
     });
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
-  onCloseUpdatePolicy = (value) => {
-    this.setState({ onClickUpdatePolicy: value });
+  closeProgress = () => {
+    this.setState({ openProgress: false });
   };
+
+  //셀
+  Cell = (props) => {
+    return <Table.Cell>{props.value}</Table.Cell>;
+  };
+
+  HeaderRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      style={{
+        cursor: "pointer",
+        backgroundColor: "whitesmoke",
+      }}
+    />
+  );
+
+  Row = (props) => {
+    return <Table.Row {...props} key={props.tableRow.key} />;
+  };
+
+  onExpandedRowIdsChange = (selection) => {
+    if (selection.length > 1) selection.splice(0, 1);
+    return this.setState({ expandedRowIds: selection });
+  };
+
+  RowDetail = ({ row }) => (
+    <div>
+      <MeteringWorker
+        // deployment={row.deployment}
+        // namespace={row.project}
+        row={row.workers}
+        onSelectionChange={this.onSelectionChange}
+        onUpdateData={this.onUpdateData}
+      />
+    </div>
+  );
 
   render() {
-    const Cell = (props) => {
-      const { column } = props;
-
-      if (column.name === "status") {
-        return (
-          <Table.Cell
-            {...props}
-            // style={{ cursor: "pointer" }}
-            aria-haspopup="true"
-          >
-            <div style={{ position: "relative", top: "-3px" }}>
-              <WarningRoundedIcon
-                style={{
-                  fontSize: "19px",
-                  marginRight: "5px",
-                  position: "relative",
-                  top: "5px",
-                  color: props.value === "warn" ? "#efac17" : "#dc0505",
-                }}
-              />
-              <span>{props.value}</span>
-            </div>
-          </Table.Cell>
-        );
-      }
-      return <Table.Cell>{props.value}</Table.Cell>;
+    const onSelectionChange = (selection) => {
+      if (selection.length > 1) selection.splice(0, 1);
+      this.setState({ selection: selection });
+      let selectedRows = [];
+      selection.forEach((index) => {
+        selectedRows.push(this.state.rows[index]);
+      });
+      this.setState({
+        selectedRow: selectedRows.length > 0 ? selectedRows : {},
+      });
     };
-
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-        }}
-      />
-    );
-    const Row = (props) => {
-      return <Table.Row {...props} key={props.tableRow.key} />;
-    };
-
-    // const onSelectionChange = (selection) => {
-    //   // console.log(this.state.rows[selection[0]])
-    //   if (selection.length > 1) selection.splice(0, 1);
-    //   this.setState({ selection: selection });
-    //   this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
-    // };
 
     return (
       <div className="content-wrapper fulled">
+        {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-          <i><AiOutlineAreaChart/></i>
-          <span>Metrings</span>
+            <i>
+              <AiOutlineAreaChart />
+            </i>
+            <span>Metrings</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
+            <li>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
+              <NavLink to="/settings">Settings</NavLink>
+            </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Settings
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
+              Meterings
             </li>
           </ol>
         </section>
@@ -204,51 +218,82 @@ class Metering extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <MtSetMetering/>,
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "30px",
+                    top: "27px",
+                    zIndex: "10",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  <MtAddRegionCost onUpdateData={this.onUpdateData}/>
+                  <MtEditMetering/>
+                </div>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
+                  {/* 검색 */}
                   <SearchState defaultValue="" />
+
                   <SearchPanel style={{ marginLeft: 0 }} />
 
+                  {/* Sorting */}
+                  <SortingState
+                    defaultSorting={[
+                      { columnName: "snapshots", direction: "desc" },
+                    ]}
+                  />
+
+                  {/* 페이징 */}
                   <PagingState
                     defaultCurrentPage={0}
                     defaultPageSize={this.state.pageSize}
                   />
+
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  <SortingState
-                    defaultSorting={[
-                      { columnName: "updated_time", direction: "desc" },
-                    ]}
-                  />
-
-                  {/* <SelectionState
+                  {/* <EditingState
+                    onCommitChanges={commitChanges}
+                  /> */}
+                  <SelectionState
                     selection={this.state.selection}
                     onSelectionChange={onSelectionChange}
-                  /> */}
+                  />
+                  {/* <FilteringState/> */}
 
                   <IntegratedFiltering />
-                  {/* <IntegratedSelection /> */}
                   <IntegratedSorting />
+                  <IntegratedSelection />
                   <IntegratedPaging />
 
-                  <Table cellComponent={Cell} rowComponent={Row} />
+                  {/* 테이블 */}
+                  <RowDetailState
+                    // defaultExpandedRowIds={[2, 5]}
+                    expandedRowIds={this.state.expandedRowIds}
+                    onExpandedRowIdsChange={this.onExpandedRowIdsChange}
+                  />
+
+                  <Table cellComponent={this.Cell} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
                   />
                   <TableHeaderRow
                     showSortingControls
-                    rowComponent={HeaderRow}
+                    rowComponent={this.HeaderRow}
                   />
-                  {/* <TableColumnVisibility
-                    defaultHiddenColumnNames={this.state.defaultHiddenColumnNames}
-                  /> */}
-
-                  {/* <TableSelection
+                  <TableSelection
                     selectByRowClick
                     highlightRow
+                    rowComponent={this.Row}
                     // showSelectionColumn={false}
-                  /> */}
+                  />
+
+                  <TableColumnVisibility
+                    defaultHiddenColumnNames={["workers"]}
+                  />
+                  <TableRowDetail contentComponent={this.RowDetail} />
+
+                  {/* <TableFilterRow showFilterSelector={true}/> */}
                 </Grid>,
               ]
             ) : (
@@ -260,6 +305,166 @@ class Metering extends Component {
             )}
           </Paper>
         </section>
+      </div>
+    );
+  }
+}
+
+class MeteringWorker extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rows: "",
+      columns: [
+        { name: "id", title: "ID" },
+        { name: "cpu", title: "CPU" },
+        { name: "memory", title: "Memory" },
+        { name: "disk", title: "Disk" },
+        { name: "cost", title: "Cost" },
+        { name: "created_time", title: "Created time" },
+        { name: "updated_time", title: "Updated Time" },
+      ],
+      tableColumnExtensions: [
+        { columnName: "id", width: "50px" },
+        { columnName: "cpu", width: "80px" },
+        { columnName: "memory", width: "100px" },
+        { columnName: "disk", width: "80px" },
+        { columnName: "cost", width: "80px"},
+        { columnName: "created_time", width: "160px"},
+        { columnName: "created_time", width: "160px"},
+        
+      ],
+      value: 0,
+      confirmOpen: false,
+      confirmInfo: {
+        title: "confirmTitle",
+        context: "confirmText",
+        button: {
+          open: "",
+          yes: "OK",
+          no: "CANCEL",
+        },
+      },
+      confrimTarget: "false",
+      confirmTargetKeyname: "snapshot",
+      selectedRow: [],
+    };
+  }
+
+  componentWillMount() {
+    let result = [];
+    if (this.props.row !== null) {
+      this.props.row.map((item) => result.push(item));
+      this.setState({ rows: result });
+    }
+  }
+
+  initState = () => {
+    this.setState({
+      selection: [],
+      selectedRow: "",
+    });
+  };
+
+  HeaderRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      style={{
+        cursor: "pointer",
+        backgroundColor: "#f5f5f5",
+      }}
+    />
+  );
+
+  
+  Cell = (props) => {
+    const { column, row } = props;
+
+    const fn_linearProgressBar = () => {
+      var data = [];
+      if (props.value.indexOf(" ") > -1) {
+        props.value.split(" ").forEach((item) => {
+          if (item.indexOf("/") > -1) {
+            item.split("/").map((i, index) => (data[index] = i));
+          }
+        });
+      } else {
+        data = [];
+      }
+
+      var percent = (data[0] / data[1]) * 100;
+
+      return (
+        <div>
+          <p>{props.value + " (" + percent.toFixed(1) + "%)"}</p>
+          <p style={{ marginTop: "5px" }}>
+            <LinearProgressBar value={data[0]} total={data[1]} />
+          </p>
+        </div>
+      );
+    };
+
+    // console.log("cell : ", props);
+    if (column.name === "cpu" || column.name === "memory" || column.name === "disk" || column.name === "cost" ) {
+      return (
+        <Table.Cell {...props} style={{ cursor: "pointer", textAlign:"center"}}>
+         {props.value}
+        </Table.Cell>
+      );
+    } else if (column.name === "cpu" || column.name === "ram") {
+      return (
+        <Table.Cell>
+          {/* <p>{props.value}</p> */}
+          {fn_linearProgressBar()}
+        </Table.Cell>
+      );
+      //
+    }
+    return <Table.Cell {...props} />;
+  };
+
+
+  render() {
+
+    return (
+      <div className="inner-table">
+        {this.state.rows ? (
+          <Paper>
+            <Grid rows={this.state.rows} columns={this.state.columns}>
+              {/* Sorting */}
+              <SortingState
+                defaultSorting={[
+                  { columnName: "created_time", direction: "asc" },
+                ]}
+              />
+
+              <IntegratedFiltering />
+              <IntegratedSorting />
+
+              {/* 테이블 */}
+              <Table
+                cellComponent={this.Cell}
+                columnExtensions={this.state.tableColumnExtensions}
+              />
+              {/* <TableColumnResizing
+              defaultColumnWidths={this.state.defaultColumnWidths}
+            /> */}
+              <TableHeaderRow
+                showSortingControls
+                rowComponent={this.HeaderRow}
+              />
+              <TableColumnVisibility
+                    defaultHiddenColumnNames={["id"]}
+                  />
+            </Grid>
+          </Paper>
+        ) : (
+          <CircularProgress
+            variant="determinate"
+            value={this.state.completed}
+            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+          ></CircularProgress>
+        )}
       </div>
     );
   }

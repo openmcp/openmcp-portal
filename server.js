@@ -50,35 +50,34 @@ async function excuteQuery(query) {
   } catch (error) {}
 }
 
-
 const groupBy = function (data, key) {
   return data.reduce(function (carry, el) {
-      var group = el[key];
+    var group = el[key];
 
-      if (carry[group] === undefined) {
-          carry[group] = []
-      }
+    if (carry[group] === undefined) {
+      carry[group] = [];
+    }
 
-      carry[group].push(el)
-      return carry
-  }, {})
-}
+    carry[group].push(el);
+    return carry;
+  }, {});
+};
 
-const convertBytes = function(bytes) {
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+const convertBytes = function (bytes) {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 
   if (bytes == 0) {
-    return "n/a"
+    return "n/a";
   }
 
-  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
 
   if (i == 0) {
-    return bytes + " " + sizes[i]
+    return bytes + " " + sizes[i];
   }
 
-  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
-}
+  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i];
+};
 
 function getDateTime() {
   var d = new Date();
@@ -115,11 +114,11 @@ function getDateTime() {
 function getDateBefore(type, time) {
   var d = new Date();
   d = new Date(d.getTime());
-  if(type === 'h') {
+  if (type === "h") {
     d.setHours(d.getHours() - time);
-  } else if(type === 'm') {
+  } else if (type === "m") {
     d.setMinutes(d.getMinutes() - time);
-  } else if(type === 'd') {
+  } else if (type === "d") {
     d.setDate(d.getDate() - time);
   }
 
@@ -151,7 +150,7 @@ function getDateBefore(type, time) {
       : "0" + d.getSeconds().toString());
   return date_format_str;
 }
-////////////////////////////////////////////////////////// 
+//////////////////////////////////////////////////////////
 //  함수끝
 //////////////////////////////////////////////////////////
 
@@ -169,7 +168,6 @@ const apiServer = conf.api.url; //로컬 API 서버
 const { Client } = require("pg");
 const { toNamespacedPath } = require("path");
 
-
 const connection = new Client({
   user: conf.db.user,
   host: conf.db.host,
@@ -185,21 +183,21 @@ dbSettings();
 function dbSettings() {
   //connection.connect();
   connection.query(`select * from tb_account_role;`, (err, result) => {
-      if (result === undefined) {
-        connection.query(createTableScript, (err, result) => {
-          if(err != null) {
-            console.log("table script : ", err);
+    if (result === undefined) {
+      connection.query(createTableScript, (err, result) => {
+        if (err != null) {
+          console.log("table script : ", err);
+        }
+        connection.query(inertDataScript, (err, result) => {
+          if (err != null) {
+            console.log("insert script : ", err);
           }
-          connection.query(inertDataScript, (err, result) => {
-            if(err != null) {
-              console.log("insert script : ", err);
-            }
-          });
         });
-        console.log("DB schemas create");
-      } else {
-        console.log("Skip DB schemas create");
-      }
+      });
+      console.log("DB schemas create");
+    } else {
+      console.log("Skip DB schemas create");
+    }
     //connection.end();
   });
 }
@@ -311,8 +309,6 @@ app.get("/public", function (req, res) {
 // END OAuth2.0 서비스 END
 /////////////////////////////////////////////////////////////////
 
-
-
 ///////////////////////
 // Write Log
 ///////////////////////
@@ -356,7 +352,7 @@ app.post("/user_login", (req, res) => {
         from tb_group_role t 
         where ta.user_id = ANY(t.member)
         ) as g_clusters
-  from tb_accounts ta where ta.user_id = '${req.body.userid}';`
+  from tb_accounts ta where ta.user_id = '${req.body.userid}';`;
 
   connection.query(
     // `select * from tb_accounts where user_id = '${req.body.userid}';`,
@@ -425,13 +421,12 @@ app.get("/api/projects", (req, res) => {
     if (!error && response.statusCode == 200) {
     } else {
       console.log("error", error);
-      
     }
   });
 
   //   request(url, function (error, response, body) {
   //     if (!error && response.statusCode == 200) {
-  //         
+  //
   //         token = body.token;
   //     } else {
   //         return error
@@ -469,7 +464,6 @@ app.post("/projects", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -486,13 +480,11 @@ app.get("/projects/:project/overview", (req, res) => {
     method: "GET",
   };
 
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -517,7 +509,6 @@ app.post("/projects/create", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -548,7 +539,6 @@ app.get("/projects/:project/resources/workloads/deployments", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -569,13 +559,11 @@ app.get(
       uri: `${apiServer}/apis/clsuters/${req.query.cluster}/projects/${req.params.project}/deployments/${req.params.deployment}`,
     };
 
-
     request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         res.send(body);
       } else {
         console.log("error", error);
-        
       }
     });
   }
@@ -595,7 +583,6 @@ app.get(
         res.send(body);
       } else {
         console.log("error", error);
-        
       }
     });
 
@@ -646,10 +633,8 @@ app.post("/apis/deployments/replica_status/set_pod_num", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -673,7 +658,6 @@ app.get("/projects/:project/resources/workloads/statefulsets", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -697,7 +681,6 @@ app.get(
         res.send(body);
       } else {
         console.log("error", error);
-        
       }
     });
   }
@@ -720,7 +703,6 @@ app.get("/projects/:project/resources/pods", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -742,7 +724,6 @@ app.get("/projects/:project/resources/pods/:pod", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -764,7 +745,6 @@ app.get("/projects/:project/resources/services", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -786,7 +766,6 @@ app.get("/projects/:project/resources/services/:service", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -808,7 +787,6 @@ app.get("/projects/:project/resources/ingress", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -831,7 +809,6 @@ app.get("/projects/:project/resources/ingress/:ingress", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -853,7 +830,6 @@ app.get("/projects/:project/volumes", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -875,7 +851,6 @@ app.get("/projects/:project/volumes/:volume", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -897,7 +872,6 @@ app.get("/projects/:project/config/secrets", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -919,7 +893,6 @@ app.get("/projects/:project/config/secrets/:secret", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -942,7 +915,6 @@ app.get("/projects/:project/config/config_maps", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -964,7 +936,6 @@ app.get("/projects/:project/config/config_maps/:config_map", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1000,7 +971,6 @@ app.post("/deployments", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1021,7 +991,6 @@ app.get("/deployments/:deployment", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1041,7 +1010,6 @@ app.post("/deployments/create", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1060,7 +1028,6 @@ app.post("/apis/deployments/resources", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1092,7 +1059,6 @@ app.post("/clusters", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1107,7 +1073,7 @@ app.post("/clusters-joinable", (req, res) => {
   var options = {
     uri: `${apiServer}/apis/joinableclusters`,
     method: "POST",
-    body : data,
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -1115,7 +1081,6 @@ app.post("/clusters-joinable", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1137,7 +1102,6 @@ app.get("/clusters/:cluster/overview", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1167,7 +1131,6 @@ app.get("/clusters/:cluster/nodes", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1199,7 +1162,6 @@ app.get("/clusters/:cluster/pods", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1249,10 +1211,8 @@ app.post("/cluster/join", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1275,10 +1235,8 @@ app.post("/cluster/unjoin", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -1305,8 +1263,84 @@ app.post("/nodes", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
+  });
+});
+
+app.get("/apis/metric/apiServer", async (req, res) => {
+  var date = getDateTime();
+  var dateBefore = getDateBefore("h", 1);
+  let resultData = [];
+
+  let query = `SELECT *
+  FROM apiserver_state
+  where reqests_per_sec <> '' and latency <> '' 
+  and cluster_name = '${req.query.cluster}' 
+  and collected_time >= '${dateBefore}' 
+  and collected_time < '${date}'
+  order by collected_time desc;
+  `;
+
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    var data = {};
+    queryResult.forEach((item) => {
+      data = {
+        unit: "sec",
+        requests_per_sec: parseFloat(item.reqests_per_sec).toFixed(2),
+        latency: parseFloat(item.latency).toFixed(2),
+        time: item.collected_time,
+      };
+      resultData.push(data);
+    });
+  }
+  res.send(resultData);
+});
+
+// app.get("/azure/aks-type", (req, res) => {
+//   connection.query(
+//     `select * from tb_codes where kinds='AKS-TYPE' order by etc;`,
+//     (err, result) => {
+//       res.send(result.rows);
+//     }
+//   );
+// });
+
+//node resource 예측
+app.get("/nodes/predict", (req, res) => {
+  let query = `SELECT
+    TRIM(cluster) as cluster,
+    TRIM(node) as node,
+    cpu/1000/1000/1000 cpu,
+    memory/1000/1000 memory,
+    collected_time
+  FROM node_workload_prediction nwp
+  WHERE (cluster, node, collected_time) IN
+    (select cluster, node, MAX(collected_time) as max_date
+    from node_workload_prediction
+    group by cluster, node)
+  ORDER BY cluster;
+  `;
+
+  connection.query(query, (err, result) => {
+    res.send(result.rows);
+    // var result_set = {
+    //   data: [],
+    //   message: "Failed get nodes resource predict data",
+    // };
+
+    // if (result.rows.length < 1) {
+    //   result_set = {
+    //     data: [],
+    //     message: "There is no predict data",
+    //   };
+    //   res.send(result_set);
+    // } else {
+    //   result.
+
+    //   res.send(result.rows);
+    // }
+    //connection.end();
   });
 });
 
@@ -1350,10 +1384,8 @@ app.post("/nodes/add/eks", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1400,10 +1432,8 @@ app.post("/nodes/add/aks", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           res.send(body);
-          
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1450,7 +1480,6 @@ app.post("/nodes/add/gke", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1496,7 +1525,6 @@ app.post("/nodes/add/kvm", (req, res) => {
         if (!error && response.statusCode == 200) {
           res.send(body);
         } else {
-          
         }
       });
       //connection.end();
@@ -1540,7 +1568,6 @@ app.post("/nodes/delete/kvm", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
     }
@@ -1566,9 +1593,103 @@ app.get("/nodes/:node", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
+});
+
+app.get("/nodes/:node/power-usage", async (req, res) => {
+  
+
+  let resultData = {
+    range: [],
+    rows: [],
+    timeline:[],
+  };
+  let totalRange = 0;
+
+  let query = `select CASE WHEN code = 'POWER-LOW' THEN 'low'
+                WHEN code = 'POWER-MEDIUM' THEN 'medium'
+                ELSE 'high' END as name, description as value from tb_codes
+              where kinds = 'CONFIG'
+              and code like 'POWER%'
+              order by code desc;
+    `;
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    let low = 0;
+    let medium = 0;
+    let high = 0;
+    queryResult.forEach((item) => {
+      if (item.name === "high") {
+        totalRange = item.value;
+        high = item.value;
+      } else if (item.name === "medium") {
+        medium = item.value;
+      } else {
+        low = item.value;
+      }
+    });
+    resultData.range = [
+      { name: "low", value: parseFloat(low) },
+      { name: "medium", value: medium - low },
+      { name: "high", value: high - medium },
+    ];
+  }
+
+  query = `select power as usage
+  from node_power_usage
+  where (cluster_name, node_name, collected_time) in (
+  select cluster_name, node_name,max(collected_time)as max_date
+  from node_power_usage
+  where cluster_name='${req.query.clustername}' and node_name= '${req.params.node}'
+  group by cluster_name, node_name);
+  `;
+
+  // let query = `select trim(cluster_name) cluster_name, trim(node_name) node_name, power, collected_time
+  // from node_power_usage
+  // where (cluster_name, node_name, collected_time) in (
+  // select cluster_name, node_name,max(collected_time)as max_date
+  // from node_power_usage
+  // where cluster_name='${req.query.clustername}' and node_name= '${req.params.node}'
+  // group by cluster_name, node_name);
+  // `;
+
+  let queryResult2 = await excuteQuery(query);
+  if (queryResult2.length > 0) {
+    let data = queryResult2[0];
+    let usage = parseFloat(parseFloat(data.usage).toFixed(1));
+    console.log("usage : ", data.usage);
+    if (data.usage === null) {
+      usage = 0;
+    }
+    resultData.rows.push({
+      name: "usage",
+      value: usage,
+    });
+
+    resultData.rows.push({
+      name: "available",
+      value: totalRange - usage,
+    });
+  }
+
+  query = `select power, collected_time
+  from node_power_usage
+  where cluster_name='${req.query.clustername}' and node_name= '${req.params.node}';
+  `;
+
+
+  let queryResult3 = await excuteQuery(query);
+  if (queryResult3.length > 0) {
+    let data = queryResult3;
+    queryResult3.forEach((item) => {
+      resultData.timeline.push({
+        usage: parseFloat(parseFloat(item.power).toFixed(2)),
+        time: item.collected_time,
+      });
+    });
+  }
+  res.send(resultData);
 });
 
 app.post("/nodes/eks/start", (req, res) => {
@@ -1608,7 +1729,6 @@ app.post("/nodes/eks/start", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1640,7 +1760,6 @@ app.post("/nodes/eks/stop", (req, res) => {
         node: req.body.node,
       };
 
-
       var data = JSON.stringify(requestData);
       var request = require("request");
       var options = {
@@ -1651,11 +1770,9 @@ app.post("/nodes/eks/stop", (req, res) => {
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1698,11 +1815,9 @@ app.post("/nodes/eks/change", (req, res) => {
 
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1748,7 +1863,6 @@ app.post("/nodes/aks/start", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1795,7 +1909,6 @@ app.post("/nodes/aks/stop", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1843,7 +1956,6 @@ app.post("/clusters/aks/change", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1885,7 +1997,6 @@ app.post("/nodes/kvm/stop", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1927,7 +2038,6 @@ app.post("/nodes/kvm/start", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -1971,7 +2081,6 @@ app.post("/nodes/kvm/change", (req, res) => {
           res.send(body);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -2038,7 +2147,7 @@ app.get("/azure/pool/:cluster", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var clusterInfo = {};
-          
+
           for (let value of JSON.parse(body)) {
             // if(value.name == cluster){ //임시로 막음(일치하는 클러스터가 없음)
             if (value.name === "aks-cluster-01") {
@@ -2049,7 +2158,6 @@ app.get("/azure/pool/:cluster", (req, res) => {
           res.send(clusterInfo);
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -2110,7 +2218,6 @@ app.get("/eks/clusters/workers", (req, res) => {
         secretKey: result.rows[0].secretKey,
       };
 
-      
       var data = JSON.stringify(requestData);
 
       var request = require("request");
@@ -2126,7 +2233,6 @@ app.get("/eks/clusters/workers", (req, res) => {
           var result = JSON.parse(body);
           console.log(result);
           result.map((item) => {
-            
             if (item.name == clusterName) {
               res.send(item.nodegroups);
             }
@@ -2134,7 +2240,7 @@ app.get("/eks/clusters/workers", (req, res) => {
         } else {
           console.log("error", error);
           res.send(error);
-          // 
+          //
         }
       });
       //connection.end();
@@ -2194,7 +2300,6 @@ app.get("/gke/clusters/pools", (req, res) => {
           });
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -2256,7 +2361,6 @@ app.get("/aks/clusters/pools", (req, res) => {
           });
         } else {
           console.log("error", error);
-          
         }
       });
       //connection.end();
@@ -2285,7 +2389,7 @@ app.post("/pods", (req, res) => {
   var options = {
     uri: `${apiServer}/apis/pods`,
     method: "POST",
-    body:data,
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -2293,7 +2397,6 @@ app.post("/pods", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2315,7 +2418,6 @@ app.get("/pods/:pod", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2336,7 +2438,6 @@ app.get("/pods/:pod/physicalResPerMin", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2358,7 +2459,6 @@ app.post("/hpa", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2380,7 +2480,6 @@ app.post("/vpa", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2409,7 +2508,6 @@ app.post("/ingress", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2444,7 +2542,6 @@ app.post("/services", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2477,7 +2574,6 @@ app.get("/dns", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2737,7 +2833,6 @@ app.get("/settings/policy/openmcp-policy", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -2761,7 +2856,6 @@ app.post("/settings/policy/openmcp-policy", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -3232,7 +3326,7 @@ app.post("/settings/threshold", (req, res) => {
     node_name, cluster_name, cpu_warn, cpu_danger, ram_warn, ram_danger, storage_warn, storage_danger, created_time, updated_time)
     VALUES ('${req.body.nodeName}', '${req.body.clusterName}', ${req.body.cpuWarn}, ${req.body.cpuDanger}, ${req.body.ramWarn}, ${req.body.ramDanger}, ${req.body.storageWarn}, ${req.body.stroageDanger}, '${now}', '${now}');
   `;
-  
+
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -3259,7 +3353,6 @@ app.put("/settings/threshold", (req, res) => {
 	SET cpu_warn=${req.body.cpuWarn}, cpu_danger=${req.body.cpuDanger}, ram_warn=${req.body.ramWarn}, ram_danger=${req.body.ramDanger}, storage_warn=${req.body.storageWarn}, storage_danger=${req.body.storageDanger}, updated_time='${now}'	WHERE cluster_name='${req.body.clusterName}' AND node_name='${req.body.nodeName}';
   `;
 
-  
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -3305,16 +3398,16 @@ app.post("/settings/threshold/log", (req, res) => {
   //connection.connect();
   let data = req.body.g_clusters;
 
-  let clusters = ''
-  data.forEach((item, index)=>{
-    if(index === data.length-1){
-      clusters = clusters + `'${item}'`
+  let clusters = "";
+  data.forEach((item, index) => {
+    if (index === data.length - 1) {
+      clusters = clusters + `'${item}'`;
     } else {
-      clusters = clusters + `'${item}',`
+      clusters = clusters + `'${item}',`;
     }
   });
-  
-  let condition = `cluster_name in (${clusters})`
+
+  let condition = `cluster_name in (${clusters})`;
 
   let queryString = `select
   tl.node_name,
@@ -3325,11 +3418,10 @@ app.post("/settings/threshold/log", (req, res) => {
   tl.resource
   from tb_threshold_log tl
   where ${condition}
-  order by created_time desc, node_name;`
+  order by created_time desc, node_name;`;
   connection.query(queryString, (err, result) => {
-      res.send(result.rows);
-    }
-  );
+    res.send(result.rows);
+  });
 });
 
 app.post("/settings/threshold/log", (req, res) => {
@@ -3340,7 +3432,7 @@ app.post("/settings/threshold/log", (req, res) => {
     cluster_name, node_name, created_time, status, message, resource)
     VALUES ('${req.body.clusterName}', '${req.body.nodeName}', '${now}', '${req.body.status}', '${req.body.message}', '${req.body.resource}');
   `;
-  
+
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -3373,34 +3465,128 @@ app.get("/apis/nodes_metric", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
 
-app.get("/apis/metering", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/metering.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+//get metering list
+app.get("/apis/metering", async (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/metering.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+  var date = getDateTime();
+  var dateBeforeDay = getDateBefore("d", 1);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/dashboard`,
-  //   method: "GET",
-  //   // headers: {
-  //   //   Authorization:
-  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-  //   // },
-  // };
+  let resultData = [];
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //     
-  //   }
-  // });
+  let totalRange = 0;
+
+  let query = `SELECT 
+  mc.region,
+  mc.region_name,
+  mc.cost as region_cost,
+  mc.created_time as region_created_time,
+  mw.id,
+  mw.cpu, 
+  mw.memory, 
+  mw.disk,
+  mw.cost,
+  mw.created_time,
+  mw.updated_time
+  FROM tb_metering_cluster AS mc
+  LEFT OUTER JOIN tb_metering_worker mw ON mc.region = mw.region;
+    `;
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    let regionObjects = {};
+    queryResult.forEach((item) => {
+      regionObjects[item.region] = {
+        region: item.region,
+        region_name: item.region_name,
+        cost: item.region_cost,
+        created_time: item.region_created_time,
+        workers: [],
+      };
+    });
+    let regionArray = Object.values(regionObjects);
+
+    queryResult.forEach((item) => {
+      regionArray.forEach((value) => {
+        if (item.region === value.region) {
+          value.workers.push({
+            id: item.id,
+            cpu: item.cpu,
+            memory: item.memory,
+            disk: item.disk,
+            cost: item.cost,
+            created_time: item.created_time,
+            updated_time: item.updated_time,
+          });
+          return false;
+        }
+      });
+    });
+
+    resultData = regionArray;
+  }
+
+  res.send(resultData);
+});
+
+//metering region add
+app.post("/apis/metering", (req, res) => {
+  console.log("region-cost");
+  var date = getDateTime();
+  let query = `
+  INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('${req.body.regionCode}', ${req.body.regionCost}, '${req.body.regionName}', '${date}', '${date}');
+  `;
+
+  console.log(query);
+
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Metering Region is Registered !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
+  });
+});
+
+//update metring settings
+app.put("/apis/metering", (req, res) => {
+  var date = getDateTime();
+  var dateBefore = getDateBefore("h", 1);
+  let resultData = [];
+
+  let query = `
+  INSERT INTO tb_dashboard (user_id, component) VALUES ('${req.body.userId}', '{${req.body.myComponents}}') ON CONFLICT(user_id) DO
+  UPDATE SET component='{${req.body.myComponents}}'
+  `;
+
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Group role is updated !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild, please check policy : " + err,
+      };
+      res.send(result_set);
+    }
+  });
 });
 
 app.get("/apis/metering/bill", (req, res) => {
@@ -3423,7 +3609,7 @@ app.get("/apis/metering/bill", (req, res) => {
   //     res.send(body);
   //   } else {
   //     console.log("error", error);
-  //     
+  //
   //   }
   // });
 });
@@ -3439,10 +3625,8 @@ app.get("/apis/migration/log", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -3459,10 +3643,8 @@ app.post("/apis/migration", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -3473,7 +3655,7 @@ app.post("/apis/snapshot/list", (req, res) => {
   let options = {
     uri: `${apiServer}/apis/snapshot/list`,
     method: "POST",
-    body : data,
+    body: data,
   };
 
   request(options, function (error, response, body) {
@@ -3481,7 +3663,6 @@ app.post("/apis/snapshot/list", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -3500,7 +3681,6 @@ app.post("/apis/snapshot", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -3519,7 +3699,6 @@ app.post("/apis/snapshot/restore", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -3537,7 +3716,6 @@ app.get("/apis/snapshot/log", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -3565,7 +3743,6 @@ app.put("/apis/dashboard/components", (req, res) => {
   UPDATE SET component='{${req.body.myComponents}}'
   `;
 
-  
   connection.query(query, (err, result) => {
     if (err !== "null") {
       const result_set = {
@@ -3609,7 +3786,7 @@ app.post("/apis/dashboard/region_groups", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("ddd")
+  console.log("ddd");
   let request = require("request");
   let data = JSON.stringify(req.body);
   let options = {
@@ -3634,7 +3811,7 @@ app.post("/apis/dashboard/omcp", (req, res) => {
   // res.send(overview);
   let request = require("request");
   let data = JSON.stringify(req.body);
-  console.log(data)
+  console.log(data);
 
   let options = {
     uri: `${apiServer}/apis/dashboard/omcp`,
@@ -3713,7 +3890,6 @@ app.post("/apis/dashboard/service_topology", (req, res) => {
     } else {
       console.log("error", error);
       res.send(error);
-      
     }
   });
 });
@@ -3741,14 +3917,13 @@ app.post("/apis/dashboard/service_region_topology", (req, res) => {
   });
 });
 
-
 app.post("/apis/dashboard/power_usage", async (req, res) => {
   var date = getDateTime();
   var dateBeforeDay = getDateBefore("d", 1);
 
   let resultData = {
     range: [],
-    rows: []
+    rows: [],
   };
   let totalRange = 0;
 
@@ -3765,20 +3940,20 @@ app.post("/apis/dashboard/power_usage", async (req, res) => {
     let medium = 0;
     let high = 0;
     queryResult.forEach((item) => {
-      if(item.name === 'high'){
-        totalRange = item.value
+      if (item.name === "high") {
+        totalRange = item.value;
         high = item.value;
-      } else if (item.name === 'medium'){
+      } else if (item.name === "medium") {
         medium = item.value;
       } else {
         low = item.value;
       }
     });
     resultData.range = [
-      { name : "low", value : parseFloat(low)},
-      { name : "medium", value : medium-low},
-      { name : "high", value : high-medium},
-    ]
+      { name: "low", value: parseFloat(low) },
+      { name: "medium", value: medium - low },
+      { name: "high", value: high - medium },
+    ];
   }
 
   query = `SELECT AVG(power) AS usage
@@ -3792,42 +3967,35 @@ app.post("/apis/dashboard/power_usage", async (req, res) => {
           from node_power_usage group by cluster_name order by max_date desc
           );
     `;
-  // query = `select avg(power) usage
-  // from node_power_usage
-  // where collected_time >= '${dateBeforeDay}' 
-  // and collected_time < '${date}';   
-  //   `;
 
   let queryResult2 = await excuteQuery(query);
   if (queryResult2.length > 0) {
     let data = queryResult2[0];
     let usage = parseFloat(parseFloat(data.usage).toFixed(1));
     console.log("usage : ", data.usage);
-    if(data.usage === null){
-      usage = 0
+    if (data.usage === null) {
+      usage = 0;
     }
     resultData.rows.push({
-      name : "usage",
-      value : usage
-    })
+      name: "usage",
+      value: usage,
+    });
 
     resultData.rows.push({
       name: "available",
-      value: totalRange - usage
-    }); 
+      value: totalRange - usage,
+    });
   }
 
   res.send(resultData);
 });
-
-
 
 // #######################
 // Multiple Metric
 // #######################
 
 app.post("/apis/metric/clusterlist", (req, res) => {
-  console.log("apis/metric/clusterlist")
+  console.log("apis/metric/clusterlist");
   let request = require("request");
   let data = JSON.stringify(req.body);
   let options = {
@@ -3835,7 +4003,7 @@ app.post("/apis/metric/clusterlist", (req, res) => {
     method: "POST",
     body: data,
   };
-  console.log(options)
+  console.log(options);
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
@@ -3843,17 +4011,14 @@ app.post("/apis/metric/clusterlist", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
 
 app.get("/apis/metric/clusterState", async (req, res) => {
   let resultData = {
-    nodeState: {
-    },
-    podState: {
-    },
+    nodeState: {},
+    podState: {},
     workloadState: {
       deployment: "0",
       replicaset: "0",
@@ -3913,7 +4078,7 @@ app.get("/apis/metric/clusterState", async (req, res) => {
             parseInt(data.pod_total) -
             parseInt(data.pod_running) -
             parseInt(data.pod_abnormal),
-        }
+        },
       ],
     };
   }
@@ -3958,14 +4123,14 @@ app.get("/apis/metric/apiServer", async (req, res) => {
 
   // let query = `SELECT *
   // FROM apiserver_state
-  // where reqests_per_sec <> '' and latency <> '' 
-  // and cluster_name = '${req.query.cluster}' 
-  // and collected_time >= '2021-11-17 15:00:00' 
+  // where reqests_per_sec <> '' and latency <> ''
+  // and cluster_name = '${req.query.cluster}'
+  // and collected_time >= '2021-11-17 15:00:00'
   // and collected_time < '2021-11-17 16:00:00'
   // order by collected_time desc;
   //   `;
 
-   let query = `SELECT *
+  let query = `SELECT *
   FROM apiserver_state
   where reqests_per_sec <> '' and latency <> '' 
   and cluster_name = '${req.query.cluster}' 
@@ -3973,21 +4138,19 @@ app.get("/apis/metric/apiServer", async (req, res) => {
   and collected_time < '${date}'
   order by collected_time desc;
   `;
-  
+
   let queryResult = await excuteQuery(query);
   if (queryResult.length > 0) {
-    
     var data = {};
     queryResult.forEach((item) => {
       data = {
-        unit : "sec",
-        requests_per_sec : parseFloat(item.reqests_per_sec).toFixed(2),
-        latency : parseFloat(item.latency).toFixed(2),
-        time : item.collected_time
-      }
+        unit: "sec",
+        requests_per_sec: parseFloat(item.reqests_per_sec).toFixed(2),
+        latency: parseFloat(item.latency).toFixed(2),
+        time: item.collected_time,
+      };
       resultData.push(data);
     });
-
   }
   res.send(resultData);
 });
@@ -4004,7 +4167,6 @@ app.get("/apis/metric/namespacelist", (req, res) => {
       res.send(body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
@@ -4016,7 +4178,7 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
   var dateBeforeMinute = getDateBefore("m", 20);
   let resultData = {
     volumeState: {
-      pvc_cnt : "0"
+      pvc_cnt: "0",
     },
     workloadState: {
       deployment: "0",
@@ -4029,8 +4191,8 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
     },
     podState: {},
     netState: [],
-    cpuTop5 : [],
-    memoryTop5 : [],
+    cpuTop5: [],
+    memoryTop5: [],
   };
 
   let query = `SELECT *
@@ -4041,13 +4203,12 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
                 order by collected_time desc
                 limit 1;
               `;
-              
+
   let queryResult = await excuteQuery(query);
   if (queryResult.length > 0) {
     let data = queryResult[0];
-    
-    resultData.volumeState = 
-    {
+
+    resultData.volumeState = {
       pvc_cnt: parseInt(data.pvc_cnt),
     };
   }
@@ -4062,13 +4223,13 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
   `;
   let queryResult2 = await excuteQuery(query);
   if (queryResult2.length > 0) {
-  let data = queryResult2[0];
-  resultData.workloadState = {
-    deployment: data.deployment_cnt,
-    replicaset: data.replicaset_cnt,
-    statefulset: data.statefulset_cnt,
-  };
-}
+    let data = queryResult2[0];
+    resultData.workloadState = {
+      deployment: data.deployment_cnt,
+      replicaset: data.replicaset_cnt,
+      statefulset: data.statefulset_cnt,
+    };
+  }
 
   query = `  
     SELECT *
@@ -4088,7 +4249,6 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
       endpoint: data.endpoint_cnt,
     };
   }
-
 
   query = `SELECT *
     FROM namespace_pod_state
@@ -4118,11 +4278,10 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
             parseInt(data.pod_total) -
             parseInt(data.pod_running) -
             parseInt(data.pod_abnormal),
-        }
+        },
       ],
     };
   }
-
 
   // 10분단위로 해야함
   query = `SELECT cluster_name, namespace_name, trim(n_rx)::float n_rx, trim(n_tx)::float n_tx, collected_time
@@ -4138,29 +4297,26 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
   //  query = `SELECT cluster_name, namespace_name, n_rx, n_tx, collected_time
   //  FROM namespace_resources
   //  where cluster_name <> '' and namespace_name <> ''
-  //  and cluster_name = '${req.query.cluster}' 
-  //  and namespace_name = '${req.query.namespace}' 
-  // and collected_time >= '${dateBeforeMinute}' 
+  //  and cluster_name = '${req.query.cluster}'
+  //  and namespace_name = '${req.query.namespace}'
+  // and collected_time >= '${dateBeforeMinute}'
   // and collected_time < '${date}'
   // order by collected_time desc;
   // `;
 
-
   let queryResult5 = await excuteQuery(query);
   if (queryResult5.length > 0) {
-    queryResult5.forEach((item) =>{
+    queryResult5.forEach((item) => {
       let data = {
         unit: "ms",
-        rx : parseFloat(parseFloat(item.n_rx).toFixed(4)),
-        tx : parseFloat(parseFloat(item.n_tx).toFixed(4)),
-        time : item.collected_time
-      }
-      resultData.netState.push(data)
-    })
+        rx: parseFloat(parseFloat(item.n_rx).toFixed(4)),
+        tx: parseFloat(parseFloat(item.n_tx).toFixed(4)),
+        time: item.collected_time,
+      };
+      resultData.netState.push(data);
+    });
   }
 
-
-  
   query = `SELECT distinct cluster_name, namespace_name, trim(cpu_usage)::float cpu_usage, collected_time
             FROM namespace_resources
             where cluster_name = '${req.query.cluster}' and
@@ -4175,16 +4331,15 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
 
   let queryResult6 = await excuteQuery(query);
   if (queryResult6.length > 0) {
-    queryResult6.forEach((item) =>{
+    queryResult6.forEach((item) => {
       let data = {
         name: item.namespace_name,
-        usage : parseFloat(parseFloat(item.cpu_usage).toFixed(4)),
-      }
-      resultData.cpuTop5.push(data)
-    })
+        usage: parseFloat(parseFloat(item.cpu_usage).toFixed(4)),
+      };
+      resultData.cpuTop5.push(data);
+    });
   }
 
-  
   query = `SELECT distinct cluster_name, namespace_name, trim(memory_usage)::float memory_usage, collected_time
             FROM namespace_resources
             where cluster_name = '${req.query.cluster}' and
@@ -4199,13 +4354,13 @@ app.get("/apis/metric/namespaceState", async (req, res) => {
 
   let queryResult7 = await excuteQuery(query);
   if (queryResult7.length > 0) {
-    queryResult7.forEach((item) =>{
+    queryResult7.forEach((item) => {
       let data = {
         name: item.namespace_name,
-        usage : parseFloat(parseFloat(item.memory_usage).toFixed(4)),
-      }
-      resultData.memoryTop5.push(data)
-    })
+        usage: parseFloat(parseFloat(item.memory_usage).toFixed(4)),
+      };
+      resultData.memoryTop5.push(data);
+    });
   }
 
   res.send(resultData);
@@ -4221,15 +4376,12 @@ app.get("/apis/metric/nodelist", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log("body:", body)
-
+      console.log("body:", body);
     } else {
       console.log("error", error);
-      
     }
   });
 });
-
 
 // Metric Node
 app.get("/apis/metric/nodeState", async (req, res) => {
@@ -4238,16 +4390,16 @@ app.get("/apis/metric/nodeState", async (req, res) => {
   var dateBeforeMinute = getDateBefore("m", 20);
   let resultData = {
     cpuCount: {
-      value : "0"
+      value: "0",
     },
     memoryCount: {
-      value : "0"
+      value: "0",
     },
     podState: {},
     diskState: [],
     netState: [],
-    cpuUsage : [],
-    memoryUsage : [],
+    cpuUsage: [],
+    memoryUsage: [],
   };
 
   let query = `SELECT *
@@ -4261,8 +4413,7 @@ app.get("/apis/metric/nodeState", async (req, res) => {
   let queryResult = await excuteQuery(query);
   if (queryResult.length > 0) {
     let data = queryResult[0];
-    resultData.cpuCount = 
-    {
+    resultData.cpuCount = {
       value: parseInt(data.total_cpu_cnt) + " cpu",
     };
   }
@@ -4277,8 +4428,7 @@ app.get("/apis/metric/nodeState", async (req, res) => {
   let queryResult2 = await excuteQuery(query);
   if (queryResult2.length > 0) {
     let data = queryResult2[0];
-    resultData.memoryCount = 
-    {
+    resultData.memoryCount = {
       value: convertBytes(data.node_memory_total),
     };
   }
@@ -4290,28 +4440,31 @@ app.get("/apis/metric/nodeState", async (req, res) => {
           order by collected_time desc
           limit 1;    
           `;
-    
+
   let queryResult3 = await excuteQuery(query);
   if (queryResult3.length > 0) {
     let data = queryResult3[0];
     resultData.podState = {
-          quota: parseInt(data.node_pod_quota.trim()),
-          running: parseInt(data.node_pod_running_count.trim()),
-          abnormal: data.node_pod_abnormal_count.trim() === '' ? 0 : parseInt(data.node_pod_abnormal_count) ,
+      quota: parseInt(data.node_pod_quota.trim()),
+      running: parseInt(data.node_pod_running_count.trim()),
+      abnormal:
+        data.node_pod_abnormal_count.trim() === ""
+          ? 0
+          : parseInt(data.node_pod_abnormal_count),
     };
   }
 
-    // 10분단위로 해야함
+  // 10분단위로 해야함
   //   query = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
   //   node_disk_size_usage usage, collected_time
   //   FROM node_disk_usage
-  //   where cluster_name = '${req.query.cluster}' 
-  //   and node_name = '${req.query.node}' 
-  //   and collected_time >= '2021-11-17 15:40:00' 
+  //   where cluster_name = '${req.query.cluster}'
+  //   and node_name = '${req.query.node}'
+  //   and collected_time >= '2021-11-17 15:40:00'
   //   and collected_time < '2021-11-17 16:00:00'
   //   order by collected_time desc;
   // `;
- query = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
+  query = ` SELECT cluster_name, node_name, node_disk_size_capacity capacity,
              node_disk_size_usage usage, collected_time
       FROM node_disk_usage
       where cluster_name = '${req.query.cluster}' 
@@ -4321,31 +4474,35 @@ app.get("/apis/metric/nodeState", async (req, res) => {
       order by collected_time;
       `;
 
-    let queryResult4 = await excuteQuery(query);
-    if (queryResult4.length > 0) {
-    queryResult4.forEach((item) =>{
-    let data = {
-    unit: "GB",
-    capacity : parseFloat((parseFloat(item.capacity.trim()) / Math.pow(1024, 3)).toFixed(1)),
-    usage : parseFloat((parseFloat(item.usage.trim()) / Math.pow(1024, 3)).toFixed(1)),
-    time : item.collected_time
-    }
-    resultData.diskState.push(data)
-    })
-    }
+  let queryResult4 = await excuteQuery(query);
+  if (queryResult4.length > 0) {
+    queryResult4.forEach((item) => {
+      let data = {
+        unit: "GB",
+        capacity: parseFloat(
+          (parseFloat(item.capacity.trim()) / Math.pow(1024, 3)).toFixed(1)
+        ),
+        usage: parseFloat(
+          (parseFloat(item.usage.trim()) / Math.pow(1024, 3)).toFixed(1)
+        ),
+        time: item.collected_time,
+      };
+      resultData.diskState.push(data);
+    });
+  }
 
   // 10분단위로 해야함
   // query = ` SELECT cluster_name, node_name, node_net_bytes_received rx,
   //                  node_net_bytes_transmitted tx, collected_time
   //           FROM node_net_usage
-  //           where cluster_name = '${req.query.cluster}' 
-  //           and node_name = '${req.query.node}' 
-  //           and collected_time >= '2021-11-17 15:40:00' 
+  //           where cluster_name = '${req.query.cluster}'
+  //           and node_name = '${req.query.node}'
+  //           and collected_time >= '2021-11-17 15:40:00'
   //           and collected_time < '2021-11-17 16:00:00'
   //           order by collected_time desc;
   //         `;
 
-   query = ` SELECT cluster_name, node_name, 
+  query = ` SELECT cluster_name, node_name, 
                      node_net_bytes_transmitted tx, node_net_bytes_received rx, collected_time
               FROM node_net_usage
               where cluster_name = '${req.query.cluster}' 
@@ -4354,22 +4511,24 @@ app.get("/apis/metric/nodeState", async (req, res) => {
               and collected_time < '${date}'
               order by collected_time;
               `;
-              
+
   let queryResult5 = await excuteQuery(query);
   if (queryResult5.length > 0) {
-    queryResult5.forEach((item) =>{
+    queryResult5.forEach((item) => {
       let data = {
         unit: "KB",
-        rx : parseFloat((parseFloat(item.rx.trim()) / Math.pow(1024, 1)).toFixed(1)),
-        tx : parseFloat((parseFloat(item.tx.trim()) / Math.pow(1024, 1)).toFixed(1)), 
-        time : item.collected_time
-      }
-      resultData.netState.push(data)
-    })
+        rx: parseFloat(
+          (parseFloat(item.rx.trim()) / Math.pow(1024, 1)).toFixed(1)
+        ),
+        tx: parseFloat(
+          (parseFloat(item.tx.trim()) / Math.pow(1024, 1)).toFixed(1)
+        ),
+        time: item.collected_time,
+      };
+      resultData.netState.push(data);
+    });
   }
-  
 
-  
   query = ` SELECT cluster_name, node_name, avg1m, collected_time
             FROM node_cpu_usage
             where cluster_name = '${req.query.cluster}' 
@@ -4379,29 +4538,29 @@ app.get("/apis/metric/nodeState", async (req, res) => {
           `;
 
   let queryResult6 = await excuteQuery(query);
-  
+
   if (queryResult6.length > 0) {
     let tempData = [];
-    queryResult6.forEach((item) =>{
+    queryResult6.forEach((item) => {
       // arr[item.collected_time] = [item.namespace_name] = parseFloat(item.avg1m)
-      
+
       let data = {
         [item.node_name]: item.avg1m,
-        time : item.collected_time
-      }
-      tempData.push(data)
-    })
+        time: item.collected_time,
+      };
+      tempData.push(data);
+    });
 
-    let dataGroupBy = groupBy(tempData, "time")
+    let dataGroupBy = groupBy(tempData, "time");
     Object.keys([dataGroupBy][0]).map((key) => {
-      var dataObject = {}
+      var dataObject = {};
       dataObject["unit"] = "bytes";
-      [dataGroupBy][0][key].forEach((item)=>{
+      [dataGroupBy][0][key].forEach((item) => {
         dataObject["time"] = item.collected_time;
         Object.keys(item).map((key) => {
-          dataObject[key.trim()]= item[key]
+          dataObject[key.trim()] = item[key];
         });
-      })
+      });
       // [Number(key), resultData.memoryUsage[0][key]]
       resultData.cpuUsage.push(dataObject);
     });
@@ -4416,27 +4575,27 @@ app.get("/apis/metric/nodeState", async (req, res) => {
           `;
 
   let queryResult7 = await excuteQuery(query);
-  
+
   if (queryResult7.length > 0) {
     let tempData = [];
-    queryResult7.forEach((item) =>{
+    queryResult7.forEach((item) => {
       let data = {
         [item.node_name]: item.node_memory_utilisation,
-        time : item.collected_time
-      }
-      tempData.push(data)
-    })
+        time: item.collected_time,
+      };
+      tempData.push(data);
+    });
 
-    let dataGroupBy = groupBy(tempData, "time")
+    let dataGroupBy = groupBy(tempData, "time");
     Object.keys([dataGroupBy][0]).map((key) => {
-      var dataObject = {}
+      var dataObject = {};
       dataObject["unit"] = "bytes";
-      [dataGroupBy][0][key].forEach((item)=>{
+      [dataGroupBy][0][key].forEach((item) => {
         dataObject["time"] = item.collected_time;
         Object.keys(item).map((key) => {
-          dataObject[key.trim()]= item[key]
+          dataObject[key.trim()] = item[key];
         });
-      })
+      });
       // [Number(key), resultData.memoryUsage[0][key]]
       resultData.memoryUsage.push(dataObject);
     });
@@ -4444,7 +4603,6 @@ app.get("/apis/metric/nodeState", async (req, res) => {
 
   res.send(resultData);
 });
-
 
 app.get("/apis/config-codes", async (req, res) => {
   let userId = req.query.userId;
@@ -4462,7 +4620,7 @@ app.put("/apis/config-codes/dashboard-config/refresh-cycle", (req, res) => {
 	SET description='${req.body.config}'
   WHERE kinds='CONFIG' AND code='DASHBOARD-CYCLE';
   `;
-  
+
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -4496,7 +4654,7 @@ app.put("/apis/config-codes/dashboard-config/power-usage-range", (req, res) => {
 	SET description='${req.body.high}'
   WHERE kinds='CONFIG' AND code='POWER-HIGH';
   `;
-  
+
   //connection.connect();
   connection.query(query, (err, result) => {
     if (err !== "null") {
@@ -4515,11 +4673,5 @@ app.put("/apis/config-codes/dashboard-config/power-usage-range", (req, res) => {
     //connection.end();
   });
 });
-
-
-
-
-
-
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

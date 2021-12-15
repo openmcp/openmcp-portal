@@ -453,9 +453,7 @@ ALTER TABLE public.oauth_clients
 -- ALTER TABLE public.tb_policy_projects
 --     OWNER to postgres;
 
---##############################################################################
--- METERING TABLES
---##############################################################################
+
 
 --==============================================================================
 -- apiserver_state
@@ -1227,53 +1225,76 @@ TABLESPACE pg_default;
 ALTER TABLE public.statefulset_replica_usage
     OWNER to postgres;
 
-
+--##############################################################################
+-- METERING TABLES
+--##############################################################################
 
 --==============================================================================
 -- tb_metering_cluster
 --==============================================================================
+-- DROP TABLE public.tb_metering_cluster;
 
 CREATE TABLE IF NOT EXISTS public.tb_metering_cluster
 (
     region character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    cost bigint,
+    cost numeric,
+    region_name character varying(30) COLLATE pg_catalog."default" NOT NULL,
+    created_time timestamp without time zone,
+    updated_time timestamp without time zone,
     CONSTRAINT tb_metering_cluster_pkey PRIMARY KEY (region)
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
 ALTER TABLE public.tb_metering_cluster
     OWNER to postgres;
 
 
-
 --==============================================================================
 -- tb_metering_worker
 --==============================================================================
+-- DROP SEQUENCE public.tb_metering_worker_seq;
+CREATE SEQUENCE public.tb_metering_worker_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;
 
+ALTER SEQUENCE public.tb_metering_worker_seq
+    OWNER TO postgres;
+
+-- DROP TABLE public.tb_metering_worker;
 CREATE TABLE IF NOT EXISTS public.tb_metering_worker
 (
+    id integer NOT NULL DEFAULT nextval('tb_metering_worker_seq'::regclass),
     region character varying(20) COLLATE pg_catalog."default" NOT NULL,
-    cpu bigint NOT NULL,
-    memory bigint NOT NULL,
-    disk bigint NOT NULL,
-    cost bigint,
-    CONSTRAINT tb_metering_worker_pkey PRIMARY KEY (region, cpu, memory, disk),
+    cpu numeric,
+    memory numeric,
+    disk numeric,
+    cost numeric,
+    created_time timestamp without time zone,
+    updated_time timestamp without time zone,
+    CONSTRAINT tb_metering_worker_pkey PRIMARY KEY (id),
     CONSTRAINT fk_tb_metering_woker FOREIGN KEY (region)
         REFERENCES public.tb_metering_cluster (region) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
+        NOT VALID
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
 ALTER TABLE public.tb_metering_worker
     OWNER to postgres;
+-- Index: fki_fk_tb_metering_woker
 
+-- DROP INDEX public.fki_fk_tb_metering_woker;
+
+CREATE INDEX fki_fk_tb_metering_woker
+    ON public.tb_metering_worker USING btree
+    (region COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
 
 --==============================================================================
 -- tb_billings

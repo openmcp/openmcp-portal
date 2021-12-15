@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { NavLink} from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { NavigateNext} from '@material-ui/icons';
+import { NavigateNext } from "@material-ui/icons";
 // import Paper from "@material-ui/core/Paper";
 // import {
 //   SearchState,
@@ -21,31 +21,32 @@ import { NavigateNext} from '@material-ui/icons';
 //   PagingPanel,
 // } from "@devexpress/dx-react-grid-material-ui";
 // import NdTaintConfig from './../modal/NdTaintConfig';
-import PieReChart2 from '../../modules/PieReChart2';
-import * as utilLog from './../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import NdResourceConfig from './../modal/NdResourceConfig';
-import Confirm2 from './../../modules/Confirm2';
+import PieReChart2 from "../../modules/PieReChart2";
+import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import NdResourceConfig from "./../modal/NdResourceConfig";
+import Confirm2 from "./../../modules/Confirm2";
 import Button from "@material-ui/core/Button";
-import ProgressTemp from './../../modules/ProgressTemp';
+import ProgressTemp from "./../../modules/ProgressTemp";
 import axios from "axios";
-
+import PieReChartPowerRange from "../../modules/PieReChartPowerRange";
+import LineReChart from "../../modules/LineReChart";
 
 class NdNodeDetail extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      rows:"",
+      rows: "",
       completed: 0,
-      reRender : "",
-      propsRow : ""
-    }
+      reRender: "",
+      propsRow: "",
+    };
   }
 
   componentWillMount() {
     // this.props.menuData("none");
-    if(this.props.location.state !== undefined){
-      this.setState({propsRow:this.props.location.state.data})
+    if (this.props.location.state !== undefined) {
+      this.setState({ propsRow: this.props.location.state.data });
     }
   }
 
@@ -55,7 +56,7 @@ class NdNodeDetail extends Component {
     this.callApi()
       .then((res) => {
         console.log(res);
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -64,15 +65,17 @@ class NdNodeDetail extends Component {
       })
       .catch((err) => console.log(err));
     let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-ND-VW02');
-  }  
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-ND-VW02");
+  }
 
   callApi = async () => {
     var param = this.props.match.params;
-    const response = await fetch(`/nodes/${param.node}${this.props.location.search}`);
+    const response = await fetch(
+      `/nodes/${param.node}${this.props.location.search}`
+    );
     const body = await response.json();
     return body;
   };
@@ -83,10 +86,10 @@ class NdNodeDetail extends Component {
   };
 
   onUpdateData = () => {
-    console.log("onUpdateData={this.props.onUpdateData}")
+    console.log("onUpdateData={this.props.onUpdateData}");
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -104,7 +107,7 @@ class NdNodeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            { this.props.match.params.node}
+              {this.props.match.params.node}
               <small>Node Overview</small>
             </h1>
             <ol className="breadcrumb">
@@ -112,11 +115,15 @@ class NdNodeDetail extends Component {
                 <NavLink to="/dashboard">Home</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/nodes">Nodes</NavLink>
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 Overview
               </li>
             </ol>
@@ -126,10 +133,26 @@ class NdNodeDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-              <BasicInfo rowData={this.state.rows.basic_info} onUpdateData={this.onUpdateData} propsRow={this.state.propsRow}/>,
-              <KubernetesStatus rowData={this.state.rows.kubernetes_node_status} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
-              <NodeResourceUsage rowData={this.state.rows.node_resource_usage} nodeData={this.state.rows.basic_info} propsRow={this.state.propsRow}/>,
-              // <Events rowData={this.state.rows.events}/>
+                <BasicInfo
+                  rowData={this.state.rows.basic_info}
+                  onUpdateData={this.onUpdateData}
+                  propsRow={this.state.propsRow}
+                />,
+                <KubernetesStatus
+                  rowData={this.state.rows.kubernetes_node_status}
+                  nodeData={this.state.rows.basic_info}
+                  propsRow={this.state.propsRow}
+                />,
+                <NodeResourceUsage
+                  rowData={this.state.rows.node_resource_usage}
+                  nodeData={this.state.rows.basic_info}
+                  propsRow={this.state.propsRow}
+                />,
+                <NodePowerUsage
+                  nodeName={this.props.match.params.node}
+                  query={this.props.location.search}
+                />,
+                // <Events rowData={this.state.rows.events}/>
               ]
             ) : (
               <CircularProgress
@@ -146,31 +169,32 @@ class NdNodeDetail extends Component {
 }
 
 class BasicInfo extends Component {
-  render(){
+  render() {
     return (
       <div className="content-box">
         <div className="cb-header">
-          <span>
-            Basic Info
-          </span>
-            {/* <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/> */}
+          <span>Basic Info</span>
+          {/* <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/> */}
         </div>
         <div className="cb-body">
           <div>
             <span>Name : </span>
             <strong>{this.props.rowData.name}</strong>
           </div>
-          <div style={{display:"flex"}}>
-
+          <div style={{ display: "flex" }}>
             <div className="cb-body-left">
               <div>
                 <span>Status : </span>
                 <span
                   style={{
                     color:
-                    this.props.rowData.status === "Healthy" ? "#1ab726"
-                      : this.props.rowData.status === "Unhealthy" ? "red"
-                        : this.props.rowData.status === "Unknown" ? "#b5b5b5" : "black",
+                      this.props.rowData.status === "Healthy"
+                        ? "#1ab726"
+                        : this.props.rowData.status === "Unhealthy"
+                        ? "red"
+                        : this.props.rowData.status === "Unknown"
+                        ? "#b5b5b5"
+                        : "black",
                   }}
                 >
                   {this.props.rowData.status}
@@ -195,28 +219,27 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>IP : </span>
-                  {this.props.rowData.ip}
-                </div>
-                <div>
-                  <span>OS : </span>
-                  {this.props.rowData.os}
-                </div>
-                <div>
-                  <span>Docker : </span>
-                  {this.props.rowData.docker}
-                </div>
-                <div>
-                  <span>Created Time : </span>
-                  {this.props.rowData.created_time}
-                </div>
-                <div>
-                  <span>Provider : </span>
-                  {this.props.propsRow.provider}
-                </div>
+                <span>IP : </span>
+                {this.props.rowData.ip}
+              </div>
+              <div>
+                <span>OS : </span>
+                {this.props.rowData.os}
+              </div>
+              <div>
+                <span>Docker : </span>
+                {this.props.rowData.docker}
+              </div>
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
+              <div>
+                <span>Provider : </span>
+                {this.props.propsRow.provider}
+              </div>
             </div>
           </div>
-          
         </div>
       </div>
     );
@@ -225,54 +248,74 @@ class BasicInfo extends Component {
 
 class NodeResourceUsage extends Component {
   state = {
-    rows : this.props.rowData,
-    nodeData : this.props.nodeData
-  }
+    rows: this.props.rowData,
+    nodeData: this.props.nodeData,
+  };
   angle = {
-    full : {
-      startAngle : 0,
-      endAngle : 360
+    full: {
+      startAngle: 0,
+      endAngle: 360,
     },
-    half : {
-      startAngle : 180,
-      endAngle : 0
-    }  
-  }
-  render(){
-    const colors = [
-      "#0088FE",
-      "#ecf0f5",
-    ];
+    half: {
+      startAngle: 180,
+      endAngle: 0,
+    },
+  };
+  render() {
+    const colors = ["#0088FE", "#ecf0f5"];
     return (
       <div className="content-box">
         <div className="cb-header">
-        <span>
-          Node Resource Usage
-          </span>
-          {this.props.propsRow.provider === "eks" || this.props.propsRow.provider === "kvm" ? 
-            <NdResourceConfig 
-              rows = {this.state.rows}
+          <span>Node Resource Usage</span>
+          {this.props.propsRow.provider === "eks" ||
+          this.props.propsRow.provider === "kvm" ? (
+            <NdResourceConfig
+              rows={this.state.rows}
               rowData={this.props.rowData}
               nodeData={this.props.nodeData}
               onUpdateData={this.props.onUpdateData}
-              propsRow={this.props.propsRow}/> : ""}
+              propsRow={this.props.propsRow}
+            />
+          ) : (
+            ""
+          )}
         </div>
         <div className="cb-body flex">
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">CPU</div>
-            <PieReChart2 data={this.state.rows.cpu} angle={this.angle.half} unit={this.state.rows.cpu.unit} colors={colors}></PieReChart2>
+            <PieReChart2
+              data={this.state.rows.cpu}
+              angle={this.angle.half}
+              unit={this.state.rows.cpu.unit}
+              colors={colors}
+            ></PieReChart2>
           </div>
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">Memory</div>
-            <PieReChart2 data={this.state.rows.memory} angle={this.angle.half} unit={this.state.rows.memory.unit} colors={colors}></PieReChart2>
+            <PieReChart2
+              data={this.state.rows.memory}
+              angle={this.angle.half}
+              unit={this.state.rows.memory.unit}
+              colors={colors}
+            ></PieReChart2>
           </div>
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">Storage</div>
-            <PieReChart2 data={this.state.rows.storage} angle={this.angle.half} unit={this.state.rows.storage.unit} colors={colors}></PieReChart2>
+            <PieReChart2
+              data={this.state.rows.storage}
+              angle={this.angle.half}
+              unit={this.state.rows.storage.unit}
+              colors={colors}
+            ></PieReChart2>
           </div>
           <div className="cb-body-content pie-chart">
             <div className="cb-sub-title">Pod</div>
-            <PieReChart2 data={this.state.rows.pods} angle={this.angle.half} unit={this.state.rows.pods.unit} colors={colors}></PieReChart2>
+            <PieReChart2
+              data={this.state.rows.pods}
+              angle={this.angle.half}
+              unit={this.state.rows.pods.unit}
+              colors={colors}
+            ></PieReChart2>
           </div>
         </div>
       </div>
@@ -281,323 +324,384 @@ class NodeResourceUsage extends Component {
 }
 
 class KubernetesStatus extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
-    this.state={
-      rows : this.props.rowData,
-      confirmType : "",
+    this.state = {
+      rows: this.props.rowData,
+      confirmType: "",
       confirmOpen: false,
-      confirmInfo : {
-        title :"Confirm Stop Node",
-        context :"Are you sure you want to stop Node?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
+      confirmInfo: {
+        title: "Confirm Stop Node",
+        context: "Are you sure you want to stop Node?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
       },
-      confrimTarget : "",
-      confirmTargetKeyname:"",
-      powerflag:"on",
-    }
+      confrimTarget: "",
+      confirmTargetKeyname: "",
+      powerflag: "on",
+    };
   }
 
   handleClickStart = () => {
     this.setState({
       confirmType: "power",
       confirmOpen: true,
-      powerFlag : "on",
-      confirmInfo : {
-        title :"Confirm Start Node",
-        context :"Are you sure you want to Start Node?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
-      }
-    })
-  }
+      powerFlag: "on",
+      confirmInfo: {
+        title: "Confirm Start Node",
+        context: "Are you sure you want to Start Node?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
+      },
+    });
+  };
 
   handleClickStop = () => {
     this.setState({
       confirmType: "power",
       confirmOpen: true,
-      powerFlag : "off",
-      confirmInfo : {
-        title :"Confirm Stop Node",
-        context :"Are you sure you want to stop Node?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
-      }
-    })
-  }
+      powerFlag: "off",
+      confirmInfo: {
+        title: "Confirm Stop Node",
+        context: "Are you sure you want to stop Node?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
+      },
+    });
+  };
 
   handleClickDelete = () => {
     this.setState({
       confirmType: "delete",
       confirmOpen: true,
-      confirmInfo : {
-        title :"Confirm Delete KVM VM",
-        context :"Are you sure you want to delete vm(node)?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
-      }
-    })
-  }
+      confirmInfo: {
+        title: "Confirm Delete KVM VM",
+        context: "Are you sure you want to delete vm(node)?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
+      },
+    });
+  };
 
   //callback
   confirmed = (result) => {
-    this.setState({confirmOpen:false});
+    this.setState({ confirmOpen: false });
 
     //show progress loading...
-    this.setState({openProgress:true});
+    this.setState({ openProgress: true });
     const provider = this.props.propsRow.provider;
     let data = {};
     let url = "";
 
-    if(result) {
-      if(this.state.confirmType === "power"){
-        if(this.state.powerFlag === "on"){
-          console.log("poweron")
+    if (result) {
+      if (this.state.confirmType === "power") {
+        if (this.state.powerFlag === "on") {
+          console.log("poweron");
           url = `/nodes/${provider}/start`;
           // utilLog.fn_insertPLogs(userId, "log-ND-PO01"); //poweron log
-        } else if (this.state.powerFlag === "off"){
-          console.log("poweroff")
+        } else if (this.state.powerFlag === "off") {
+          console.log("poweroff");
           url = `/nodes/${provider}/stop`;
           // utilLog.fn_insertPLogs(userId, "log-ND-PO02"); //poweroff log
         }
-       
-        if(provider === "eks"){
+
+        if (provider === "eks") {
           //eks
           data = {
             region: "ap-northeast-2",
             node: "ip-172-31-0-123.ap-northeast-2.compute.internal",
-            cluster : "eks-cluster1"
+            cluster: "eks-cluster1",
 
             // region: this.props.propsRow.region,
             // node: this.props.propsRow.name,
             // cluster : this.props.propsRow.cluster
           };
-        } else if (provider === "aks"){
+        } else if (provider === "aks") {
           data = {
             // cluster : this.props.propsRow.cluster,
             // node : this.props.propsRow.name,
-            cluster : "aks-cluster-01",
-            node : "aks-np01-47695231-vmss_4",
+            cluster: "aks-cluster-01",
+            node: "aks-np01-47695231-vmss_4",
           };
-        } else if (provider === "kvm"){
+        } else if (provider === "kvm") {
           data = {
-            cluster : this.props.propsRow.cluster,
-            node : this.props.propsRow.name,
+            cluster: this.props.propsRow.cluster,
+            node: this.props.propsRow.name,
           };
         } else {
           alert(provider + " is not supported Type");
-          this.setState({openProgress:false})
+          this.setState({ openProgress: false });
           return;
         }
-      } else if (this.state.confirmType === "delete"){
+      } else if (this.state.confirmType === "delete") {
         url = `/nodes/delete/kvm`;
         data = {
-          cluster : this.props.propsRow.cluster,
+          cluster: this.props.propsRow.cluster,
           node: this.props.propsRow.name,
         };
       }
-      
 
-      axios.post(url, data)
-      .then((res) => {
-        if(res.data.error){
-          alert(res.data.message)
-        }
-      })
-      .catch((err) => {
-          console.log(err)
-      });
+      axios
+        .post(url, data)
+        .then((res) => {
+          if (res.data.error) {
+            alert(res.data.message);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
-      this.setState({openProgress:false})
+      this.setState({ openProgress: false });
     } else {
-      this.setState({openProgress:false})
+      this.setState({ openProgress: false });
     }
-  }
+  };
 
-  render(){
-    return(
+  render() {
+    return (
       <div className="content-box cb-kube-status">
-        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        {this.state.openProgress ? (
+          <ProgressTemp
+            openProgress={this.state.openProgress}
+            closeProgress={this.closeProgress}
+          />
+        ) : (
+          ""
+        )}
         <Confirm2
-          confirmInfo={this.state.confirmInfo} 
-          confrimTarget ={this.state.confrimTarget} 
-          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmInfo={this.state.confirmInfo}
+          confrimTarget={this.state.confrimTarget}
+          confirmTargetKeyname={this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
-          confirmOpen={this.state.confirmOpen}/>
+          confirmOpen={this.state.confirmOpen}
+        />
 
         <div className="cb-header">
           <span>Kubernetes Node Status</span>
-          {this.props.propsRow.provider !== "gke" ?
-            <div style={{position:"absolute", top:"0px", right:"0px"}}>
-              <Button variant="outlined" color="primary" onClick={this.handleClickStart} style={{marginRight:"10px",zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
+          {this.props.propsRow.provider !== "gke" ? (
+            <div style={{ position: "absolute", top: "0px", right: "0px" }}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={this.handleClickStart}
+                style={{
+                  marginRight: "10px",
+                  zIndex: "10",
+                  width: "148px",
+                  height: "31px",
+                  textTransform: "capitalize",
+                }}
+              >
                 Start Node
               </Button>
 
-              <Button variant="outlined" color="primary" onClick={this.handleClickStop} style={{zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={this.handleClickStop}
+                style={{
+                  zIndex: "10",
+                  width: "148px",
+                  height: "31px",
+                  textTransform: "capitalize",
+                }}
+              >
                 Stop Node
               </Button>
 
-              {this.props.propsRow.provider === "kvm" ? 
-                <Button variant="outlined" color="primary" onClick={this.handleClickDelete} style={{marginLeft:"10px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
+              {this.props.propsRow.provider === "kvm" ? (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={this.handleClickDelete}
+                  style={{
+                    marginLeft: "10px",
+                    zIndex: "10",
+                    width: "148px",
+                    height: "31px",
+                    textTransform: "capitalize",
+                  }}
+                >
                   Delete Node
-                </Button> : ""
-              }
-            </div> : ""
-          }
+                </Button>
+              ) : (
+                ""
+              )}
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div className="cb-body flex">
-          {this.state.rows.map((item)=>{
+          {this.state.rows.map((item) => {
             return (
-          <div className={"cb-body-content "+item.status}>
-            <div>{item.name}</div>
-            <div>({item.status})</div>
-          </div>)
+              <div className={"cb-body-content " + item.status}>
+                <div>{item.name}</div>
+                <div>({item.status})</div>
+              </div>
+            );
           })}
         </div>
       </div>
     );
+  }
+}
+
+class NodePowerUsage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      range: "",
+      rows: "",
+      timeline: "",
+      settings: {
+        width: 200,
+        height: 150,
+        cx: 98,
+        cy: 90,
+        outerRadius: 80,
+        innerRadius: 45,
+        startAngle: 200,
+        endAngle: -20,
+        minHeight: "200px",
+      },
+      completed: 0,
+      refreshCycle: 5000,
+    };
+  }
+
+  componentWillMount() {
+    let cycle = 5000;
+    AsyncStorage.getItem("dashboard-cycle", (err, result) => {
+      cycle = result * 1000;
+    });
+
+    this.setState({
+      refreshCycle: cycle,
+    });
+  }
+
+  callApi = async () => {
+    const response = await fetch(
+      `/nodes/${this.props.nodeName}/power-usage${this.props.query}`
+    );
+    const body = await response.json();
+    return body;
   };
-};
 
-// class Events extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       columns: [
-//         { name: "project", title: "Project" },
-//         { name: "type", title: "Type" },
-//         { name: "reason", title: "Reason" },
-//         { name: "object", title: "Object" },
-//         { name: "message", title: "Message" },
-//         { name: "time", title: "Time" },
-//       ],
-//       defaultColumnWidths: [
-//         { columnName: "project", width: 150 },
-//         { columnName: "type", width: 150 },
-//         { columnName: "reason", width: 150 },
-//         { columnName: "object", width: 240 },
-//         { columnName: "message", width: 440 },
-//         { columnName: "time", width: 180 },
-//       ],
-//       rows: this.props.rowData,
+  componentDidMount() {
+    // this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
+    this.timer = setInterval(this.progress, 20);
+    this.onRefresh();
 
-//       // Paging Settings
-//       currentPage: 0,
-//       setCurrentPage: 0,
-//       pageSize: 10, 
-//       pageSizes: [5, 10, 15, 0],
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
 
-//       completed: 0,
-//     };
-//   }
+    utilLog.fn_insertPLogs(userId, "log-DS-VW10");
+  }
 
-//   componentWillMount() {
-//     // this.props.onSelectMenu(false, "");
-//   }
+  onRefresh = () => {
+    this.callApi()
+      .then((res) => {
+        if (res === null) {
+          this.setState({ rows: "" });
+        } else {
+          if (res.hasOwnProperty("errno")) {
+            if (res.code === "ECONNREFUSED") {
+              clearInterval(this.timer2);
+              this.setState({ loadErr: "Connection Failed" });
+            }
 
-  
+            this.setState({ rows: "", range: "", timeline: "" });
+          } else {
+            debugger;
+            this.setState({
+              rows: res.rows,
+              range: res.range,
+              timeline: res.timeline,
+            });
+          }
+        }
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
+  };
 
-//   // callApi = async () => {
-//   //   const response = await fetch("/clusters");
-//   //   const body = await response.json();
-//   //   return body;
-//   // };
+  progress = () => {
+    const { completed } = this.state;
+    this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+  };
 
-//   // progress = () => {
-//   //   const { completed } = this.state;
-//   //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-//   // };
+  // componentWillUnmount() {
+  //   clearInterval(this.timer2);
+  // }
 
-//   // //컴포넌트가 모두 마운트가 되었을때 실행된다.
-//   // componentDidMount() {
-//   //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-//   //   this.timer = setInterval(this.progress, 20);
-//   //   this.callApi()
-//   //     .then((res) => {
-//   //       this.setState({ rows: res });
-//   //       clearInterval(this.timer);
-//   //     })
-//   //     .catch((err) => console.log(err));
-//   // };
+  render() {
+    return (
+      <div className="content-box">
+        <div className="cb-header">
+          <span>Node Power Usage (Watt)</span>
+          {/* <div className="cb-btn">
+                      <Link to={this.props.path}>detail</Link>
+                    </div> */}
+        </div>
+        <div className="cb-body flex" style={{ position: "relative" }}>
+          {this.state.rows ? (
+            [
+              <div style ={{margin:"0 70px"}}>
+                <PieReChartPowerRange
+                  range={this.state.range}
+                  data={this.state.rows}
+                  settings={this.state.settings}
+                />
+              </div>,
+              <LineReChart
+                rowData={this.state.timeline}
+                unit="watt"
+                name="usage"
+                title="Power Usage"
+                cardinal={false}
+              ></LineReChart>,
+            ]
+          ) : (
+            <div
+              style={{
+                position: "relative",
+                margin: "10px auto",
+                left: 0,
+                right: 0,
+                textAlign: "center",
+              }}
+            >
+              {this.state.loadErr ? (
+                <div>{this.state.loadErr}</div>
+              ) : (
+                <CircularProgress
+                  variant="determinate"
+                  value={this.state.completed}
+                ></CircularProgress>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+}
 
-//   render() {
-//     const HeaderRow = ({ row, ...restProps }) => (
-//       <Table.Row
-//         {...restProps}
-//         style={{
-//           cursor: "pointer",
-//           backgroundColor: "whitesmoke",
-//           // ...styles[row.sector.toLowerCase()],
-//         }}
-//         // onClick={()=> alert(JSON.stringify(row))}
-//       />
-//     );
-//     const Row = (props) => {
-//       // console.log("row!!!!!! : ",props);
-//       return <Table.Row {...props} key={props.tableRow.key}/>;
-//     };
-
-//     return (
-//       <div className="content-box">
-//         <div className="cb-header">Events</div>
-//         <div className="cb-body">
-//         <Paper>
-//             {this.state.rows ? (
-//               [
-//                 <Grid
-//                   rows={this.state.rows}
-//                   columns={this.state.columns}
-//                 >
-//                   <Toolbar />
-//                   {/* 검색 */}
-//                   <SearchState defaultValue="" />
-//                   <IntegratedFiltering />
-//                   <SearchPanel style={{ marginLeft: 0 }} />
-
-//                   {/* Sorting */}
-//                   <SortingState
-//                     defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-//                   />
-//                   <IntegratedSorting />
-
-//                   {/* 페이징 */}
-//                   <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-//                   <IntegratedPaging />
-//                   <PagingPanel pageSizes={this.state.pageSizes} />
-
-//                   {/* 테이블 */}
-//                   <Table rowComponent={Row} />
-//                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-//                   <TableHeaderRow
-//                     showSortingControls
-//                     rowComponent={HeaderRow}
-//                   />
-//                 </Grid>,
-//               ]
-//             ) : (
-//               <CircularProgress
-//                 variant="determinate"
-//                 value={this.state.completed}
-//                 style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-//               ></CircularProgress>
-//             )}
-//           </Paper>
-//         </div>
-//       </div>
-//     );
-//   };
-// };
 export default NdNodeDetail;

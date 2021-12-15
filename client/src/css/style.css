@@ -1308,6 +1308,11 @@ tbody {
   padding: 0px;
 }
 
+.MuiTableCell-root[class*="TableHeaderCell-cell"]:first-child
+ {
+  padding-left: 0px !important;
+}
+
 .small-grid .MuiTableCell-root {
   padding: 3px !important;
 }
@@ -2251,13 +2256,18 @@ g {
 }
 
 .mt-set-metering .res:first-child {
-  margin: 40px 0 0 20px;
+  margin: 15px 0 0 20px;
 }
 
 .mt-set-metering .res #range-slider {
   position: absolute;
   top: -30px;
   left: -14px;
+  font-weight: bold;
+  color: #367fa9;
+}
+
+.mt-set-metering .res #content-title{
   font-weight: bold;
   color: #367fa9;
 }
@@ -2271,6 +2281,7 @@ g {
   font-size: 14px;
 }
 
+.mt-set-metering .res .txt .input-section > span,
 .mt-set-metering .res .txt > span {
   margin-top: 8px;
   min-width: 124px;
@@ -2280,8 +2291,13 @@ g {
   min-width: 130px;
 }
 
+.mt-set-metering .res.transfer-price {
+  margin: 30px 0 0 20px;
+  position: relative;
+}
+
 .mt-set-metering .res .txt > span.per {
-  min-width: 92px;
+  min-width: 30px;
 }
 
 .mt-set-metering .res .txt > span.price {
@@ -2289,9 +2305,12 @@ g {
   margin-right: 5px;
 }
 
+
+.mt-set-metering .res .txt .input-section > .input-txt,
 .mt-set-metering .res .txt > .input-txt {
   position: relative;
 }
+
 .mt-set-metering .res .txt > .input-txt > span {
   position: absolute;
   right: 17px;
@@ -2300,6 +2319,7 @@ g {
   font-weight: bold;
 }
 
+.mt-set-metering .res .txt .input-section > .input-txt input,
 .mt-set-metering .res .txt > .input-txt input {
   width: 100px;
   height: 32px;
@@ -2311,6 +2331,16 @@ g {
   border-radius: 2px;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
   margin: 0 8px 0 8px;
+}
+
+.mt-set-metering .res .txt .input-section {
+  display: flex;
+  margin-right:30px;
+}
+
+.mt-set-metering .res .txt .input-section .label {
+  min-width: 0;
+  margin-right: 5px;
 }
 
 .progressbar {

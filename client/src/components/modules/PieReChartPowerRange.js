@@ -100,7 +100,7 @@ class PieReChartPowerRange extends Component {
     // const COLORS2 = ["#00C49F", "#08080800"];
 
     return (
-      <div style={{ minHeight: "305px", padding: "18px 0" }}>
+      <div style={{ minHeight: this.props.settings.minHeight, padding: "18px 0" }}>
         <PieChart
           width={this.state.settings.width}
           height={this.state.settings.height}
@@ -111,8 +111,8 @@ class PieReChartPowerRange extends Component {
             dataKey="value"
             cx={this.state.settings.cx}
             cy={this.state.settings.cy}
-            outerRadius={this.state.settings.outerRadius + 10}
-            innerRadius={this.state.settings.innerRadius + 51}
+            outerRadius={this.state.settings.outerRadius*1.1}
+            innerRadius={this.state.settings.innerRadius*1.2}
             fill="#82ca9d"
             startAngle={this.state.settings.startAngle}
             endAngle={this.state.settings.endAngle}

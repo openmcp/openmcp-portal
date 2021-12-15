@@ -460,7 +460,7 @@ class SnapshotDetail extends Component {
               padding: "0px",
             }}>
             <div className="progressbar" style={{ display: "float" }}>
-              <LinearProgressBar2 value={mBtye} total={10} />
+              <LinearProgressBar2 value={mBtye} total={10}  mColor={"normalColor"} bColor={"normalBaseColor"}/>
               {mBtye} MB
             </div>
           </Table.Cell>
