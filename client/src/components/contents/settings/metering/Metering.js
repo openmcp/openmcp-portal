@@ -58,7 +58,7 @@ class Metering extends Component {
         { name: "workers", title: "workers" },
       ],
       defaultColumnWidths: [
-        { columnName: "region", width: 160 },
+        { columnName: "region", width: 100 },
         { columnName: "region_name", width: 160 },
         { columnName: "cost", width: 100 },
         { columnName: "created_time", width: 200 },
@@ -139,6 +139,15 @@ class Metering extends Component {
 
   //셀
   Cell = (props) => {
+    const { column, row } = props;
+    if (props.value !== null && column.name === "cost"){
+      return (
+        <Table.Cell {...props} style={{textAlign:"center"}}>
+         {'$ '+props.value + '/hour'}
+        </Table.Cell>
+      );
+    }
+
     return <Table.Cell>{props.value}</Table.Cell>;
   };
 
@@ -408,20 +417,18 @@ class MeteringWorker extends Component {
     };
 
     // console.log("cell : ", props);
-    if (column.name === "cpu" || column.name === "memory" || column.name === "disk" || column.name === "cost" ) {
+    if (column.name === "cpu" || column.name === "memory" || column.name === "disk") {
       return (
         <Table.Cell {...props} style={{textAlign:"center"}}>
          {props.value}
         </Table.Cell>
       );
-    } else if (column.name === "cpu" || column.name === "ram") {
+    } else if (props.value !== null && column.name === "cost"){
       return (
-        <Table.Cell>
-          {/* <p>{props.value}</p> */}
-          {fn_linearProgressBar()}
+        <Table.Cell {...props} style={{textAlign:"center"}}>
+         {'$ '+props.value + '/hour'}
         </Table.Cell>
       );
-      //
     }
     return <Table.Cell {...props} />;
   };

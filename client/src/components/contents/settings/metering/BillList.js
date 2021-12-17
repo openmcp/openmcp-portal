@@ -120,7 +120,7 @@ class BillList extends Component {
          {props.value}
         </Table.Cell>
       );
-    } else if (column.name === "cost"){
+    } else if (props.value !== null && column.name === "cost"){
       return (
         <Table.Cell {...props} style={{textAlign:"center"}}>
          {'$ '+props.value}
@@ -355,7 +355,7 @@ class BillingSubData extends Component {
          {props.value}
         </Table.Cell>
       );
-    } else if (column.name === "cost"){
+    } else if (props.value !== null && column.name === "cost"){
       return (
         <Table.Cell {...props} style={{textAlign:"center"}}>
          {'$ '+props.value}
