@@ -114,10 +114,16 @@ class BillList extends Component {
   //셀
   Cell = (props) => {
     const { column, row } = props;
-    if (column.name === "year" || column.name === "month" || column.name === "cost") {
+    if (column.name === "year" || column.name === "month" ) {
       return (
         <Table.Cell {...props} style={{textAlign:"center"}}>
          {props.value}
+        </Table.Cell>
+      );
+    } else if (column.name === "cost"){
+      return (
+        <Table.Cell {...props} style={{textAlign:"center"}}>
+         {'$ '+props.value}
         </Table.Cell>
       );
     }
@@ -343,10 +349,16 @@ class BillingSubData extends Component {
     };
 
     // console.log("cell : ", props);
-    if (column.name === "region" || column.name === "clusters" || column.name === "worker_spec" || column.name === "workers" || column.name === "hours" || column.name === "cost" ) {
+    if (column.name === "region" || column.name === "clusters" || column.name === "worker_spec" || column.name === "workers" || column.name === "hours" ){
       return (
         <Table.Cell {...props} style={{textAlign:"center"}}>
          {props.value}
+        </Table.Cell>
+      );
+    } else if (column.name === "cost"){
+      return (
+        <Table.Cell {...props} style={{textAlign:"center"}}>
+         {'$ '+props.value}
         </Table.Cell>
       );
     }
