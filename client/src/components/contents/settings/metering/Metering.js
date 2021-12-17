@@ -120,6 +120,7 @@ class Metering extends Component {
           selection: [],
           selectedRow: "",
           rows: res,
+          expandedRowIds: [],
         });
         clearInterval(this.timer);
       })
@@ -228,7 +229,9 @@ class Metering extends Component {
                   }}
                 >
                   <MtAddRegionCost onUpdateData={this.onUpdateData}/>
-                  <MtEditMetering/>
+
+                  <MtEditMetering selectedRow={this.state.selectedRow} onUpdateData={this.onUpdateData}/>
+
                 </div>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
@@ -330,8 +333,8 @@ class MeteringWorker extends Component {
         { columnName: "memory", width: "100px" },
         { columnName: "disk", width: "80px" },
         { columnName: "cost", width: "80px"},
-        { columnName: "created_time", width: "160px"},
-        { columnName: "created_time", width: "160px"},
+        { columnName: "created_time", width: "200px"},
+        { columnName: "updated_time", width: "200px"},
         
       ],
       value: 0,

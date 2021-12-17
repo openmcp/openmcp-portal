@@ -147,7 +147,6 @@ class ExcuteMigration extends Component {
           } else if (result === "refresh"){
             this.onRefresh();
           } else {
-            console.log("expired-pront");
             fn_goLoginPage(this.props.propsData.info.history);
           }
         }
@@ -216,30 +215,31 @@ class ExcuteMigration extends Component {
       }
     }
 
-    // axios
-    //   .post(url, data)
-    //   .then((res) => {
-    //     alert(res.data.message);
-    //     this.setState({ open: false });
-    //     this.props.onUpdateData();
-    //     this.props.menuClose();
-    //   })
-    //   .catch((err) => {
-    //     alert(err);
-    //   });
 
-    // this.props.onUpdateData();
+    axios
+      .post(url, data)
+      .then((res) => {
+        alert("Migration request has been completed");
+        this.setState({ open: false });
+        this.props.onUpdateData();
+        this.props.menuClose();
+      })
+      .catch((err) => {
+        alert(err);
+      });
 
-    // // loging deployment migration
-    // let userId = null;
-    // AsyncStorage.getItem("userName", (err, result) => {
-    //   userId = result;
-    // });
-    // utilLog.fn_insertPLogs(userId, "log-MG-MD01");
+    this.props.onUpdateData();
 
-    // //close modal popup
-    // this.setState({ open: false });
-    // this.props.menuClose();
+    // loging deployment migration
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-MG-MD01");
+
+    //close modal popup
+    this.setState({ open: false });
+    this.props.menuClose();
   };
 
   render() {

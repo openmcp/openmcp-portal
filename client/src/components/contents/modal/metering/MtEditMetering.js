@@ -10,8 +10,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-
-// import axios from 'axios';
+import axios from "axios";
 
 const styles = (theme) => ({
   root: {
@@ -26,41 +25,82 @@ const styles = (theme) => ({
   },
 });
 
-function valuetext(value) {
-  return `${value}°C`;
-}
+class MtEditMetering extends React.Component {
+  state = {
+    open: false,
+    workers: [
+      {
+        index: Math.random(),
+        worker: null,
+        id: "new",
+        ynUpdated : false,
+      },
+    ],
+    deleteRecord:[],
+  };
 
-class MtEditMetering extends Component {
-  constructor(props) {
-    super(props);
-    this.cpu_max = 5000;
-    this.memory_max = 10000;
-    this.state = {
-      title: this.props.name,
-      open: false,
-      cpu_req: "No Request",
-      cpu_limit: "Limitless",
-      mem_req: "No Request",
-      mem_limit: "Limitless",
-      // cpu_value : [this.props.resources.cpu_min.replace('m',''),this.props.resources.cpu_max.replace('m','')],
-      // mem_value : [this.props.resources.memory_min.replace('Mi',''),this.props.resources.memory_max.replace('Mi','')],
-      cpu_value: [0, 0],
-      mem_value: [0, 0],
-    };
-  }
-  componentWillMount() {}
+  
+
+  handleChange = (e) => {
+    if (
+      ["cpu", "memory", "disk", "cost"].includes(
+        e.target.name
+      )
+    ) {
+      let workers = [...this.state.workers];
+      workers[e.target.dataset.id].worker[e.target.name] = e.target.value;
+      workers[e.target.dataset.id].ynUpdated = true;
+
+    } else {
+      this.setState({ [e.target.name]: e.target.value });
+    }
+  };
 
   onChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value,
-    });
+      [e.target.name] : e.target.value
+    })
+  }
+
+  addNewRow = (e) => {
+    this.setState((prevState) => ({
+      workers: [
+        ...prevState.workers,
+        {
+          index: Math.random(),
+          worker: {id : "new", cpu:0, memory:0, disk:0, cost:0,},
+          ynUpdated : false,
+        },
+      ],
+    }));
   };
 
   handleClickOpen = () => {
+    if (Object.keys(this.props.selectedRow).length === 0) {
+      alert("Please select a region cost data row");
+      this.setState({ open: false });
+      return;
+    }
+
+    let workers= [];
+    for (var i = 0; i<this.props.selectedRow[0].workers.length; i++) {
+      workers.push({
+        index: Math.random(),
+        worker: {
+          id : this.props.selectedRow[0].workers[i].id,
+          cpu : this.props.selectedRow[0].workers[i].cpu, 
+          memory: this.props.selectedRow[0].workers[i].memory, 
+          disk: this.props.selectedRow[0].workers[i].disk, 
+          cost: this.props.selectedRow[0].workers[i].cost},
+        ynUpdated : false,
+      },);
+    };
+
     this.setState({
       open: true,
-      cpu_value: [0, 0],
-      mem_value: [0, 0],
+      rows : this.props.selectedRow[0],
+      cost:this.props.selectedRow[0].cost,
+      workers :workers
     });
   };
 
@@ -68,13 +108,59 @@ class MtEditMetering extends Component {
     this.setState({ open: false });
   };
 
+  clickOnDelete(record) {
+    
+    let deleteRow = this.state.workers.filter((r) =>  r !== record);
+
+    if(record.worker.id !== "new"){
+      this.setState((prevState)=> ({deleteRecord :[
+        ...prevState.deleteRecord, record.worker],
+      }));
+    }
+
+    this.setState({
+      workers: deleteRow
+    });
+  }
+
   handleSave = (e) => {
-    //Save modification data (Resource Changed)
+    let updatedRecord = [];
+    let newRecord =[];
+    this.state.workers.forEach((item)=>{
+      if(item.worker.id !== "new" && item.ynUpdated){
+        updatedRecord.push(item.worker);
+      }
+
+      if(item.worker.id === "new"){
+        newRecord.push(item.worker);
+      }
+    });
+
+    const url = `/apis/metering/worker`;
+
+    const data ={
+      regionCost : this.state.cost,
+      region : this.state.rows.region,
+      newRecord : newRecord,
+      deleteRecord : this.state.deleteRecord,
+      updateRecord : updatedRecord
+    }
+
+    axios
+      .post(url, data)
+      .then((res) => {
+        this.props.onUpdateData();
+        alert(res.data.message);
+      })
+      .catch((err) => {
+        console.log("Error : ", err);
+      });
 
     let userId = null;
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
+
     utilLog.fn_insertPLogs(userId, "log-PD-MD01");
     this.setState({ open: false });
   };
@@ -98,18 +184,7 @@ class MtEditMetering extends Component {
       );
     });
 
-    const handleChangeCpu = (e, newValue) => {
-      this.setState({
-        cpu_value: newValue,
-      });
-    };
-
-    const handleChangeMem = (e, newValue) => {
-      this.setState({
-        mem_value: newValue,
-      });
-    };
-
+    let { workers } = this.state;
     return (
       <div>
         <Button
@@ -140,52 +215,66 @@ class MtEditMetering extends Component {
             Edit Metering
           </DialogTitle>
           <DialogContent dividers>
-            <div className="mt-set-metering">
-              <div className="res transfer-price">
-                <Typography id="content-title" gutterBottom>
-                  Region
-                </Typography>
-                <div className="txt">
-                  Code : KR, Name : Korea
-                </div>
-              </div>
-              <div className="res transfer-price">
-                <Typography id="content-title" gutterBottom>
-                  Cluster Cost
-                </Typography>
-                <div className="txt ">
-                  <span className="price">$</span>
-                  <div className="input-txt">
-                    <input type="number" placeholder="0" name="cpu_req" />
-                  </div>
-                  <span className="per">per hour for each cluster</span>
-                </div>
-                
-              </div>
-              <div className="res transfer-price">
-                <div style={{display:"flex"}}>
+          {this.state.rows ? (
+          <div className="mt-set-metering">
+                <div className="res transfer-price">
                   <Typography id="content-title" gutterBottom>
-                    Worker Node Cost
+                    Region
                   </Typography>
-                  
+                  <div className="txt">
+                    Code : {this.state.rows.region}, Name :{" "}
+                    {this.state.rows.region_name}
+                  </div>
                 </div>
-                <MtWorkerNodeCost />
+                <div className="res transfer-price">
+                  <Typography id="content-title" gutterBottom>
+                    Cluster Cost
+                  </Typography>
+                  <div className="txt ">
+                    <span className="price">$</span>
+                    <div className="input-txt">
+                      <input
+                        type="number"
+                        placeholder="0"
+                        name="cost"
+                        value={this.state.cost}
+                        onChange={this.onChange}
+                      />
+                    </div>
+                    <span className="per">per hour for each cluster</span>
+                  </div>
+                </div>
+                <form className="res transfer-price" onChange={this.handleChange}> 
+                  <div style={{ display: "flex" }}>
+                    <Typography id="content-title" gutterBottom>
+                      Worker Node Cost
+                    </Typography>
+                  </div>
+          
+                    <MtWorkerNodeCost
+                      delete={this.clickOnDelete.bind(this)}
+                      workers={workers}
+                    />
 
-                <Button
+                  <Button
                     variant="outlined"
                     color="primary"
-                    onClick={this.handleClickOpen}
+                    onClick={this.addNewRow}
                     style={{
                       width: "100%",
                       height: "31px",
                       textTransform: "capitalize",
+                      margin: "10px 0",
+                      background: "#4496c7",
+                      border: "1px solid #4496c7",
                       // fontSize:"25px"
                     }}
                   >
                     +
                   </Button>
+                </form>
               </div>
-            </div>
+              ) : null}
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
@@ -201,18 +290,27 @@ class MtEditMetering extends Component {
   }
 }
 
-class MtWorkerNodeCost extends Component {
-  render() {
-    return [
-      <div className="txt">
+const MtWorkerNodeCost = (props) => {
+  return props.workers.map((val, idx) => {
+    let cpu = `name-${idx}`,
+    memory = `memory-${idx}`,
+    disk = `disk-${idx}`,
+    cost = `cost-${idx}`;
+
+    return (
+      <div className="txt" key={val.index} id={val.index}>
         <div className="input-section">
           <span className="label">vCPU</span>
           <div className="input-txt">
             <input
+              id={cpu}
               type="number"
               placeholder="0"
-              name="mem_req"
+              name="cpu"
               style={{ textAlign: "center", padding: "0" }}
+              // onChange={this.onChange}
+              defaultValue={val.worker.cpu || ''}
+              data-id={idx}
             />
           </div>
         </div>
@@ -221,10 +319,14 @@ class MtWorkerNodeCost extends Component {
           <span className="label">Memory</span>
           <div className="input-txt">
             <input
+              id={memory}
               type="number"
               placeholder="0"
-              name="mem_req"
+              name="memory"
               style={{ textAlign: "center", padding: "0" }}
+              defaultValue={val.worker.memory || ''}
+              data-id={idx}
+              // onChange={this.onChange}
             />
           </div>
           <span className="label">GB</span>
@@ -234,10 +336,14 @@ class MtWorkerNodeCost extends Component {
           <span className="label">Disk</span>
           <div className="input-txt">
             <input
+              id={disk}
               type="number"
               placeholder="0"
-              name="mem_req"
+              name="disk"
               style={{ textAlign: "center", padding: "0" }}
+              defaultValue={val.worker.disk || ''}
+              data-id={idx}
+              // onChange={this.onChange}
             />
           </div>
           <span className="label">GB</span>
@@ -247,30 +353,34 @@ class MtWorkerNodeCost extends Component {
           <span className="label">Hourly Cost $</span>
           <div className="input-txt">
             <input
+              id={cost}
               type="number"
               placeholder="0"
-              name="mem_req"
+              name="cost"
               style={{ textAlign: "center", padding: "0" }}
+              defaultValue={val.worker.cost || ''}
+              data-id={idx}
+              // onChange={this.onChange}
             />
           </div>
         </div>
+
         <Button
           variant="outlined"
           color="primary"
-          onClick={this.handleClickOpen}
+          onClick={() => props.delete(val)}
           style={{
-            width: "75px",
+            width: "74px",
             height: "31px",
             textTransform: "capitalize",
             // fontSize:"25px"
           }}
         >
-          Delete
+          delete
         </Button>
       </div>
-
-    ];
-  }
-}
+    );
+  });
+};
 
 export default MtEditMetering;

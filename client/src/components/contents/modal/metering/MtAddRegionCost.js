@@ -182,6 +182,8 @@ class MtAddRegionCost extends Component {
                   </div>
                   <span className="per">$</span>
                 </div>
+                  <div className="per">
+(cost per hour for each cluster)</div>
               </div>
             </div>
           </DialogContent>

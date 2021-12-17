@@ -2338,6 +2338,10 @@ g {
   margin-right:30px;
 }
 
+.mt-set-metering .res .txt .input-section:last-child {
+  margin-right:0px;
+}
+
 .mt-set-metering .res .txt .input-section .label {
   min-width: 0;
   margin-right: 5px;

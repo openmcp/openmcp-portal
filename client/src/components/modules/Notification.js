@@ -20,7 +20,6 @@
 //       // const history = useHistory();
 //       // history.push("/nodes/cluster2-master.dev.gmd.life?clustername=cluster2");
 //     // this.props.info.history.push(url);
-//     debugger;
 //     console.log('dkdkdkdkdk');
 //   }
   

@@ -3494,7 +3494,8 @@ app.get("/apis/metering", async (req, res) => {
   mw.created_time,
   mw.updated_time
   FROM tb_metering_cluster AS mc
-  LEFT OUTER JOIN tb_metering_worker mw ON mc.region = mw.region;
+  LEFT OUTER JOIN tb_metering_worker mw ON mc.region = mw.region
+  order by region_created_time desc, region, id;
     `;
   let queryResult = await excuteQuery(query);
   if (queryResult.length > 0) {
@@ -3541,8 +3542,6 @@ app.post("/apis/metering", (req, res) => {
   INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('${req.body.regionCode}', ${req.body.regionCost}, '${req.body.regionName}', '${date}', '${date}');
   `;
 
-  console.log(query);
-
   connection.query(query, (err, result) => {
     if (err !== "null") {
       const result_set = {
@@ -3586,6 +3585,60 @@ app.put("/apis/metering", (req, res) => {
       };
       res.send(result_set);
     }
+  });
+});
+
+app.post("/apis/metering/worker", (req, res) => {
+  const now = getDateTime();
+  const region = req.body.region;
+  const regionCost = req.body.regionCost;
+  const insertData = req.body.newRecord;
+  const updateData = req.body.updateRecord;
+  const deleteData = req.body.deleteRecord;
+
+  let query = `UPDATE public.tb_metering_cluster set cost=${regionCost} WHERE region='${region}'; `
+
+  if(insertData.length > 0){
+    insertData.forEach(item => {
+      query = query + `INSERT INTO public.tb_metering_worker(
+        region, cpu, memory, disk, cost, created_time, updated_time)
+        VALUES ('${region}', ${item.cpu}, ${item.memory}, ${item.disk}, ${item.cost}, '${now}', '${now}'); `
+    })
+  }
+
+  if(updateData.length > 0){
+    updateData.forEach(item => {
+      query = query + `UPDATE public.tb_metering_worker
+      SET cpu=${item.cpu}, memory=${item.memory}, disk=${item.disk}, cost=${item.cost}, updated_time='${now}'
+      WHERE id=${item.id}; `
+    })
+  }
+
+  if(deleteData.length > 0){
+    deleteData.forEach(item => {
+      query = query + `DELETE FROM public.tb_metering_worker
+      WHERE id=${item.id}; `
+    })
+  }
+
+
+  console.log(query);
+
+  connection.query(query, (err, result) => {
+    if (err !== "null") {
+      const result_set = {
+        data: [],
+        message: "Metering Worker Data is Updated !!",
+      };
+      res.send(result_set);
+    } else {
+      const result_set = {
+        data: [],
+        message: "Update was faild : " + err,
+      };
+      res.send(result_set);
+    }
+    //connection.end();
   });
 });
 
