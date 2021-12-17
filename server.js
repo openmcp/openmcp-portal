@@ -3642,29 +3642,67 @@ app.post("/apis/metering/worker", (req, res) => {
   });
 });
 
-app.get("/apis/metering/bill", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/metering_bill.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
+app.get("/apis/billing", async (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/metering_bill.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
 
-  // var request = require("request");
-  // var options = {
-  //   uri: `${apiServer}/apis/dashboard`,
-  //   method: "GET",
-  //   // headers: {
-  //   //   Authorization:
-  //   //     "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDMxMDQ4NzcsImlhdCI6MTYwMzEwMTI3NywidXNlciI6Im9wZW5tY3AifQ.mgO5hRruyBioZLTJ5a3zwZCkNBD6Bg2T05iZF-eF2RI",
-  //   // },
-  // };
+  console.log("apis/billing");
+  
+  var date = getDateTime();
+  var dateBeforeDay = getDateBefore("d", 1);
 
-  // request(options, function (error, response, body) {
-  //   if (!error && response.statusCode == 200) {
-  //     res.send(body);
-  //   } else {
-  //     console.log("error", error);
-  //
-  //   }
-  // });
+  let resultData = [];
+
+  let totalRange = 0;
+
+  let query = `select substring(CAST(date AS VARCHAR), 1,7) date, 
+	region, clusters, workers, hours, cost, cpu, memory, disk
+	from tb_billings
+	order by date desc, region, cost;
+  `;
+
+  let queryResult = await excuteQuery(query);
+  if (queryResult.length > 0) {
+    let billObjects = {};
+    queryResult.forEach((item) => {
+      let year = item.date.split('-')[0];
+      let month = item.date.split('-')[0];
+
+      billObjects[item.date] = {
+        date : item.date,
+        year: item.date.split('-')[0],
+        month: item.date.split('-')[1],
+        cost: item.cost,
+        details: [],
+      };
+    });
+    let billArray = Object.values(billObjects);
+
+
+  //   date, 
+	// region, clusters, workers, hours, cost, cpu, memory, disk
+  
+    queryResult.forEach((item) => {
+      billArray.forEach((value) => {
+        if (item.date === value.date) {
+          value.details.push({
+            region: item.region,
+            clusters: item.clusters,
+            worker_spec: `${item.cpu}vCPU / ${item.memory}GB / ${item.disk}GB`,
+            workers : item.workers,
+            hours: item.hours,
+            cost: item.cost,
+          });
+          return false;
+        }
+      });
+    });
+
+    resultData = billArray;
+  }
+
+  res.send(resultData);
 });
 
 app.get("/apis/migration/log", (req, res) => {

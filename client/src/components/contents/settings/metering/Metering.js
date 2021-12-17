@@ -410,7 +410,7 @@ class MeteringWorker extends Component {
     // console.log("cell : ", props);
     if (column.name === "cpu" || column.name === "memory" || column.name === "disk" || column.name === "cost" ) {
       return (
-        <Table.Cell {...props} style={{ cursor: "pointer", textAlign:"center"}}>
+        <Table.Cell {...props} style={{textAlign:"center"}}>
          {props.value}
         </Table.Cell>
       );

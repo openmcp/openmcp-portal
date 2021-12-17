@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink, Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -10,7 +9,7 @@ import {
   SortingState,
   IntegratedSorting,
   IntegratedSelection,
-  SelectionState,
+  RowDetailState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -19,82 +18,47 @@ import {
   SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
-  TableSelection,
   PagingPanel,
-  // TableColumnVisibility
+  TableRowDetail,
+  TableColumnVisibility,
 } from "@devexpress/dx-react-grid-material-ui";
-// import { NavigateNext } from "@material-ui/icons";
-import * as utilLog from "./../../../util/UtLogs.js";
+import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-// import AddMembers from "./../AddMembers";
-// import Editor from "../../modules/Editor";
-// import AcChangeRole from "./../../modal/AcChangeRole";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Popper from "@material-ui/core/Popper";
-import MenuList from "@material-ui/core/MenuList";
-import Grow from "@material-ui/core/Grow";
-//import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-// import GrCreateGroup from "./../../modal/GrCreateGroup";
-// import GrEditGroup from "./../../modal/GrEditGroup";
-import axios from "axios";
-import Confirm2 from "./../../../modules/Confirm2";
-import ThCreateThreshold from "../../modal/ThCreateThreshold.js";
-import ThEditThreshold from "../../modal/ThEditThreshold.js";
-import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
-import { BiDollarCircle } from "react-icons/bi";
+import LinearProgressBar from "../../../modules/LinearProgressBar.js";
+import { NavLink } from "react-router-dom";
 import { NavigateNext } from "@material-ui/icons";
+import { BiDollarCircle } from "react-icons/bi";
 
 class BillList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       columns: [
-        { name: "date", title: "Date" },
-        { name: "total", title: "Total Bill" },
+        { name: "year", title: "Year" },
+        { name: "month", title: "month" },
+        { name: "cost", title: "Total Cost" },
       ],
       defaultColumnWidths: [
-        { columnName: "date", width: 150 },
-        { columnName: "total", width: 150 },
+        { columnName: "year", width: 100 },
+        { columnName: "month", width: 100 },
+        { columnName: "cost", width: 130 },
       ],
-      defaultHiddenColumnNames: [],
       rows: "",
 
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10,
+      pageSize: 5,
       pageSizes: [5, 10, 15, 0],
-
       completed: 0,
-      selection: [],
-      selectedRow: "",
-      anchorEl: null,
-
-      grEditOpen: false,
-
-      confirmOpen: false,
-      confirmInfo: {
-        title: "Delete Threshold",
-        context: "Are you sure you want to Delete Host Threshold?",
-        button: {
-          open: "",
-          yes: "CONFIRM",
-          no: "CANCEL",
-        },
-      },
-      confrimTarget: "",
-      confirmTargetKeyname: "Threshold Name",
+      openProgress: false,
     };
   }
 
-  componentWillMount() {
-    // this.props.menuData("none");
-  }
+  componentWillMount() {}
 
   callApi = async () => {
-    const response = await fetch(`/apis/metering/bill`);
+    const response = await fetch(`/apis/billing`);
     const body = await response.json();
     return body;
   };
@@ -104,15 +68,15 @@ class BillList extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
+  //컴포넌트가 모두 마운트가 되었을때 실행된다.
   componentDidMount() {
+    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
+    debugger;
     this.callApi()
-      .then((res) => {
-        if (res == null) {
-          this.setState({ rows: [] });
-        } else {
-          this.setState({ rows: res });
-        }
+      .then((result) => {
+        console.log(result)
+        this.setState({ rows: result });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -121,7 +85,7 @@ class BillList extends Component {
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    utilLog.fn_insertPLogs(userId, "log-AC-VW01");
+    utilLog.fn_insertPLogs(userId, "log-BL-VW01");
   }
 
   onUpdateData = () => {
@@ -129,138 +93,70 @@ class BillList extends Component {
     this.callApi()
       .then((res) => {
         this.setState({
-          selection: [],
-          selectedRow: "",
           rows: res,
+          expandedRowIds: [],
         });
-
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  };
 
-  // editDialogOpen = (row) => {
-  //   this.setState({
-  //     grEditOpen : true,
-  //     selectedRow : row
-  //   });
-  // }
-  handleDeleteClick = (e) => {
-    if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select a Host Threshold");
-      return;
-    } else {
-      this.setState({
-        confirmOpen: true,
-      });
-    }
-  };
-
-  confirmed = (result) => {
-    this.setState({ confirmOpen: false });
-
-    //show progress loading...
-    this.setState({ openProgress: true });
-
-    if (result) {
-      const url = `/settings/threshold`;
-
-      const data = {
-        cluster: this.state.selectedRow.cluster_name,
-        node: this.state.selectedRow.node_name,
-      };
-
-      axios
-        .delete(url, { data: data })
-        .then((res) => {
-          alert(res.data.message);
-          this.setState({ open: false });
-          this.handleClose();
-          this.onUpdateData();
-        })
-        .catch((err) => {});
-
-      this.setState({ openProgress: false });
-
-      // loging Add Node
-      let userId = null;
-      AsyncStorage.getItem("userName", (err, result) => {
-        userId = result;
-      });
-      utilLog.fn_insertPLogs(userId, "log-ND-MD02");
-    } else {
-      this.setState({ openProgress: false });
-    }
-  };
-
-  handleClick = (event) => {
-    if (this.state.anchorEl === null) {
-      this.setState({ anchorEl: event.currentTarget });
-    } else {
-      this.setState({ anchorEl: null });
-    }
-  };
-
-  handleClose = () => {
-    this.setState({
-      anchorEl: null,
-      selection: [],
-      selectedRow: "",
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
     });
+    utilLog.fn_insertPLogs(userId, "log-BL-VW01");
   };
+
+  closeProgress = () => {
+    this.setState({ openProgress: false });
+  };
+
+  //셀
+  Cell = (props) => {
+    const { column, row } = props;
+    if (column.name === "year" || column.name === "month" || column.name === "cost") {
+      return (
+        <Table.Cell {...props} style={{textAlign:"center"}}>
+         {props.value}
+        </Table.Cell>
+      );
+    }
+
+    return <Table.Cell>{props.value}</Table.Cell>;
+  };
+
+  HeaderRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      style={{
+        cursor: "pointer",
+        backgroundColor: "whitesmoke",
+      }}
+    />
+  );
+
+  Row = (props) => {
+    return <Table.Row {...props} key={props.tableRow.key} />;
+  };
+
+  onExpandedRowIdsChange = (selection) => {
+    if (selection.length > 1) selection.splice(0, 1);
+    return this.setState({ expandedRowIds: selection });
+  };
+
+  RowDetail = ({ row }) => (
+    <div>
+      <BillingSubData
+        row={row.details}
+        onUpdateData={this.onUpdateData}
+      />
+    </div>
+  );
 
   render() {
-    const onSelectionChange = (selection) => {
-      if (selection.length > 1) selection.splice(0, 1);
-      this.setState({ selection: selection });
-      this.setState({
-        selectedRow: this.state.rows[selection[0]]
-          ? this.state.rows[selection[0]]
-          : {},
-        confrimTarget: this.state.rows[selection[0]]
-          ? this.state.rows[selection[0]].group_name
-          : "false",
-      });
-    };
-
-    const open = Boolean(this.state.anchorEl);
-
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-        }}
-      />
-    );
-
-    const Row = (props) => {
-      return <Table.Row {...props} key={props.tableRow.key} />;
-    };
-
-    const Cell = (props) => {
-      const { column, row } = props;
-
-      // <WarningRoundedIcon style={{ fontSize: "8px", marginRight: "5px" }} />
-      if (column.name === "total") {
-        return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/settings/billing/${row.date}`,
-            state: {
-              data : row
-            }
-          }}>$ {props.value}</Link></Table.Cell>
-        );
-      }
-      return <Table.Cell>{props.value}</Table.Cell>;
-    };
-
     return (
       <div className="content-wrapper fulled">
+        {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
           <i><BiDollarCircle/></i>
@@ -277,13 +173,6 @@ class BillList extends Component {
             </li>
           </ol>
         </section>
-        <Confirm2
-          confirmInfo={this.state.confirmInfo}
-          confrimTarget={this.state.confrimTarget}
-          confirmTargetKeyname={this.state.confirmTargetKeyname}
-          confirmed={this.confirmed}
-          confirmOpen={this.state.confirmOpen}
-        />
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
@@ -291,124 +180,62 @@ class BillList extends Component {
                 <div
                   style={{
                     position: "absolute",
-                    right: "21px",
-                    top: "20px",
+                    right: "30px",
+                    top: "27px",
                     zIndex: "10",
                     textTransform: "capitalize",
                   }}
                 >
-                  <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={this.handleClick}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                  <Popper
-                    open={open}
-                    anchorEl={this.state.anchorEl}
-                    role={undefined}
-                    transition
-                    disablePortal
-                    placement={"bottom-end"}
-                  >
-                    {({ TransitionProps, placement }) => (
-                      <Grow
-                        {...TransitionProps}
-                        style={{
-                          transformOrigin:
-                            placement === "bottom"
-                              ? "center top"
-                              : "center top",
-                        }}
-                      >
-                        <Paper>
-                          <MenuList autoFocusItem={open} id="menu-list-grow">
-                            <MenuItem
-                              style={{
-                                textAlign: "center",
-                                display: "block",
-                                fontSize: "14px",
-                              }}
-                            >
-                              <ThCreateThreshold
-                                rowDatas={this.state.rows}
-                                onUpdateData={this.onUpdateData}
-                                menuClose={this.handleClose}
-                              />
-                            </MenuItem>
-                            <MenuItem
-                              style={{
-                                textAlign: "center",
-                                display: "block",
-                                fontSize: "14px",
-                              }}
-                            >
-                              <ThEditThreshold
-                                rowData={this.state.selectedRow}
-                                onUpdateData={this.onUpdateData}
-                                menuClose={this.handleClose}
-                              />
-                            </MenuItem>
-                            <MenuItem
-                              style={{
-                                textAlign: "center",
-                                display: "block",
-                                fontSize: "14px",
-                              }}
-                            >
-                              <div onClick={this.handleDeleteClick}>
-                                Delete Threshold
-                              </div>
-                            </MenuItem>
-                          </MenuList>
-                        </Paper>
-                      </Grow>
-                    )}
-                  </Popper>
                 </div>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
+                  {/* 검색 */}
                   <SearchState defaultValue="" />
+
                   <SearchPanel style={{ marginLeft: 0 }} />
 
+                  {/* Sorting */}
+                  <SortingState
+                    defaultSorting={[
+                      { columnName: "snapshots", direction: "desc" },
+                    ]}
+                  />
+
+                  {/* 페이징 */}
                   <PagingState
                     defaultCurrentPage={0}
                     defaultPageSize={this.state.pageSize}
                   />
+
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  <SortingState
-                    defaultSorting={[
-                      { columnName: "user_id", direction: "asc" },
-                    ]}
-                  />
-
-                  <SelectionState
-                    selection={this.state.selection}
-                    onSelectionChange={onSelectionChange}
-                  />
-
+                 
                   <IntegratedFiltering />
-                  <IntegratedSelection />
                   <IntegratedSorting />
                   <IntegratedPaging />
 
-                  <Table cellComponent={Cell} rowComponent={Row} />
+                  {/* 테이블 */}
+                  <RowDetailState
+                    // defaultExpandedRowIds={[2, 5]}
+                    expandedRowIds={this.state.expandedRowIds}
+                    onExpandedRowIdsChange={this.onExpandedRowIdsChange}
+                  />
+
+                  <Table cellComponent={this.Cell} />
                   <TableColumnResizing
                     defaultColumnWidths={this.state.defaultColumnWidths}
                   />
                   <TableHeaderRow
                     showSortingControls
-                    rowComponent={HeaderRow}
+                    rowComponent={this.HeaderRow}
                   />
 
-                  <TableSelection
-                    selectByRowClick
-                    highlightRow
-                    // showSelectionColumn={false}
+                  <TableColumnVisibility
+                    defaultHiddenColumnNames={["workers"]}
                   />
+                  <TableRowDetail contentComponent={this.RowDetail} />
+
+                  {/* <TableFilterRow showFilterSelector={true}/> */}
                 </Grid>,
               ]
             ) : (
@@ -420,6 +247,154 @@ class BillList extends Component {
             )}
           </Paper>
         </section>
+      </div>
+    );
+  }
+}
+
+class BillingSubData extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      rows: "",
+      columns: [
+        { name: "region", title: "Region" },
+        { name: "clusters", title: "Clusters" },
+        { name: "worker_spec", title: "Worker Nodes Spec" },
+        { name: "workers", title: "Worker Nodes" },
+        { name: "hours", title: "Hours" },
+        { name: "cost", title: "Cost" },
+      ],
+      tableColumnExtensions: [
+        { columnName: "region", width: "80px" },
+        { columnName: "clusters", width: "80px" },
+        { columnName: "worker_spec", width: "200px" },
+        { columnName: "workers", width: "130px" },
+        { columnName: "hours", width: "80px" },
+        { columnName: "cost", width: "80px"},
+        
+      ],
+      value: 0,
+      confirmOpen: false,
+      confirmInfo: {
+        title: "confirmTitle",
+        context: "confirmText",
+        button: {
+          open: "",
+          yes: "OK",
+          no: "CANCEL",
+        },
+      },
+      confrimTarget: "false",
+      confirmTargetKeyname: "snapshot",
+      selectedRow: [],
+    };
+  }
+
+  componentWillMount() {
+    let result = [];
+    if (this.props.row !== null) {
+      this.props.row.map((item) => result.push(item));
+      this.setState({ rows: result });
+    }
+  }
+
+  initState = () => {
+    this.setState({
+    });
+  };
+
+  HeaderRow = ({ row, ...restProps }) => (
+    <Table.Row
+      {...restProps}
+      style={{
+        cursor: "pointer",
+        backgroundColor: "#f5f5f5",
+      }}
+    />
+  );
+
+  
+  Cell = (props) => {
+    const { column, row } = props;
+
+    const fn_linearProgressBar = () => {
+      var data = [];
+      if (props.value.indexOf(" ") > -1) {
+        props.value.split(" ").forEach((item) => {
+          if (item.indexOf("/") > -1) {
+            item.split("/").map((i, index) => (data[index] = i));
+          }
+        });
+      } else {
+        data = [];
+      }
+
+      var percent = (data[0] / data[1]) * 100;
+
+      return (
+        <div>
+          <p>{props.value + " (" + percent.toFixed(1) + "%)"}</p>
+          <p style={{ marginTop: "5px" }}>
+            <LinearProgressBar value={data[0]} total={data[1]} />
+          </p>
+        </div>
+      );
+    };
+
+    // console.log("cell : ", props);
+    if (column.name === "region" || column.name === "clusters" || column.name === "worker_spec" || column.name === "workers" || column.name === "hours" || column.name === "cost" ) {
+      return (
+        <Table.Cell {...props} style={{textAlign:"center"}}>
+         {props.value}
+        </Table.Cell>
+      );
+    }
+    return <Table.Cell {...props} />;
+  };
+
+
+  render() {
+
+    return (
+      <div className="inner-table">
+        {this.state.rows ? (
+          <Paper>
+            <Grid rows={this.state.rows} columns={this.state.columns}>
+              {/* Sorting */}
+              <SortingState
+                defaultSorting={[
+                  { columnName: "created_time", direction: "asc" },
+                ]}
+              />
+
+              <IntegratedFiltering />
+              <IntegratedSorting />
+
+              {/* 테이블 */}
+              <Table
+                cellComponent={this.Cell}
+                columnExtensions={this.state.tableColumnExtensions}
+              />
+              {/* <TableColumnResizing
+              defaultColumnWidths={this.state.defaultColumnWidths}
+            /> */}
+              <TableHeaderRow
+                showSortingControls
+                rowComponent={this.HeaderRow}
+              />
+              <TableColumnVisibility
+                    defaultHiddenColumnNames={["id"]}
+                  />
+            </Grid>
+          </Paper>
+        ) : (
+          <CircularProgress
+            variant="determinate"
+            value={this.state.completed}
+            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+          ></CircularProgress>
+        )}
       </div>
     );
   }

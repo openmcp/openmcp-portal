@@ -1299,20 +1299,22 @@ CREATE INDEX fki_fk_tb_metering_woker
 --==============================================================================
 -- tb_billings
 --==============================================================================
+-- DROP TABLE public.tb_billings;
+
 CREATE TABLE IF NOT EXISTS public.tb_billings
 (
     date date NOT NULL,
     region character varying(20) COLLATE pg_catalog."default" NOT NULL,
     clusters bigint,
-    worker_spec character varying(100) COLLATE pg_catalog."default",
-    wokers bigint,
+    workers bigint,
     hours bigint,
-    cost double precision,
+    cost numeric,
+    cpu numeric,
+    memory numeric,
+    disk numeric,
     CONSTRAINT tb_billings_pkey PRIMARY KEY (date, region)
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
 ALTER TABLE public.tb_billings
