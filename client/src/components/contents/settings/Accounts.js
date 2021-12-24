@@ -37,7 +37,7 @@ import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import { AiOutlineUser} from "react-icons/ai";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
+import { withTranslation } from 'react-i18next';
 
 class Accounts extends Component {
   constructor(props) {
@@ -118,7 +118,7 @@ class Accounts extends Component {
   };
 
   render() {
-
+    const {t} = this.props;
     const Cell = (props) => {
       // const { column, row } = props;
       const { column } = props;
@@ -185,16 +185,16 @@ class Accounts extends Component {
         <section className="content-header">
           <h1>
           <i><AiOutlineUser/></i>
-          <span>Accounts</span>
+          <span>{t("accounts.title")}</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Settings
+              {t("accounts.title")}
             </li>
           </ol>
         </section>
@@ -294,9 +294,21 @@ class Accounts extends Component {
             )}
           </Paper>
         </section>
+
+      <div className="iframe-ti">
+        <Paper className="iframe-paper">
+          <div className="iframe-rel">
+            <div className="iframe-abs">
+              <iframe src="http://34.146.191.162:20001" scrolling="no"/>
+            </div>
+          </div>
+        </Paper>
+      </div>
+
+
       </div>
     );
   }
 }
 
-export default Accounts;
+export default withTranslation()(Accounts); 

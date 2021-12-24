@@ -13,6 +13,7 @@ import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
 import SelectBox from "../../../modules/SelectBox.js";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -123,6 +124,7 @@ class PcSetSelectBoxPolicy extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -160,7 +162,7 @@ class PcSetSelectBoxPolicy extends Component {
             textTransform: "capitalize",
           }}
         >
-          edit policy
+          {t("policy.omcpPolicy.pop-edit.btn-edit")}
         </Button>
         <Dialog
           onClose={this.handleClose}
@@ -189,10 +191,10 @@ class PcSetSelectBoxPolicy extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -201,4 +203,4 @@ class PcSetSelectBoxPolicy extends Component {
   }
 }
 
-export default PcSetSelectBoxPolicy;
+export default withTranslation()(PcSetSelectBoxPolicy); 

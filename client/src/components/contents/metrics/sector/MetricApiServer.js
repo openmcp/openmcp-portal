@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import MetricLineChart from "../module/MetricLineChart";
 import MetricPieChart from "../module/MetricPieChart";
 import MetricSyncLineChart from "../module/MetricSyncLineChart";
+import { withTranslation } from 'react-i18next';
 
 class MetricApiServer extends Component {
   constructor(props) {
@@ -53,6 +54,7 @@ class MetricApiServer extends Component {
   
 
   render() {
+    const {t} = this.props;
     const lineTitles = ["requests_per_sec", "latency"];
 
     const colors = [
@@ -72,14 +74,14 @@ class MetricApiServer extends Component {
         {this.state.rows ? (
           [
             <div className="m-area-header">
-              <span>Api Server Metric</span>
+              <span>{t("multipleMetrics.apiServerMetric.title")}</span>
               {/* <span>{this.props.cluster}</span> */}
             </div>,
             <div className="m-area-body">
               <div className="m-line-chart-area">
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>requests/sec</span>
+                    <span>{t("multipleMetrics.apiServerMetric.requestsPerSec")}</span>
                   </div>
                   <div className="m-c-body">
                     <MetricSyncLineChart
@@ -96,7 +98,7 @@ class MetricApiServer extends Component {
                 </div>
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>latency</span>
+                    <span>{t("multipleMetrics.apiServerMetric.latency")}</span>
                   </div>
                   <div className="m-c-body">
                   <MetricSyncLineChart
@@ -127,4 +129,4 @@ class MetricApiServer extends Component {
   }
 }
 
-export default MetricApiServer;
+export default withTranslation()(MetricApiServer); 

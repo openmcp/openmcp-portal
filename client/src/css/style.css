@@ -1736,7 +1736,7 @@ g {
 }
 
 .pd-resource-config.select {
-  min-width: 222px;
+  min-width: 380px;
 }
 
 .pd-resource-config.select .res:first-child {
@@ -2169,7 +2169,7 @@ g {
 
 .left-main-menu > .sidebar-main-title {
   color: #8aa4af;
-  margin: 11px 21px;
+  margin: 8px 21px;
 }
 
 .left-main-menu > .sidebar-sub-title span {
@@ -2729,4 +2729,30 @@ g {
 
 .range path {
   stroke : none !important
+}
+
+.iframe-ti {
+  padding:10px;
+}
+
+.iframe-paper {
+  overflow: hidden;
+}
+
+.iframe-ti .iframe-rel{
+  position:relative;
+  width:100%;
+  height: calc(100vh - 78px);
+}
+
+.iframe-ti .iframe-rel .iframe-abs{
+  position:absolute;
+  top:-78px;
+  left:-213px;
+}
+
+.iframe-ti iframe {
+  display:block;
+  width:100vw;
+  height: 100vh;
 }

@@ -23,15 +23,16 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
 import EditEKSAuth from "../../../modal/public-cloud-auth/EditEKSAuth.js";
-import axios from 'axios';
-import Confirm2 from './../../../../modules/Confirm2';
+import axios from "axios";
+import Confirm2 from "./../../../../modules/Confirm2";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
+import Grow from "@material-ui/core/Grow";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from "react-i18next";
 
 class ConfigEKS extends Component {
   constructor(props) {
@@ -40,7 +41,7 @@ class ConfigEKS extends Component {
     this.state = {
       // tb_auth_eks > seq,cluster,type,accessKey,secretKey
       columns: [
-        { name: "seq", title:"No"},
+        { name: "seq", title: "No" },
         { name: "cluster", title: "Cluster" },
         { name: "accessKey", title: "Access Key" },
         { name: "secretKey", title: "Secret Key" },
@@ -65,20 +66,12 @@ class ConfigEKS extends Component {
 
       selection: [],
       selectedRow: "",
-      popTitle:"",
+      popTitle: "",
 
       confirmOpen: false,
-      confirmInfo : {
-        title :"Delete EKS PCA Info",
-        context :"Are you sure you want to delete EKS PCA config?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
-      },
-      confrimTarget : "",
-      confirmTargetKeyname:"",
+
+      confrimTarget: "",
+      confirmTargetKeyname: "",
       anchorEl: null,
     };
   }
@@ -90,7 +83,6 @@ class ConfigEKS extends Component {
   };
 
   componentWillMount() {
-
     this.callApi()
       .then((res) => {
         this.setState({ rows: res });
@@ -110,91 +102,105 @@ class ConfigEKS extends Component {
             textAlign: "center",
             background: "whitesmoke",
           }}
-        >
-        </Table.Cell>
+        ></Table.Cell>
       );
     }
     return <Table.Cell>{props.value}</Table.Cell>;
   };
 
   handleClickNew = () => {
-    this.setState({ 
-      open : true,
-      new : true,
-      popTitle:"Add EKS Authentication",
-      data:{}
+    const { t } = this.props;
+    this.setState({
+      open: true,
+      new: true,
+      popTitle: t("config.publicCloudAuth.eks.pop-new.title"),
+      data: {},
     });
   };
 
   handleClickEdit = () => {
-    if (Object.keys(this.state.selectedRow).length  === 0) {
-      alert("Please select a authentication data row");
+    const { t } = this.props;
+    if (Object.keys(this.state.selectedRow).length === 0) {
+      alert(t("config.publicCloudAuth.eks.pop-edit.msg.chk-selectAuth"));
       this.setState({ open: false });
       return;
     }
 
-    this.setState({ 
-      open: true, 
-      new: false, 
-      popTitle:"Edit EKS Authentication",
-      data:{
-        seq : this.state.selectedRow.seq,
+    this.setState({
+      open: true,
+      new: false,
+      popTitle: t("config.publicCloudAuth.eks.pop-edit.title"),
+      data: {
+        seq: this.state.selectedRow.seq,
         cluster: this.state.selectedRow.cluster,
         accessKey: this.state.selectedRow.accessKey,
         secretKey: this.state.selectedRow.secretKey,
         region: this.state.selectedRow.region,
-      }
+      },
     });
   };
 
   handleClickDelete = () => {
-    if (Object.keys(this.state.selectedRow).length  === 0) {
-      alert("Please select a authentication data row");
+    const {t} = this.props;
+    if (Object.keys(this.state.selectedRow).length === 0) {
+      alert(t("config.publicCloudAuth.eks.pop-delete.msg.chk-selectAuth"));
       this.setState({ open: false });
       return;
     } else {
       this.setState({
         confirmOpen: true,
-      })
+      });
     }
-  }
+  };
 
   //callback
   confirmed = (result) => {
-    this.setState({confirmOpen:false})
+    this.setState({ confirmOpen: false });
 
-    if(result) {
+    if (result) {
       const data = {
-        seq : this.state.selectedRow.seq,
-        cluster : this.state.selectedRow.cluster
+        seq: this.state.selectedRow.seq,
+        cluster: this.state.selectedRow.cluster,
       };
-  
+
       const url = `/settings/config/pca/eks`;
-      axios.delete(url, {data:data})
-      .then((res) => {
-        this.callBackClosed();
-      })
-      .catch((err) => {
-        console.log("Error : ",err);
-      });
+      axios
+        .delete(url, { data: data })
+        .then((res) => {
+          this.callBackClosed();
+        })
+        .catch((err) => {
+          console.log("Error : ", err);
+        });
     } else {
-      this.setState({confirmOpen:false})
+      this.setState({ confirmOpen: false });
     }
-  }
+  };
 
   callBackClosed = () => {
     this.setState({
-      open : false,
+      open: false,
       selection: [],
-      selectedRow: "",});
+      selectedRow: "",
+    });
     this.callApi()
-    .then((res) => {
-      this.setState({ rows: res });
-    })
-    .catch((err) => console.log(err));
-  }
+      .then((res) => {
+        this.setState({ rows: res });
+      })
+      .catch((err) => console.log(err));
+  };
 
   render() {
+    const { t } = this.props;
+    const confirmInfo = {
+      title: t("config.publicCloudAuth.eks.pop-delete.title"),
+      context: t("config.publicCloudAuth.eks.pop-delete.context"),
+      button: {
+        open: "",
+        yes: t("common.btn.confirm"),
+        no: t("common.btn.cancel"),
+      },
+    };
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -222,10 +228,10 @@ class ConfigEKS extends Component {
     };
 
     const handleClick = (event) => {
-      if(this.state.anchorEl === null){
-        this.setState({anchorEl : event.currentTarget});
+      if (this.state.anchorEl === null) {
+        this.setState({ anchorEl: event.currentTarget });
       } else {
-        this.setState({anchorEl : null});
+        this.setState({ anchorEl: null });
       }
     };
 
@@ -235,34 +241,38 @@ class ConfigEKS extends Component {
 
     const open = Boolean(this.state.anchorEl);
 
-
     return (
       <div>
         <Confirm2
-          confirmInfo={this.state.confirmInfo} 
-          confrimTarget ={this.state.confrimTarget} 
-          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmInfo={confirmInfo}
+          confrimTarget={this.state.confrimTarget}
+          confirmTargetKeyname={this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
-          confirmOpen={this.state.confirmOpen}/>
-          
-        <EditEKSAuth 
+          confirmOpen={this.state.confirmOpen}
+        />
+
+        <EditEKSAuth
           open={this.state.open}
           new={this.state.new}
           callBackClosed={this.callBackClosed}
           title={this.state.popTitle}
           data={this.state.data}
         />
-        
+
         <div className="md-contents-body">
-          <div style={{padding:  "8px 15px",
-                        fontSize:"13px",
-                        backgroundColor: "#bfdcec",
-                        boxShadow: "0px 0px 3px 0px #b9b9b9"
-                      }}
-          > EKS Authentications Configration</div>
+          <div
+            style={{
+              padding: "8px 15px",
+              fontSize: "13px",
+              backgroundColor: "#bfdcec",
+              boxShadow: "0px 0px 3px 0px #b9b9b9",
+            }}
+          >
+            {t("config.publicCloudAuth.eks.description")}
+          </div>
           <section className="md-content">
             <Paper>
-            <div
+              <div
                 style={{
                   position: "absolute",
                   right: "21px",
@@ -279,59 +289,92 @@ class ConfigEKS extends Component {
                 >
                   <MoreVertIcon />
                 </IconButton>
-                <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
-                    {({ TransitionProps, placement }) => (
-                      <Grow
+                <Popper
+                  open={open}
+                  anchorEl={this.state.anchorEl}
+                  role={undefined}
+                  transition
+                  disablePortal
+                  placement={"bottom-end"}
+                >
+                  {({ TransitionProps, placement }) => (
+                    <Grow
                       {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
-                      >
-                        <Paper>
-                          <MenuList autoFocusItem={open} id="menu-list-grow">
-                            <MenuItem
+                      style={{
+                        transformOrigin:
+                          placement === "bottom" ? "center top" : "center top",
+                      }}
+                    >
+                      <Paper>
+                        <MenuList autoFocusItem={open} id="menu-list-grow">
+                          <MenuItem
                             onKeyDown={(e) => e.stopPropagation()}
-                              onClick={handleClose}
-                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            onClick={handleClose}
+                            style={{
+                              textAlign: "center",
+                              display: "block",
+                              fontSize: "14px",
+                            }}
+                          >
+                            <div
+                              onClick={this.handleClickNew}
+                              style={{
+                                width: "148px",
+                                textTransform: "capitalize",
+                              }}
                             >
-                              <div
-                                onClick={this.handleClickNew}
-                                style={{ width: "148px", textTransform: "capitalize", }}
-                              >
-                                New </div>
-                            </MenuItem>
-                            <MenuItem
+                              {t("config.publicCloudAuth.eks.pop-new.btn-open")}{" "}
+                            </div>
+                          </MenuItem>
+                          <MenuItem
                             onKeyDown={(e) => e.stopPropagation()}
-                              onClick={handleClose}
-                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            onClick={handleClose}
+                            style={{
+                              textAlign: "center",
+                              display: "block",
+                              fontSize: "14px",
+                            }}
+                          >
+                            <div
+                              onClick={this.handleClickEdit}
+                              style={{
+                                width: "148px",
+                                textTransform: "capitalize",
+                              }}
                             >
-                              <div
-                                onClick={this.handleClickEdit}
-                                style={{ width: "148px", textTransform: "capitalize", }}
-                              >
-                                Edit
-                              </div>
-                            </MenuItem>
-                            <MenuItem
+                              {t(
+                                "config.publicCloudAuth.eks.pop-edit.btn-open"
+                              )}
+                            </div>
+                          </MenuItem>
+                          <MenuItem
                             onKeyDown={(e) => e.stopPropagation()}
-                              onClick={handleClose}
-                              style={{ textAlign: "center", display: "block", fontSize: "14px"}}
+                            onClick={handleClose}
+                            style={{
+                              textAlign: "center",
+                              display: "block",
+                              fontSize: "14px",
+                            }}
+                          >
+                            <div
+                              onClick={this.handleClickDelete}
+                              style={{
+                                width: "148px",
+                                textTransform: "capitalize",
+                              }}
                             >
-                              <div
-                                onClick={this.handleClickDelete}
-                                style={{ width: "148px", textTransform: "capitalize", }}
-                              >
-                                Delete
-                              </div>
-                            </MenuItem>
-                            </MenuList>
-                          </Paper>
-                      </Grow>
-                    )}
-                  </Popper>
+                              {t(
+                                "config.publicCloudAuth.eks.pop-delete.btn-open"
+                              )}
+                            </div>
+                          </MenuItem>
+                        </MenuList>
+                      </Paper>
+                    </Grow>
+                  )}
+                </Popper>
               </div>
-              <Grid 
-                rows={this.state.rows} 
-                columns={this.state.columns}
-              >
+              <Grid rows={this.state.rows} columns={this.state.columns}>
                 {/* <div style={{position:"relative"}}>
                   <div style = {{position:"absolute",
                         right: "13px",
@@ -402,12 +445,9 @@ class ConfigEKS extends Component {
                 <IntegratedPaging />
 
                 {/* 테이블 */}
-                <Table
-                  cellComponent={this.Cell}
-                  rowComponent={Row}
-                />
+                <Table cellComponent={this.Cell} rowComponent={Row} />
                 <TableColumnResizing
-                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  defaultColumnWidths={this.state.defaultColumnWidths}
                 />
                 <TableHeaderRow showSortingControls rowComponent={HeaderRow} />
                 {/* <TableColumnVisibility defaultHiddenColumnNames={["role_id"]} /> */}
@@ -425,4 +465,4 @@ class ConfigEKS extends Component {
   }
 }
 
-export default ConfigEKS;
+export default withTranslation()(ConfigEKS);

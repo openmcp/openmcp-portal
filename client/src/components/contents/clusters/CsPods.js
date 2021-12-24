@@ -24,25 +24,14 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
-
+import { withTranslation } from 'react-i18next';
 
 let apiParams = "";
 class CsPods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status"},
-        { name: "cluster", title: "Cluster"},
-        { name: "project", title: "Project" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "node", title: "Node" },
-        { name: "node_ip", title: "Node IP" },
-        // { name: "cpu", title: "CPU" },
-        // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 370 },
         { columnName: "status", width: 100 },
@@ -117,6 +106,19 @@ class CsPods extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const columns = [
+      { name: "name", title: t("pods.pod.grid.name") },
+      { name: "status", title: t("pods.pod.grid.status") },
+      { name: "cluster", title: t("pods.pod.grid.cluster") },
+      { name: "project", title: t("pods.pod.grid.project") },
+      { name: "pod_ip", title: t("pods.pod.grid.podIp") },
+      { name: "node", title: t("pods.pod.grid.node") },
+      { name: "node_ip", title: t("pods.pod.grid.nodeIp") },
+      // { name: "cpu", title: "CPU" },
+      // { name: "memory", title: "Memory" },
+      { name: "created_time", title: t("pods.pod.grid.createdTime") },
+    ];
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -237,16 +239,20 @@ class CsPods extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Pods
+          {t("pods.title")}
             <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Clusters
+              <NavLink to="/clusters">{t("clusters.title")}</NavLink>
+            </li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              {t("pods.title")}
             </li>
           </ol>
         </section>
@@ -257,7 +263,7 @@ class CsPods extends Component {
                 // <Editor title="create" context={this.state.editorContext}/>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -299,4 +305,4 @@ class CsPods extends Component {
   }
 }
 
-export default CsPods;
+export default withTranslation()(CsPods); 

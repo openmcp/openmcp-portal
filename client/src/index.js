@@ -4,7 +4,7 @@ import "./index.css";
 import * as serviceWorker from "./serviceWorker";
 import { BrowserRouter} from "react-router-dom";
 import App from './App';
-
+import './lang/i18n' 
 
 
 ReactDOM.render(

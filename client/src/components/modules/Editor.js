@@ -12,7 +12,7 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-
+import { withTranslation } from 'react-i18next';
 // import Modal from "@material-ui/core/Modal";
 
 /*
@@ -85,6 +85,9 @@ class Editor extends Component {
   };
 
   render() {
+    const {t} = this.props;
+
+
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -274,10 +277,10 @@ class Editor extends Component {
           <DialogContent dividers>{editor}</DialogContent>
           <DialogActions>
             <Button autoFocus onClick={this.handleExcute} color="primary">
-              excution
+              {t("common.btn.excution")}
             </Button>
             <Button autoFocus onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -286,4 +289,4 @@ class Editor extends Component {
   }
 }
 
-export default withStyles(styles)(Editor);
+export default withTranslation()(withStyles(styles)(Editor));

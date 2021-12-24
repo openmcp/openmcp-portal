@@ -24,11 +24,8 @@ import SelectBox from '../../modules/SelectBox';
 import PieReChart2 from '../../modules/PieReChart2';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-// import LineChart from './../../modules/LineChart';
-// import PieHalfReChart from './../../modules/PieHalfReChart';
-// import PieReChart from './../../modules/PieReChart';
-// import line_chart_sample from './../../../json/line_chart_sample.json'
 import ChangeAKSReource from '../modal/chageResource/ChangeAKSReource';
+import { withTranslation } from 'react-i18next';
 
 let apiParams = "";
 class CsOverview extends Component {
@@ -99,26 +96,28 @@ class CsOverview extends Component {
   };
 
   render() {
+    const {t} = this.props;
+
     return (
       <div>
         <div className="content-wrapper cluster-overview">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Overview
+            {t("clusters.detail.overview.name")}
               <small>{this.props.match.params.cluster}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Clusters</NavLink>
+                <NavLink to="/clusters">{t("clusters.title")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Overview
+                {t("clusters.detail.overview.name")}
               </li>
             </ol>
           </section>
@@ -127,18 +126,18 @@ class CsOverview extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}
+            <BasicInfo rowData={this.state.rows.basic_info} t={t}
             //  provider={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.provider }
             //  region={this.props.location.state.data == undefined ? "-" : this.props.location.state.data.region}
              />,
             <div style={{display:"flex"}}>
-              <ProjectUsageTop5 rowData={this.state.rows.project_usage_top5}/>
-              <NodeUsageTop5 rowData={this.state.rows.node_usage_top5}/>
+              <ProjectUsageTop5 rowData={this.state.rows.project_usage_top5} t={t}/>
+              <NodeUsageTop5 rowData={this.state.rows.node_usage_top5} t={t}/>
             </div>,
             <ClusterResourceUsage rowData={this.state.rows.cluster_resource_usage} onRefresh={this.onRefresh} 
-            clusterInfo = {this.state.rows.basic_info}/>,
-            <KubernetesStatus rowData={this.state.rows.kubernetes_status}/>,
-            <Events rowData={this.state.rows.events}/>
+            clusterInfo = {this.state.rows.basic_info} t={t}/>,
+            <KubernetesStatus rowData={this.state.rows.kubernetes_status} t={t}/>,
+            <Events rowData={this.state.rows.events} t={t}/>
             ]
           ) : (
             <CircularProgress
@@ -156,32 +155,33 @@ class CsOverview extends Component {
 
 class BasicInfo extends Component {
   render(){
+    const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">{t("clusters.detail.overview.basicInfo.name")}</div>
         <div className="cb-body">
           <div>
-            <span>Name : </span>
+            <span>{t("clusters.detail.overview.basicInfo.sub.name")} : </span>
             <strong>{this.props.rowData.name}</strong>
           </div>
           <div>
-            <span>Provider : </span>
+            <span>{t("clusters.detail.overview.basicInfo.sub.provider")} : </span>
             {this.props.rowData.provider}
           </div>
           <div>
-            <span>Kubernetes Version : </span>
+            <span>{t("clusters.detail.overview.basicInfo.sub.version")} : </span>
             {this.props.rowData.kubernetes_version}
           </div>
           <div>
-            <span>Status : </span>
+            <span>{t("clusters.detail.overview.basicInfo.sub.status")} : </span>
             {this.props.rowData.status}
           </div>
           <div>
-            <span>Region : </span>
+            <span>{t("clusters.detail.overview.basicInfo.sub.region")} : </span>
             {this.props.rowData.region}
           </div>
           <div>
-            <span>Zone : </span>
+            <span>{t("clusters.detail.overview.basicInfo.sub.zone")} : </span>
             {this.props.rowData.zone}
           </div>
         </div>
@@ -192,10 +192,7 @@ class BasicInfo extends Component {
 
 class ProjectUsageTop5 extends Component {
   state = {
-    columns: [
-      { name: "name", title: "Name" },
-      { name: "usage", title: "Usage" },
-    ],
+    columns: [],
     rows : this.props.rowData.cpu,
   }
 
@@ -206,6 +203,13 @@ class ProjectUsageTop5 extends Component {
   };
   
   render(){
+    const t = this.props.t
+
+    const columns = [
+      { name: "name", title: t("clusters.detail.overview.projectUsage.grid.name") },
+      { name: "usage", title: t("clusters.detail.overview.projectUsage.grid.usage") },
+    ];
+    
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -219,12 +223,8 @@ class ProjectUsageTop5 extends Component {
     );
 
     const onSelectBoxChange = (data) => {
-      console.log("onSelectBoxChange", data)
       switch(data){
         case "cpu":
-          console.log("cpu")
-          // this.setState({rows:this.props.rowData.cpu});
-
           this.callApi()
           .then((res) => {
             this.setState({ rows: res.project_usage_top5.cpu });
@@ -233,9 +233,6 @@ class ProjectUsageTop5 extends Component {
 
           break;
         case "memory":
-          console.log("memory")
-          // this.setState({rows:this.props.rowData.memory});
-
           this.callApi()
           .then((res) => {
             this.setState({ rows: res.project_usage_top5.memory });
@@ -252,7 +249,7 @@ class ProjectUsageTop5 extends Component {
     return (
       <div className="content-box col-sep-2">
         <div className="cb-header">
-          Project Usage Top5
+          {t("clusters.detail.overview.projectUsage.name")}
           <SelectBox rows={selectBoxData} onSelectBoxChange={onSelectBoxChange} defaultValue=""></SelectBox>
         </div>
         
@@ -260,7 +257,7 @@ class ProjectUsageTop5 extends Component {
           {this.state.aaa}
           <Grid
             rows = {this.state.rows}
-            columns = {this.state.columns}>
+            columns = {columns}>
 
             {/* Sorting */}
             <SortingState
@@ -294,6 +291,14 @@ class NodeUsageTop5 extends Component {
   };
   
   render(){
+    const t = this.props.t
+
+    const columns = [
+      { name: "name", title: t("clusters.detail.overview.nodeUsage.grid.name") },
+      { name: "usage", title: t("clusters.detail.overview.nodeUsage.grid.usage") },
+    ];
+    
+
     const Cell = (props) => {
       const { column } = props;
       // console.log("cell : ", props);
@@ -356,7 +361,7 @@ class NodeUsageTop5 extends Component {
     return (
       <div className="content-box col-sep-2">
         <div className="cb-header">
-          Node Usage Top5
+          {t("clusters.detail.overview.nodeUsage.name")}
           <SelectBox rows={selectBoxData} onSelectBoxChange={onSelectBoxChange}
           defaultValue=""></SelectBox>
         </div>
@@ -365,7 +370,7 @@ class NodeUsageTop5 extends Component {
           {this.state.aaa}
           <Grid
             rows = {this.state.rows}
-            columns = {this.state.columns}>
+            columns = {columns}>
 
             {/* Sorting */}
             <SortingState
@@ -382,216 +387,8 @@ class NodeUsageTop5 extends Component {
   }
 }
 
-
-
-
-
 // 갱신전
-
-let normal = {
-    cpu: {
-      counts: 3,
-      unit: "core",
-      status: [
-        { name: "Used", value: 1.2 },
-        { name: "Total", value: 72 }
-      ]
-    },
-    memory: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 42.3 },
-        { name: "Total", value: 197.3 }
-      ]
-    },
-    storage: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 71.3 },
-        { name: "Total", value: 1724.6 }
-      ]
-    }
-  }
   
-
-  let stress50 = {
-    cpu: {
-      counts: 3,
-      unit: "core",
-      status: [
-        { name: "Used", value: 35.3 },
-        { name: "Total", value: 72 }
-      ]
-    },
-    memory: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 95.3 },
-        { name: "Total", value: 197.3 }
-      ]
-    },
-    storage: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 71.3 },
-        { name: "Total", value: 1724.6 }
-      ]
-    }
-  }
-
-    
-  let stress70 = {
-    cpu: {
-      counts: 3,
-      unit: "core",
-      status: [
-        { name: "Used", value: 55.1 },
-        { name: "Total", value: 72 }
-      ]
-    },
-    memory: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 148.1 },
-        { name: "Total", value: 197.3 }
-      ]
-    },
-    storage: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 71.3 },
-        { name: "Total", value: 1724.6 }
-      ]
-    }
-  }
-
-    
-
-  let stress80 = {
-    cpu: {
-      counts: 3,
-      unit: "core",
-      status: [
-        { name: "Used", value: 63.2 },
-        { name: "Total", value: 72 }
-      ]
-    },
-    memory: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 175.4 },
-        { name: "Total", value: 197.3 }
-      ]
-    },
-    storage: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 71.3 },
-        { name: "Total", value: 1724.6 }
-      ]
-    }
-  }
-
-  let stress0 = {
-    cpu: {
-      counts: 3,
-      unit: "core",
-      status: [
-        { name: "Used", value: 52.2 },
-        { name: "Total", value: 72 }
-      ]
-    },
-    memory: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 101.4 },
-        { name: "Total", value: 197.3 }
-      ]
-    },
-    storage: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 71.3 },
-        { name: "Total", value: 1724.6 }
-      ]
-    }
-  }
-
-  let eks ={
-    cpu: {
-      counts: 3,
-      unit: "core",
-      status: [
-        { name: "Used", value: 3.5 },
-        { name: "Total", value: 6 }
-      ]
-    },
-    memory: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 13.4 },
-        { name: "Total", value: 24.2 }
-      ]
-    },
-    storage: {
-      counts: 3,
-      unit: "Gi",
-      status: [
-        { name: "Used", value: 31.4 },
-        { name: "Total", value: 75.0 }
-      ]
-    }
-  }
-    
-    let gke2 ={
-      cpu: {
-        counts: 3,
-        unit: "core",
-        status: [
-          { name: "Used", value: 1.6 },
-          { name: "Total", value: 8 }
-        ]
-      },
-      memory: {
-        counts: 3,
-        unit: "Gi",
-        status: [
-          { name: "Used", value: 12.5 },
-          { name: "Total", value: 24.2 }
-        ]
-      },
-      storage: {
-        counts: 3,
-        unit: "Gi",
-        status: [
-          { name: "Used", value: 19.3 },
-          { name: "Total", value: 197.0 }
-        ]
-      }
-}
-
-  let colors3 = [
-    "#0088FE", //파랑
-    "#ecf0f5",
-  ];
-
-  let colors2 = [
-    "#ff8042",// 주황
-    "#ecf0f5",
-  ];
-
-  let count = 1;
 class ClusterResourceUsage extends Component {
   state = {
     rows : this.props.rowData,
@@ -625,122 +422,14 @@ class ClusterResourceUsage extends Component {
       }
   }
 
-  onClick = () => {
-    if(count === 1){
-      this.setState({
-        rows:stress50,
-        unhColors:colors3
-      })
-    } else if (count === 2){
-      this.setState({
-        rows:stress70, 
-        unhColors:colors3
-      })
-    } else if (count === 3 ){
-      this.setState({
-        rows:stress80, 
-        unhColors:colors2
-      })
-    }  else if (count === 4 ){
-      this.setState({
-        rows:stress0, 
-        unhColors:colors3
-      })
-    }  else {
-      count = 1
-      this.setState({
-        rows:normal, 
-        unhColors:colors3
-      })
-    }
-    count++
-    
-    // this.props.onRefresh();
-  }
-
-  onSelectBoxChange = (data) => {
-    count=1
-    // console.log(eks-cluster1)
-    if(data === "cluster1"){
-      this.setState({
-        rows:normal,
-        unhColors:colors3
-      })} else if(data === "eks-cluster1") {
-        this.setState({
-          rows:eks,
-          unhColors:colors3
-        })
-      } else {
-      this.setState({
-        rows:gke2,
-        unhColors:colors3
-      })
-    }
-    // } 
-    // else if(data === "eks-cluster1"){
-    //   this.setState({
-    //     rows:warning, //addAfter
-    //     unhColors:colors2
-    //   })
-    // } else if(data === "cluster1"){
-    //   this.setState({
-    //     rows:normal,
-    //     unhColors:colors3
-    //   })
-    // } else if(data === "gke-cluster1"){
-    //   this.setState({
-    //     rows:gke,
-    //     unhColors:colors3
-    //   })
-    // }else {
-    //   this.setState({
-    //     rows:gke,
-    //     unhColors:colors3
-    //   })
-    // }
-
-
-    // this.setState({
-    //   rows:warning,
-    //   unhColors:colors2
-    // })
-
-    // this.setState({
-    //   rows:healthy,
-    //   unhColors:colors3
-    // })
-    
-  }
-
-  
-  
   render(){
-    // const colors = [
-    //   "#0088FE",
-    //   "#ecf0f5",
-    // ];
-
-    // const colors2 = [
-    //   "#ff8042", //#0088FE, #ff8042;
-    //   "#ecf0f5",
-    // ];
-
-    // const selectBoxData = [
-    //   {name:"cluster1", value:"cluster1"},
-    //   {name:"cluster2", value:"cluster2"},
-    //   {name:"cluster3", value:"cluster2"},
-    //   {name:"eks-cluster1", value:"eks-cluster1"},
-    //   {name:"gke-cluster1", value:"gke-cluster1"},
-    // ];
-
-    
-
+    const t = this.props.t;
     return (
       <div className="content-box">
         <div className="cb-header">
           
-          <span style={{cursor:"cluster1"}} onClick={this.onClick} >
-            Cluster Resource Usage
+          <span style={{cursor:"cluster1"}} >
+          {t("clusters.detail.overview.resourceUsage.name")}
           </span>
           {this.props.clusterInfo.provider === "aks" ? 
           <ChangeAKSReource clusterInfo={this.props.clusterInfo} /> : "" }
@@ -769,10 +458,10 @@ class KubernetesStatus extends Component {
     rows : this.props.rowData
   }
   render(){
-    
+    const t = this.props.t;
     return(
       <div className="content-box cb-kube-status">
-        <div className="cb-header">Kubernetes Status</div>
+        <div className="cb-header">{t("clusters.detail.overview.kubeStatus.name")}</div>
         <div className="cb-body flex">
           {this.state.rows.map((item)=>{
             return (
@@ -791,14 +480,7 @@ class Events extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "project", title: "Project" },
-        { name: "type", title: "Type" },
-        { name: "reason", title: "Reason" },
-        { name: "object", title: "Object" },
-        { name: "message", title: "Message" },
-        { name: "time", title: "Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "project", width: 150 },
         { columnName: "type", width: 150 },
@@ -823,32 +505,17 @@ class Events extends Component {
     // this.props.onSelectMenu(false, "");
   }
 
-  
-
-  // callApi = async () => {
-  //   const response = await fetch("/clusters");
-  //   const body = await response.json();
-  //   return body;
-  // };
-
-  // progress = () => {
-  //   const { completed } = this.state;
-  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  // };
-
-  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  // componentDidMount() {
-  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-  //   this.timer = setInterval(this.progress, 20);
-  //   this.callApi()
-  //     .then((res) => {
-  //       this.setState({ rows: res });
-  //       clearInterval(this.timer);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
   render() {
+    const t = this.props.t;
+    const columns= [
+      { name: "project", title: t("clusters.detail.overview.events.grid.project") },
+      { name: "type", title: t("clusters.detail.overview.events.grid.type")  },
+      { name: "reason", title: t("clusters.detail.overview.events.grid.reason")  },
+      { name: "object", title: t("clusters.detail.overview.events.grid.object") },
+      { name: "message", title: t("clusters.detail.overview.events.grid.message") },
+      { name: "time", title: t("clusters.detail.overview.events.grid.time")  },
+    ];
+    
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -867,14 +534,14 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">{t("clusters.detail.overview.events.name")}</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
               [
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -916,5 +583,4 @@ class Events extends Component {
   };
 };
 
-export default CsOverview;
-
+export default withTranslation()(CsOverview); 

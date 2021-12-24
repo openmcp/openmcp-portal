@@ -28,6 +28,7 @@ import LinearProgressBar from "../../../modules/LinearProgressBar.js";
 import { NavLink } from "react-router-dom";
 import { NavigateNext } from "@material-ui/icons";
 import { BiDollarCircle } from "react-icons/bi";
+import { withTranslation } from 'react-i18next';
 
 class BillList extends Component {
   constructor(props) {
@@ -72,7 +73,6 @@ class BillList extends Component {
   componentDidMount() {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
-    debugger;
     this.callApi()
       .then((result) => {
         console.log(result)
@@ -160,22 +160,23 @@ class BillList extends Component {
   );
 
   render() {
+    const {t} = this.props;
     return (
       <div className="content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
           <i><BiDollarCircle/></i>
-          <span>Billing</span>
+          <span>{t("billing.title")}</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Settings
+              {t("billing.title")}
             </li>
           </ol>
         </section>
@@ -367,7 +368,7 @@ class BillingSubData extends Component {
 
 
   render() {
-
+    
     return (
       <div className="inner-table">
         {this.state.rows ? (
@@ -412,4 +413,4 @@ class BillingSubData extends Component {
   }
 }
 
-export default BillList;
+export default withTranslation()(BillList); 

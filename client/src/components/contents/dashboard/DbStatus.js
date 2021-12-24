@@ -7,6 +7,7 @@ import * as utilLog from "../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import { RiDashboardFill } from "react-icons/ri";
 import CustomDynamicView from "./CustomDynamicView";
+import { withTranslation } from 'react-i18next';
 
 class DbStatus extends Component {
   constructor(props) {
@@ -69,6 +70,7 @@ class DbStatus extends Component {
   };
 
   onRefresh = () => {
+    const {t} = this.props;
     this.callApi()
       .then((res) => {
         if (res === null) {
@@ -77,7 +79,7 @@ class DbStatus extends Component {
           if (res.hasOwnProperty("errno")) {
             if (res.code === "ECONNREFUSED") {
               clearInterval(this.timer2);
-              this.setState({ loadErr: "Connection Failed" });
+              this.setState({ loadErr: t("dashboard.connectionFailed") });
             }
 
             console.log(res);
@@ -108,6 +110,7 @@ class DbStatus extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div className="">
         {/* 컨텐츠 내용 */}
@@ -115,38 +118,42 @@ class DbStatus extends Component {
           {this.state.rows ? (
             [
               <DashboardCard01
-                title="Clusters"
+                title={t("dashboard.systemStatus.clusters")}
                 width="24%"
                 data={this.state.rows.clusters}
                 path="/clusters"
                 angle={this.angle.full}
+                btnDetail={t("dashboard.systemStatus.btn-info")} 
               ></DashboardCard01>,
               <DashboardCard01
-                title="Nodes"
+                title={t("dashboard.systemStatus.nodes")}
                 width="24%"
                 data={this.state.rows.nodes}
                 path="/nodes"
                 angle={this.angle.full}
+                btnDetail={t("dashboard.systemStatus.btn-info")}
               ></DashboardCard01>,
               <DashboardCard01
-                title="Pods"
+                title={t("dashboard.systemStatus.pods")}
                 width="24%"
                 data={this.state.rows.pods}
                 path="/pods"
                 angle={this.angle.full}
+                btnDetail={t("dashboard.systemStatus.btn-info")}
               ></DashboardCard01>,
               <DashboardCard01
-                title="Projects"
+                title={t("dashboard.systemStatus.porjects")}
                 width="24%"
                 data={this.state.rows.projects}
                 path="/projects"
                 angle={this.angle.full}
+                btnDetail={t("dashboard.systemStatus.btn-info")}
               ></DashboardCard01>,
             ]
           ) : ([
             <div className="content-box" style={{width:"100%"}}>
                 <div className="cb-header">
-                  <span>System Status</span>
+                  <span>{t("dashboard.systemStatus.title")}</span>
                 </div>
                 <div
                   style={{
@@ -180,6 +187,7 @@ class DashboardCard01 extends Component {
     this.props.onClickRefresh();
   };
   render() {
+    const {t} = this.props;
     const colors = [
       "#0088FE",
       // "#00C49F",
@@ -199,7 +207,7 @@ class DashboardCard01 extends Component {
           <span> : {this.props.data.counts}</span>
 
           <Link to={this.props.path}>
-            <div className="cb-btn">detail</div>
+            <div className="cb-btn">{this.props.btnDetail}</div>
           </Link>
         </div>
         <div
@@ -218,4 +226,4 @@ class DashboardCard01 extends Component {
   }
 }
 
-export default DbStatus;
+export default withTranslation()(DbStatus); 

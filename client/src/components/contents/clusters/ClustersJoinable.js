@@ -35,6 +35,7 @@ import Grow from '@material-ui/core/Grow';
 import axios from "axios";
 import DndJoinUnjoin from "./dnd/DndJoinUnjoin.js";
 import DndJoinUnjoinThree from "./dnd/DndJoinUnjoinThree.js";
+import { withTranslation } from 'react-i18next';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
@@ -43,13 +44,7 @@ class ClustersJoinable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "endpoint", title: "Endpoint" },
-        { name: "provider", title: "Provider" },
-        { name: "region", title: "Region" },
-        { name: "zone", title: "Zone" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 180 },
         { columnName: "endpoint", width: 200},
@@ -181,6 +176,24 @@ class ClustersJoinable extends Component {
 
 
   render() {
+    const {t} = this.props;
+    const columns = [
+      { name: "name", title: t("clusters.joinable.grid.name") },
+      { name: "endpoint", title:  t("clusters.joinable.grid.serverIp") },
+      { name: "provider", title:  t("clusters.joinable.grid.provider") },
+      { name: "region", title:  t("clusters.joinable.grid.region") },
+      { name: "zone", title:  t("clusters.joinable.grid.zone") },
+    ];
+
+     const confirmInfo = {
+      title: t("clusters.joinable.pop-join.title"),
+      context: t("clusters.joinable.pop-join.context"),
+      button: {
+        open: t("clusters.joinable.btn-join"),
+        yes: t("common.btn.confirm"),
+        no: t("common.btn.cancel"),
+      },
+    };
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -301,6 +314,7 @@ class ClustersJoinable extends Component {
           </ol>
         </section> */}
           <section className="content" style={{ position: "relative" }}>
+          {this.state.rows ? (
               <Paper>
               <div style={{
                   position: "absolute",
@@ -328,7 +342,8 @@ class ClustersJoinable extends Component {
                               <MenuItem 
                               onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
-                                <Confirm confirmInfo={this.state.confirmInfo} confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}
+                                <Confirm confirmInfo={confirmInfo} 
+                                confrimTarget ={this.state.confrimTarget} confirmed={this.confirmed}
                                 menuClose={handleClose}
                                 />
                               </MenuItem>
@@ -339,10 +354,10 @@ class ClustersJoinable extends Component {
                   </Popper>
                 </div>
                 {/* <Editor title="create" context={this.state.editorContext}/> */}
-        {this.state.rows ? (
+        
                     <Grid
                       rows={this.state.rows}
-                      columns={this.state.columns}
+                      columns={columns}
                     >
                       <Toolbar />
                       {/* 검색 */}
@@ -383,6 +398,7 @@ class ClustersJoinable extends Component {
 
 
         
+              </Paper>
               ) : (
                 <CircularProgress
                   variant="determinate"
@@ -390,7 +406,6 @@ class ClustersJoinable extends Component {
                   style={{ position: "absolute", left: "50%", marginTop: "20px" }}
                 ></CircularProgress>
               )}
-              </Paper>
           </section>
       </div>
     );
@@ -399,4 +414,4 @@ class ClustersJoinable extends Component {
 
 
 
-export default ClustersJoinable;
+export default withTranslation()(ClustersJoinable); 

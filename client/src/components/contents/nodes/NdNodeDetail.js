@@ -31,6 +31,7 @@ import ProgressTemp from "./../../modules/ProgressTemp";
 import axios from "axios";
 import PieReChartPowerRange from "../../modules/PieReChartPowerRange";
 import LineReChart from "../../modules/LineReChart";
+import { withTranslation } from 'react-i18next';
 
 class NdNodeDetail extends Component {
   constructor(props) {
@@ -100,6 +101,7 @@ class NdNodeDetail extends Component {
   };
 
   render() {
+    const {t} = this.props;
     // console.log("CsOverview_Render : ",this.state.rows.basic_info);
     return (
       <div>
@@ -107,24 +109,24 @@ class NdNodeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              {this.props.match.params.node}
-              <small>Node Overview</small>
+              {t("nodes.detail.title")}
+              <small>{this.props.match.params.node}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                <NavLink to="/nodes">Nodes</NavLink>
+                <NavLink to="/nodes">{t("nodes.title")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                Overview
+                {t("nodes.detail.title")}
               </li>
             </ol>
           </section>
@@ -137,20 +139,24 @@ class NdNodeDetail extends Component {
                   rowData={this.state.rows.basic_info}
                   onUpdateData={this.onUpdateData}
                   propsRow={this.state.propsRow}
+                  t={t}
                 />,
                 <KubernetesStatus
                   rowData={this.state.rows.kubernetes_node_status}
                   nodeData={this.state.rows.basic_info}
                   propsRow={this.state.propsRow}
+                  t={t}
                 />,
                 <NodeResourceUsage
                   rowData={this.state.rows.node_resource_usage}
                   nodeData={this.state.rows.basic_info}
                   propsRow={this.state.propsRow}
+                  t={t}
                 />,
                 <NodePowerUsage
                   nodeName={this.props.match.params.node}
                   query={this.props.location.search}
+                  t={t}
                 />,
                 // <Events rowData={this.state.rows.events}/>
               ]
@@ -170,21 +176,22 @@ class NdNodeDetail extends Component {
 
 class BasicInfo extends Component {
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box">
         <div className="cb-header">
-          <span>Basic Info</span>
+          <span>{t("nodes.detail.basicInfo.title")}</span>
           {/* <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/> */}
         </div>
         <div className="cb-body">
           <div>
-            <span>Name : </span>
+            <span>{t("nodes.detail.basicInfo.sub.name")} : </span>
             <strong>{this.props.rowData.name}</strong>
           </div>
           <div style={{ display: "flex" }}>
             <div className="cb-body-left">
               <div>
-                <span>Status : </span>
+                <span>{t("nodes.detail.basicInfo.sub.status")} : </span>
                 <span
                   style={{
                     color:
@@ -201,121 +208,44 @@ class BasicInfo extends Component {
                 </span>
               </div>
               <div>
-                <span>Role : </span>
+                <span>{t("nodes.detail.basicInfo.sub.role")} : </span>
                 {this.props.rowData.role}
               </div>
               <div>
-                <span>Cluster : </span>
+                <span>{t("nodes.detail.basicInfo.sub.cluster")} : </span>
                 {this.props.rowData.cluster}
               </div>
               <div>
-                <span>Kubernetes : </span>
+                <span>{t("nodes.detail.basicInfo.sub.version")} : </span>
                 {this.props.rowData.kubernetes}
               </div>
               <div>
-                <span>Kubernetes Proxy : </span>
+                <span>{t("nodes.detail.basicInfo.sub.proxy")} : </span>
                 {this.props.rowData.kubernetes_proxy}
               </div>
             </div>
             <div className="cb-body-right">
               <div>
-                <span>IP : </span>
+                <span>{t("nodes.detail.basicInfo.sub.ip")} : </span>
                 {this.props.rowData.ip}
               </div>
               <div>
-                <span>OS : </span>
+                <span>{t("nodes.detail.basicInfo.sub.os")} : </span>
                 {this.props.rowData.os}
               </div>
               <div>
-                <span>Docker : </span>
+                <span>{t("nodes.detail.basicInfo.sub.docker")} : </span>
                 {this.props.rowData.docker}
               </div>
               <div>
-                <span>Created Time : </span>
+                <span>{t("nodes.detail.basicInfo.sub.createdTime")}: </span>
                 {this.props.rowData.created_time}
               </div>
               <div>
-                <span>Provider : </span>
+                <span>{t("nodes.detail.basicInfo.sub.provider")} : </span>
                 {this.props.propsRow.provider}
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-}
-
-class NodeResourceUsage extends Component {
-  state = {
-    rows: this.props.rowData,
-    nodeData: this.props.nodeData,
-  };
-  angle = {
-    full: {
-      startAngle: 0,
-      endAngle: 360,
-    },
-    half: {
-      startAngle: 180,
-      endAngle: 0,
-    },
-  };
-  render() {
-    const colors = ["#0088FE", "#ecf0f5"];
-    return (
-      <div className="content-box">
-        <div className="cb-header">
-          <span>Node Resource Usage</span>
-          {this.props.propsRow.provider === "eks" ||
-          this.props.propsRow.provider === "kvm" ? (
-            <NdResourceConfig
-              rows={this.state.rows}
-              rowData={this.props.rowData}
-              nodeData={this.props.nodeData}
-              onUpdateData={this.props.onUpdateData}
-              propsRow={this.props.propsRow}
-            />
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="cb-body flex">
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">CPU</div>
-            <PieReChart2
-              data={this.state.rows.cpu}
-              angle={this.angle.half}
-              unit={this.state.rows.cpu.unit}
-              colors={colors}
-            ></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Memory</div>
-            <PieReChart2
-              data={this.state.rows.memory}
-              angle={this.angle.half}
-              unit={this.state.rows.memory.unit}
-              colors={colors}
-            ></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Storage</div>
-            <PieReChart2
-              data={this.state.rows.storage}
-              angle={this.angle.half}
-              unit={this.state.rows.storage.unit}
-              colors={colors}
-            ></PieReChart2>
-          </div>
-          <div className="cb-body-content pie-chart">
-            <div className="cb-sub-title">Pod</div>
-            <PieReChart2
-              data={this.state.rows.pods}
-              angle={this.angle.half}
-              unit={this.state.rows.pods.unit}
-              colors={colors}
-            ></PieReChart2>
           </div>
         </div>
       </div>
@@ -331,12 +261,12 @@ class KubernetesStatus extends Component {
       confirmType: "",
       confirmOpen: false,
       confirmInfo: {
-        title: "Confirm Stop Node",
-        context: "Are you sure you want to stop Node?",
+        title: this.props.t("nodes.detail.nodeStatus.pop-powerStart.title"),
+        context: this.props.t("nodes.detail.nodeStatus.pop-powerStart.context"),
         button: {
           open: "",
-          yes: "CONFIRM",
-          no: "CANCEL",
+          yes: this.props.t("common.btn.confirm"),
+          no: this.props.t("common.btn.cancel"),
         },
       },
       confrimTarget: "",
@@ -351,12 +281,12 @@ class KubernetesStatus extends Component {
       confirmOpen: true,
       powerFlag: "on",
       confirmInfo: {
-        title: "Confirm Start Node",
-        context: "Are you sure you want to Start Node?",
+        title: this.props.t("nodes.detail.nodeStatus.pop-powerStart.title"),
+        context: this.props.t("nodes.detail.nodeStatus.pop-powerStart.context"),
         button: {
           open: "",
-          yes: "CONFIRM",
-          no: "CANCEL",
+          yes: this.props.t("common.btn.confirm"),
+          no: this.props.t("common.btn.cancel"),
         },
       },
     });
@@ -368,12 +298,12 @@ class KubernetesStatus extends Component {
       confirmOpen: true,
       powerFlag: "off",
       confirmInfo: {
-        title: "Confirm Stop Node",
-        context: "Are you sure you want to stop Node?",
+        title: this.props.t("nodes.detail.nodeStatus.pop-powerOff.title"),
+        context: this.props.t("nodes.detail.nodeStatus.pop-powerOff.context"),
         button: {
           open: "",
-          yes: "CONFIRM",
-          no: "CANCEL",
+          yes: this.props.t("common.btn.confirm"),
+          no: this.props.t("common.btn.cancel"),
         },
       },
     });
@@ -384,12 +314,13 @@ class KubernetesStatus extends Component {
       confirmType: "delete",
       confirmOpen: true,
       confirmInfo: {
-        title: "Confirm Delete KVM VM",
-        context: "Are you sure you want to delete vm(node)?",
+        title: this.props.t("nodes.detail.nodeStatus.pop-deleteNode.title"),
+        context: this.props.t("nodes.detail.nodeStatus.pop-deleteNode.context"),
         button: {
           open: "",
-          yes: "CONFIRM",
-          no: "CANCEL",
+          open: "",
+          yes: this.props.t("common.btn.confirm"),
+          no: this.props.t("common.btn.cancel"),
         },
       },
     });
@@ -408,11 +339,9 @@ class KubernetesStatus extends Component {
     if (result) {
       if (this.state.confirmType === "power") {
         if (this.state.powerFlag === "on") {
-          console.log("poweron");
           url = `/nodes/${provider}/start`;
           // utilLog.fn_insertPLogs(userId, "log-ND-PO01"); //poweron log
         } else if (this.state.powerFlag === "off") {
-          console.log("poweroff");
           url = `/nodes/${provider}/stop`;
           // utilLog.fn_insertPLogs(userId, "log-ND-PO02"); //poweroff log
         }
@@ -471,6 +400,7 @@ class KubernetesStatus extends Component {
   };
 
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box cb-kube-status">
         {this.state.openProgress ? (
@@ -490,7 +420,7 @@ class KubernetesStatus extends Component {
         />
 
         <div className="cb-header">
-          <span>Kubernetes Node Status</span>
+          <span>{t("nodes.detail.nodeStatus.title")}</span>
           {this.props.propsRow.provider !== "gke" ? (
             <div style={{ position: "absolute", top: "0px", right: "0px" }}>
               <Button
@@ -505,7 +435,7 @@ class KubernetesStatus extends Component {
                   textTransform: "capitalize",
                 }}
               >
-                Start Node
+                {t("nodes.detail.nodeStatus.btn-startNode")}
               </Button>
 
               <Button
@@ -519,7 +449,7 @@ class KubernetesStatus extends Component {
                   textTransform: "capitalize",
                 }}
               >
-                Stop Node
+                {t("nodes.detail.nodeStatus.btn-stopNode")}
               </Button>
 
               {this.props.propsRow.provider === "kvm" ? (
@@ -535,7 +465,7 @@ class KubernetesStatus extends Component {
                     textTransform: "capitalize",
                   }}
                 >
-                  Delete Node
+                   {t("nodes.detail.nodeStatus.btn-deletNode")}
                 </Button>
               ) : (
                 ""
@@ -554,6 +484,84 @@ class KubernetesStatus extends Component {
               </div>
             );
           })}
+        </div>
+      </div>
+    );
+  }
+}
+
+class NodeResourceUsage extends Component {
+  state = {
+    rows: this.props.rowData,
+    nodeData: this.props.nodeData,
+  };
+  angle = {
+    full: {
+      startAngle: 0,
+      endAngle: 360,
+    },
+    half: {
+      startAngle: 180,
+      endAngle: 0,
+    },
+  };
+  render() {
+    const t = this.props.t;
+    const colors = ["#0088FE", "#ecf0f5"];
+    return (
+      <div className="content-box">
+        <div className="cb-header">
+          <span> {t("nodes.detail.resourceUsage.title")}</span>
+          {this.props.propsRow.provider === "eks" ||
+          this.props.propsRow.provider === "kvm" ? (
+            <NdResourceConfig
+              rows={this.state.rows}
+              rowData={this.props.rowData}
+              nodeData={this.props.nodeData}
+              onUpdateData={this.props.onUpdateData}
+              propsRow={this.props.propsRow}
+            />
+          ) : (
+            ""
+          )}
+        </div>
+        <div className="cb-body flex">
+          <div className="cb-body-content pie-chart">
+            <div className="cb-sub-title">CPU</div>
+            <PieReChart2
+              data={this.state.rows.cpu}
+              angle={this.angle.half}
+              unit={this.state.rows.cpu.unit}
+              colors={colors}
+            ></PieReChart2>
+          </div>
+          <div className="cb-body-content pie-chart">
+            <div className="cb-sub-title">Memory</div>
+            <PieReChart2
+              data={this.state.rows.memory}
+              angle={this.angle.half}
+              unit={this.state.rows.memory.unit}
+              colors={colors}
+            ></PieReChart2>
+          </div>
+          <div className="cb-body-content pie-chart">
+            <div className="cb-sub-title">Storage</div>
+            <PieReChart2
+              data={this.state.rows.storage}
+              angle={this.angle.half}
+              unit={this.state.rows.storage.unit}
+              colors={colors}
+            ></PieReChart2>
+          </div>
+          <div className="cb-body-content pie-chart">
+            <div className="cb-sub-title">Pod</div>
+            <PieReChart2
+              data={this.state.rows.pods}
+              angle={this.angle.half}
+              unit={this.state.rows.pods.unit}
+              colors={colors}
+            ></PieReChart2>
+          </div>
         </div>
       </div>
     );
@@ -651,10 +659,11 @@ class NodePowerUsage extends Component {
   // }
 
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box">
         <div className="cb-header">
-          <span>Node Power Usage (Watt)</span>
+          <span>{t("nodes.detail.powerUsage.title")}</span>
           {/* <div className="cb-btn">
                       <Link to={this.props.path}>detail</Link>
                     </div> */}
@@ -703,4 +712,4 @@ class NodePowerUsage extends Component {
   }
 }
 
-export default NdNodeDetail;
+export default withTranslation()(NdNodeDetail); 

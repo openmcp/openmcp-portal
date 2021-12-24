@@ -11,6 +11,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -166,6 +167,7 @@ class MtEditMetering extends React.Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -201,7 +203,7 @@ class MtEditMetering extends React.Component {
             textTransform: "capitalize",
           }}
         >
-          Edit Metering
+          {t("meterings.pop-edit.btn-add")}
         </Button>
 
         <Dialog
@@ -212,14 +214,14 @@ class MtEditMetering extends React.Component {
           maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Edit Metering
+            {t("meterings.pop-edit.title")}
           </DialogTitle>
           <DialogContent dividers>
           {this.state.rows ? (
           <div className="mt-set-metering">
                 <div className="res transfer-price">
                   <Typography id="content-title" gutterBottom>
-                    Region
+                    {t("meterings.pop-edit.region")}
                   </Typography>
                   <div className="txt">
                     Code : {this.state.rows.region}, Name :{" "}
@@ -228,7 +230,7 @@ class MtEditMetering extends React.Component {
                 </div>
                 <div className="res transfer-price">
                   <Typography id="content-title" gutterBottom>
-                    Cluster Cost
+                    {t("meterings.pop-edit.clusterCost")}
                   </Typography>
                   <div className="txt ">
                     <span className="price">$</span>
@@ -241,20 +243,23 @@ class MtEditMetering extends React.Component {
                         onChange={this.onChange}
                       />
                     </div>
-                    <span className="per">per hour for each cluster</span>
+                    <span className="per">
+                    {t("meterings.pop-edit.costDescription")}
+                    </span>
                   </div>
                 </div>
                 <form className="res transfer-price" onChange={this.handleChange}> 
                   <div style={{ display: "flex" }}>
                     <Typography id="content-title" gutterBottom>
-                      Worker Node Cost
+                    {t("meterings.pop-edit.workerNodeCost")}
                     </Typography>
                   </div>
           
-                    <MtWorkerNodeCost
-                      delete={this.clickOnDelete.bind(this)}
-                      workers={workers}
-                    />
+                  <MtWorkerNodeCost
+                    delete={this.clickOnDelete.bind(this)}
+                    workers={workers}
+                    t={t}
+                  />
 
                   <Button
                     variant="outlined"
@@ -278,10 +283,10 @@ class MtEditMetering extends React.Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -291,6 +296,7 @@ class MtEditMetering extends React.Component {
 }
 
 const MtWorkerNodeCost = (props) => {
+  const t = props.t;
   return props.workers.map((val, idx) => {
     let cpu = `name-${idx}`,
     memory = `memory-${idx}`,
@@ -376,11 +382,11 @@ const MtWorkerNodeCost = (props) => {
             // fontSize:"25px"
           }}
         >
-          delete
+          {t("common.btn.delete")}
         </Button>
       </div>
     );
   });
 };
 
-export default MtEditMetering;
+export default withTranslation()(MtEditMetering); 

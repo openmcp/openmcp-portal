@@ -12,6 +12,7 @@ import { NavigateNext } from '@material-ui/icons';
 import PublicCloud from './public-cloud/PublicCloud';
 import { AiOutlineSetting} from "react-icons/ai";
 import DashBoardConfig from "./dashboard/DashBoardConfig";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -72,8 +73,8 @@ class Config extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "Public Cloud Auth", index: 1, param:"public-cloud" },
-      { label: "Dashboard Config", index: 2, param:"dashbaord-config" },
+      { label: "publicCloudAuth", index: 1, param:"public-cloud" },
+      { label: "dashboardConfig", index: 2, param:"dashbaord-config" },
     // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -83,6 +84,7 @@ class Config extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -94,20 +96,26 @@ class Config extends Component {
           <section className="content-header">
             <h1>
               <i><AiOutlineSetting/></i>
-              <span>Config</span>
+              <span>{t("config.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
-              </li>
-              <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/settings">Settings</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Config
+                {t("config.title")}
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {this.state.tabHeader.map((i) => {
+                  if(this.state.value+1 === i.index){
+                    return (
+                      <span>{t(`config.${i.label}.title`)}</span>
+                    );
+                  }
+                  })}
               </li>
             </ol>
           </section>
@@ -132,7 +140,7 @@ class Config extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
+                    <Tab label={t(`config.${i.label}.title`)} {...a11yProps(i.index)}
                           component={Link}
                           to={{
                             pathname: `/settings/config/${i.param}`
@@ -164,4 +172,4 @@ class Config extends Component {
   }
 }
 
-export default withStyles(styles)(Config);
+export default withTranslation()(withStyles(styles)(Config));

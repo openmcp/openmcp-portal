@@ -32,6 +32,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 // import { NavigateNext} from '@material-ui/icons';
 // import ProgressTemp from './../../modules/ProgressTemp';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from 'react-i18next';
 
 
 // let apiParams = "";
@@ -39,12 +40,7 @@ class DNS extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "project", title: "Project"},
-        { name: "name", title: "Name"},
-        { name: "dns_name", title: "Dns Name"},
-        { name: "ip", title: "IP"},
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "project", width: 120 },
         { columnName: "name", width: 230 },
@@ -60,22 +56,22 @@ class DNS extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
-kind: OpenMCPDeployment
-metadata:
-  name: openmcp-deployment2
-  namespace: openmcp
-spec:
-  replicas: 3
-  labels:
-      app: openmcp-nginx
-  template:
-    spec:
-      template:
-        spec:
-          containers:
-          - image: nginx
-            name: nginx`,
+//       editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+// kind: OpenMCPDeployment
+// metadata:
+//   name: openmcp-deployment2
+//   namespace: openmcp
+// spec:
+//   replicas: 3
+//   labels:
+//       app: openmcp-nginx
+//   template:
+//     spec:
+//       template:
+//         spec:
+//           containers:
+//           - image: nginx
+//             name: nginx`,
       openProgress : false,
       anchorEl: null,
     };
@@ -177,7 +173,13 @@ spec:
   }
 
   render() {
-
+    const {t} = this.props;
+    const columns = [
+      { name: "project", title: t("network.dns.grid.project")},
+      { name: "name", title: t("network.dns.grid.name")},
+      { name: "dns_name", title: t("network.dns.grid.dnsName")},
+      { name: "ip", title: t("network.dns.grid.ip")},
+    ];
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -338,7 +340,7 @@ spec:
                 // </div>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -380,4 +382,4 @@ spec:
   }
 }
 
-export default DNS;
+export default withTranslation()(DNS); 

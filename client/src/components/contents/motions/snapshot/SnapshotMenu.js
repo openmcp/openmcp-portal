@@ -13,6 +13,7 @@ import { NavigateNext } from "@material-ui/icons";
 import Snapshot from "./Snapshot";
 import SnapshotLog from "./SnapshotLog";
 import { HiOutlineCamera } from "react-icons/hi";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -72,7 +73,7 @@ class SnapshotMenu extends Component {
     value: 0,
     tabHeader: [
       { label: "snapshot", index: 1, param: "execute" },
-      { label: "snapshot log", index: 2, param: "log" },
+      { label: "snapshotLog", index: 2, param: "log" },
       // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -87,6 +88,7 @@ class SnapshotMenu extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -101,24 +103,28 @@ class SnapshotMenu extends Component {
               <i>
                 <HiOutlineCamera />
               </i>
-              <span>Snapshot</span>
+              <span>{t("snapshots.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
-              </li>
-              <li>
-                <NavigateNext
-                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-                />
-                <NavLink to="/settings">Motions</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                Snapshot
+                {t("snapshots.title")}
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {this.state.tabHeader.map((i) => {
+                  if(this.state.value+1 === i.index){
+                    return (
+                      <span>{t(`snapshots.${i.label}.title`)}</span>
+                    );
+                  }
+                  })}
               </li>
             </ol>
           </section>
@@ -218,4 +224,4 @@ class SnapshotMenu extends Component {
 //   );
 // }
 
-export default withStyles(styles)(SnapshotMenu);
+export default withTranslation()(withStyles(styles)(SnapshotMenu));

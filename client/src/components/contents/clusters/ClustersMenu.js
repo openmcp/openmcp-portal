@@ -12,6 +12,7 @@ import { NavigateNext } from "@material-ui/icons";
 import ClustersJoinable from "./ClustersJoinable";
 import ClustersJoined from "./ClustersJoined";
 import { FaBuffer } from "react-icons/fa";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -64,28 +65,41 @@ function a11yProps(index) {
 }
 
 class ClustersMenu extends Component {
-  state = {
-    // rows: "",
-    // completed: 0,
-    reRender: "",
-    value: 0,
-    tabHeader: [
-      { label: "Joined", index: 1, param: "joined" },
-      { label: "Joinable", index: 2, param: "joinable" },
-      // { label: "DaemonSets", index: 3 },
-    ],
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      // rows: "",
+      // completed: 0,
+      reRender: "",
+      value: 0,
+      tabHeader: [],
+    };
+  }
 
   componentWillMount() {
+    const {t} = this.props;
     if (this.props.match.url.indexOf("joinable") > 0) {
-      this.setState({ value: 1 });
+      this.setState({ value: 1 , tabHeader: [
+        { label: "joined.title", index: 1, param: "joined" },
+        { label: "joinable.title", index: 2, param: "joinable" },
+        // { label: "DaemonSets", index: 3 },
+      ],});
     } else {
-      this.setState({ value: 0 });
+      this.setState({ value: 0 , tabHeader: [
+        { label: "joined.title", index: 1, param: "joined" },
+        { label: "joinable.title", index: 2, param: "joinable" },
+        // { label: "DaemonSets", index: 3 },
+      ],});
     }
     this.props.menuData("none");
   }
 
+  languageChanged = () => {
+
+  }
+
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -100,18 +114,18 @@ class ClustersMenu extends Component {
               <i>
                 <FaBuffer />
               </i>
-              <span>Clusters</span>
+              <span>{t("clusters.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                <NavLink to="/clusters">Clusters</NavLink>
+                <NavLink to="/clusters">{t("clusters.title")}</NavLink>
               </li>
             </ol>
           </section>
@@ -137,7 +151,7 @@ class ClustersMenu extends Component {
                   {this.state.tabHeader.map((i) => {
                     return (
                       <Tab
-                        label={i.label}
+                        label={t(`clusters.${i.label}`)}
                         {...a11yProps(i.index)}
                         component={Link}
                         to={{
@@ -212,4 +226,4 @@ class ClustersMenu extends Component {
 //   );
 // }
 
-export default withStyles(styles)(ClustersMenu);
+export default withTranslation()(withStyles(styles)(ClustersMenu));

@@ -5,6 +5,7 @@ import { RiDashboardFill } from "react-icons/ri";
 import CustomDynamicView from "./CustomDynamicView";
 import DashboardSelectModule from "../modal/dashboard/DashboardSelectModule";
 import { CircularProgress } from "@material-ui/core";
+import { withTranslation } from 'react-i18next';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -103,6 +104,7 @@ class Dashboard extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div className="content-wrapper dashboard-main">
         {/* 컨텐츠 헤더 */}
@@ -112,7 +114,7 @@ class Dashboard extends Component {
               <RiDashboardFill />
             </i>
             <span onClick={this.onRefresh} style={{ cursor: "pointer" }}>
-              Dashboard
+            {t("dashboard.title")}
             </span>
             <span>
               {this.state.myComponentList.length > 0 ||
@@ -132,14 +134,14 @@ class Dashboard extends Component {
           <ol className="breadcrumb">
             <li>
               <a href="/dashboard">
-                <i className="fa fa-dashboard"></i> Home
+                <i className="fa fa-dashboard"></i> {t("common.nav.home")}
               </a>
             </li>
             <li className="active">
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
               />
-              Dashboard
+              {t("dashboard.title")}
             </li>
           </ol>
         </section>
@@ -186,5 +188,5 @@ class Dashboard extends Component {
 //     );
 //   }
 // }
+export default withTranslation()(Dashboard); 
 
-export default Dashboard;

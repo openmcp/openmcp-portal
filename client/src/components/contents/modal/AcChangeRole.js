@@ -41,6 +41,7 @@ import axios from 'axios';
 // import IconButton from "@material-ui/core/IconButton";
 // import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
+import { withTranslation } from 'react-i18next'
 
 const styles = (theme) => ({
   root: {
@@ -116,8 +117,9 @@ class AcChangeRole extends Component {
   // }
 
   handleClickOpen = () => {
+    const {t} = this.props;
     if (Object.keys(this.props.rowData).length === 0) {
-      alert("Please select account");
+      alert(t("accounts.pop-changeRole.msg.chk-selectAccount"));
       this.setState({ open: false });
       return;
     }
@@ -125,7 +127,7 @@ class AcChangeRole extends Component {
     this.setState({ 
       open: true,
       account : this.props.rowData.user_id,
-      account_role : this.props.rowData.role_name,
+      account_role : this.props.rowData.role,
       selection : []
     });
 
@@ -151,8 +153,9 @@ class AcChangeRole extends Component {
   };
 
   handleSave = (e) => {
+    const {t} = this.props;
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select account role");
+      alert(t("accounts.pop-changeRole.msg.chk-selectRole"));
       return;
     } 
 
@@ -185,6 +188,7 @@ class AcChangeRole extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -237,7 +241,7 @@ class AcChangeRole extends Component {
             textTransform: "capitalize",
           }}
         >
-          Change Role
+          {t("accounts.pop-changeRole.btn-change")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -247,13 +251,13 @@ class AcChangeRole extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Change Account Role
+            {t("accounts.pop-changeRole.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body">
               <section className="md-content">
                 {/* deployment informations */}
-                <p>User Info</p>
+                <p>{t("accounts.pop-changeRole.userInfo.title")}</p>
                 <div id="md-content-info">
                   <div class="md-partition">
                     <div class="md-item">
@@ -270,7 +274,7 @@ class AcChangeRole extends Component {
                 </div>
               </section>
               <section className="md-content">
-                <p>Select Role</p>
+                <p>{t("accounts.pop-changeRole.selectRole.title")}</p>
                 {/* cluster selector */}
                 <Paper>
                 <Grid rows={this.state.rows} columns={this.state.columns}>
@@ -343,10 +347,10 @@ class AcChangeRole extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              update
+              {t("common.btn.update")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -355,4 +359,4 @@ class AcChangeRole extends Component {
   }
 }
 
-export default AcChangeRole;
+export default withTranslation()(AcChangeRole); 

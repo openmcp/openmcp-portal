@@ -45,6 +45,7 @@ import { NavLink } from "react-router-dom";
 import { NavigateNext } from "@material-ui/icons";
 import MtAddRegionCost from "../../modal/metering/MtAddRegionCost.js";
 import MtEditMetering from "../../modal/metering/MtEditMetering.js";
+import { withTranslation } from 'react-i18next';
 
 class Metering extends Component {
   constructor(props) {
@@ -183,6 +184,7 @@ class Metering extends Component {
   );
 
   render() {
+    const {t} = this.props;
     const onSelectionChange = (selection) => {
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
@@ -203,24 +205,18 @@ class Metering extends Component {
             <i>
               <AiOutlineAreaChart />
             </i>
-            <span>Metrings</span>
+            <span>{t("meterings.title")}</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
-            </li>
-            <li>
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              <NavLink to="/settings">Settings</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
               />
-              Meterings
+              {t("meterings.title")}
             </li>
           </ol>
         </section>
@@ -480,4 +476,4 @@ class MeteringWorker extends Component {
   }
 }
 
-export default Metering;
+export default withTranslation()(Metering); 

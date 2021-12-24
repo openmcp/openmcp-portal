@@ -13,6 +13,7 @@ import AlertLog from './AlertLog';
 import SetThreshold from './SetThreshold';
 import { AiFillAlert} from "react-icons/ai";
 import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -73,7 +74,7 @@ class Threshold extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "alert log", index: 1, param:"alert-log" },
+      { label: "alertLog", index: 1, param:"alert-log" },
       { label: "threshold", index: 2, param:"set-threshold" },
     // { label: "DaemonSets", index: 3 },
     ],
@@ -90,6 +91,7 @@ class Threshold extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -99,8 +101,6 @@ class Threshold extends Component {
     AsyncStorage.getItem("roles", (err, result) => {
       role = result;
     });
-    
-
 
     return (
       <div>
@@ -109,20 +109,26 @@ class Threshold extends Component {
           <section className="content-header">
             <h1>
             <i><AiFillAlert/></i>
-              <span>Alert</span>
+              <span>{t("alert.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/settings">Settings</NavLink>
+                {t("alert.title")}
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Alert
+                {this.state.tabHeader.map((i) => {
+                  if(this.state.value+1 === i.index){
+                    return (
+                      <span>{t(`alert.${i.label}.title`)}</span>
+                    );
+                  }
+                  })}
               </li>
             </ol>
           </section>
@@ -147,7 +153,7 @@ class Threshold extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                       return (
-                      <Tab label={i.label} {...a11yProps(i.index)}
+                      <Tab label={t(`alert.${i.label}.title`)} {...a11yProps(i.index)}
                             component={Link}
                             to={{
                               pathname: `/settings/alert/${i.param}`
@@ -196,4 +202,4 @@ class Threshold extends Component {
   //   );
   // }
 
-export default withStyles(styles)(Threshold);
+export default withTranslation()(withStyles(styles)(Threshold));

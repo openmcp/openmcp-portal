@@ -11,7 +11,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-
+import { withTranslation } from 'react-i18next';
 
 // let apiParams = "";
 class ServicesDetail extends Component {
@@ -67,22 +67,31 @@ class ServicesDetail extends Component {
   };
 
   render() {
+    const {t} =this.props;
     return (
       <div>
         <div className="content-wrapper fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            { this.props.match.params.service}
-              <small>Service Overview</small>
+              {t("network.services.detail.title")}
+              <small> { this.props.match.params.service}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Netowork
+                <NavLink to="/network"> {t("network.title")}</NavLink>
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavLink to="/network/services"> {t("network.services.title")}</NavLink>
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("network.services.detail.title")}
               </li>
             </ol>
           </section>
@@ -91,10 +100,10 @@ class ServicesDetail extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
+            <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
             // <Workloads rowData={this.state.rows.workloads}/>,
-            <Pods rowData={this.state.rows.pods}/>,
-            <Events rowData={this.state.rows.events}/>
+            <Pods rowData={this.state.rows.pods} t={t}/>,
+            <Events rowData={this.state.rows.events} t={t}/>
             ]
           ) : (
             <CircularProgress
@@ -119,30 +128,31 @@ class BasicInfo extends Component {
   //   }
   // }
   render(){
+    const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">{t("network.services.detail.basicInfo.title")}</div>
         <div className="cb-body">
           <div style={{display:"flex"}}>
             <div className="cb-body-left" style={{width:"50%"}}>
               <div>
-                <span>Name : </span>
+                <span>{t("network.services.detail.basicInfo.name")} : </span>
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                  <span>Project : </span>
+                  <span>{t("network.services.detail.basicInfo.project")} : </span>
                   {this.props.rowData.project}
                 </div>
               <div>
-                <span>Type : </span>
+                <span>{t("network.services.detail.basicInfo.type")} : </span>
                 {this.props.rowData.type}
               </div>
               <div>
-                <span>Session Affinity : </span>
+                <span>{t("network.services.detail.basicInfo.affinity")} : </span>
                 {this.props.rowData.session_affinity}
               </div>
               <div>
-                <span>Selector : </span>
+                <span>{t("network.services.detail.basicInfo.selector")} : </span>
                   {this.props.rowData.selector}
               </div>
               {/* <div>
@@ -152,23 +162,23 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Cluster : </span>
+                <span>{t("network.services.detail.basicInfo.cluster")} : </span>
                 {this.props.rowData.cluster}
               </div>
               <div>
-                <span>Cluster IP : </span>
+                <span>{t("network.services.detail.basicInfo.clusterIp")} : </span>
                 {this.props.rowData.cluster_ip}
               </div>
               <div>
-                <span>Externer IP : </span>
+                <span>{t("network.services.detail.basicInfo.externerIp")} : </span>
                 {this.props.rowData.external_ip}
               </div>
               <div>
-                <span>Endpoints : </span>
+                <span>{t("network.services.detail.basicInfo.endpoints")} : </span>
                 {this.props.rowData.endpoints}
               </div>
               <div>
-                <span>Created Time : </span>
+                <span>{t("network.services.detail.basicInfo.createdTime")} : </span>
                 {this.props.rowData.created_time}
               </div>
             </div>
@@ -307,18 +317,7 @@ class Pods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status"},
-        { name: "cluster", title: "Cluster"},
-        { name: "project", title: "Project" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "node", title: "Node" },
-        { name: "node_ip", title: "Node IP" },
-        // { name: "cpu", title: "CPU" },
-        // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 330 },
         { columnName: "status", width: 100 },
@@ -373,6 +372,19 @@ class Pods extends Component {
   // };
 
   render() {
+    const t = this.props.t;
+    const columns = [
+      { name: "name", title: t("pods.pod.grid.name") },
+      { name: "status", title: t("pods.pod.grid.status") },
+      { name: "cluster", title: t("pods.pod.grid.cluster") },
+      { name: "project", title: t("pods.pod.grid.project") },
+      { name: "pod_ip", title: t("pods.pod.grid.podIp") },
+      { name: "node", title: t("pods.pod.grid.node") },
+      { name: "node_ip", title: t("pods.pod.grid.nodeIp") },
+      // { name: "cpu", title: "CPU" },
+      // { name: "memory", title: "Memory" },
+      { name: "created_time", title: t("pods.pod.grid.createdTime") },
+    ];
 
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -432,7 +444,8 @@ class Pods extends Component {
             {...props}
             style={{ cursor: "pointer" }}
           ><Link to={{
-            pathname: `/pods/${props.value}`,
+            pathname: `/pods/${props.value}/overview`,
+            search:`cluster=${row.cluster}&project=${row.project}`,
             state: {
               data : row
             }
@@ -460,14 +473,14 @@ class Pods extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Pods</div>
+        <div className="cb-header">{t("pods.title")}</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
               [
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -513,14 +526,7 @@ class Events extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "project", title: "Project" },
-        { name: "type", title: "Type" },
-        { name: "reason", title: "Reason" },
-        { name: "object", title: "Object" },
-        { name: "message", title: "Message" },
-        { name: "time", title: "Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "project", width: 150 },
         { columnName: "type", width: 150 },
@@ -571,6 +577,16 @@ class Events extends Component {
   // };
 
   render() {
+    const t = this.props.t;
+    const columns = [
+      { name: "project", title: t("network.services.detail.events.grid.project") },
+      { name: "type", title:  t("network.services.detail.events.grid.type") },
+      { name: "reason", title:  t("network.services.detail.events.grid.reason") },
+      { name: "object", title:  t("network.services.detail.events.grid.object") },
+      { name: "message", title:  t("network.services.detail.events.grid.message") },
+      { name: "time", title:  t("network.services.detail.events.grid.createdTime") },
+    ];
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -589,14 +605,16 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">
+          {t("network.services.detail.events.title")}
+        </div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
               [
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -638,5 +656,4 @@ class Events extends Component {
   };
 };
 
-
-export default ServicesDetail;
+export default withTranslation()(ServicesDetail); 

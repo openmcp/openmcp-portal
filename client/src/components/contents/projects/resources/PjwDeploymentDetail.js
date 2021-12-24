@@ -26,6 +26,8 @@ import {
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import { withTranslation } from 'react-i18next';
+
 
 // import { withStyles, makeStyles } from "@material-ui/core/styles";
 // import clsx from "clsx";
@@ -102,12 +104,13 @@ class PjwDeploymentDetail extends Component {
 
 
   render() {
+    const {t} = this.props;
     return (
       <div>
         <div className="sub-content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
           <section className="sub-content-header" style={{ paddingTop: 15 }}>
-            Overview
+            {t("projects.detail.resources.workloads.deployments.detail.title")}
             <small>
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
@@ -133,14 +136,14 @@ class PjwDeploymentDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} />,
-                <ReplicaStatus refresh={this.refresh} />,
-                <Pods rowData={this.state.rows.pods} />,
-                <Ports rowData={this.state.rows.ports} />,
+                <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
+                <ReplicaStatus refresh={this.refresh} t={t}/>,
+                <Pods rowData={this.state.rows.pods} t={t}/>,
+                <Ports rowData={this.state.rows.ports} t={t}/>,
                 // <PhysicalResources
                 //   rowData={this.state.rows.physical_resources}
                 // />,
-                <Events rowData={this.state.rows.events} />,
+                <Events rowData={this.state.rows.events} t={t}/>,
               ]
             ) : (
               <CircularProgress
@@ -158,9 +161,12 @@ class PjwDeploymentDetail extends Component {
 
 class BasicInfo extends Component {
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">
+        {t("projects.detail.resources.workloads.deployments.detail.basicInfo.title")}
+          </div>
         <div className="cb-body">
           <div style={{display:"flex"}}>
             <div className="cb-body-left">
@@ -312,6 +318,7 @@ class ReplicaStatus extends React.Component {
   }
 
   render() {
+    const t = this.props.t;
     const rectangle = (status, pId) => {
       return (
         <div className="rectangle"
@@ -333,7 +340,8 @@ class ReplicaStatus extends React.Component {
 
     return (
       <div className="content-box replica-set">
-        <div className="cb-header">Replica Status</div>
+        <div className="cb-header">{t(`projects.detail.resources.workloads.deployments.detail.replicaStatus.title`)}
+</div>
         <div className="cb-body" style={{width:"100%"}}>
           {/* <div style={{margin: "auto", width:"fit-content"}}> */}
           <div>
@@ -429,7 +437,6 @@ class Pods extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log("pods update");
     if (this.props.rowData !== prevProps.rowData) {
       this.setState({
         ...this.state,
@@ -462,7 +469,7 @@ class Pods extends Component {
   // };
 
   render() {
-
+    const t = this.props.t;
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -578,7 +585,7 @@ class Pods extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Pods</div>
+        <div className="cb-header">{t(`projects.detail.resources.workloads.deployments.detail.pods.title`)}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -685,6 +692,7 @@ class Ports extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -703,7 +711,7 @@ class Ports extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Ports</div>
+        <div className="cb-header">{t(`projects.detail.resources.workloads.deployments.detail.ports.title`)}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -854,6 +862,7 @@ class Events extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -872,7 +881,7 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">{t(`projects.detail.resources.workloads.deployments.detail.events.title`)}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -923,4 +932,4 @@ class Events extends Component {
   }
 }
 
-export default PjwDeploymentDetail;
+export default withTranslation()(PjwDeploymentDetail); 

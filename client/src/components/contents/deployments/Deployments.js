@@ -43,20 +43,15 @@ import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
 import { AiOutlineDeploymentUnit } from "react-icons/ai";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from 'react-i18next';
+
 
 // let apiParams = "";
 class Deployments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Ready" },
-        { name: "cluster", title: "Cluster" },
-        { name: "project", title: "Project" },
-        { name: "image", title: "Image" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
         { columnName: "status", width: 100 },
@@ -80,19 +75,22 @@ class Deployments extends Component {
       editorContext: `apiVersion: openmcp.k8s.io/v1alpha1
 kind: OpenMCPDeployment
 metadata:
-  name: openmcp-deployment2
-  namespace: openmcp
+  name: [object name]
+  namespace: [namespace name]
 spec:
-  replicas: 3
+  clusters:
+  - [cluster1]
+  - [cluster2]
+  replicas: [replicas(number)]
   labels:
-      app: openmcp-nginx
+      app: [application name]
   template:
     spec:
       template:
         spec:
           containers:
-          - image: nginx
-            name: nginx`,
+          - image: [container image]
+            name: [container name]`,
       openProgress: false,
       anchorEl: null,
       projects: "",
@@ -282,6 +280,15 @@ spec:
     return <Table.Row {...props} key={props.tableRow.key} />;
   };
   render() {
+    const {t} = this.props;
+    const columns = [
+      { name: "name", title: t("deployments.grid.name") },
+      { name: "status", title: t("deployments.grid.ready") },
+      { name: "cluster", title: t("deployments.grid.cluster") },
+      { name: "project", title: t("deployments.grid.project") },
+      { name: "image", title: t("deployments.grid.image") },
+      { name: "created_time", title: t("deployments.grid.createdTime") },
+    ]
     const onSelectionChange = (selection) => {
       // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
@@ -315,18 +322,18 @@ spec:
         <section className="content-header" onClick={this.onRefresh}>
           <h1>
             <i><AiOutlineDeploymentUnit/></i>
-            <span>Deployments</span>
+            <span>{t("deployments.title")}</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <Link to="/dashboard">Home</Link>
+              <Link to="/dashboard">{t("common.nav.home")}</Link>
             </li>
             <li className="active">
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
               />
-              Deployments
+              {t("deployments.title")}
             </li>
           </ol>
         </section>
@@ -409,8 +416,8 @@ spec:
                               }}
                             >
                               <Editor
-                                btTitle="create"
-                                title="Create Deployment"
+                                btTitle={t("deployments.pop-create.btn-create")}
+                                title={t("deployments.pop-create.title")}
                                 context={this.state.editorContext}
                                 excuteScript={this.excuteScript}
                                 menuClose={handleClose}
@@ -422,7 +429,7 @@ spec:
                     )}
                   </Popper>
                 </div>,
-                <Grid rows={this.state.rows} columns={this.state.columns}>
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -491,4 +498,4 @@ spec:
   }
 }
 
-export default Deployments;
+export default withTranslation()(Deployments); 

@@ -15,6 +15,7 @@ import axios from "axios";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
 // import Confirm2 from "../../../modules/Confirm2";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -85,20 +86,21 @@ class EditKVMAuth extends Component {
   };
 
   handleSave = (e) => {
+    const {t} = this.props;
     if (this.state.cluster === ""){
-      alert("Please enter Cluster Name");
+      alert(t("config.publicCloudAuth.kvm.pop-common.msg.chk-cluster"));
       return;
     } else if (this.state.agentURL === ""){
-      alert("Please enter Agent URL");
+      alert(t("config.publicCloudAuth.kvm.pop-common.msg.chk-kvmAgentUrl"));
       return;
     } else if (this.state.agentPort === ""){
-      alert("Please enter Agent Port");
+      alert(t("config.publicCloudAuth.kvm.pop-common.msg.chk-kvmAgentPort"));
       return;
     } else if (this.state.mClusterName === ""){
-      alert("Please enter Master Cluster VM Name");
+      alert(t("config.publicCloudAuth.kvm.pop-common.msg.chk-masterVmName"));
       return;
     } else if (this.state.mClusterPwd === ""){
-      alert("Please enter Master Cluster Password");
+      alert(t("config.publicCloudAuth.kvm.pop-common.msg.chk-masterVmPwd"));
       return;
     } 
 
@@ -164,6 +166,7 @@ class EditKVMAuth extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -198,7 +201,7 @@ class EditKVMAuth extends Component {
             <div className="md-contents-body" style={{minWidth:"500px"}}>
               <section className="md-content">
                 <div className="props">
-                  <p>Cluster</p>
+                  <p>{t("config.publicCloudAuth.kvm.pop-common.cluster")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -211,7 +214,7 @@ class EditKVMAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>KVM Agent URL</p>
+                  <p>{t("config.publicCloudAuth.kvm.pop-common.kvmAgentUrl")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -224,7 +227,7 @@ class EditKVMAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>KVM Agent Port</p>
+                  <p>{t("config.publicCloudAuth.kvm.pop-common.kvmAgentPort")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -237,7 +240,7 @@ class EditKVMAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Cluster Master VM Name</p>
+                  <p>{t("config.publicCloudAuth.kvm.pop-common.masterVmName")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -250,7 +253,7 @@ class EditKVMAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Cluster Master VM Password</p>
+                  <p>{t("config.publicCloudAuth.kvm.pop-common.masterVmPwd")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -267,10 +270,10 @@ class EditKVMAuth extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -279,4 +282,4 @@ class EditKVMAuth extends Component {
   }
 }
 
-export default EditKVMAuth;
+export default withTranslation()(EditKVMAuth); 

@@ -1,21 +1,21 @@
-export function getMenu(pathParams) {
+export function getMenu(pathParams, t) {
   const menuData = {
     clusters : [
       {
         type: "single",
-        title : "Overview",
+        title : t("detailLeftMenu.cluster.overview"),
         path : "/clusters/" + pathParams.cluster + "/overview",
         state : pathParams.state
       },
       {
         type: "single",
-        title : "Nodes",
+        title :  t("detailLeftMenu.cluster.nodes"),
         path : "/clusters/" + pathParams.cluster + "/nodes",
         state : pathParams.state
       },
       {
         type: "single",
-        title : "Pods",
+        title :  t("detailLeftMenu.cluster.pods"),
         path : "/clusters/" + pathParams.cluster + "/pods",
         state : pathParams.state
       },
@@ -56,38 +56,38 @@ export function getMenu(pathParams) {
     projects : [
       {
         type: "single",
-        title : "Overview",
+        title : t("detailLeftMenu.project.overview"),
         path : "/projects/"+pathParams.project + "/overview",
         searchString: pathParams.searchString,
         state : pathParams.state,
       },
       {
         type: "multi",
-        title : "Resources",
+        title : t("detailLeftMenu.project.resources.title"),
         path : "/projects/"+pathParams.project + "/resources",
         searchString: pathParams.searchString,
         state : pathParams.state,
         sub : [
-          { title: "Workloads", path: "/projects/"+pathParams.project+"/resources/workloads", searchString: pathParams.searchString },
-          { title: "Pods", path: "/projects/"+pathParams.project+"/resources/pods", searchString: pathParams.searchString },
-          { title: "Services", path: "/projects/"+pathParams.project+"/resources/services", searchString: pathParams.searchString },
-          { title: "Ingress", path: "/projects/"+pathParams.project+"/resources/ingress", searchString: pathParams.searchString },
+          { title: t("detailLeftMenu.project.resources.workloads"), path: "/projects/"+pathParams.project+"/resources/workloads", searchString: pathParams.searchString },
+          { title: t("detailLeftMenu.project.resources.pods"), path: "/projects/"+pathParams.project+"/resources/pods", searchString: pathParams.searchString },
+          { title: t("detailLeftMenu.project.resources.services"), path: "/projects/"+pathParams.project+"/resources/services", searchString: pathParams.searchString },
+          { title: t("detailLeftMenu.project.resources.ingress"), path: "/projects/"+pathParams.project+"/resources/ingress", searchString: pathParams.searchString },
         ]
       },
       {
         type: "single",
-        title : "Volumes",
+        title : t("detailLeftMenu.project.volumnes"),
         path : "/projects/"+pathParams.project + "/volumes", searchString: pathParams.searchString,
         state : pathParams.state,
       },
       {
         type: "multi",
-        title : "Config",
+        title : t("detailLeftMenu.project.config.title"),
         path : "/projects/"+pathParams.project + "/config", searchString: pathParams.searchString,
         state : pathParams.state,
         sub : [
-          { title: "Secrets", path: "/projects/"+pathParams.project + "/config/secrets", searchString: pathParams.searchString},
-          { title: "ConfigMaps", path: "/projects/"+pathParams.project+"/config/config_maps", searchString: pathParams.searchString},
+          { title: t("detailLeftMenu.project.config.secrets"), path: "/projects/"+pathParams.project + "/config/secrets", searchString: pathParams.searchString},
+          { title: t("detailLeftMenu.project.config.configmaps"), path: "/projects/"+pathParams.project+"/config/config_maps", searchString: pathParams.searchString},
         ]
       },
       // {

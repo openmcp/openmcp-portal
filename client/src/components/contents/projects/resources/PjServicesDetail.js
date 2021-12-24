@@ -13,7 +13,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-
+import { withTranslation } from 'react-i18next';
 
 // let apiParams = "";
 class PjServicesDetail extends Component {
@@ -69,26 +69,35 @@ class PjServicesDetail extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div>
         <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            {this.props.match.params.service}
-              <small>Service Overview</small>
+              {t("network.services.detail.title")}
+              <small>{this.props.match.params.service}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/projects">Projects</NavLink>
+                <NavLink to="/projects">{t("projects.title")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Resources
+                {t("projects.detail.resources.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.detail.resources.services.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("network.services.detail.title")}
               </li>
             </ol>
           </section>
@@ -97,10 +106,10 @@ class PjServicesDetail extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <Workloads rowData={this.state.rows.workloads}/>,
-            <Pods rowData={this.state.rows.pods}/>,
-            <Events rowData={this.state.rows.events}/>
+            <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
+            // <Workloads rowData={this.state.rows.workloads} t={t}/>,
+            <Pods rowData={this.state.rows.pods} t={t}/>,
+            <Events rowData={this.state.rows.events} t={t}/>
             ]
           ) : (
             <CircularProgress
@@ -118,9 +127,10 @@ class PjServicesDetail extends Component {
 
 class BasicInfo extends Component {
   render(){
+    const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">{t("network.services.detail.basicInfo.title")}</div>
         <div className="cb-body">
           <div style={{display:"flex"}}>
             <div className="cb-body-left">
@@ -179,128 +189,129 @@ class BasicInfo extends Component {
   }
 }
 
-class Workloads extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "type", title: "Type" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "name", width: 400 },
-        { columnName: "status", width: 150 },
-        { columnName: "type", width: 150 },
-      ],
-      rows: this.props.rowData,
+// class Workloads extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       columns: [
+//         { name: "name", title: "Name" },
+//         { name: "status", title: "Status" },
+//         { name: "type", title: "Type" },
+//       ],
+//       defaultColumnWidths: [
+//         { columnName: "name", width: 400 },
+//         { columnName: "status", width: 150 },
+//         { columnName: "type", width: 150 },
+//       ],
+//       rows: this.props.rowData,
 
-      // Paging Settings
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 10, 
-      pageSizes: [5, 10, 15, 0],
+//       // Paging Settings
+//       currentPage: 0,
+//       setCurrentPage: 0,
+//       pageSize: 10, 
+//       pageSizes: [5, 10, 15, 0],
 
-      completed: 0,
-    };
-  }
+//       completed: 0,
+//     };
+//   }
 
-  componentWillMount() {
-    // this.props.onSelectMenu(false, "");
-  }
+//   componentWillMount() {
+//     // this.props.onSelectMenu(false, "");
+//   }
 
   
 
-  // callApi = async () => {
-  //   const response = await fetch("/clusters");
-  //   const body = await response.json();
-  //   return body;
-  // };
+//   // callApi = async () => {
+//   //   const response = await fetch("/clusters");
+//   //   const body = await response.json();
+//   //   return body;
+//   // };
 
-  // progress = () => {
-  //   const { completed } = this.state;
-  //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
-  // };
+//   // progress = () => {
+//   //   const { completed } = this.state;
+//   //   this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
+//   // };
 
-  // //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  // componentDidMount() {
-  //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
-  //   this.timer = setInterval(this.progress, 20);
-  //   this.callApi()
-  //     .then((res) => {
-  //       this.setState({ rows: res });
-  //       clearInterval(this.timer);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+//   // //컴포넌트가 모두 마운트가 되었을때 실행된다.
+//   // componentDidMount() {
+//   //   //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+//   //   this.timer = setInterval(this.progress, 20);
+//   //   this.callApi()
+//   //     .then((res) => {
+//   //       this.setState({ rows: res });
+//   //       clearInterval(this.timer);
+//   //     })
+//   //     .catch((err) => console.log(err));
+//   // };
 
-  render() {
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-    const Row = (props) => {
-      // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
-    };
+//   render() {
+//     const t = this.props.t;
+//     const HeaderRow = ({ row, ...restProps }) => (
+//       <Table.Row
+//         {...restProps}
+//         style={{
+//           cursor: "pointer",
+//           backgroundColor: "whitesmoke",
+//           // ...styles[row.sector.toLowerCase()],
+//         }}
+//         // onClick={()=> alert(JSON.stringify(row))}
+//       />
+//     );
+//     const Row = (props) => {
+//       // console.log("row!!!!!! : ",props);
+//       return <Table.Row {...props} key={props.tableRow.key}/>;
+//     };
 
-    return (
-      <div className="content-box">
-        <div className="cb-header">Workloads</div>
-        <div className="cb-body">
-        <Paper>
-            {this.state.rows ? (
-              [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
-                  <Toolbar />
-                  {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <IntegratedFiltering />
-                  <SearchPanel style={{ marginLeft: 0 }} />
+//     return (
+//       <div className="content-box">
+//         <div className="cb-header">Workloads</div>
+//         <div className="cb-body">
+//         <Paper>
+//             {this.state.rows ? (
+//               [
+//                 <Grid
+//                   rows={this.state.rows}
+//                   columns={this.state.columns}
+//                 >
+//                   <Toolbar />
+//                   {/* 검색 */}
+//                   <SearchState defaultValue="" />
+//                   <IntegratedFiltering />
+//                   <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* Sorting */}
-                  <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
+//                   {/* Sorting */}
+//                   <SortingState
+//                     // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+//                   />
+//                   <IntegratedSorting />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
+//                   {/* 페이징 */}
+//                   <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+//                   <IntegratedPaging />
+//                   <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  {/* 테이블 */}
-                  <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
-        </div>
-      </div>
-    );
-  };
-};
+//                   {/* 테이블 */}
+//                   <Table rowComponent={Row} />
+//                   <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+//                   <TableHeaderRow
+//                     showSortingControls
+//                     rowComponent={HeaderRow}
+//                   />
+//                 </Grid>,
+//               ]
+//             ) : (
+//               <CircularProgress
+//                 variant="determinate"
+//                 value={this.state.completed}
+//                 style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+//               ></CircularProgress>
+//             )}
+//           </Paper>
+//         </div>
+//       </div>
+//     );
+//   };
+// };
 
 class Pods extends Component {
   constructor(props) {
@@ -364,6 +375,7 @@ class Pods extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -382,7 +394,7 @@ class Pods extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Pods</div>
+        <div className="cb-header">{t("pods.title")}</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -493,6 +505,7 @@ class Events extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -511,7 +524,7 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">{t("network.services.detail.events.title")}</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -560,5 +573,4 @@ class Events extends Component {
   };
 };
 
-
-export default PjServicesDetail;
+export default withTranslation()(PjServicesDetail); 

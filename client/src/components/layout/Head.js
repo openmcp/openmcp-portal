@@ -1,14 +1,6 @@
 import React, { Component } from "react";
-// import { Settings } from "@material-ui/icons";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-
 import { Link } from "react-router-dom";
-// //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-// import Grow from '@material-ui/core/Grow';
-// import Paper from '@material-ui/core/Paper';
-// import Popper from '@material-ui/core/Popper';
-// import MenuItem from '@material-ui/core/MenuItem';
-// import MenuList from '@material-ui/core/MenuList';
 import * as utilLog from "./../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import LanguageSwitch from "../modules/LanguageSwitch.js";
@@ -18,7 +10,6 @@ class Head extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // anchorEl:null,
       open: false,
       selectedMenu: "dashboard",
     };
@@ -28,47 +19,11 @@ class Head extends Component {
 
   componentWillUpdate(prevProps, prevState) {
     if (this.props.path !== prevProps.path) {
-      // if (prevProps.path.indexOf('/dashboard') >= 0 ){
-      //   this.setState({selectedMenu:'dashboard'})
-      // } else if (prevProps.path.indexOf('/clusters') >= 0 ) {
-      //   this.setState({selectedMenu:'clusters'})
-      // } else if (prevProps.path.indexOf('/nodes') >= 0 ) {
-      //   this.setState({selectedMenu:'nodes'})
-      // } else if (prevProps.path.indexOf('/projects') >= 0 ) {
-      //   this.setState({selectedMenu:'projects'})
-      // } else if (prevProps.path.indexOf('/deployments') >= 0 ) {
-      //   this.setState({selectedMenu:'deployments'})
-      // } else if (prevProps.path.indexOf('/pods') >= 0 ) {
-      //   this.setState({selectedMenu:'pods'})
-      // } else if (prevProps.path.indexOf('/network') >= 0 ) {
-      //   this.setState({selectedMenu:'network'})
-      // } else if (prevProps.path.indexOf('/settings') >= 0 ){
-      //   this.setState({selectedMenu:'settings'})
-      // }
       this.selectionMenu(prevProps.path);
     }
   }
 
   componentWillMount() {
-    // var menu = window.location.pathname
-    // // console.log(menu)
-    // if (menu.indexOf('/dashboard') >= 0 ){
-    //   this.setState({selectedMenu:'dashboard'})
-    // } else if (menu.indexOf('/clusters') >= 0 ) {
-    //   this.setState({selectedMenu:'clusters'})
-    // } else if (menu.indexOf('/nodes') >= 0 ) {
-    //   this.setState({selectedMenu:'nodes'})
-    // } else if (menu.indexOf('/projects') >= 0 ) {
-    //   this.setState({selectedMenu:'projects'})
-    // } else if (menu.indexOf('/deployments') >= 0 ) {
-    //   this.setState({selectedMenu:'deployments'})
-    // } else if (menu.indexOf('/pods') >= 0 ) {
-    //   this.setState({selectedMenu:'pods'})
-    // } else if (menu.indexOf('/network') >= 0 ) {
-    //   this.setState({selectedMenu:'network'})
-    // } else if (menu.indexOf('/settings') >= 0 ){
-    //   this.setState({selectedMenu:'settings'})
-    // }
     this.selectionMenu(this.props.path);
   }
 
@@ -151,9 +106,9 @@ class Head extends Component {
 
         <nav className="navbar navbar-static-top">
           <div className="top-menu navbar-right">
-            {/* <div>
+            <div>
               <LanguageListMenu />
-            </div> */}
+            </div>
             <div
               className={"main-menu " + this.state.selectedMenu}
               id="accounts"
@@ -198,3 +153,4 @@ class Head extends Component {
 }
 
 export default Head;
+// export default withTranslation()(Head);

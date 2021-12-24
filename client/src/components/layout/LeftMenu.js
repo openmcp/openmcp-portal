@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { NavLink } from 'react-router-dom';
 import * as fnMenuList from './LeftMenuData.js';
 // import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import { withTranslation } from 'react-i18next';
 
 class LeftMenu extends Component {
   constructor(props){
@@ -13,21 +14,20 @@ class LeftMenu extends Component {
     }
   }
 
-
-
-  shouldComponentUpdate(prevProps, prevState) {
-    if (this.props.menu !== prevProps.menu || this.props.title !== prevProps.title){
-      return true;
-    } else {
-      if(this.props.pathParams.hasOwnProperty('searchString') && this.props.pathParams.searchString !== prevProps.pathParams.searchString){
-        return true;
-      }
-      return false;
-    }
-  }
+  // shouldComponentUpdate(prevProps, prevState) {
+  //   if (this.props.menu !== prevProps.menu || this.props.title !== prevProps.title){
+  //     return true;
+  //   } else {
+  //     if(this.props.pathParams.hasOwnProperty('searchString') && this.props.pathParams.searchString !== prevProps.pathParams.searchString){
+  //       return true;
+  //     }
+  //     return false;
+  //   }
+  // }
 
   render() {
-    const menuList = fnMenuList.getMenu(this.props.pathParams);
+    const {t} = this.props;
+    const menuList = fnMenuList.getMenu(this.props.pathParams, t);
     const lists = [];
     menuList[this.props.menu].forEach((item) => {
       if(item.type === "single"){
@@ -111,4 +111,4 @@ class LeftMenu extends Component {
   }
 }
 
-export default LeftMenu;
+export default withTranslation()(LeftMenu); 

@@ -15,6 +15,7 @@ import axios from "axios";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
 // import Confirm2 from "../../../modules/Confirm2";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -81,17 +82,18 @@ class EditEKSAuth extends Component {
   };
 
   handleSave = (e) => {
+    const {t} = this.props;
     if (this.state.cluster === ""){
-      alert("Please enter Cluster Name");
+      alert(t("config.publicCloudAuth.eks.pop-common.msg.chk-cluster"));
       return;
     } else if (this.state.secretKey === ""){
-      alert("Please enter Secret Key");
+      alert(t("config.publicCloudAuth.eks.pop-common.msg.chk-secretKey"));
       return;
     } else if (this.state.accessKey === ""){
-      alert("Please enter Access Key");
+      alert(t("config.publicCloudAuth.eks.pop-common.msg.chk-accessKey"));
       return;
     } else if (this.state.region === ""){
-      alert("Please enter Region");
+      alert(t("config.publicCloudAuth.eks.pop-common.msg.chk-region"));
       return;
     }
 
@@ -159,6 +161,7 @@ class EditEKSAuth extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -193,7 +196,7 @@ class EditEKSAuth extends Component {
             <div className="md-contents-body" style={{minWidth:"500px"}}>
               <section className="md-content">
               <div className="props">
-                  <p>Cluster</p>
+                  <p>{t("config.publicCloudAuth.eks.pop-common.cluster")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -206,7 +209,7 @@ class EditEKSAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Secret key</p>
+                  <p>{t("config.publicCloudAuth.eks.pop-common.secretKey")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -219,7 +222,7 @@ class EditEKSAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Access key</p>
+                  <p>{t("config.publicCloudAuth.eks.pop-common.accessKey")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -232,7 +235,7 @@ class EditEKSAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Region</p>
+                  <p>{t("config.publicCloudAuth.eks.pop-common.region")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -249,10 +252,10 @@ class EditEKSAuth extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -261,4 +264,4 @@ class EditEKSAuth extends Component {
   }
 }
 
-export default EditEKSAuth;
+export default withTranslation()(EditEKSAuth); 

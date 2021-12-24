@@ -12,6 +12,7 @@ import MetricSelectBox from "./module/MetricSelectBox.js";
 
 import MetricNamespace from "./sector/MetricNamespace.js";
 import MetricNode from "./sector/MetricNode.js";
+import { withTranslation } from 'react-i18next';
 
 
 class MultipleMetrics extends Component {
@@ -23,6 +24,7 @@ class MultipleMetrics extends Component {
       selectBoxData : ""
     };
   }
+
   componentWillMount() {
     // this.props.menuData("none");
   }
@@ -93,9 +95,7 @@ class MultipleMetrics extends Component {
 
 
   render() {
-
-    
-
+    const {t} = this.props;
     const onSelectBoxChange = (data) => {
       this.setState({cluster : data});
     }
@@ -106,17 +106,17 @@ class MultipleMetrics extends Component {
           <h1>
             <i><AiOutlineDashboard/></i>
             <span>
-              Multiple Metrics
+              {t("multipleMetrics.title")}
             </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Multiple Metrics
+              {t("multipleMetrics.title")}
             </li>
           </ol>
         </section>
@@ -145,4 +145,4 @@ class MultipleMetrics extends Component {
   }
 }
 
-export default MultipleMetrics;
+export default withTranslation()(MultipleMetrics); 

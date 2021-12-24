@@ -23,7 +23,7 @@ import Editor from "./../../../modules/Editor";
 import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-
+import { withTranslation } from 'react-i18next';
 
 let apiParams = "";
 class PjIngress extends Component {
@@ -106,6 +106,7 @@ class PjIngress extends Component {
   }
 
   render() {
+    const {t} = this.props;
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -204,24 +205,24 @@ class PjIngress extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Ingress
+            {t("projects.detail.resources.ingress.title")}
             <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              Projects
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              {t("projects.title")}
             </li>
             <li className="active">
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              Resources
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              {t("projects.detail.resources.title")}
+            </li>
+            <li className="active">
+              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              {t("projects.detail.resources.ingress.title")}
             </li>
           </ol>
         </section>
@@ -278,4 +279,4 @@ class PjIngress extends Component {
   }
 }
 
-export default PjIngress;
+export default withTranslation()(PjIngress); 

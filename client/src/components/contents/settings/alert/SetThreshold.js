@@ -42,6 +42,7 @@ import Confirm2 from "./../../../modules/Confirm2";
 import ThCreateThreshold from "../../modal/ThCreateThreshold.js";
 import ThEditThreshold from "../../modal/ThEditThreshold.js";
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
+import { withTranslation } from "react-i18next";
 
 class SetThreshold extends Component {
   constructor(props) {
@@ -88,15 +89,6 @@ class SetThreshold extends Component {
       grEditOpen: false,
 
       confirmOpen: false,
-      confirmInfo: {
-        title: "Delete Threshold",
-        context: "Are you sure you want to Delete Host Threshold?",
-        button: {
-          open: "",
-          yes: "CONFIRM",
-          no: "CANCEL",
-        },
-      },
       confrimTarget: "",
       confirmTargetKeyname: "Threshold Name",
     };
@@ -159,8 +151,9 @@ class SetThreshold extends Component {
   //   });
   // }
   handleDeleteClick = (e) => {
+    const { t } = this.props;
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select a Host Threshold");
+      alert(t("alert.threshold.pop-delete.msg.chk-selectThreshold"));
       return;
     } else {
       this.setState({
@@ -223,6 +216,16 @@ class SetThreshold extends Component {
   };
 
   render() {
+    const { t } = this.props;
+    const confirmInfo = {
+      title: t("alert.threshold.pop-delete.confirm.title"),
+      context: t("alert.threshold.pop-delete.confirm.context"),
+      button: {
+        open: "",
+        yes: t("common.btn.confirm"),
+        no: t("common.btn.cancel"),
+      },
+    };
     const onSelectionChange = (selection) => {
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
@@ -313,7 +316,7 @@ class SetThreshold extends Component {
     return (
       <div className="sub-content-wrapper fulled">
         <Confirm2
-          confirmInfo={this.state.confirmInfo}
+          confirmInfo={confirmInfo}
           confrimTarget={this.state.confrimTarget}
           confirmTargetKeyname={this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
@@ -394,7 +397,7 @@ class SetThreshold extends Component {
                               }}
                             >
                               <div onClick={this.handleDeleteClick}>
-                                Delete Threshold
+                                {t("alert.threshold.pop-delete.btn-delete")}
                               </div>
                             </MenuItem>
                           </MenuList>
@@ -460,4 +463,4 @@ class SetThreshold extends Component {
   }
 }
 
-export default SetThreshold;
+export default withTranslation()(SetThreshold);

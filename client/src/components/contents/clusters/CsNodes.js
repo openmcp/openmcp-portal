@@ -25,25 +25,14 @@ import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
 import LinearProgressBar from "../../modules/LinearProgressBar.js";
 // import Editor from "../../modules/Editor";
+import { withTranslation } from 'react-i18next';
 
 let apiParams = "";
 class CsNodes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Node" },
-        { name: "status", title: "Status" },
-        { name: "cluster", title: "Cluster"},
-        { name: "role", title: "Role" },
-        { name: "system_version", title: "System Version" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
-        { name: "pods", title: "Pods" },
-        { name: "provider", title: "Provider" },
-        { name: "region", title: "Region" },
-        { name: "zone", title: "Zone" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
         { columnName: "status", width: 100 },
@@ -123,6 +112,20 @@ class CsNodes extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const columns= [
+      { name: "name", title: t("nodes.grid.name") },
+      { name: "status", title: t("nodes.grid.status") },
+      { name: "cluster", title: t("nodes.grid.cluster")},
+      { name: "role", title: t("nodes.grid.role") },
+      { name: "system_version", title: t("nodes.grid.version") },
+      { name: "cpu", title: t("nodes.grid.cpu") },
+      { name: "memory", title: t("nodes.grid.memory") },
+      { name: "pods", title: t("nodes.grid.pods") },
+      { name: "provider", title: t("nodes.grid.provider") },
+      { name: "region", title: t("nodes.grid.region") },
+      { name: "zone", title: t("nodes.grid.zone") },
+    ];
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -245,16 +248,19 @@ class CsNodes extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Nodes
+          {t("nodes.title")}
             <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Clusters
+              {t("clusters.title")}
+            </li>
+            <li className="active">
+              {t("nodes.title")}
             </li>
           </ol>
         </section>
@@ -265,7 +271,7 @@ class CsNodes extends Component {
                 // <Editor title="create" context={this.state.editorContext}/>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -307,4 +313,4 @@ class CsNodes extends Component {
   }
 }
 
-export default CsNodes;
+export default withTranslation()(CsNodes); 

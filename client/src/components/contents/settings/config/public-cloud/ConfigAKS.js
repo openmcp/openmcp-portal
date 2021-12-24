@@ -33,6 +33,8 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from 'react-i18next';
+
 
 class ConfigAKS extends Component {
   constructor(props) {
@@ -71,15 +73,7 @@ class ConfigAKS extends Component {
       popTitle: "",
 
       confirmOpen: false,
-      confirmInfo: {
-        title: "Delete AKS PCA Info",
-        context: "Are you sure you want to delete AKS PCA config?",
-        button: {
-          open: "",
-          yes: "CONFIRM",
-          no: "CANCEL",
-        },
-      },
+     
       confrimTarget: "",
       confirmTargetKeyname: "",
       anchorEl: null,
@@ -119,17 +113,19 @@ class ConfigAKS extends Component {
   };
 
   handleClickNew = () => {
+    const {t} = this.props;
     this.setState({
       open: true,
       new: true,
-      popTitle: "Add AKS Authentication",
+      popTitle: t("config.publicCloudAuth.aks.pop-new.title"),
       data: {},
     });
   };
 
   handleClickEdit = () => {
+    const {t} = this.props;
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select a authentication data row");
+      alert(t("config.publicCloudAuth.aks.pop-edit.msg.chk-selectAuth"));
       this.setState({ open: false });
       return;
     }
@@ -137,7 +133,7 @@ class ConfigAKS extends Component {
     this.setState({
       open: true,
       new: false,
-      popTitle: "Edit AKS Authentication",
+      popTitle: t("config.publicCloudAuth.aks.pop-edit.title"),
       data: {
         seq: this.state.selectedRow.seq,
         cluster: this.state.selectedRow.cluster,
@@ -150,8 +146,9 @@ class ConfigAKS extends Component {
   };
 
   handleClickDelete = () => {
+    const {t} = this.props;
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select a authentication data row");
+      alert(t("config.publicCloudAuth.aks.pop-delete.msg.chk-selectAuth"));
       this.setState({ open: false });
       return;
     } else {
@@ -199,6 +196,17 @@ class ConfigAKS extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const confirmInfo = {
+      title: t("config.publicCloudAuth.aks.pop-delete.title"),
+      context: t("config.publicCloudAuth.aks.pop-delete.context"),
+      button: {
+        open: "",
+        yes: t("common.btn.confirm"),
+        no: t("common.btn.cancel"),
+      },
+    };
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -242,7 +250,7 @@ class ConfigAKS extends Component {
     return (
       <div>
         <Confirm2
-          confirmInfo={this.state.confirmInfo}
+          confirmInfo={confirmInfo}
           confrimTarget={this.state.confrimTarget}
           confirmTargetKeyname={this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
@@ -266,8 +274,7 @@ class ConfigAKS extends Component {
               boxShadow: "0px 0px 3px 0px #b9b9b9",
             }}
           >
-            {" "}
-            AKS Authentications Configration
+            {t("config.publicCloudAuth.aks.description")}
           </div>
           <section className="md-content">
             <Paper>
@@ -305,7 +312,7 @@ class ConfigAKS extends Component {
                                 onClick={this.handleClickNew}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                New </div>
+                                {t("config.publicCloudAuth.aks.pop-new.btn-open")} </div>
                             </MenuItem>
                             <MenuItem
                             onKeyDown={(e) => e.stopPropagation()}
@@ -316,7 +323,7 @@ class ConfigAKS extends Component {
                                 onClick={this.handleClickEdit}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                Edit
+                                {t("config.publicCloudAuth.aks.pop-edit.btn-open")}
                               </div>
                             </MenuItem>
                             <MenuItem
@@ -328,7 +335,7 @@ class ConfigAKS extends Component {
                                 onClick={this.handleClickDelete}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                Delete
+                                {t("config.publicCloudAuth.aks.pop-delete.btn-open")}
                               </div>
                             </MenuItem>
                             </MenuList>
@@ -432,4 +439,4 @@ class ConfigAKS extends Component {
   }
 }
 
-export default ConfigAKS;
+export default withTranslation()(ConfigAKS); 

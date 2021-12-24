@@ -13,6 +13,7 @@ import ConfigEKS from './ConfigEKS';
 import ConfigGKE from './ConfigGKE';
 import ConfigAKS from './ConfigAKS';
 import ConfigKVM from './ConfigKVM';
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -73,10 +74,10 @@ class PublicCloud extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "EKS", index: 0, param:"eks" },
-      { label: "GKE", index: 1, param:"gke" },
-      { label: "AKS", index: 2, param:"aks" },
-      { label: "KVM", index: 3, param:"kvm" },
+      { label: "eks", index: 0, param:"eks" },
+      { label: "gke", index: 1, param:"gke" },
+      { label: "aks", index: 2, param:"aks" },
+      { label: "kvm", index: 3, param:"kvm" },
     // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -99,7 +100,7 @@ class PublicCloud extends Component {
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
-    const { classes } = this.props;
+    const { classes,t } = this.props;
     return (
       <div>
         <div className="sub-content-wrapper">
@@ -123,7 +124,7 @@ class PublicCloud extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
+                    <Tab label={t(`config.publicCloudAuth.${i.label}.title`)} {...a11yProps(i.index)}
                           component={Link}
                           to={{
                             pathname: `/settings/config/public-cloud/${i
@@ -175,4 +176,4 @@ class PublicCloud extends Component {
   }
 }
 
-export default withStyles(styles)(PublicCloud);
+export default withTranslation()(withStyles(styles)(PublicCloud));

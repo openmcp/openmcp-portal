@@ -39,37 +39,39 @@ import Grow from "@material-ui/core/Grow";
 import LinearProgressBar from "../../modules/LinearProgressBar.js";
 import axios from "axios";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from "react-i18next";
 
-function GoLogin() {
-  const history = useHistory();
-  const handleOnClick = useCallback(() => {
-    AsyncStorage.setItem("token", null);
-    AsyncStorage.setItem("userName", null);
-    AsyncStorage.setItem("roles", null);
-    AsyncStorage.setItem("projects", null);
-    history.push("/login");
-  }, [history]);
+// function GoLogin() {
+//   const history = useHistory();
+//   const handleOnClick = useCallback(() => {
+//     AsyncStorage.setItem("token", null);
+//     AsyncStorage.setItem("userName", null);
+//     AsyncStorage.setItem("roles", null);
+//     AsyncStorage.setItem("projects", null);
+//     history.push("/login");
+//   }, [history]);
 
-  return (
-    <button type="button" onClick={handleOnClick}>
-      Go home
-    </button>
-  );
-}
+//   return (
+//     <button type="button" onClick={handleOnClick}>
+//       Go home
+//     </button>
+//   );
+// }
 
 class ClustersJoined extends Component {
   constructor(props) {
     super(props);
+    const { t } = this.props;
     this.state = {
       columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "region", title: "Region" },
-        { name: "zone", title: "Zone" },
-        { name: "nodes", title: "Nodes" },
-        { name: "cpu", title: "CPU" },
-        { name: "ram", title: "Memory" },
-        { name: "provider", title: "Provider" },
+        { name: "name", title: t("clusters.joined.grid.name") },
+        { name: "status", title: t("clusters.joined.grid.status") },
+        { name: "region", title: t("clusters.joined.grid.region") },
+        { name: "zone", title: t("clusters.joined.grid.zone") },
+        { name: "nodes", title: t("clusters.joined.grid.nodes") },
+        { name: "cpu", title: t("clusters.joined.grid.cpu") },
+        { name: "ram", title: t("clusters.joined.grid.memory") },
+        { name: "provider", title: t("clusters.joined.grid.provider") },
         // { name: "disk", title: "Disk" },
         // { name: "network", title: "Network" },
       ],
@@ -97,15 +99,6 @@ class ClustersJoined extends Component {
       selection: [],
       selectedRow: "",
 
-      confirmInfo: {
-        title: "Cluster Unjoin Confrim",
-        context: "Are you sure you want to cancel the Cluster Join?",
-        button: {
-          open: "UNJOIN",
-          yes: "UNJOIN",
-          no: "CANCEL",
-        },
-      },
       confrimTarget: "false",
       openProgress: false,
       anchorEl: null,
@@ -117,8 +110,8 @@ class ClustersJoined extends Component {
 
   callApi = async () => {
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => { 
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     let accessToken;
@@ -127,12 +120,12 @@ class ClustersJoined extends Component {
     });
 
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
     const response = await fetch("/clusters", requestOptions);
     const body = await response.json();
@@ -161,7 +154,7 @@ class ClustersJoined extends Component {
               // //2. 만료되었을경우 로그인페이지로 이동
               // //3. 만료되지 않았을 경우, refresh토큰을 이용해 accessToken재 발급
 
-              let refreshToken = '';
+              let refreshToken = "";
               AsyncStorage.getItem("refreshToken", (err, result) => {
                 refreshToken = result;
               });
@@ -176,22 +169,28 @@ class ClustersJoined extends Component {
               const url = `/oauth/token`;
               const data = `grant_type=refresh_token&refresh_token=${refreshToken}`;
 
-              axios.post(url, data, config).then((res, err) => {
-                if (res.data.access_token !== "fail") {
-                  AsyncStorage.setItem("token", res.data.access_token);
-                  AsyncStorage.setItem("refreshToken", res.data.refresh_token);
-                  this.onRefresh();
-                } else {
-                  alert("인증이 만료되어 로그인페이지로 이동합니다.");
-                  AsyncStorage.setItem("token", null);
-                  AsyncStorage.setItem("userName", null);
-                  AsyncStorage.setItem("roles", null);
-                  AsyncStorage.setItem("projects", null);
-                  this.props.propsData.info.history.push("/login");
-                }
-              }).catch((err) => {
-                alert(err);
-              });
+              axios
+                .post(url, data, config)
+                .then((res, err) => {
+                  if (res.data.access_token !== "fail") {
+                    AsyncStorage.setItem("token", res.data.access_token);
+                    AsyncStorage.setItem(
+                      "refreshToken",
+                      res.data.refresh_token
+                    );
+                    this.onRefresh();
+                  } else {
+                    alert("인증이 만료되어 로그인페이지로 이동합니다.");
+                    AsyncStorage.setItem("token", null);
+                    AsyncStorage.setItem("userName", null);
+                    AsyncStorage.setItem("roles", null);
+                    AsyncStorage.setItem("projects", null);
+                    this.props.propsData.info.history.push("/login");
+                  }
+                })
+                .catch((err) => {
+                  alert(err);
+                });
             } else {
               alert("인증이 만료되어 로그인페이지로 이동합니다.");
               AsyncStorage.setItem("token", null);
@@ -200,11 +199,9 @@ class ClustersJoined extends Component {
               AsyncStorage.setItem("projects", null);
               this.props.propsData.info.history.push("/login");
             }
-            
-          }else{
+          } else {
             this.setState({ rows: resData });
           }
-
         }
         clearInterval(this.timer);
       })
@@ -274,6 +271,30 @@ class ClustersJoined extends Component {
   };
 
   render() {
+    const { t } = this.props;
+    const columns = [
+      { name: "name", title: t("clusters.joined.grid.name") },
+      { name: "status", title: t("clusters.joined.grid.status") },
+      { name: "region", title: t("clusters.joined.grid.region") },
+      { name: "zone", title: t("clusters.joined.grid.zone") },
+      { name: "nodes", title: t("clusters.joined.grid.nodes") },
+      { name: "cpu", title: t("clusters.joined.grid.cpu") },
+      { name: "ram", title: t("clusters.joined.grid.memory") },
+      { name: "provider", title: t("clusters.joined.grid.provider") },
+      // { name: "disk", title: "Disk" },
+      // { name: "network", title: "Network" },
+    ];
+
+    const confirmInfo = {
+      title: t("clusters.joined.pop-unjoin.title"),
+      context: t("clusters.joined.pop-unjoin.context"),
+      button: {
+        open: t("clusters.joined.btn-unjoin"),
+        yes: t("common.btn.confirm"),
+        no: t("common.btn.cancel"),
+      },
+    };
+
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => {
       var cpuPct =
@@ -536,7 +557,7 @@ class ClustersJoined extends Component {
                               }}
                             >
                               <Confirm
-                                confirmInfo={this.state.confirmInfo}
+                                confirmInfo={confirmInfo}
                                 confrimTarget={this.state.confrimTarget}
                                 confirmed={this.confirmed}
                                 menuClose={handleClose}
@@ -548,7 +569,7 @@ class ClustersJoined extends Component {
                     )}
                   </Popper>
                 </div>
-                <Grid rows={this.state.rows} columns={this.state.columns}>
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState className="search-Satste" defaultValue="" />
@@ -596,7 +617,7 @@ class ClustersJoined extends Component {
               </Paper>
             </section>,
             <section className="content" style={{ position: "relative" }}>
-              <ResourceStatus data={this.state.rows} />
+              <ResourceStatus data={this.state.rows} t={t} />
             </section>,
           ]
         ) : (
@@ -642,7 +663,9 @@ class ResourceStatus extends Component {
     const colors = ["#51BFFF", "#ecf0f5"];
     return (
       <div>
-        <div className="rs-title">Cluster Resource Status</div>
+        <div className="rs-title">
+          {this.props.t("clusters.joined.clusterResourceStatus")}
+        </div>
         {/* <div className="rap-contents" style={{display: "flex",overflow: "auto"}}> */}
         <div className="rap-contents" style={{ overflow: "auto" }}>
           {this.state.data.map((item) => {
@@ -761,4 +784,4 @@ class ResourceStatus extends Component {
   }
 }
 
-export default ClustersJoined;
+export default withTranslation()(ClustersJoined);

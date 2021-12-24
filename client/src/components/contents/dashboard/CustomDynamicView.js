@@ -9,6 +9,7 @@ import DbServiceTopology from "./DbServiceTopology";
 import DbStatus from "./DbStatus";
 import DbTopology from "./DbTopology";
 import DbWorldMapClusterStatus from "./DbWorldMapClusterStatus";
+import { withTranslation } from 'react-i18next';
 
 class CustomDynamicView extends Component {
   constructor(props) {
@@ -63,6 +64,7 @@ class CustomDynamicView extends Component {
   }
 
   componentWillMount() {
+    const {t} = this.props;
     var componentsTag = [];
     this.state.myComponentList.forEach((item) => {
       switch (item) {
@@ -111,4 +113,4 @@ class CustomDynamicView extends Component {
   }
 }
 
-export default CustomDynamicView;
+export default withTranslation()(CustomDynamicView); 

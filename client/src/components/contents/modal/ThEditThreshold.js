@@ -17,6 +17,7 @@ import {
 
 // import Paper from "@material-ui/core/Paper";
 import axios from "axios";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -54,8 +55,9 @@ class ThEditThreshold extends Component {
     });
   }
   handleClickOpen = () => {
+    const {t} = this.props;
     if (Object.keys(this.props.rowData).length === 0) {
-      alert("Please select a Host Threshold");
+      alert(t("alert.threshold.pop-edit.msg.chk-selectThreshold"));
       this.setState({ open: false });
       return;
     }
@@ -92,23 +94,25 @@ class ThEditThreshold extends Component {
   };
 
   handleUpdate = (e) => {
+    const {t} = this.props;
+
     if (this.state.cpuWarn === 0) {
-      alert("Please set 'cpu warning threshold (%)'");
+      alert(t("alert.threshold.pop-edit.msg.chk-cpuW"));
       return;
     } else if (this.state.cpuDanger === 0) {
-      alert("Please set 'cpu danger threshold (%)'");
+      alert(t("alert.threshold.pop-edit.msg.chk-cpuD"));
       return;
     } else if (this.state.ramWarn === 0) {
-      alert("Please set 'ram warning threshold (%)'");
+      alert(t("alert.threshold.pop-edit.msg.chk-memoryW"));
       return;
     } else if (this.state.ramDanger === 0) {
-      alert("Please set 'ram danger threshold (%)'");
+      alert(t("alert.threshold.pop-edit.msg.chk-memoryD"));
       return;
-    } else if (this.state.storageWarn === 0) {
-      alert("Please set 'storage warning threshold (%)'");
+    } else if (this.state.stroageWarn === 0) {
+      alert(t("alert.threshold.pop-edit.msg.chk-storageW"));
       return;
-    } else if (this.state.storageDanger === 0) {
-      alert("Please set 'storage danger threshold (%)'");
+    } else if (this.state.stroageDanger === 0) {
+      alert(t("alert.threshold.pop-edit.msg.chk-storageD"));
       return;
     }
 
@@ -148,6 +152,7 @@ class ThEditThreshold extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -176,7 +181,7 @@ class ThEditThreshold extends Component {
             textTransform: "capitalize",
           }}
         >
-          Edit Threshold
+          {t("alert.threshold.pop-edit.btn-edit")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -186,7 +191,7 @@ class ThEditThreshold extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Edit Threshold
+            {t("alert.threshold.pop-edit.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body small-grid">
@@ -199,7 +204,7 @@ class ThEditThreshold extends Component {
                           className="props pj-pc-textfield"
                           style={{ width: "50%", marginRight: "10px" }}
                         >
-                          <p>CPU Threshold (Warning)</p>
+                          <p>{t("alert.threshold.pop-edit.cpuThW")}</p>
                           <TextField
                             id="outlined-multiline-static"
                             rows={1}
@@ -217,7 +222,7 @@ class ThEditThreshold extends Component {
                           className="props pj-pc-textfield"
                           style={{ width: "50%" }}
                         >
-                          <p>CPU Threshold (Danger)</p>
+                          <p>{t("alert.threshold.pop-edit.cpuThD")}</p>
                           <TextField
                             id="outlined-multiline-static"
                             rows={1}
@@ -239,7 +244,7 @@ class ThEditThreshold extends Component {
                           className="props pj-pc-textfield"
                           style={{ width: "50%", marginRight: "10px" }}
                         >
-                          <p>Memory Threshold (Warning)</p>
+                          <p>{t("alert.threshold.pop-edit.memoryThW")}</p>
                           <TextField
                             id="outlined-multiline-static"
                             rows={1}
@@ -257,7 +262,7 @@ class ThEditThreshold extends Component {
                           className="props pj-pc-textfield"
                           style={{ width: "50%" }}
                         >
-                          <p>Memory Threshold (Danger)</p>
+                          <p>{t("alert.threshold.pop-edit.memoryThD")}</p>
                           <TextField
                             id="outlined-multiline-static"
                             rows={1}
@@ -279,7 +284,7 @@ class ThEditThreshold extends Component {
                           className="props pj-pc-textfield"
                           style={{ width: "50%", marginRight: "10px" }}
                         >
-                          <p>Storage Threshold (Warning)</p>
+                          <p>{t("alert.threshold.pop-edit.storageThW")}</p>
                           <TextField
                             id="outlined-multiline-static"
                             rows={1}
@@ -297,7 +302,7 @@ class ThEditThreshold extends Component {
                           className="props pj-pc-textfield"
                           style={{ width: "50%" }}
                         >
-                          <p>Storage Threshold (Danger)</p>
+                          <p>{t("alert.threshold.pop-edit.storageThD")}</p>
                           <TextField
                             id="outlined-multiline-static"
                             rows={1}
@@ -321,11 +326,11 @@ class ThEditThreshold extends Component {
           <DialogActions>
             <div>
               <Button onClick={this.handleUpdate} color="primary">
-                update
+                {t("common.btn.update")}
               </Button>
             </div>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -334,4 +339,4 @@ class ThEditThreshold extends Component {
   }
 }
 
-export default ThEditThreshold;
+export default withTranslation()(ThEditThreshold); 

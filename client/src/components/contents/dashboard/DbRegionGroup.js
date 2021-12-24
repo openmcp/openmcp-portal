@@ -3,6 +3,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import TreeView2 from "../../modules/TreeView2";
 import * as utilLog from "../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from 'react-i18next';
 
 class DbRegionGroup extends Component {
   constructor(props) {
@@ -67,6 +68,7 @@ class DbRegionGroup extends Component {
   };
 
   onRefresh = () => {
+    const {t} = this.props;
     console.log("refresh", this.state.refreshCycle);
     this.callApi()
       .then((res) => {
@@ -76,7 +78,7 @@ class DbRegionGroup extends Component {
           if (res.hasOwnProperty("errno")) {
             if (res.code === "ECONNREFUSED") {
               clearInterval(this.timer2);
-              this.setState({loadErr : "Connection Failed"})
+              this.setState({loadErr : t("dashboard.connectionFailed")})
             }
 
             this.setState({ rows: "" });
@@ -106,6 +108,7 @@ class DbRegionGroup extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div className="dash-comp">
         {/* 컨텐츠 내용 */}
@@ -119,7 +122,7 @@ class DbRegionGroup extends Component {
                 */}
           <div className="content-box">
             <div className="cb-header">
-              <span>Cluster Regions</span>
+              <span>{t("dashboard.regions.title")}</span>
               {/* <div className="cb-btn">
                       <Link to={this.props.path}>detail</Link>
                     </div> */}
@@ -176,4 +179,4 @@ class DashboardCard04 extends Component {
   }
 }
 
-export default DbRegionGroup;
+export default withTranslation()(DbRegionGroup); 

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
-// import { NavigateNext } from "@material-ui/icons";
+import { NavigateNext } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
@@ -27,6 +27,8 @@ import { AsyncStorage } from "AsyncStorage";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import { FaCube } from "react-icons/fa";
 import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
+import { withTranslation } from 'react-i18next';
+
 
 let apiParams = "";
 class DeploymentDetail extends Component {
@@ -91,41 +93,53 @@ class DeploymentDetail extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div>
         <div className="content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
-          <section className="content-header">
-            <h1>
-              {this.props.match.params.deployment}
-              <small>Deployment Overview</small>
-            </h1>
-            {/*             
-            <small>
+          <section className="content-header" onClick={this.onRefresh}>
+          <h1>
+            {t("deployments.detail.title")}
+            <small>{this.props.match.params.deployment}</small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <Link to="/dashboard">{t("common.nav.home")}</Link>
+            </li>
+            <li className="active">
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
               />
-              {this.props.match.params.deployment}
-            </small> */}
-          </section>
+              {t("deployments.title")}
+            </li>
+            <li className="active">
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
+              {t("deployments.detail.title")}
+            </li>
+          </ol>
+        </section>
           {/* 내용부분 */}
           <section className="content">
             {this.state.rows ? (
               [
                 <BasicInfo
                   rowData={this.state.rows.basic_info}
-                  refresh={this.refresh}
+                  refresh={this.refresh} t={t}
                 />,
                 <ReplicaStatus
                   refresh={this.refresh}
                   queryString={this.props.location.search}
+                  t={t}
                 />,
-                <Pods rowData={this.state.rows.pods} />,
-                <Ports rowData={this.state.rows.ports} />,
+                <Pods rowData={this.state.rows.pods} t={t} />,
+                <Ports rowData={this.state.rows.ports} t={t} />,
                 // <PhysicalResources
                 //   rowData={this.state.rows.physical_resources}
                 // />,
-                <Events rowData={this.state.rows.events} />,
+                <Events rowData={this.state.rows.events} t={t} />,
               ]
             ) : (
               <CircularProgress
@@ -143,10 +157,11 @@ class DeploymentDetail extends Component {
 
 class BasicInfo extends Component {
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box">
         <div className="cb-header">
-          <span>Basic Info</span>
+          <span>{t("deployments.detail.basicInfo.title")}</span>
           {/* <PdPodResourceConfig
             data={this.props.rowData}
             refresh={this.props.refresh}
@@ -156,15 +171,15 @@ class BasicInfo extends Component {
           <div style={{ display: "flex" }}>
             <div className="cb-body-left">
               <div>
-                <span>Name : </span>
+                <span>{t("deployments.detail.basicInfo.name")} : </span>
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Project : </span>
+                <span>{t("deployments.detail.basicInfo.project")} : </span>
                 {this.props.rowData.project}
               </div>
               <div>
-                <span>Labels : </span>
+                <span>{t("deployments.detail.basicInfo.labels")} : </span>
                 <div style={{ margin: "-25px 0px 0px 66px" }}>
                   {Object.keys(this.props.rowData.labels).length > 0
                     ? Object.entries(this.props.rowData.labels).map((i) => {
@@ -176,11 +191,11 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Created Time : </span>
+                <span>{t("deployments.detail.basicInfo.createdTime")} : </span>
                 {this.props.rowData.created_time}
               </div>
               <div>
-                <span>Uid : </span>
+                <span>{t("deployments.detail.basicInfo.uid")} : </span>
                 {this.props.rowData.uid}
               </div>
             </div>
@@ -322,6 +337,7 @@ class ReplicaStatus extends React.Component {
   };
 
   render() {
+    const t = this.props.t;
     const rectangle = (status, pId) => {
       return [
         <div>
@@ -344,7 +360,7 @@ class ReplicaStatus extends React.Component {
 
     return (
       <div className="content-box replica-set">
-        <div className="cb-header">Replica Status</div>
+        <div className="cb-header">{t("deployments.detail.replicaStatus.title")}</div>
         <div className="cb-body" style={{ width: "100%" }}>
           <div>
             {this.state.rows ? (
@@ -427,18 +443,7 @@ class Pods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "cluster", title: "Cluster" },
-        { name: "project", title: "Project" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "node", title: "Node" },
-        { name: "node_ip", title: "Node IP" },
-        // { name: "cpu", title: "CPU" },
-        // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 330 },
         { columnName: "status", width: 100 },
@@ -475,6 +480,20 @@ class Pods extends Component {
     }
   }
   render() {
+    const t = this.props.t;
+    const columns = [
+      { name: "name", title: t("pods.pod.grid.name") },
+      { name: "status", title: t("pods.pod.grid.status") },
+      { name: "cluster", title: t("pods.pod.grid.cluster") },
+      { name: "project", title: t("pods.pod.grid.project") },
+      { name: "pod_ip", title: t("pods.pod.grid.podIp") },
+      { name: "node", title: t("pods.pod.grid.node") },
+      { name: "node_ip", title: t("pods.pod.grid.nodeIp") },
+      // { name: "cpu", title: "CPU" },
+      // { name: "memory", title: "Memory" },
+      { name: "created_time", title: t("pods.pod.grid.createdTime") },
+    ];
+
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -619,12 +638,12 @@ class Pods extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Pods</div>
+        <div className="cb-header">{t("deployments.detail.pods.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
               [
-                <Grid rows={this.state.rows} columns={this.state.columns}>
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -674,12 +693,7 @@ class Ports extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "port_name", title: "Port Name" },
-        { name: "port", title: "Port" },
-        // { name: "listening_port", title: "Listening Port" },
-        { name: "protocol", title: "Protocol" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "port_name", width: 200 },
         { columnName: "port", width: 150 },
@@ -701,6 +715,13 @@ class Ports extends Component {
   componentWillMount() {}
 
   render() {
+    const t = this.props.t;
+    const columns = [
+      { name: "port_name", title: t("deployments.detail.ports.grid.name") },
+      { name: "port", title: t("deployments.detail.ports.grid.port") },
+      // { name: "listening_port", title: "Listening Port" },
+      { name: "protocol", title: t("deployments.detail.ports.grid.protocol") },
+    ];
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -797,12 +818,12 @@ class Ports extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Ports</div>
+        <div className="cb-header">{t("deployments.detail.ports.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
               [
-                <Grid rows={this.state.rows} columns={this.state.columns}>
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -892,14 +913,7 @@ class Events extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "project", title: "Project" },
-        { name: "type", title: "Type" },
-        { name: "reason", title: "Reason" },
-        { name: "object", title: "Object" },
-        { name: "message", title: "Message" },
-        { name: "time", title: "Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "project", width: 150 },
         { columnName: "type", width: 150 },
@@ -922,6 +936,16 @@ class Events extends Component {
 
   componentWillMount() {}
   render() {
+    const t = this.props.t;
+    const columns = [
+      { name: "project", title: t("deployments.detail.events.grid.project") },
+      { name: "type", title:  t("deployments.detail.events.grid.type") },
+      { name: "reason", title:  t("deployments.detail.events.grid.reason") },
+      { name: "object", title:  t("deployments.detail.events.grid.object") },
+      { name: "message", title:  t("deployments.detail.events.grid.message") },
+      { name: "time", title:  t("deployments.detail.events.grid.time") },
+    ];
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -940,12 +964,12 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">{t("deployments.detail.events.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
               [
-                <Grid rows={this.state.rows} columns={this.state.columns}>
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -991,4 +1015,4 @@ class Events extends Component {
   }
 }
 
-export default DeploymentDetail;
+export default withTranslation()(DeploymentDetail); 

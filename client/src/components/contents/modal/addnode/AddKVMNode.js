@@ -25,7 +25,7 @@ import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import ProgressTemp from './../../../modules/ProgressTemp';
 import Confirm2 from './../../../modules/Confirm2';
-
+import { withTranslation } from 'react-i18next';
 
 class AddKVMNode extends Component {
   constructor(props) {
@@ -34,14 +34,7 @@ class AddKVMNode extends Component {
       newVmName: "",
       newVmPassword: "",
       templateVm : "",
-
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "pools", title: "Pools" },
-        { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
@@ -93,17 +86,19 @@ class AddKVMNode extends Component {
   };
 
   handleSaveClick = () => {
+    const t = this.props.t
+    
     if (this.state.newVmName === ""){
-      alert("Please enter New VM(Node) Name");
+      alert(t("nodes.pop-addNode.msg-checkVmName"));
       return;
     } else if (this.state.newVmPassword === ""){
-      alert("Please enter New VM(Node) Password");
+      alert(t("nodes.pop-addNode.msg-checkVmPassword"));
       return;
     } else if (Object.keys(this.state.selectedRow).length  === 0){
-      alert("Please select target Cluster");
+      alert(t("common.msg.unselected-target"));
       return;
     } else if (this.state.templateVm === ""){
-      alert("Please enter Template Image VM")
+      alert(t("nodes.pop-addNode.msg-checkTempImgName"));
       return;
     } else {
       this.setState({
@@ -191,6 +186,14 @@ class AddKVMNode extends Component {
   };
 
   render() {
+    const t = this.props.t;
+    const columns = [
+      { name: "name", title: t("nodes.pop-addNode.grid.name") },
+      { name: "status", title: t("nodes.pop-addNode.grid.status") },
+      { name: "pools", title: t("nodes.pop-addNode.grid.pool") },
+      { name: "cpu", title: t("nodes.pop-addNode.grid.cpu") },
+      { name: "ram", title: t("nodes.pop-addNode.grid.memory") },
+    ];
     return (
       <div>
         {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
@@ -208,11 +211,11 @@ class AddKVMNode extends Component {
               className="props"
               style={{ width: "40%", marginRight: "10px" }}
             >
-              <p>New VM(Node) Name</p>
+              <p>{t("nodes.pop-addNode.newVmName")}</p>
               <TextField
                 id="outlined-multiline-static"
                 rows={1}
-                placeholder="new vm name"
+                placeholder={t("nodes.pop-addNode.newVmName-placeholder")}
                 variant="outlined"
                 value={this.state.newVmName}
                 fullWidth={true}
@@ -222,11 +225,11 @@ class AddKVMNode extends Component {
               />
             </div>
             <div className="props" style={{ width: "60%" }}>
-              <p>New VM(Node) Password</p>
+              <p>{t("nodes.pop-addNode.newVmPasswd")}</p>
               <TextField
                 id="outlined-multiline-static"
                 rows={1}
-                placeholder="new vm password"
+                placeholder={t("nodes.pop-addNode.newVmPasswd-placeholder")}
                 variant="outlined"
                 value={this.state.newVmPassword}
                 fullWidth={true}
@@ -238,10 +241,10 @@ class AddKVMNode extends Component {
         </section>
         <section className="md-content">
           <div className="outer-table">
-            <p>Cluster</p>
+            <p>{t("nodes.pop-addNode.grid.title")}</p>
             {/* cluster selector */}
             <Paper>
-              <Grid rows={this.state.clusters} columns={this.state.columns}>
+              <Grid rows={this.state.clusters} columns={columns}>
                 {/* Sorting */}
                 <SortingState
                   defaultSorting={[{ columnName: "status", direction: "asc" }]}
@@ -284,11 +287,11 @@ class AddKVMNode extends Component {
         <section className="md-content">
           <div>
             <div className="props">
-                <p>Template Image VM</p>
+                <p>{t("nodes.pop-addNode.templateImgVm")}</p>
                 <TextField
                   id="outlined-multiline-static"
                   rows={1}
-                  placeholder="template vm name"
+                  placeholder={t("nodes.pop-addNode.templateImgVm-placeholder")}
                   variant="outlined"
                   value={this.state.accessKey}
                   fullWidth={true}
@@ -303,4 +306,4 @@ class AddKVMNode extends Component {
   }
 }
 
-export default AddKVMNode;
+export default withTranslation()(AddKVMNode); 

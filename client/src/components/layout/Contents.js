@@ -4,17 +4,8 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import LeftMenu from './LeftMenu';
 import Dashboard from "./../contents/dashboard/Dashboard";
 import Projects from "./../contents/projects/Projects";
-// import Pods from "../contents/pods/Pods";
-// import HPA from '../contents/pods/HPA';
-// import VPA from '../contents/pods/VPA';
-// import ClustersJoinable from "../contents/clusters/ClustersJoinable";
-// import ClustersJoined from "../contents/clusters/ClustersJoined";
-// import Storages from "./../contents/Storages";
 import Nodes from './../contents/nodes/Nodes';
 import Deployments from '../contents/deployments/Deployments';
-// import DNS from '../contents/netowork/DNS';
-// import Ingress from '../contents/netowork/Ingress';
-// import Services from '../contents/netowork/Services';
 
 // Sub menu contents
 import PjOverview from "../contents/projects/PjOverview";
@@ -44,7 +35,6 @@ import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
 import Accounts from './../contents/settings/Accounts';
 import Policy from '../contents/settings/policy/Policy';
-// import PjwDeploymentDetail from './../contents/projects/resources/PjwDeploymentDetail';
 import DeploymentDetail from './../contents/deployments/DeploymentDetail';
 import ServicesDetail from './../contents/netowork/ServicesDetail';
 import IngressDetail from './../contents/netowork/IngressDetail';
@@ -69,7 +59,6 @@ import BillDetail from "../contents/settings/metering/BillDetail";
 import SignIn from "../common/SignIn";
 import MultipleMetrics from "../contents/metrics/MultipleMetrics";
 
-
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
 // 각 컨텐츠는 Route를 이용해서 전환되도록 해야한다.
 class Contents extends Component {
@@ -80,11 +69,7 @@ class Contents extends Component {
     }
   }
 
-    
-
-  componentDidMount(){
-    
-  }
+  componentDidMount(){}
 
   onMenuData = (data) => {
     this.setState({menuData : data});
@@ -96,7 +81,6 @@ class Contents extends Component {
   // };
 
   render() {
-    
     return (
       <div>
         {

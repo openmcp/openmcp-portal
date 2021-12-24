@@ -26,21 +26,14 @@ import { FaCube } from "react-icons/fa";
 // import { NavigateNext} from '@material-ui/icons';
 // import Editor from "./../../modules/Editor";
 // import ProgressTemp from './../../modules/ProgressTemp';
+import { withTranslation } from 'react-i18next';
 
 // let apiParams = "";
 class HPA extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "namespace", title: "Project" },
-        { name: "cluster", title: "Cluster"},
-        { name: "reference", title: "Reference"},
-        { name: "min_repl", title: "Min"},
-        { name: "max_repl", title: "Max" },
-        { name: "current_repl", title: "Replicas" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 300 },
         { columnName: "namespace", width: 130 },
@@ -179,6 +172,17 @@ spec:
   }
 
   render() {
+    const {t} = this.props;
+    const columns= [
+      { name: "name", title: t("pods.hpa.grid.name") },
+      { name: "namespace", title: t("pods.hpa.grid.project") },
+      { name: "cluster", title:t("pods.hpa.grid.cluster")},
+      { name: "reference", title: t("pods.hpa.grid.reference")},
+      { name: "min_repl", title: t("pods.hpa.grid.min")},
+      { name: "max_repl", title: t("pods.hpa.grid.max") },
+      { name: "current_repl", title: t("pods.hpa.grid.replicas") },
+    ];
+
     const rectangle = (status, pId) => {
       return (
 
@@ -296,7 +300,7 @@ spec:
                 
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -338,4 +342,4 @@ spec:
   }
 }
 
-export default HPA;
+export default withTranslation()(HPA); 

@@ -25,6 +25,7 @@ import LineReChart from './../../modules/LineReChart';
 import SelectBox from './../../modules/SelectBox';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
+import { withTranslation } from 'react-i18next';
 
 
 let apiParams = "";
@@ -84,6 +85,7 @@ class PjOverview extends Component {
   };
 
   render() {
+    const {t} = this.props;
     // console.log("PjOverview_Render : ",this.state.rows.basic_info);
     return (
       <div>
@@ -91,20 +93,20 @@ class PjOverview extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            Overview
+            {t("projects.detail.overview.title")}
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/projects">Projects</NavLink>
+                <NavLink to="/projects">{t("projects.title")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Overview
+                {t("projects.detail.overview.title")}
               </li>
             </ol>
           </section>
@@ -113,12 +115,12 @@ class PjOverview extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
+            <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
             <div style={{display:"flex"}}>
-              <ProjectResources rowData={this.state.rows.project_resource}/>
-              <UsageTop5 rowData={this.state.rows.usage_top5} query ={this.props.location.search}/>
+              <ProjectResources rowData={this.state.rows.project_resource} t={t}/>
+              <UsageTop5 rowData={this.state.rows.usage_top5} query ={this.props.location.search} t={t}/>
             </div>,
-            <PhysicalResources rowData={this.state.rows.physical_resources}/>
+            <PhysicalResources rowData={this.state.rows.physical_resources} t={t}/>
             ]
           ) : (
             <CircularProgress
@@ -136,24 +138,25 @@ class PjOverview extends Component {
 
 class BasicInfo extends Component {
   render(){
+    const t = this.props.t;
     // console.log("BasicInfo:", this.props.rowData.name)
     
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">{t("projects.detail.overview.basicInfo.title")}</div>
         <div className="cb-body">
         <div style={{display:"flex"}}>
             <div className="cb-body-left">
               <div>
-                <span>Name : </span>
+                <span>{t("projects.detail.overview.basicInfo.sub.name")} : </span>
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>Cluster : </span>
+                <span>{t("projects.detail.overview.basicInfo.sub.cluster")} : </span>
                 {this.props.rowData.cluster}
               </div>
               <div>
-                  <span>Labels : </span>
+                  <span>{t("projects.detail.overview.basicInfo.sub.labels")} : </span>
                   <div style={{margin : "-25px 0px 0px 66px"}}>
                     {
                       Object.keys(this.props.rowData.labels).length > 0 ?
@@ -169,15 +172,15 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Status : </span>
+                <span>{t("projects.detail.overview.basicInfo.sub.status")} : </span>
                 {this.props.rowData.status}
               </div>
               <div>
-                <span>UID : </span>
+                <span>{t("projects.detail.overview.basicInfo.sub.uid")} : </span>
                 {this.props.rowData.uid}
               </div>
               <div>
-                <span>Created Time : </span>
+                <span>{t("projects.detail.overview.basicInfo.sub.createdTime")} : </span>
                 {this.props.rowData.created_time}
               </div>
             </div>
@@ -197,6 +200,13 @@ class ProjectResources extends Component {
     ],
   }
   render(){
+    const t = this.props.t;
+    const columns = [
+      { name: "resource", title: t("projects.detail.overview.projectResource.grid.resource") },
+      { name: "total", title: t("projects.detail.overview.projectResource.grid.total") },
+      { name: "abnormal", title: t("projects.detail.overview.projectResource.grid.abnormal")}
+    ];
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -210,11 +220,11 @@ class ProjectResources extends Component {
     );
     return (
       <div className="content-box col-sep-2 ">
-        <div className="cb-header">Project Resources</div>
+        <div className="cb-header">{t("projects.detail.overview.projectResource.title")}</div>
         <div className="cb-body table-style">
           <Grid
             rows = {this.props.rowData}
-            columns = {this.state.columns}
+            columns = {columns}
             >
 
             {/* Sorting */}
@@ -232,16 +242,9 @@ class ProjectResources extends Component {
   }
 }
 
-
-
-
 class UsageTop5 extends Component {
   state = {
-    columns: [
-      { name: "name", title: "Name" },
-      // { name: "type", title: "Type" },
-      { name: "usage", title: "Usage" },
-    ],
+    columns: [],
     defaultColumnWidths: [
       { columnName: "name", width: 350 },
       { columnName: "usage", width: 200 },
@@ -256,6 +259,11 @@ class UsageTop5 extends Component {
   };
   
   render(){
+    const t = this.props.t;
+    const columns = [
+      { name: "name", title: t("projects.detail.overview.usageTop5.grid.name") },
+      { name: "usage", title: t("projects.detail.overview.usageTop5.grid.usage")  },
+    ];
     
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
@@ -274,6 +282,7 @@ class UsageTop5 extends Component {
         case "cpu":
           this.setState({rows:this.props.rowData.cpu});
 
+          // 실시간처리
           // this.callApi()
           // .then((res) => {
           //   this.setState({ rows: res.usage_top5.cpu });
@@ -284,6 +293,7 @@ class UsageTop5 extends Component {
         case "memory":
           this.setState({rows:this.props.rowData.memory});
 
+          // 실시간처리
           // this.callApi()
           // .then((res) => {
           //   console.log(res.usage_top5.memory)
@@ -298,10 +308,11 @@ class UsageTop5 extends Component {
     }
 
     const selectBoxData = [{name:"cpu", value:"cpu"},{name:"memory", value:"memory"}];
+
     return (
       <div className="content-box col-sep-2">
         <div className="cb-header">
-          Usage Top5
+          {t("projects.detail.overview.usageTop5.title")}
           <SelectBox rows={selectBoxData} onSelectBoxChange={onSelectBoxChange}
           defaultValue=""></SelectBox>
         </div>
@@ -310,7 +321,7 @@ class UsageTop5 extends Component {
           {this.state.aaa}
           <Grid
             rows = {this.state.rows}
-            columns = {this.state.columns}>
+            columns = {columns}>
 
             {/* Sorting */}
             <SortingState
@@ -349,13 +360,13 @@ class UsageTop5 extends Component {
 //   }
 // }
 
-
 class PhysicalResources extends Component {
   render() {
+    const t = this.props.t;
     const network_title = ["in", "out"];
     return (
       <div className="content-box line-chart">
-        <div className="cb-header">Physical Resources</div>
+        <div className="cb-header">{t("projects.detail.overview.physicalResources.title")}</div>
         <div className="cb-body">
           <div className="cb-body-content">
             <LineReChart
@@ -390,8 +401,5 @@ class PhysicalResources extends Component {
   }
 }
 
-
-
-
-export default PjOverview;
+export default withTranslation()(PjOverview); 
 

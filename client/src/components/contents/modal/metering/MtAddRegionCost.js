@@ -11,7 +11,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
-
+import { withTranslation } from 'react-i18next';
 // import axios from 'axios';
 
 const styles = (theme) => ({
@@ -102,6 +102,7 @@ class MtAddRegionCost extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -136,7 +137,7 @@ class MtAddRegionCost extends Component {
             textTransform: "capitalize",
           }}
         >
-          Add Region
+         {t("meterings.pop-add.btn-add")}
         </Button>
 
         <Dialog
@@ -147,13 +148,13 @@ class MtAddRegionCost extends Component {
           maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Add Region
+          {t("meterings.pop-add.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="mt-set-metering">
               <div className="res">
                 <Typography id="range-slider" gutterBottom>
-                  Region
+                {t("meterings.pop-add.title")}
                 </Typography>
                 <div className="txt">
                   <span>Code : </span>
@@ -183,16 +184,16 @@ class MtAddRegionCost extends Component {
                   <span className="per">$</span>
                 </div>
                   <div className="per">
-(cost per hour for each cluster)</div>
+{t("meterings.pop-add.costDescription")}</div>
               </div>
             </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -201,4 +202,4 @@ class MtAddRegionCost extends Component {
   }
 }
 
-export default MtAddRegionCost;
+export default withTranslation()(MtAddRegionCost)

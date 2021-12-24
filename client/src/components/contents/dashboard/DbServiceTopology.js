@@ -8,6 +8,7 @@ import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
 import { Button, CircularProgress } from "@material-ui/core";
 // import { useHistory } from "react-router-dom";
+import { withTranslation } from 'react-i18next';
 
 am4core.useTheme(am4themes_animated);
 
@@ -66,6 +67,7 @@ class DbServiceTopology extends Component {
 
 
   onRefresh = () => {
+    const {t} = this.props;
     this.setState({ loadErr:"" });
     
     this.timer = setInterval(this.progress, 20);
@@ -95,7 +97,7 @@ class DbServiceTopology extends Component {
         } else {
           if (res.data.hasOwnProperty("errno")) {
             if (res.data.code === "ECONNREFUSED") {
-              this.setState({loadErr : "Connection Failed"})
+              this.setState({loadErr : t("dashboard.connectionFailed")})
             }
             this.setState({ rows: "" });
           } else {
@@ -276,10 +278,11 @@ class DbServiceTopology extends Component {
   }
 
   render() {
+    const {t} = this.props;
     return (
       <div className="dash-comp" style={{ width: "100%" }}>
         <Button variant="outlined" color="primary" onClick={this.onRefresh} style={{position:"absolute", right:"2px", top:"-42px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
-                    refresh
+        {t("dashboard.topology.btn-refresh")}
               </Button>
         <div
           className="topology"
@@ -312,4 +315,4 @@ class DbServiceTopology extends Component {
   }
 }
 
-export default DbServiceTopology;
+export default withTranslation()(DbServiceTopology); 

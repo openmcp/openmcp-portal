@@ -46,6 +46,7 @@ import axios from "axios";
 // import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
 import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -60,21 +61,13 @@ const styles = (theme) => ({
   },
 });
 
-let project_name = "";
+
 // let project_description = "";
 class PjCreateProject extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "nodes", title: "nodes" },
-        { name: "cpu", title: "CPU(%)" },
-        { name: "ram", title: "Memory(%)" },
-
-        // { name: "edit", title: "edit" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 180 },
         { columnName: "status", width: 130 },
@@ -102,6 +95,7 @@ class PjCreateProject extends Component {
       // project_description: "",
     });
   };
+
   callApi = async () => {
     let g_clusters;
     AsyncStorage.getItem("g_clusters",(err, result) => { 
@@ -138,7 +132,9 @@ class PjCreateProject extends Component {
 
   onChange(e) {
     if (e.target.name === "project_name") {
-      project_name = e.target.value;
+      this.setState({
+        project_name : e.target.value
+      });
     }
   }
 
@@ -172,17 +168,18 @@ class PjCreateProject extends Component {
 
   handleSave = (e) => {
     //Save Changed Taint
-    if (project_name === "") {
-      alert("Please insert project name");
+    const {t} = this.props;
+    if (this.state.project_name === "") {
+      alert(t("projects.pop-create.msg.chk-proejctName"));
       return;
     } else if (Object.keys(this.state.selectedRows).length === 0) {
-      alert("Please select target cluster");
+      alert(t("common.msg.unselected-target"));
       return;
     }
     
     const url = `/projects/create`;
     const data = {
-      project: project_name,
+      project: this.state.project_name,
       clusters: this.state.selectedRows,
     };
 
@@ -248,6 +245,16 @@ class PjCreateProject extends Component {
   );
 
   render() {
+    const {t} = this.props;
+    const columns= [
+      { name: "name", title: t("projects.pop-create.cluster.grid.name") },
+      { name: "status", title: t("projects.pop-create.cluster.grid.status") },
+      { name: "nodes", title: t("projects.pop-create.cluster.grid.nodes") },
+      { name: "cpu", title: t("projects.pop-create.cluster.grid.cpu") },
+      { name: "ram", title: t("projects.pop-create.cluster.grid.ram") },
+
+      // { name: "edit", title: "edit" },
+    ];
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -282,7 +289,7 @@ class PjCreateProject extends Component {
             textTransform: "capitalize",
           }}
         >
-          Create Project
+          {t("projects.pop-create.title")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -292,22 +299,22 @@ class PjCreateProject extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Create Project
+            {t("projects.pop-create.title")}
           </DialogTitle>
           <DialogContent dividers>
             {/* <div className="pj-create">
               <div className="create-content"> */}
             <div className="md-contents-body">
               <section className="md-content">
-                <p>Project</p>
+                <p>{t("projects.pop-create.project.title")}</p>
                 <div style={{ marginBottom: "10px" }}>
                   <TextField
                     id="outlined-multiline-static"
                     // label="name"
                     rows={1}
-                    placeholder="project name"
+                    placeholder={t("projects.pop-create.project.placeHolder")}
                     variant="outlined"
-                    // value = ''
+                    value = {this.state.project_name}
                     fullWidth={true}
                     name="project_name"
                     onChange={this.onChange}
@@ -329,10 +336,10 @@ class PjCreateProject extends Component {
                 </div> */}
               </section>
               <section className="md-content">
-                <p>Select Clusters</p>
+                <p>{t("projects.pop-create.cluster.title")}</p>
                 {/* cluster selector */}
                 <Paper>
-                  <Grid rows={this.state.clusters} columns={this.state.columns}>
+                  <Grid rows={this.state.clusters} columns={columns}>
                     {/* <Toolbar /> */}
                     {/* 검색 */}
                     {/* <SearchState defaultValue="" />
@@ -382,10 +389,10 @@ class PjCreateProject extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -394,4 +401,4 @@ class PjCreateProject extends Component {
   }
 }
 
-export default PjCreateProject;
+export default withTranslation()(PjCreateProject); 

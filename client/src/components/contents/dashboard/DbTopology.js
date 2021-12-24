@@ -13,12 +13,12 @@ import { FaBuffer } from "react-icons/fa";
 import DbClusterTopology from "./DbClusterTopology";
 import DbServiceTopology from "./DbServiceTopology";
 import DbServiceRegionTopology from "./DbServiceRegionTopology";
+import { withTranslation } from "react-i18next";
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper,
-    
   },
 });
 
@@ -59,18 +59,23 @@ class DbTopology extends Component {
   state = {
     reRender: "",
     value: 0,
-    tabHeader: [
-      { label: "Cluster", index: 1, param: "cluster" },
-      { label: "Service", index: 2, param: "service" },
-      { label: "Region", index: 3, param: "region" },
-    ],
+    tabHeader: [],
   };
 
   componentWillMount() {
-    this.setState({ value: 0 });
+    const {t} = this.props;
+    this.setState({
+      value: 0,
+      tabHeader: [
+        { label: "cluster.title", index: 1, param: "cluster" },
+        { label: "service.title", index: 2, param: "service" },
+        { label: "region.title", index: 3, param: "region" },
+      ],
+    });
   }
 
   render() {
+    const { t } = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -80,16 +85,20 @@ class DbTopology extends Component {
         {/* 컨텐츠 내용 */}
         <div style={{}}>
           <div className="content-box">
-            <div className="cb-header" style={{marginBottom:"0px"}}>
-              <span>Topology</span>
+            <div className="cb-header" style={{ marginBottom: "0px" }}>
+              <span>{t("dashboard.topology.title")}</span>
             </div>
             <div
               className="cb-body"
               style={{ position: "relative", display: "flex" }}
             >
-              <section style={{width:"100%"}}>
+              <section style={{ width: "100%" }}>
                 <div>
-                  <AppBar position="static" className="app-bar" style={{boxShadow:"none"}}>
+                  <AppBar
+                    position="static"
+                    className="app-bar"
+                    style={{ boxShadow: "none" }}
+                  >
                     <Tabs
                       value={this.state.value}
                       onChange={handleChange}
@@ -107,7 +116,7 @@ class DbTopology extends Component {
                       {this.state.tabHeader.map((i) => {
                         return (
                           <Tab
-                            label={i.label}
+                            label={t(`dashboard.topology.${i.label}`)}
                             {...a11yProps(i.index)}
                             component={Link}
                             style={{
@@ -120,26 +129,14 @@ class DbTopology extends Component {
                       })}
                     </Tabs>
                   </AppBar>
-                  <TabPanel
-                    className=""
-                    value={this.state.value}
-                    index={0}
-                  >
-                    <DbClusterTopology propsData = {this.props.propsData}/>
+                  <TabPanel className="" value={this.state.value} index={0}>
+                    <DbClusterTopology propsData={this.props.propsData} />
                   </TabPanel>
-                  <TabPanel
-                    className=""
-                    value={this.state.value}
-                    index={1}
-                  >
-                    <DbServiceTopology propsData = {this.props.propsData}/>
+                  <TabPanel className="" value={this.state.value} index={1}>
+                    <DbServiceTopology propsData={this.props.propsData} />
                   </TabPanel>
-                  <TabPanel
-                    className=""
-                    value={this.state.value}
-                    index={2}
-                  >
-                    <DbServiceRegionTopology propsData = {this.props.propsData}/>
+                  <TabPanel className="" value={this.state.value} index={2}>
+                    <DbServiceRegionTopology propsData={this.props.propsData} />
                   </TabPanel>
                 </div>
               </section>
@@ -151,4 +148,4 @@ class DbTopology extends Component {
   }
 }
 
-export default DbTopology;
+export default withTranslation()(DbTopology);

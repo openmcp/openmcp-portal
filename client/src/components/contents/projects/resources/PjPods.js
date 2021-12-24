@@ -24,7 +24,7 @@ import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
-
+import { withTranslation } from 'react-i18next';
 
 let apiParams = "";
 class PjPods extends Component {
@@ -116,7 +116,7 @@ class PjPods extends Component {
   };
 
   render() {
-
+    const {t} = this.props;
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -234,20 +234,24 @@ class PjPods extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Pods
+          {t("projects.detail.resources.pods.title")}
             <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Projects
+              {t("projects.title")}
             </li>
             <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Resources
+                {t("projects.detail.resources.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.detail.resources.pods.title")}
               </li>
           </ol>
         </section>
@@ -300,4 +304,4 @@ class PjPods extends Component {
   }
 }
 
-export default PjPods;
+export default withTranslation()(PjPods); 

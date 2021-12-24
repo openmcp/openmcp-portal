@@ -1054,6 +1054,8 @@ app.post("/clusters", (req, res) => {
     body: data,
   };
 
+  console.log(options);
+
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -1067,6 +1069,7 @@ app.post("/clusters-joinable", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters_joinable.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
+  console.log("joinable-start");
 
   var request = require("request");
   let data = JSON.stringify(req.body);
@@ -1078,6 +1081,7 @@ app.post("/clusters-joinable", (req, res) => {
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
+      console.log("joinable")
       res.send(body);
     } else {
       console.log("error", error);

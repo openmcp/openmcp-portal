@@ -3,6 +3,7 @@ import Paper from "@material-ui/core/Paper";
 import { AsyncStorage } from "AsyncStorage";
 import { Button, TextField } from "@material-ui/core";
 import Axios from "axios";
+import { withTranslation } from 'react-i18next';
 
 class DashBoardConfig extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class DashBoardConfig extends Component {
 
     this.callApi()
       .then((res) => {
-        if (res === null) {
+        if (res === null) { 
           this.setState({ rows: "" });
         } else {
           res.forEach(item => {
@@ -42,12 +43,13 @@ class DashBoardConfig extends Component {
   }
 
   render() {
+    const {t} = this.props;
     return (
       <div className="sub-content-wrapper fulled">
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.flag ? (
-              <DashBoardConfigSet data={this.state} />
+              <DashBoardConfigSet data={this.state} t={t}/>
             ) : null}
           </Paper>
         </section>
@@ -142,10 +144,11 @@ class DashBoardConfigSet extends Component {
   }
 
   render() {
+    const t = this.props.t;
     return (
       <div className="dash-config">
         <section>
-          <span>Refresh-Cycle(second)</span>
+          <span>{t("config.dashboardConfig.refreshCycle.title")}</span>
           <TextField
             id="outlined-multiline-static"
             rows={1}
@@ -169,11 +172,11 @@ class DashBoardConfigSet extends Component {
               padding: "18px",
             }}
           >
-            save
+             {t("common.btn.save")}
           </Button>
         </section>
         <section>
-          <span>Power Usage Range(watt)</span>
+          <span>{t("config.dashboardConfig.powerUsageRange.title")}</span>
           <span>low</span>
           <TextField
             id="outlined-multiline-static"
@@ -220,7 +223,7 @@ class DashBoardConfigSet extends Component {
               padding: "18px",
             }}
           >
-            save
+            {t("common.btn.save")}
           </Button>
         </section>
       </div>
@@ -228,4 +231,4 @@ class DashBoardConfigSet extends Component {
   }
 }
 
-export default DashBoardConfig;
+export default withTranslation()(DashBoardConfig); 

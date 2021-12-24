@@ -31,23 +31,14 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from 'react-i18next';
 
 // let apiParams = "";
 class Services extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name"},
-        { name: "cluster", title: "Cluster" },
-        { name: "project", title: "Project" },
-        { name: "type", title: "Type"},
-        { name: "cluster_ip", title: "Cluster IP"},
-        { name: "external_ip", title: "External IP"},
-        { name: "selector", title: "Selector" },
-        // { name: "port", title: "Port" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 300 },
         { columnName: "cluster", width: 130 },
@@ -68,14 +59,29 @@ class Services extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : `apiVersion: v1
-kind: Service
+//       editorContext2 : `apiVersion: v1
+// kind: Service
+// metadata:
+//   namespace: openmcp
+//   labels: {}
+// spec:
+//   sessionAffinity: None
+//   selector: {}
+// `,
+editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+kind: OpenMCPService
 metadata:
-  namespace: openmcp
-  labels: {}
+  name: [service name]
+  namespace: [namespace name]
 spec:
-  sessionAffinity: None
-  selector: {}
+  template:
+    spec:
+      type: [LoadBalancer]
+      ports:
+      - name: [http]
+        port: [80]
+  labelselector:
+    app: [openmcp-nginx]
 `,
       anchorEl: null,
     };
@@ -169,7 +175,18 @@ spec:
   }
 
   render() {
-
+    const {t} = this.props;
+    const columns = [
+      { name: "name", title: t("network.services.grid.name")},
+      { name: "cluster", title: t("network.services.grid.cluster") },
+      { name: "project", title: t("network.services.grid.project") },
+      { name: "type", title: t("network.services.grid.type")},
+      { name: "cluster_ip", title: t("network.services.grid.clusterIp")},
+      { name: "external_ip", title: t("network.services.grid.externalIp")},
+      { name: "selector", title: t("network.services.grid.selector") },
+      // { name: "port", title: "Port" },
+      { name: "created_time", title: t("network.services.grid.createdTime") },
+    ];
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -320,7 +337,7 @@ spec:
                               <MenuItem 
                               onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
-                                <Editor btTitle="create" title="Create Service" context={this.state.editorContext} excuteScript={this.excuteScript}
+                                <Editor btTitle={t("network.services.pop-create.btn-create")} title={t("network.services.pop-create.title")} context={this.state.editorContext} excuteScript={this.excuteScript}
                                 menuClose={handleClose}
                                 />
                               </MenuItem>
@@ -332,7 +349,7 @@ spec:
                 </div>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -374,4 +391,4 @@ spec:
   }
 }
 
-export default Services;
+export default withTranslation()(Services);

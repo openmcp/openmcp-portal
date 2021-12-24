@@ -4,6 +4,7 @@ import { PieChart, Pie, Sector, Cell } from "recharts";
 import PieReChartPowerRange from "../../modules/PieReChartPowerRange";
 import { AsyncStorage } from "AsyncStorage";
 import * as utilLog from "../../util/UtLogs.js";
+import { withTranslation } from 'react-i18next';
 
 class DbPowerUsage extends Component {
   constructor(props) {
@@ -81,6 +82,7 @@ class DbPowerUsage extends Component {
   }
 
   onRefresh = () => {
+    const {t} = this.props;
     this.callApi()
       .then((res) => {
         if (res === null) {
@@ -89,7 +91,7 @@ class DbPowerUsage extends Component {
           if (res.hasOwnProperty("errno")) {
             if (res.code === "ECONNREFUSED") {
               clearInterval(this.timer2);
-              this.setState({loadErr : "Connection Failed"})
+              this.setState({loadErr : t("dashboard.connectionFailed")})
             }
 
             this.setState({ rows: "", range: "" });
@@ -117,6 +119,7 @@ class DbPowerUsage extends Component {
 
 
   render() {
+    const {t} = this.props;
     return (
         <div className="dash-comp">
           {/* 컨텐츠 내용 */}
@@ -124,7 +127,7 @@ class DbPowerUsage extends Component {
           <div style={{ display: "flex" }}>
             <div className="content-box">
               <div className="cb-header">
-                <span>Cluster Power Usage (AVG)</span>
+                <span>{t("dashboard.powerUsage.title")}</span>
                 {/* <div className="cb-btn">
                       <Link to={this.props.path}>detail</Link>
                     </div> */}
@@ -163,4 +166,4 @@ class DbPowerUsage extends Component {
   }
 }
 
-export default DbPowerUsage;
+export default withTranslation()(DbPowerUsage); 

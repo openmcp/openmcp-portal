@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import MetricLineChart from "../module/MetricLineChart";
 import MetricSelectBox from "../module/MetricSelectBox";
 import * as utilLog from "./../../../util/UtLogs.js";
+import { withTranslation } from 'react-i18next';
 
 class MetricNode extends Component {
   constructor(props) {
@@ -122,6 +123,7 @@ class MetricNode extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const angle = {
       full: {
         startAngle: 0,
@@ -151,7 +153,7 @@ class MetricNode extends Component {
         {this.state.row ? (
           [
             <div className="m-area-header">
-              <span>Node Metric</span>
+              <span>{t("multipleMetrics.nodeMetric.title")}</span>
               {this.state.selectBoxData ? (
                 <span
                   style={{ position: "relative", top: "-3px", right: "8px" }}
@@ -159,7 +161,7 @@ class MetricNode extends Component {
                   <span
                     style={{ position: "relative", top: "8px", right: "0px" }}
                   >
-                    name :{" "}
+                    {t("multipleMetrics.nodeMetric.lb-node")} :{" "}
                   </span>
                   {/* <div style={{padding:"10px 15px 0px 15px"}}> */}
                   <MetricSelectBox
@@ -176,7 +178,7 @@ class MetricNode extends Component {
                 <div className="m-linechart-area">
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>disk usage</span>
+                      <span>{t("multipleMetrics.nodeMetric.diskUsage")}</span>
                     </div>
                     <div className="m-c-body">
                       {this.state.row.diskState ? (
@@ -213,7 +215,7 @@ class MetricNode extends Component {
                 <div className="m-linechart-area">
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>network usage</span>
+                      <span>{t("multipleMetrics.nodeMetric.networkUsage")}</span>
                     </div>
                     <div className="m-c-body">
                       {this.state.row.netState ? (
@@ -272,7 +274,7 @@ class MetricNode extends Component {
                 <div className="m-multiple-info-area">
                   <div className="m-content">
                     <div className="m-c-header" style={{ textAlign: "left" }}>
-                      <span>pod state</span>
+                      <span>{t("multipleMetrics.nodeMetric.podState.title")}</span>
                     </div>
                     <div className="m-c-body">
                       <span style={{ color: "#5500C4" }}>
@@ -295,7 +297,7 @@ class MetricNode extends Component {
                 <div className="m-linechart-area">
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>all node cpu usage</span>
+                      <span>{t("multipleMetrics.nodeMetric.cpuUsage")}</span>
                     </div>
                     <div className="m-c-body">
                       {this.state.row.cpuUsage ? (
@@ -332,7 +334,7 @@ class MetricNode extends Component {
                 <div className="m-linechart-area">
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>all node memory usage</span>
+                      <span>{t("multipleMetrics.nodeMetric.memoryUsage")}</span>
                     </div>
                     <div className="m-c-body">
                       {this.state.row.memoryUsage ? (
@@ -377,4 +379,4 @@ class MetricNode extends Component {
   }
 }
 
-export default MetricNode;
+export default withTranslation()(MetricNode); 

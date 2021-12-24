@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,
@@ -19,10 +19,10 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-// import { NavigateNext} from '@material-ui/icons';
+import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-
+import { withTranslation } from 'react-i18next';
 
 
 // import Editor from "./../modules/Editor";
@@ -34,18 +34,7 @@ class Pods extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status"},
-        { name: "cluster", title: "Cluster"},
-        { name: "project", title: "Project" },
-        { name: "pod_ip", title: "Pod IP" },
-        { name: "node", title: "Node" },
-        { name: "node_ip", title: "Node IP" },
-        // { name: "cpu", title: "CPU" },
-        // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 330 },
         { columnName: "status", width: 100 },
@@ -138,6 +127,19 @@ class Pods extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const columns = [
+      { name: "name", title: t("pods.pod.grid.name") },
+      { name: "status", title: t("pods.pod.grid.status") },
+      { name: "cluster", title: t("pods.pod.grid.cluster") },
+      { name: "project", title: t("pods.pod.grid.project") },
+      { name: "pod_ip", title: t("pods.pod.grid.podIp") },
+      { name: "node", title: t("pods.pod.grid.node") },
+      { name: "node_ip", title: t("pods.pod.grid.nodeIp") },
+      // { name: "cpu", title: "CPU" },
+      // { name: "memory", title: "Memory" },
+      { name: "created_time", title: t("pods.pod.grid.createdTime") },
+    ];
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -256,23 +258,6 @@ class Pods extends Component {
     return (
       <div className="sub-content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
-        {/* <section className="content-header">
-          <h1>
-            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
-              Pods
-            </span>
-            <small></small>
-          </h1>
-          <ol className="breadcrumb">
-            <li>
-              <NavLink to="/dashboard">Home</NavLink>
-            </li>
-            <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Pods
-            </li>
-          </ol>
-        </section> */}
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
@@ -280,7 +265,7 @@ class Pods extends Component {
                 // <Editor title="create" context={this.state.editorContext}/>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -322,4 +307,4 @@ class Pods extends Component {
   }
 }
 
-export default Pods;
+export default withTranslation()(Pods); 

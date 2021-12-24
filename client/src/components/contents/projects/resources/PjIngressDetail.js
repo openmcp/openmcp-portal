@@ -24,6 +24,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
+import { withTranslation } from 'react-i18next';
 
 // let apiParams = "";
 class PjIngressDetail extends Component {
@@ -83,30 +84,35 @@ class PjIngressDetail extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div>
         <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            {this.props.match.params.ingress}
-              <small>Ingress Overview</small>
+            {t("network.ingress.detail.title")}
+              <small>{this.props.match.params.ingress}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
-              </li>
-              <li>
-                <NavigateNext
-                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-                />
-                <NavLink to="/projects">Projects</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li className="active">
-                <NavigateNext
-                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-                />
-                Resources
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.detail.resources.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.detail.resources.ingress.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("network.ingress.detail.title")}
               </li>
             </ol>
           </section>
@@ -115,9 +121,9 @@ class PjIngressDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} />,
-                <Rules rowData={this.state.rows.rules} />,
-                <Events rowData={this.state.rows.events} />,
+                <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
+                <Rules rowData={this.state.rows.rules} t={t} />,
+                <Events rowData={this.state.rows.events} t={t} />,
               ]
             ) : (
               <CircularProgress
@@ -135,9 +141,10 @@ class PjIngressDetail extends Component {
 
 class BasicInfo extends Component {
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">{t("network.ingress.detail.basicInfo.title")}</div>
         <div className="cb-body">
           <div style={{ display: "flex" }}>
             <div className="cb-body-left">
@@ -233,7 +240,7 @@ class Rules extends Component {
   
 
   render() {
-
+    const t = this.props.t;
     const Cell = (props) => {
       // const { column, row } = props;
       // console.log("cell : ", props);
@@ -279,7 +286,7 @@ class Rules extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Rules</div>
+        <div className="cb-header">{t("network.ingress.detail.rules.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -390,6 +397,7 @@ class Events extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -408,7 +416,7 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">{t("network.ingress.detail.events.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -459,4 +467,4 @@ class Events extends Component {
   }
 }
 
-export default PjIngressDetail;
+export default withTranslation()(PjIngressDetail); 

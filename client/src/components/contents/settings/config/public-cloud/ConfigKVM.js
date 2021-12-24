@@ -32,6 +32,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from 'react-i18next';
 
 class ConfigKVM extends Component {
   constructor(props) {
@@ -43,8 +44,8 @@ class ConfigKVM extends Component {
         { name: "cluster", title: "Cluster" },
         { name: "agentURL", title: "Agent URL" },
         { name: "agentPort", title: "Agent Port" },
-        { name: "mClusterName", title: "MCluster VM Name" },
-        { name: "mClusterPwd", title: "MCluster Passwd" },
+        { name: "mClusterName", title: "Cluster MasterVM Name" },
+        { name: "mClusterPwd", title: "Cluster MasterVM Passwd" },
       ],
       defaultColumnWidths: [
         { columnName: "seq", width: 100 },
@@ -69,15 +70,7 @@ class ConfigKVM extends Component {
       popTitle:"",
 
       confirmOpen: false,
-      confirmInfo : {
-        title :"Delete KVM PCA Info",
-        context :"Are you sure you want to delete KVM PCA config?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
-      },
+     
       confrimTarget : "",
       confirmTargetKeyname:"",
       anchorEl: null,
@@ -119,17 +112,19 @@ class ConfigKVM extends Component {
   };
 
   handleClickNew = () => {
+    const {t} = this.props;
     this.setState({ 
       open : true,
       new : true,
-      popTitle:"Add KVM Authentication",
+      popTitle:t("config.publicCloudAuth.kvm.pop-new.title"),
       data:{}
     });
   };
 
   handleClickEdit = () => {
+    const {t} = this.props;
     if (Object.keys(this.state.selectedRow).length  === 0) {
-      alert("Please select a authentication data row");
+      alert(t("config.publicCloudAuth.kvm.pop-edit.msg.chk-selectAuth"));
       this.setState({ open: false });
       return;
     }
@@ -137,7 +132,7 @@ class ConfigKVM extends Component {
     this.setState({ 
       open: true, 
       new: false, 
-      popTitle:"Edit KVM Authentication",
+      popTitle:t("config.publicCloudAuth.kvm.pop-edit.title"),
       data:{
         seq : this.state.selectedRow.seq,
         cluster: this.state.selectedRow.cluster,
@@ -150,8 +145,9 @@ class ConfigKVM extends Component {
   };
 
   handleClickDelete = () => {
+    const {t} = this.props;
     if (Object.keys(this.state.selectedRow).length  === 0) {
-      alert("Please select a authentication data row");
+      alert(t("config.publicCloudAuth.kvm.pop-edit.msg.chk-selectAuth"));
       this.setState({ open: false });
       return;
     } else {
@@ -197,6 +193,16 @@ class ConfigKVM extends Component {
   }
 
   render() {
+    const {t} = this.props;
+    const confirmInfo = {
+      title :t("config.publicCloudAuth.kvm.pop-delete.title"),
+      context :t("config.publicCloudAuth.kvm.pop-delete.context"),
+      button : {
+        open : "",
+        yes : t("common.btn.confirm"),
+        no : t("common.btn.cancel"),
+      }
+    };
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -241,7 +247,7 @@ class ConfigKVM extends Component {
       <div>
 
         <Confirm2
-          confirmInfo={this.state.confirmInfo} 
+          confirmInfo={confirmInfo} 
           confrimTarget ={this.state.confrimTarget} 
           confirmTargetKeyname = {this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
@@ -261,7 +267,7 @@ class ConfigKVM extends Component {
                         backgroundColor: "#bfdcec",
                         boxShadow: "0px 0px 3px 0px #b9b9b9"
                       }}
-          > KVM Authentications Configration</div>
+          > {t("config.publicCloudAuth.kvm.description")}</div>
           <section className="md-content">
             <Paper>
             <div
@@ -298,7 +304,7 @@ class ConfigKVM extends Component {
                                 onClick={this.handleClickNew}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                New </div>
+                                {t("config.publicCloudAuth.kvm.pop-new.btn-open")} </div>
                             </MenuItem>
                             <MenuItem
                             onKeyDown={(e) => e.stopPropagation()}
@@ -309,7 +315,7 @@ class ConfigKVM extends Component {
                                 onClick={this.handleClickEdit}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                Edit
+                                {t("config.publicCloudAuth.kvm.pop-edit.btn-open")}
                               </div>
                             </MenuItem>
                             <MenuItem
@@ -321,7 +327,7 @@ class ConfigKVM extends Component {
                                 onClick={this.handleClickDelete}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                Delete
+                                {t("config.publicCloudAuth.kvm.pop-delete.btn-open")}
                               </div>
                             </MenuItem>
                             </MenuList>
@@ -427,4 +433,4 @@ class ConfigKVM extends Component {
   }
 }
 
-export default ConfigKVM;
+export default withTranslation()(ConfigKVM); 

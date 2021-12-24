@@ -42,7 +42,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import { fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
-
+import { withTranslation } from 'react-i18next';
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -128,24 +128,25 @@ class GrCreateGroup extends Component {
   };
 
   handleSave = (e) => {
-  if (this.state.groupName === "") {
-    alert("Please insert 'group name' data");
-    return;
-  } else if (this.state.description === "") {
-    alert("Please insert 'description' data");
-    return;
-  }
-  //  else if (Object.keys(this.state.selectedRoleIds).length === 0) {
-  //   alert("Please select roles");
-  //   return;
-  // } 
-  else if (Object.keys(this.state.selectedClusters).length === 0) {
-    alert("Please select clusters");
-    return;
-  } else if (Object.keys(this.state.selectedUserIds).length === 0) {
-    alert("Please select users");
-    return;
-  }
+    const {t} = this.props;
+    if (this.state.groupName === "") {
+      alert(t("groupRole.pop-create.msg.chk-groupName"));
+      return;
+    } else if (this.state.description === "") {
+      alert(t("groupRole.pop-create.msg.chk-description"));
+      return;
+    }
+    //  else if (Object.keys(this.state.selectedRoleIds).length === 0) {
+    //   alert("Please select roles");
+    //   return;
+    // } 
+    else if (Object.keys(this.state.selectedClusters).length === 0) {
+      alert(t("groupRole.pop-create.msg.chk-clusters"));
+      return;
+    } else if (Object.keys(this.state.selectedUserIds).length === 0) {
+      alert(t("groupRole.pop-create.msg.chk-users"));
+      return;
+    }
 
     // Update user role
     const url = `/settings/group-role`;
@@ -216,6 +217,7 @@ class GrCreateGroup extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -234,16 +236,16 @@ class GrCreateGroup extends Component {
       );
     });
 
-    const steps = ['Set Group Informations', 'Select Clusters', 'Select Group Users'];
+    const steps = [t("groupRole.pop-create.step.1.title"), t("groupRole.pop-create.step.2.title"), t("groupRole.pop-create.step.3.title")];
     // const steps = ['Set Group Informations', 'Select Group Roles','Select Projects', 'Select Group Users'];
     const handleNext = () => {
       switch (this.state.activeStep){
         case 0 :
           if (this.state.groupName === "") {
-            alert("Please insert 'group name' data");
+            alert(t("groupRole.pop-create.msg.chk-groupName"));
             return;
           } else if (this.state.description === "") {
-            alert("Please insert 'description' data");
+            alert(t("groupRole.pop-create.msg.chk-description"));
             return;
           } else {
             this.setState({activeStep : this.state.activeStep + 1});
@@ -259,7 +261,7 @@ class GrCreateGroup extends Component {
         //   }
         case 1:
           if (Object.keys(this.state.selectedClusters).length === 0) {
-            alert("Please select clusters");
+            alert(t("groupRole.pop-create.msg.chk-clusters"));
             return;
           } else {
             this.setState({activeStep : this.state.activeStep + 1});
@@ -283,7 +285,7 @@ class GrCreateGroup extends Component {
             textTransform: "capitalize",
           }}
         >
-          Create Group
+          {t("groupRole.pop-create.btn-create")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -293,7 +295,7 @@ class GrCreateGroup extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Create Group Role
+          {t("groupRole.pop-create.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body small-grid">
@@ -310,11 +312,11 @@ class GrCreateGroup extends Component {
                 <div>
                   
                   <section className="md-content">
-                    <p>Group Role Name</p>
+                    <p>{t("groupRole.pop-create.step.1.groupRoleName.title")}</p>
                     <TextField
                       id="outlined-multiline-static"
                       rows={1}
-                      placeholder="group role name"
+                      placeholder={t("groupRole.pop-create.step.1.groupRoleName.placeholder")}
                       variant="outlined"
                       value={this.state.groupName}
                       fullWidth={true}
@@ -323,11 +325,11 @@ class GrCreateGroup extends Component {
                     />
                   </section>
                   <section className="md-content">
-                    <p>Description</p>
+                    <p>{t("groupRole.pop-create.step.1.description.title")}</p>
                     <TextField
                       id="outlined-multiline-static"
                       rows={1}
-                      placeholder="group information"
+                      placeholder={t("groupRole.pop-create.step.1.description.placeholder")}
                       variant="outlined"
                       value={this.state.description}
                       fullWidth={true}
@@ -352,6 +354,7 @@ class GrCreateGroup extends Component {
                     selection={this.state.clusterSelectionId}
                     onselectedClusters={this.onSelectClusters}
                     propsData={this.props.propsData}
+                    t={t}
                   />
                 </section>
               ) : (
@@ -359,6 +362,7 @@ class GrCreateGroup extends Component {
                   <GrUsers 
                     selection={this.state.userSelectionId}
                     onSelectedUsers={this.onSelectUsers}
+                    t={t}
                   />
                 </section>
               )}
@@ -374,15 +378,15 @@ class GrCreateGroup extends Component {
                 disabled={this.state.activeStep === 0}
                 onClick={handleBack}
               >
-                Back
+                {t("common.btn.back")}
               </Button>
               {this.state.activeStep === steps.length - 1 ? (
                 <Button onClick={this.handleSave} color="primary">
-                  save
+                  {t("common.btn.save")}
                 </Button>
               ) : (
                 <Button color="primary" onClick={handleNext}>
-                  next
+                   {t("common.btn.next")}
                 </Button>
               )}
               
@@ -539,143 +543,6 @@ class GrCreateGroup extends Component {
 //   }
 // }
 
-class GrUsers extends Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      columns: [
-        { name: "user_id", title: "User ID" },
-        { name: "role", title: "Roles" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "user_id", width: 200 },
-        { columnName: "role", width: 500 },
-      ],
-      currentPage: 0,
-      setCurrentPage: 0,
-      pageSize: 5,
-      pageSizes: [5, 10, 15, 0],
-      rows:[],
-      selection: this.props.selection,
-      selectedRow : [],
-    }
-  }
-
-  callApi = async () => {
-    const response = await fetch("/settings/accounts");
-    const body = await response.json();
-    return body;
-  };
-
-  componentWillMount(){
-    this.callApi()
-      .then((res) => {
-        
-        this.setState({ rows: res});
-        let selectedRows = [];
-        this.props.selection.forEach((index) => {
-          selectedRows.push(res[index]);
-        });
-        this.setState({ selectedRow: selectedRows});
-        })
-      .catch((err) => console.log(err));
-  }
-
-  render(){
-    const HeaderRow = ({ row, ...restProps }) => (
-      <Table.Row
-        {...restProps}
-        style={{
-          cursor: "pointer",
-          backgroundColor: "whitesmoke",
-          // ...styles[row.sector.toLowerCase()],
-        }}
-        // onClick={()=> alert(JSON.stringify(row))}
-      />
-    );
-
-    const onSelectionChange = (selection) => {
-      let selectedRows = [];
-      selection.forEach((id) => {
-        selectedRows.push(this.state.rows[id]);
-      });
-      this.setState({ selectedRow: selectedRows});
-      this.setState({ selection: selection });
-
-      this.props.onSelectedUsers(selectedRows, selection);
-    };
-
-    return(
-      <div>
-        <p>Select Users</p>
-          <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
-              {this.state.selectedRow.length > 0 
-                ? this.state.selectedRow.map((row)=>{
-                  return (
-                    <span>
-                      <LensIcon style={{fontSize:"8px", marginRight:"5px"}}/>
-                      {row.user_id}
-                    </span>
-                  );
-                }) 
-                : <div style={{
-                  color:"#9a9a9a",
-                  textAlign: "center",
-                  paddingTop: "30px"}}>
-                    Please Select Users
-                  </div>}
-          </div>
-        {/* <p>Select Role</p> */}
-        <Paper>
-          <Grid rows={this.state.rows} columns={this.state.columns}>
-            {/* <Toolbar /> */}
-            {/* 검색 */}
-            {/* <SearchState defaultValue="" />
-            <SearchPanel style={{ marginLeft: 0 }} /> */}
-
-            {/* Sorting */}
-            <SortingState
-              defaultSorting={[{ columnName: "status", direction: "asc" }]}
-            />
-
-            {/* 페이징 */}
-            <PagingState
-              defaultCurrentPage={0}
-              defaultPageSize={this.state.pageSize}
-            />
-            <PagingPanel pageSizes={this.state.pageSizes} />
-            <SelectionState
-              selection={this.state.selection}
-              onSelectionChange={onSelectionChange}
-            />
-
-            <IntegratedFiltering />
-            <IntegratedSorting />
-            <IntegratedSelection />
-            <IntegratedPaging />
-
-            {/* 테이블 */}
-            <Table />
-            <TableColumnResizing
-              defaultColumnWidths={this.state.defaultColumnWidths}
-            />
-            <TableHeaderRow
-              showSortingControls
-              rowComponent={HeaderRow}
-            />
-            <TableColumnVisibility
-              defaultHiddenColumnNames={['role_id']}
-            />
-            <TableSelection
-              selectByRowClick
-              highlightRow
-            />
-          </Grid>
-        </Paper>
-      </div>
-    );
-  }
-}
 
 class GrClusters extends Component{
   constructor(props){
@@ -796,6 +663,7 @@ class GrClusters extends Component{
 
   render(){
 
+    const t = this.props.t;
     const HighlightedCell = ({ value, style, row, ...restProps }) => {
       var cpuPct = parseFloat(row.cpu.split("/")[0])/parseFloat(row.cpu.split("/")[1].split(" Core")[0]) * 100
       var memPct = parseFloat(row.ram.split("/")[0])/parseFloat(row.ram.split("/")[1].split(" Gi")[0]) * 100
@@ -919,7 +787,7 @@ class GrClusters extends Component{
 
     return(
       <div>
-        <p>Select Clusters</p>
+        <p>{t("groupRole.pop-create.step.2.selectClusters.title")}</p>
           <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
               {this.state.selectedRow.length > 0 
                 ? this.state.selectedRow.map((row)=>{
@@ -934,7 +802,7 @@ class GrClusters extends Component{
                   color:"#9a9a9a",
                   textAlign: "center",
                   paddingTop: "30px"}}>
-                    Please Select Clusters
+                    {t("groupRole.pop-create.step.2.selectClusters.placeholder")}
                   </div>}
           </div>
         {/* <p>Select Role</p> */}
@@ -998,4 +866,144 @@ class GrClusters extends Component{
   }
 }
 
-export default GrCreateGroup;
+class GrUsers extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      columns: [
+        { name: "user_id", title: "User ID" },
+        { name: "role", title: "Roles" },
+      ],
+      defaultColumnWidths: [
+        { columnName: "user_id", width: 200 },
+        { columnName: "role", width: 500 },
+      ],
+      currentPage: 0,
+      setCurrentPage: 0,
+      pageSize: 5,
+      pageSizes: [5, 10, 15, 0],
+      rows:[],
+      selection: this.props.selection,
+      selectedRow : [],
+    }
+  }
+
+  callApi = async () => {
+    const response = await fetch("/settings/accounts");
+    const body = await response.json();
+    return body;
+  };
+
+  componentWillMount(){
+    this.callApi()
+      .then((res) => {
+        
+        this.setState({ rows: res});
+        let selectedRows = [];
+        this.props.selection.forEach((index) => {
+          selectedRows.push(res[index]);
+        });
+        this.setState({ selectedRow: selectedRows});
+        })
+      .catch((err) => console.log(err));
+  }
+
+  render(){
+    const t = this.props.t;
+    const HeaderRow = ({ row, ...restProps }) => (
+      <Table.Row
+        {...restProps}
+        style={{
+          cursor: "pointer",
+          backgroundColor: "whitesmoke",
+          // ...styles[row.sector.toLowerCase()],
+        }}
+        // onClick={()=> alert(JSON.stringify(row))}
+      />
+    );
+
+    const onSelectionChange = (selection) => {
+      let selectedRows = [];
+      selection.forEach((id) => {
+        selectedRows.push(this.state.rows[id]);
+      });
+      this.setState({ selectedRow: selectedRows});
+      this.setState({ selection: selection });
+
+      this.props.onSelectedUsers(selectedRows, selection);
+    };
+
+    return(
+      <div>
+        <p>{t("groupRole.pop-create.step.3.selectUsers.title")}</p>
+          <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
+              {this.state.selectedRow.length > 0 
+                ? this.state.selectedRow.map((row)=>{
+                  return (
+                    <span>
+                      <LensIcon style={{fontSize:"8px", marginRight:"5px"}}/>
+                      {row.user_id}
+                    </span>
+                  );
+                }) 
+                : <div style={{
+                  color:"#9a9a9a",
+                  textAlign: "center",
+                  paddingTop: "30px"}}>
+                    {t("groupRole.pop-create.step.3.selectUsers.placeholder")}
+                  </div>}
+          </div>
+        {/* <p>Select Role</p> */}
+        <Paper>
+          <Grid rows={this.state.rows} columns={this.state.columns}>
+            {/* <Toolbar /> */}
+            {/* 검색 */}
+            {/* <SearchState defaultValue="" />
+            <SearchPanel style={{ marginLeft: 0 }} /> */}
+
+            {/* Sorting */}
+            <SortingState
+              defaultSorting={[{ columnName: "status", direction: "asc" }]}
+            />
+
+            {/* 페이징 */}
+            <PagingState
+              defaultCurrentPage={0}
+              defaultPageSize={this.state.pageSize}
+            />
+            <PagingPanel pageSizes={this.state.pageSizes} />
+            <SelectionState
+              selection={this.state.selection}
+              onSelectionChange={onSelectionChange}
+            />
+
+            <IntegratedFiltering />
+            <IntegratedSorting />
+            <IntegratedSelection />
+            <IntegratedPaging />
+
+            {/* 테이블 */}
+            <Table />
+            <TableColumnResizing
+              defaultColumnWidths={this.state.defaultColumnWidths}
+            />
+            <TableHeaderRow
+              showSortingControls
+              rowComponent={HeaderRow}
+            />
+            <TableColumnVisibility
+              defaultHiddenColumnNames={['role_id']}
+            />
+            <TableSelection
+              selectByRowClick
+              highlightRow
+            />
+          </Grid>
+        </Paper>
+      </div>
+    );
+  }
+}
+
+
+export default withTranslation()(GrCreateGroup); 

@@ -32,7 +32,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import { HiOutlineDuplicate } from "react-icons/hi";
-
+import { withTranslation } from 'react-i18next';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 
@@ -40,13 +40,7 @@ class Projects extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "cluster", title: "Cluster" },
-        { name: "labels", title: "Labels" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 200 },
         { columnName: "status", width: 100 },
@@ -136,6 +130,14 @@ class Projects extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const columns= [
+      { name: "name", title: t("projects.grid.name") },
+      { name: "status", title: t("projects.grid.status") },
+      { name: "cluster", title: t("projects.grid.cluster") },
+      { name: "labels", title: t("projects.grid.labels") },
+      { name: "created_time", title: t("projects.grid.createdTime") },
+    ];
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -174,7 +176,6 @@ class Projects extends Component {
     
     
     const Cell = (props) => {
-
       const fnEnterCheck = (prop) => {
         var arr = [];
         var i;
@@ -235,6 +236,7 @@ class Projects extends Component {
         // onClick={()=> alert(JSON.stringify(row))}
       />
     );
+
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
       return <Table.Row {...props} key={props.tableRow.key}/>;
@@ -254,7 +256,6 @@ class Projects extends Component {
 
     const open = Boolean(this.state.anchorEl);
 
-
     return (
       <div className="content-wrapper fulled">
         {/* 컨텐츠 헤더 */}
@@ -262,17 +263,17 @@ class Projects extends Component {
           <h1>
             <i><HiOutlineDuplicate/></i>
             <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
-              Projects
+              {t("projects.title")}
             </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Projects
+              {t("projects.title")}
             </li>
           </ol>
         </section>
@@ -317,7 +318,7 @@ class Projects extends Component {
                 </div>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -361,4 +362,4 @@ class Projects extends Component {
   }
 }
 
-export default Projects;
+export default withTranslation()(Projects); 

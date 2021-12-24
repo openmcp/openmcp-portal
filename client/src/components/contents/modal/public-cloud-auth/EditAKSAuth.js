@@ -15,6 +15,7 @@ import axios from "axios";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
 // import Confirm2 from "../../../modules/Confirm2";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -84,20 +85,21 @@ class EditAKSAuth extends Component {
   };
 
   handleSave = (e) => {
+    const {t} = this.props;
     if (this.state.cluster === ""){
-      alert("Please enter Cluster Name");
+      alert(t("config.publicCloudAuth.aks.pop-common.msg.chk-cluster"));
       return;
     } else if (this.state.clientId === ""){
-      alert("Please enter Client ID");
+      alert(t("config.publicCloudAuth.aks.pop-common.msg.chk-clusterId"));
       return;
     } else if (this.state.clientSec === ""){
-      alert("Please enter Client Sec");
+      alert(t("config.publicCloudAuth.aks.pop-common.msg.chk-clientSec"));
       return;
     } else if (this.state.tenantId === ""){
-      alert("Please enter Tenant ID");
+      alert(t("config.publicCloudAuth.aks.pop-common.msg.chk-tenantId"));
       return;
     } else if (this.state.subId === ""){
-      alert("Please enter Sub ID");
+      alert(t("config.publicCloudAuth.aks.pop-common.msg.chk-subId"));
       return;
     } 
 
@@ -166,6 +168,7 @@ class EditAKSAuth extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -200,7 +203,7 @@ class EditAKSAuth extends Component {
             <div className="md-contents-body" style={{minWidth:"500px"}}>
               <section className="md-content">
               <div className="props">
-                  <p>Cluster</p>
+                  <p>{t("config.publicCloudAuth.aks.pop-common.cluster")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -213,7 +216,7 @@ class EditAKSAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Client ID</p>
+                  <p>{t("config.publicCloudAuth.aks.pop-common.clusterId")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -226,7 +229,7 @@ class EditAKSAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Client Sec</p>
+                  <p>{t("config.publicCloudAuth.aks.pop-common.clientSec")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -239,7 +242,7 @@ class EditAKSAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Tenant ID</p>
+                  <p>{t("config.publicCloudAuth.aks.pop-common.tenantId")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -252,7 +255,7 @@ class EditAKSAuth extends Component {
                   />
                 </div>
                 <div className="props">
-                  <p>Sub ID</p>
+                  <p>{t("config.publicCloudAuth.aks.pop-common.subId")}</p>
                   <TextField
                     id="outlined-multiline-static"
                     rows={1}
@@ -269,10 +272,10 @@ class EditAKSAuth extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -281,4 +284,4 @@ class EditAKSAuth extends Component {
   }
 }
 
-export default EditAKSAuth;
+export default withTranslation()(EditAKSAuth); 

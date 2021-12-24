@@ -13,6 +13,7 @@ import Pods from './Pods';
 import HPA from './HPA';
 import VPA from './VPA';
 import { FiBox } from "react-icons/fi";
+import { withTranslation } from 'react-i18next';
 
 
 const styles = (theme) => ({
@@ -95,12 +96,7 @@ class PodMenu extends Component {
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
-    const { classes } = this.props;
-
-
-    
-
-
+    const { t, classes } = this.props;
     return (
       <div>
         <div className="content-wrapper fulled">
@@ -109,16 +105,26 @@ class PodMenu extends Component {
             <h1>
             
             <i><FiBox/></i>
-              <span>Pods</span>
+              <span>{t("pods.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Pods</NavLink>
+                <NavLink to="/pods">{t("pods.title")}</NavLink>
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {this.state.tabHeader.map((i) => {
+                  if(this.state.value+1 === i.index){
+                    return (
+                      <span>{t(`pods.${i.label}.title`)}</span>
+                    );
+                  }
+                  })}
               </li>
             </ol>
           </section>
@@ -143,7 +149,7 @@ class PodMenu extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
+                    <Tab label={t(`pods.${i.label}.title`)} {...a11yProps(i.index)}
                           component={Link}
                           to={{
                             pathname: `/pods/${i.param}`
@@ -184,4 +190,4 @@ class PodMenu extends Component {
   }
 }
 
-export default withStyles(styles)(PodMenu);
+export default withTranslation()(withStyles(styles)(PodMenu));

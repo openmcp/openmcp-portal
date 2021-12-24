@@ -37,7 +37,7 @@ import GrEditGroup from './../modal/GrEditGroup';
 import axios from 'axios';
 import Confirm2 from './../../modules/Confirm2';
 import { SiGraphql} from "react-icons/si";
-
+import { withTranslation } from 'react-i18next';
 
 class GroupRole extends Component {
   constructor(props) {
@@ -73,15 +73,7 @@ class GroupRole extends Component {
       grEditOpen: false,
 
       confirmOpen: false,
-      confirmInfo : {
-        title :"Delete Group Role",
-        context :"Are you sure you want to Delete Group Role?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
-      },
+      
       confrimTarget : "",
       confirmTargetKeyname:"Group Name"
 
@@ -201,8 +193,9 @@ class GroupRole extends Component {
   //   });
   // }
   handleDeleteClick = (e) => {
+    const {t} = this.props;
     if (Object.keys(this.state.selectedRow).length  === 0) {
-      alert("Please select a Group Role");
+      alert(t("groupRole.pop-delete.msg.chk-selectGroup"));
       return;
     } else {
       this.setState({
@@ -263,6 +256,16 @@ class GroupRole extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const confirmInfo = {
+      title : t("groupRole.pop-delete.confirm.title"),
+      context : t("groupRole.pop-delete.confirm.context"),
+      button : {
+        open : "",
+        yes : t("common.btn.confirm"),
+        no : t("common.btn.cancel"),
+      }
+    };
     const onSelectionChange = (selection) => {
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
@@ -280,7 +283,7 @@ class GroupRole extends Component {
     return (
       <div className="content-wrapper fulled">
         <Confirm2
-          confirmInfo={this.state.confirmInfo} 
+          confirmInfo={confirmInfo} 
           confrimTarget ={this.state.confrimTarget} 
           confirmTargetKeyname = {this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
@@ -289,16 +292,16 @@ class GroupRole extends Component {
         <section className="content-header">
           <h1>
           <i><SiGraphql/></i>
-          <span>Group Role</span>
+          <span>{t("groupRole.title")}</span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Settings
+              {t("groupRole.title")}
             </li>
           </ol>
         </section>
@@ -350,7 +353,7 @@ class GroupRole extends Component {
                               onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize: "14px"}}
                               >
-                              <div onClick={this.handleDeleteClick}>Delete Group</div>
+                              <div onClick={this.handleDeleteClick}>{t("groupRole.pop-delete.btn-delete")}</div>
                             </MenuItem>
                             </MenuList>
                           </Paper>
@@ -412,4 +415,4 @@ class GroupRole extends Component {
   }
 }
 
-export default GroupRole;
+export default withTranslation()(GroupRole); 

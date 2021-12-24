@@ -6,6 +6,7 @@ import MetricPieChart from "../module/MetricPieChart";
 import MetricRevsBarChart from "../module/MetricRevsBarChart";
 import MetricSelectBox from "../module/MetricSelectBox";
 import * as utilLog from "./../../../util/UtLogs.js";
+import { withTranslation } from 'react-i18next';
 
 class MetricNamespace extends Component {
   constructor(props) {
@@ -105,6 +106,7 @@ class MetricNamespace extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const angle = {
       full: {
         startAngle: 0,
@@ -137,10 +139,10 @@ class MetricNamespace extends Component {
           [
             <div className="m-left">
               <div className="m-area-header">
-                <span>Namespace Metric</span>
+                <span>{t("multipleMetrics.namespaceMetric.title")}</span>
                 {this.state.selectBoxData ? (
                 <span style={{position: "relative", top: "-3px", right: "8px"}}>
-                  <span style={{position: "relative", top: "8px", right: "0px"}}>name : </span>
+                  <span style={{position: "relative", top: "8px", right: "0px"}}>{t("multipleMetrics.namespaceMetric.lb-namespace")} : </span>
                   {/* <div style={{padding:"10px 15px 0px 15px"}}> */}
                     <MetricSelectBox rows={this.state.selectBoxData} onSelectBoxChange={this.onSelectBoxChange} defaultValue=""></MetricSelectBox>
                   {/* </div> */}
@@ -150,7 +152,7 @@ class MetricNamespace extends Component {
                 <div className="m-single-info-area">
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>pvc</span>
+                      <span>{t("multipleMetrics.namespaceMetric.pvc")}</span>
                     </div>
                     <div className="m-c-body">
                       <span>{this.state.row.volumeState.pvc_cnt}</span>
@@ -158,7 +160,7 @@ class MetricNamespace extends Component {
                   </div>
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>deployment</span>
+                      <span>{t("multipleMetrics.namespaceMetric.deployment")}</span>
                     </div>
                     <div className="m-c-body">
                       <span>{this.state.row.workloadState.deployment}</span>
@@ -166,7 +168,7 @@ class MetricNamespace extends Component {
                   </div>
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>replicaset</span>
+                      <span>{t("multipleMetrics.namespaceMetric.replicaset")}</span>
                     </div>
                     <div className="m-c-body">
                       <span>{this.state.row.workloadState.replicaset}</span>
@@ -174,7 +176,7 @@ class MetricNamespace extends Component {
                   </div>
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>statefulset</span>
+                      <span>{t("multipleMetrics.namespaceMetric.statefulset")}</span>
                     </div>
                     <div className="m-c-body">
                       <span>{this.state.row.workloadState.statefulset}</span>
@@ -182,7 +184,7 @@ class MetricNamespace extends Component {
                   </div>
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>service</span>
+                      <span>{t("multipleMetrics.namespaceMetric.service")}</span>
                     </div>
                     <div className="m-c-body">
                       <span>{this.state.row.serviceState.service}</span>
@@ -190,7 +192,7 @@ class MetricNamespace extends Component {
                   </div>
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>endpoint</span>
+                      <span>{t("multipleMetrics.namespaceMetric.endpoint")}</span>
                     </div>
                     <div className="m-c-body">
                       <span>{this.state.row.serviceState.endpoint}</span>
@@ -202,7 +204,7 @@ class MetricNamespace extends Component {
                   <div className="m-pie-area">
                     <div className="m-content">
                       <div className="m-c-header">
-                        <span>pod state</span>
+                        <span>{t("multipleMetrics.namespaceMetric.podState")}</span>
                       </div>
                       <div className="m-c-body">
                         {this.state.row.podState.hasOwnProperty("status") ? (
@@ -232,7 +234,7 @@ class MetricNamespace extends Component {
                   <div className="m-linechart-area">
                     <div className="m-content">
                       <div className="m-c-header">
-                        <span>network state</span>
+                        <span>{t("multipleMetrics.namespaceMetric.networkState")}</span>
                       </div>
                       <div className="m-c-body">
                         {this.state.row.podState.hasOwnProperty("status") ? (
@@ -267,13 +269,13 @@ class MetricNamespace extends Component {
             </div>,
             <div className="m-right">
               <div className="m-area-header">
-                <span>Namespace Resource Usage Rank</span>
+                <span>{t("multipleMetrics.namespaceMetric.lb-namespaceResourceUsage")}</span>
               </div>
               <div className="m-area-body">
                 <div className="m-pie-area m-barchart-area">
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>cpu top 5</span>
+                      <span>{t("multipleMetrics.namespaceMetric.cpuTop5")}</span>
                     </div>
                     <div className="m-c-body">
                       <MetricRevsBarChart
@@ -284,7 +286,7 @@ class MetricNamespace extends Component {
                   </div>
                   <div className="m-content">
                     <div className="m-c-header">
-                      <span>memory top 5</span>
+                      <span>{t("multipleMetrics.namespaceMetric.memoryTop5")}</span>
                     </div>
                     <div className="m-c-body">
                       <MetricRevsBarChart
@@ -309,4 +311,4 @@ class MetricNamespace extends Component {
   }
 }
 
-export default MetricNamespace;
+export default withTranslation()(MetricNamespace); 

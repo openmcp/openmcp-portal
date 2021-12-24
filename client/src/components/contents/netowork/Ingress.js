@@ -31,19 +31,13 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
+import { withTranslation } from 'react-i18next';
 
 class Ingress extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "cluster", title: "Cluster" },
-        { name: "project", title: "Project" },
-        { name: "address", title: "Address" },
-        { name: "created_time", title: "Created Time" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "cluster", width: 130 },
@@ -60,17 +54,32 @@ class Ingress extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext: `apiVersion: extensions/v1beta1
-kind: Ingress
+//       editorContext2: `apiVersion: extensions/v1beta1
+// kind: Ingress
+// metadata:
+//   namespace: openmcp
+//   labels: {}
+//   name: ingress
+//   annotations:
+//     kubesphere.io/alias-name: ingress
+//     kubesphere.io/description: ingress-test
+// spec:
+//   rules: []`,
+      editorContext: `apiVersion:  openmcp.k8s.io/v1alpha1
+kind: OpenMCPIngress
 metadata:
-  namespace: openmcp
-  labels: {}
-  name: ingress
-  annotations:
-    kubesphere.io/alias-name: ingress
-    kubesphere.io/description: ingress-test
+  name: [ingress name]
+  namespace: [namespace name]
 spec:
-  rules: []`,
+  template:
+    spec:
+      rules:
+      - host: [host name]
+        http:
+          paths:
+          - backend:
+              serviceName: [service name]
+              servicePort: [service port]`,
       anchorEl: null,
     };
   }
@@ -149,7 +158,6 @@ spec:
     const data = {
       yaml: context,
     };
-    console.log(context);
     axios
       .post(url, data)
       .then((res) => {
@@ -163,6 +171,14 @@ spec:
   };
 
   render() {
+    const {t} = this.props;
+    const columns= [
+      { name: "name", title: t("network.ingress.grid.name") },
+      { name: "cluster", title: t("network.ingress.grid.cluster") },
+      { name: "project", title: t("network.ingress.grid.project") },
+      { name: "address", title: t("network.ingress.grid.address") },
+      { name: "created_time", title: t("network.ingress.grid.createdTime") },
+    ];
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -321,8 +337,8 @@ spec:
                               onKeyDown={(e) => e.stopPropagation()}
                               style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
                                 <Editor
-                                  btTitle="create"
-                                  title="Create Ingress"
+                                  btTitle={t("network.ingress.pop-create.btn-create")}
+                                  title={t("network.ingress.pop-create.title")}
                                   context={this.state.editorContext}
                                   excuteScript={this.excuteScript}
                                   menuClose={handleClose}
@@ -334,7 +350,7 @@ spec:
                     )}
                   </Popper>
                 </div>,
-                <Grid rows={this.state.rows} columns={this.state.columns}>
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -382,4 +398,4 @@ spec:
   }
 }
 
-export default Ingress;
+export default withTranslation()(Ingress); 

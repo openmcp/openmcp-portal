@@ -238,7 +238,7 @@ class Snapshot extends Component {
                   }}
                 >
                   <ExcuteSnapshot
-                    title="Take Snapshot"
+                    title=""
                     rowData={this.state.selectedRow}
                     onUpdateData={this.onUpdateData}
                   />

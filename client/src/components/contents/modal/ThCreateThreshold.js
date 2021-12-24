@@ -39,6 +39,7 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -117,6 +118,12 @@ class ThCreateThreshold extends Component {
 
   handleClose = () => {
     this.setState({
+      selectedCluster: [],
+      clusterSelectionId: [],
+
+      selectedNode: [],
+      NodeSelectionId: [],
+
       clusterName: "",
       nodeName: "",
       cpuWarn: 0,
@@ -131,29 +138,31 @@ class ThCreateThreshold extends Component {
   };
 
   handleSave = (e) => {
-    if (Object.keys(this.state.selectedCluster).length === 0) {
-      alert("Please select 'Cluster'");
+    const {t} = this.props;
+
+    if (this.state.selectedCluster[0].length === 0) {
+      alert(t("alert.threshold.pop-create.msg.chk-cluster"));
       return;
-    } else if (Object.keys(this.state.selectedNode).length === 0) {
-      alert("Please select 'Node'");
+    } else if (this.state.selectedNode[0].length === 0) {
+      alert(t("alert.threshold.pop-create.msg.chk-node"));
       return;
     } else if (this.state.cpuWarn === 0) {
-      alert("Please set 'cpu warning threshold (%)'");
+      alert(t("alert.threshold.pop-create.msg.chk-cpuW"));
       return;
     } else if (this.state.cpuDanger === 0) {
-      alert("Please set 'cpu danger threshold (%)'");
+      alert(t("alert.threshold.pop-create.msg.chk-cpuD"));
       return;
     } else if (this.state.ramWarn === 0) {
-      alert("Please set 'ram warning threshold (%)'");
+      alert(t("alert.threshold.pop-create.msg.chk-memoryW"));
       return;
     } else if (this.state.ramDanger === 0) {
-      alert("Please set 'ram danger threshold (%)'");
+      alert(t("alert.threshold.pop-create.msg.chk-memoryD"));
       return;
     } else if (this.state.stroageWarn === 0) {
-      alert("Please set 'storage warning threshold (%)'");
+      alert(t("alert.threshold.pop-create.msg.chk-storageW"));
       return;
     } else if (this.state.stroageDanger === 0) {
-      alert("Please set 'storage danger threshold (%)'");
+      alert(t("alert.threshold.pop-create.msg.chk-storageD"));
       return;
     }
 
@@ -194,19 +203,20 @@ class ThCreateThreshold extends Component {
 
   onSelectCluster = (rows, selectionId) => {
     this.setState({
-      selectedCluster: [rows.length > 0 ? rows[0].name : ""],
+      selectedCluster: [rows.length > 0 ? rows[0].name : ''],
       clusterSelectionId: selectionId,
     });
   };
 
   onSelectNode = (rows, selectionId) => {
     this.setState({
-      selectedNode: [rows.length > 0 ? rows[0].name : ""],
+      selectedNode: [rows.length > 0 ? rows[0].name : ''],
       NodeSelectionId: selectionId,
     });
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -225,20 +235,20 @@ class ThCreateThreshold extends Component {
       );
     });
 
-    const steps = ["Select Cluster", "Select Node(host)", "Set Threshold"];
+    const steps = [t("alert.threshold.pop-create.step.1.title"),t("alert.threshold.pop-create.step.2.title"), t("alert.threshold.pop-create.step.3.title")];
     const handleNext = () => {
       switch (this.state.activeStep) {
         case 0:
-          if (Object.keys(this.state.selectedCluster).length === 0) {
-            alert("Please select 'Cluster'");
+          if (this.state.selectedCluster[0].length === 0) {
+            alert(t("alert.threshold.pop-create.msg.chk-cluster"));
             return;
           } else {
             this.setState({ activeStep: this.state.activeStep + 1 });
             return;
           }
         case 1:
-          if (Object.keys(this.state.selectedNode).length === 0) {
-            alert("Please select 'Node'");
+          if (this.state.selectedNode[0].length === 0) {
+            alert(t("alert.threshold.pop-create.msg.chk-node"));
             return;
           } else {
             this.setState({ activeStep: this.state.activeStep + 1 });
@@ -246,22 +256,22 @@ class ThCreateThreshold extends Component {
           }
         case 2:
           if (this.state.cpuWarn === 0) {
-            alert("Please set 'cpu warning threshold (%)'");
+            alert(t("alert.threshold.pop-create.msg.chk-cpuW"));
             return;
           } else if (this.state.cpuDanger === 0) {
-            alert("Please set 'cpu danger threshold (%)'");
+            alert(t("alert.threshold.pop-create.msg.chk-cpuD"));
             return;
           } else if (this.state.ramWarn === 0) {
-            alert("Please set 'ram warning threshold (%)'");
+            alert(t("alert.threshold.pop-create.msg.chk-memoryW"));
             return;
           } else if (this.state.ramDanger === 0) {
-            alert("Please set 'ram danger threshold (%)'");
+            alert(t("alert.threshold.pop-create.msg.chk-memoryD"));
             return;
           } else if (this.state.stroageWarn === 0) {
-            alert("Please set 'storage warning threshold (%)'");
+            alert(t("alert.threshold.pop-create.msg.chk-storageW"));
             return;
           } else if (this.state.stroageDanger === 0) {
-            alert("Please set 'storage danger threshold (%)'");
+            alert(t("alert.threshold.pop-create.msg.chk-storageD"));
             return;
           } else {
             this.setState({ activeStep: this.state.activeStep + 1 });
@@ -278,6 +288,7 @@ class ThCreateThreshold extends Component {
 
 
     return (
+      
       <div>
         <div
           onClick={this.handleClickOpen}
@@ -287,7 +298,7 @@ class ThCreateThreshold extends Component {
             textTransform: "capitalize",
           }}
         >
-          Create Threshold
+          {t("alert.threshold.pop-create.btn-create")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -297,7 +308,7 @@ class ThCreateThreshold extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Create Host Threshold
+          {t("alert.threshold.pop-create.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body small-grid">
@@ -315,6 +326,7 @@ class ThCreateThreshold extends Component {
                       <ThCluseter
                         selection={this.state.clusterSelectionId}
                         onSelectCluster={this.onSelectCluster}
+                        t={t}
                       />
                     </section>
                   ) : this.state.activeStep === 1 ? (
@@ -324,6 +336,7 @@ class ThCreateThreshold extends Component {
                         selectedCluster={this.state.selectedCluster}
                         selection={this.state.NodeSelectionId}
                         onSelectNode={this.onSelectNode}
+                        t={t}
                       />
                     </section>
                   ) : (
@@ -334,7 +347,7 @@ class ThCreateThreshold extends Component {
                             className="props pj-pc-textfield"
                             style={{ width: "50%", marginRight: "10px" }}
                           >
-                            <p>CPU Threshold (Warning)</p>
+                            <p>{t("alert.threshold.pop-create.step.3.cpuThW")}</p>
                             <TextField
                               id="outlined-multiline-static"
                               rows={1}
@@ -352,7 +365,7 @@ class ThCreateThreshold extends Component {
                             className="props pj-pc-textfield"
                             style={{ width: "50%" }}
                           >
-                            <p>CPU Threshold (Danger)</p>
+                            <p>{t("alert.threshold.pop-create.step.3.cpuThD")}</p>
                             <TextField
                               id="outlined-multiline-static"
                               rows={1}
@@ -374,7 +387,7 @@ class ThCreateThreshold extends Component {
                             className="props pj-pc-textfield"
                             style={{ width: "50%", marginRight: "10px" }}
                           >
-                            <p>Memory Threshold (Warning)</p>
+                            <p>{t("alert.threshold.pop-create.step.3.memoryThW")}</p>
                             <TextField
                               id="outlined-multiline-static"
                               rows={1}
@@ -392,7 +405,7 @@ class ThCreateThreshold extends Component {
                             className="props pj-pc-textfield"
                             style={{ width: "50%" }}
                           >
-                            <p>Memory Threshold (Danger)</p>
+                            <p>{t("alert.threshold.pop-create.step.3.memoryThD")}</p>
                             <TextField
                               id="outlined-multiline-static"
                               rows={1}
@@ -414,7 +427,7 @@ class ThCreateThreshold extends Component {
                             className="props pj-pc-textfield"
                             style={{ width: "50%", marginRight: "10px" }}
                           >
-                            <p>Storage Threshold (Warning)</p>
+                            <p>{t("alert.threshold.pop-create.step.3.storageThW")}</p>
                             <TextField
                               id="outlined-multiline-static"
                               rows={1}
@@ -432,7 +445,7 @@ class ThCreateThreshold extends Component {
                             className="props pj-pc-textfield"
                             style={{ width: "50%" }}
                           >
-                            <p>Storage Threshold (Danger)</p>
+                            <p>{t("alert.threshold.pop-create.step.3.storageThD")}</p>
                             <TextField
                               id="outlined-multiline-static"
                               rows={1}
@@ -460,15 +473,15 @@ class ThCreateThreshold extends Component {
                 disabled={this.state.activeStep === 0}
                 onClick={handleBack}
               >
-                Back
+                {t("common.btn.back")}
               </Button>
               {this.state.activeStep === steps.length - 1 ? (
                 <Button onClick={this.handleSave} color="primary">
-                  save
+                  {t("common.btn.save")}
                 </Button>
               ) : (
                 <Button color="primary" onClick={handleNext}>
-                  next
+                  {t("common.btn.next")}
                 </Button>
               )}
             </div>
@@ -476,7 +489,7 @@ class ThCreateThreshold extends Component {
               save
             </Button> */}
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -600,6 +613,7 @@ class ThCluseter extends Component {
   };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -636,7 +650,7 @@ class ThCluseter extends Component {
 
     return (
       <div>
-        <p>Selected Clusters</p>
+        <p>{t("alert.threshold.pop-create.step.1.selectClusters.title")}</p>
         <div
           id="md-content-info"
           style={{ display: "block", minHeight: "40px", marginBottom: "10px" }}
@@ -662,7 +676,7 @@ class ThCluseter extends Component {
                 textAlign: "center",
               }}
             >
-              Please Select Cluster
+              {t("alert.threshold.pop-create.step.1.selectClusters.placeholder")}
             </div>
           )}
         </div>
@@ -804,6 +818,7 @@ class ThNode extends Component {
   }
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -831,7 +846,7 @@ class ThNode extends Component {
 
     return (
       <div>
-        <p>Selected Node</p>
+        <p>{t("alert.threshold.pop-create.step.2.selectNode.title")}</p>
         <div
           id="md-content-info"
           style={{ display: "block", minHeight: "40px", marginBottom: "10px" }}
@@ -852,7 +867,7 @@ class ThNode extends Component {
                 textAlign: "center",
               }}
             >
-              Please Select Node
+              {t("alert.threshold.pop-create.step.2.selectNode.placeholder")}
             </div>
           )}
         </div>
@@ -909,5 +924,4 @@ class ThNode extends Component {
   }
 }
 
-
-export default ThCreateThreshold;
+export default withTranslation()(ThCreateThreshold); 

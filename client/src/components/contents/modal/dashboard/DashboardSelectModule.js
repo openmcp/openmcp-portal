@@ -22,6 +22,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
+import { withTranslation } from 'react-i18next';
+
 
 function not(a, b) {
   return a.filter((value) => b.indexOf(value) === -1);
@@ -53,7 +55,7 @@ class DashboardSelectModule extends Component {
     super(props);
     this.state = {
       checked : [],
-      left : ["system_status","cluster_groups","openmcp_management_clusters","world_cluster_status"],
+      left : [],
       right : []
     }
   }
@@ -75,6 +77,10 @@ class DashboardSelectModule extends Component {
   onChange(e) {}
 
   handleClickOpen = () => {
+    if(this.props.componentList.length >0){
+
+    }
+
     this.setState({
       open: true,
       left: this.props.componentList,
@@ -141,6 +147,7 @@ class DashboardSelectModule extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -279,7 +286,7 @@ class DashboardSelectModule extends Component {
             textTransform: "capitalize",
           }}
         >
-          Edit Dashboard
+          {t("dashboard.btn-edit")}
         </Button>
         <Dialog
           onClose={this.handleClose}
@@ -289,7 +296,7 @@ class DashboardSelectModule extends Component {
           maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Dashboard Custom View
+            {t("dashboard.pop-editDashboard.title")}
           </DialogTitle>
           <DialogContent dividers>
             <Grid
@@ -298,7 +305,7 @@ class DashboardSelectModule extends Component {
               justifyContent="center"
               alignItems="center"
             >
-              <Grid item>{customList("Choices", this.state.left)}</Grid>
+              <Grid item>{customList(t("dashboard.pop-editDashboard.lb-choices"), this.state.left)}</Grid>
               <Grid item>
                 <Grid container direction="column" alignItems="center">
                   <Button
@@ -323,15 +330,15 @@ class DashboardSelectModule extends Component {
                   </Button>
                 </Grid>
               </Grid>
-              <Grid item>{customList("Chosen", this.state.right)}</Grid>
+              <Grid item>{customList(t("dashboard.pop-editDashboard.lb-chosen"), this.state.right)}</Grid>
             </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+              {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -340,4 +347,4 @@ class DashboardSelectModule extends Component {
   }
 }
 
-export default DashboardSelectModule;
+export default withTranslation()(DashboardSelectModule); 

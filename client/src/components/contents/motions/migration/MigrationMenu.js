@@ -12,6 +12,7 @@ import { NavigateNext } from "@material-ui/icons";
 import MigrationLog from "./MigrationLog";
 import Migration from "./Migration";
 import { RiInboxUnarchiveLine } from "react-icons/ri";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -71,7 +72,7 @@ class MigrationMenu extends Component {
     value: 0,
     tabHeader: [
       { label: "migration", index: 1, param: "execute" },
-      { label: "migration log", index: 2, param: "log" },
+      { label: "migrationLog", index: 2, param: "log" },
       // { label: "DaemonSets", index: 3 },
     ],
   };
@@ -86,6 +87,7 @@ class MigrationMenu extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -100,24 +102,28 @@ class MigrationMenu extends Component {
               <i>
                 <RiInboxUnarchiveLine />
               </i>
-              <span>Migration</span>
+              <span>{t("migrations.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                <NavLink to="/motions">Motions</NavLink>
+                <NavLink to="/motions/migration/execute">{t("migrations.title")}</NavLink>
               </li>
-              <li className="active">
-                <NavigateNext
-                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-                />
-                Migration
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {this.state.tabHeader.map((i) => {
+                  if(this.state.value+1 === i.index){
+                    return (
+                      <span>{t(`migrations.${i.label}.title`)}</span>
+                    );
+                  }
+                  })}
               </li>
             </ol>
           </section>
@@ -143,7 +149,7 @@ class MigrationMenu extends Component {
                   {this.state.tabHeader.map((i) => {
                     return (
                       <Tab
-                        label={i.label}
+                        label={t(`migrations.${i.label}.title`)}
                         {...a11yProps(i.index)}
                         component={Link}
                         to={{
@@ -217,4 +223,4 @@ class MigrationMenu extends Component {
 //   );
 // }
 
-export default withStyles(styles)(MigrationMenu);
+export default withTranslation()(withStyles(styles)(MigrationMenu));

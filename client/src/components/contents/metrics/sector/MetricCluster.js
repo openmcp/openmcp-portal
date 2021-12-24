@@ -3,6 +3,7 @@ import { AsyncStorage } from "AsyncStorage";
 import React, { Component } from "react";
 import MetricPieChart from "../module/MetricPieChart";
 import * as utilLog from "./../../../util/UtLogs.js";
+import { withTranslation } from 'react-i18next';
 
 class MetricCluster extends Component {
   constructor(props) {
@@ -51,6 +52,7 @@ class MetricCluster extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const angle = {
       full: {
         startAngle: 0,
@@ -80,14 +82,14 @@ class MetricCluster extends Component {
         {this.state.row ? (
           [
             <div className="m-area-header">
-              <span>Cluster Metric</span>
+              <span>{t("multipleMetrics.clusterMetric.title")}</span>
               {/* <span>{this.props.cluster}</span> */}
             </div>,
             <div className="m-area-body">
               <div className="m-single-info-area">
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>deployment</span>
+                    <span>{t("multipleMetrics.clusterMetric.deployment")}</span>
                   </div>
                   <div className="m-c-body">
                     <span>{this.state.row.workloadState.deployment}</span>
@@ -95,7 +97,7 @@ class MetricCluster extends Component {
                 </div>
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>replicaset</span>
+                    <span>{t("multipleMetrics.clusterMetric.replicaset")}</span>
                   </div>
                   <div className="m-c-body">
                     <span>{this.state.row.workloadState.replicaset}</span>
@@ -103,7 +105,7 @@ class MetricCluster extends Component {
                 </div>
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>statefulset</span>
+                    <span>{t("multipleMetrics.clusterMetric.statefulset")}</span>
                   </div>
                   <div className="m-c-body">
                     <span>{this.state.row.workloadState.statefulset}</span>
@@ -111,7 +113,7 @@ class MetricCluster extends Component {
                 </div>
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>service</span>
+                    <span>{t("multipleMetrics.clusterMetric.service")}</span>
                   </div>
                   <div className="m-c-body">
                     <span>{this.state.row.serviceState.service}</span>
@@ -119,7 +121,7 @@ class MetricCluster extends Component {
                 </div>
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>endpoint</span>
+                    <span>{t("multipleMetrics.clusterMetric.endpoint")}</span>
                   </div>
                   <div className="m-c-body">
                     <span>{this.state.row.serviceState.endpoint}</span>
@@ -130,7 +132,7 @@ class MetricCluster extends Component {
               <div className="m-pie-area">
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>node state</span>
+                    <span>{t("multipleMetrics.clusterMetric.nodeState")}</span>
                   </div>
                   <div className="m-c-body">
                     {this.state.row.nodeState.hasOwnProperty("status") ? (
@@ -147,7 +149,7 @@ class MetricCluster extends Component {
                 </div>
                 <div className="m-content">
                   <div className="m-c-header">
-                    <span>pod state</span>
+                    <span>{t("multipleMetrics.clusterMetric.podState")}</span>
                   </div>
                   <div className="m-c-body">
                     {this.state.row.podState.hasOwnProperty("status") ? (
@@ -177,4 +179,4 @@ class MetricCluster extends Component {
   }
 }
 
-export default MetricCluster;
+export default withTranslation()(MetricCluster); 

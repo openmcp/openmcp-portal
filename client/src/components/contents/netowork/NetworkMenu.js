@@ -13,7 +13,7 @@ import DNS from './DNS';
 import Services from './Services';
 import Ingress from './Ingress';
 import { BiNetworkChart } from "react-icons/bi";
-
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -95,11 +95,7 @@ class NetworkMenu extends Component {
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
-    const { classes } = this.props;
-
-
-    
-
+    const { classes, t } = this.props;
 
     return (
       <div>
@@ -108,16 +104,26 @@ class NetworkMenu extends Component {
           <section className="content-header">
             <h1>
             <i><BiNetworkChart/></i>
-              <span>Network</span>
+              <span>{t("network.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/clusters">Network</NavLink>
+                <NavLink to="/network">{t("network.title")}</NavLink>
+              </li>
+              <li>
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {this.state.tabHeader.map((i) => {
+                  if(this.state.value+1 === i.index){
+                    return (
+                      <span>{t(`network.${i.label}.title`)}</span>
+                    );
+                  }
+                  })}
               </li>
             </ol>
           </section>
@@ -183,4 +189,4 @@ class NetworkMenu extends Component {
   }
 }
 
-export default withStyles(styles)(NetworkMenu);
+export default withTranslation()(withStyles(styles)(NetworkMenu));

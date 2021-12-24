@@ -32,6 +32,7 @@
   import MenuList from '@material-ui/core/MenuList';
   import Grow from '@material-ui/core/Grow';
   //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+  import { withTranslation } from 'react-i18next';
 
   class ConfigGKE extends Component {
     constructor(props) {
@@ -119,17 +120,19 @@
     };
   
     handleClickNew = () => {
+      const {t} = this.props;
       this.setState({ 
         open : true,
         new : true,
-        popTitle:"Add GKE Authentication",
+        popTitle:t("config.publicCloudAuth.gke.pop-new.title"),
         data:{}
       });
     };
   
     handleClickEdit = () => {
+      const {t} = this.props;
       if (Object.keys(this.state.selectedRow).length  === 0) {
-        alert("Please select a authentication data row");
+        alert(t("config.publicCloudAuth.gke.pop-edit.msg.chk-selectAuth"));
         this.setState({ open: false });
         return;
       }
@@ -137,7 +140,7 @@
       this.setState({ 
         open: true, 
         new: false, 
-        popTitle:"Edit GKE Authentication",
+        popTitle: t("config.publicCloudAuth.gke.pop-edit.title"),
         data:{
           seq : this.state.selectedRow.seq,
           cluster: this.state.selectedRow.cluster,
@@ -150,8 +153,9 @@
     };
 
     handleClickDelete = () => {
+      const {t} = this.props;
       if (Object.keys(this.state.selectedRow).length  === 0) {
-        alert("Please select a authentication data row");
+        alert(t("config.publicCloudAuth.gke.pop-edit.msg.chk-selectAuth"));
         this.setState({ open: false });
         return;
       } else {
@@ -198,6 +202,16 @@
     }
   
     render() {
+      const {t} = this.props;
+      const confirmInfo = {
+        title: t("config.publicCloudAuth.gke.pop-delete.title"),
+        context: t("config.publicCloudAuth.gke.pop-delete.context"),
+        button: {
+          open: "",
+          yes: t("common.btn.confirm"),
+          no: t("common.btn.cancel"),
+        },
+      };
       const HeaderRow = ({ row, ...restProps }) => (
         <Table.Row
           {...restProps}
@@ -243,7 +257,7 @@
         <div>
 
           <Confirm2
-            confirmInfo={this.state.confirmInfo} 
+            confirmInfo={confirmInfo} 
             confrimTarget ={this.state.confrimTarget} 
             confirmTargetKeyname = {this.state.confirmTargetKeyname}
             confirmed={this.confirmed}
@@ -263,7 +277,7 @@
                           backgroundColor: "#bfdcec",
                           boxShadow: "0px 0px 3px 0px #b9b9b9"
                         }}
-            > GKE Authentications Configration</div>
+            >  {t("config.publicCloudAuth.gke.description")}</div>
             <section className="md-content">
               <Paper>
               <div
@@ -300,7 +314,7 @@
                                 onClick={this.handleClickNew}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                New </div>
+                                {t("config.publicCloudAuth.gke.pop-new.btn-open")} </div>
                             </MenuItem>
                             <MenuItem
                             onKeyDown={(e) => e.stopPropagation()}
@@ -311,7 +325,7 @@
                                 onClick={this.handleClickEdit}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                Edit
+                                {t("config.publicCloudAuth.gke.pop-edit.btn-open")}
                               </div>
                             </MenuItem>
                             <MenuItem
@@ -323,7 +337,7 @@
                                 onClick={this.handleClickDelete}
                                 style={{ width: "148px", textTransform: "capitalize", }}
                               >
-                                Delete
+                                {t("config.publicCloudAuth.gke.pop-delete.btn-open")}
                               </div>
                             </MenuItem>
                             </MenuList>
@@ -429,5 +443,4 @@
     }
   }
   
-  export default ConfigGKE;
-  
+  export default withTranslation()(ConfigGKE); 

@@ -33,6 +33,7 @@ import {
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -116,8 +117,9 @@ class ExcuteMigration extends Component {
   };
 
   handleClickOpen = () => {
+    const {t} = this.props;
     if (Object.keys(this.props.rowData).length === 0) {
-      alert("Please select deployment");
+      alert(t("migrations.migration.pop-migration.msg.chk-selectDeployment"));
       this.setState({ open: false });
       return;
     }
@@ -180,8 +182,9 @@ class ExcuteMigration extends Component {
   };
 
   handleSave = (e) => {
+    const {t}=this.props;
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert("Please select target cluster");
+      alert(t("common.msg.unselected-target"));
       return;
     }
 
@@ -219,7 +222,7 @@ class ExcuteMigration extends Component {
     axios
       .post(url, data)
       .then((res) => {
-        alert("Migration request has been completed");
+        alert(t("migrations.migration.pop-migration.msg.completedRequest"));
         this.setState({ open: false });
         this.props.onUpdateData();
         this.props.menuClose();
@@ -243,6 +246,7 @@ class ExcuteMigration extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -315,7 +319,7 @@ class ExcuteMigration extends Component {
             textTransform: "capitalize",
           }}
         >
-          Migration
+          {t("migrations.migration.pop-migration.btn-migration")}
         </div>
         <Dialog
           onClose={this.handleClose}
@@ -325,13 +329,13 @@ class ExcuteMigration extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Deployment Migration
+          {t("migrations.migration.pop-migration.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body migration">
               <section className="md-content">
                 {/* deployment informations */}
-                <p>Target Deployments</p>
+                <p>{t("migrations.migration.pop-migration.targetDeployments.title")}</p>
                 <div
                   style={{
                     padding: "10px",
@@ -364,7 +368,7 @@ class ExcuteMigration extends Component {
                 </div>
               </section>
               <section className="md-content" style={{ minHeight: "200px" }}>
-                <p>Select Cluster</p>
+                <p>{t("migrations.migration.pop-migration.selectCluster.title")}</p>
                 {/* cluster selector */}
                 <Paper>
                   {this.state.clusters.length > 0 ? (
@@ -458,10 +462,10 @@ class ExcuteMigration extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              excution
+              {t("common.btn.excution")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -487,5 +491,4 @@ class ExcuteMigration extends Component {
 //   });
 // }
 
-
-export default ExcuteMigration;
+export default withTranslation()(ExcuteMigration); 

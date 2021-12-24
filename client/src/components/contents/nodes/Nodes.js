@@ -35,25 +35,13 @@ import Grow from '@material-ui/core/Grow';
 import LinearProgressBar from './../../modules/LinearProgressBar';
 import { CgServer} from "react-icons/cg";
 import LinearProgressBar2 from "../../modules/LinearProgressBar2.js";
-
+import { withTranslation } from 'react-i18next';
 
 class Nodes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Node" },
-        { name: "status", title: "Status" },
-        { name: "cluster", title: "Cluster"},
-        { name: "role", title: "Role" },
-        { name: "system_version", title: "System Version" },
-        { name: "cpu", title: "CPU" },
-        { name: "memory", title: "Memory" },
-        { name: "pods", title: "Pods" },
-        { name: "provider", title: "Provider" },
-        { name: "region", title: "Region" },
-        { name: "zone", title: "Zone" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
         { columnName: "status", width: 100 },
@@ -204,6 +192,20 @@ class Nodes extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const columns = [
+      { name: "name", title: t("nodes.grid.name") },
+      { name: "status", title: t("nodes.grid.status") },
+      { name: "cluster", title: t("nodes.grid.cluster")},
+      { name: "role", title: t("nodes.grid.role") },
+      { name: "system_version", title: t("nodes.grid.version") },
+      { name: "cpu", title: t("nodes.grid.cpu") },
+      { name: "memory", title: t("nodes.grid.memory") },
+      { name: "pods", title: t("nodes.grid.pods") },
+      { name: "provider", title: t("nodes.grid.provider") },
+      { name: "region", title: t("nodes.grid.region") },
+      { name: "zone", title: t("nodes.grid.zone") },
+    ];
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell>
@@ -380,17 +382,17 @@ class Nodes extends Component {
             {/* <span  style={{cursor:"pointer"}}> */}
             <i><CgServer/></i>
             <span>
-              Nodes
+              {t("nodes.title")}
             </span>
             <small></small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Nodes
+              {t("nodes.title")}
             </li>
           </ol>
         </section>
@@ -437,7 +439,7 @@ class Nodes extends Component {
                 </div>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -501,4 +503,5 @@ class InfoWindow extends Component {
   }
 }
 
-export default Nodes;
+export default withTranslation()(Nodes); 
+

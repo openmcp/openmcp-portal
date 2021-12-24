@@ -43,6 +43,7 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import { withTranslation } from 'react-i18next';
 
 // let apiParams = "";
 class PjwStatefulsets extends Component {
@@ -226,6 +227,7 @@ spec:
   }
 
   render() {
+    const {t} = this.props;
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -378,7 +380,7 @@ spec:
                                 // onClick={handleClose}
                                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
                               >
-                                <Editor btTitle="create" title="Create Statefulset" context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
+                                <Editor btTitle={t("projects.detail.resources.workloads.statefulsets.pop-create.btn-create")} title={t("projects.detail.resources.workloads.statefulsets.pop-create.title")} context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
                               </MenuItem>
                             </MenuList>
                           </Paper>
@@ -449,4 +451,4 @@ spec:
   }
 }
 
-export default PjwStatefulsets;
+export default withTranslation()(PjwStatefulsets); 

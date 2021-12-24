@@ -14,6 +14,7 @@ import {
 import PdPodResourceConfig from './../../modal/PdPodResourceConfig';
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
+import { withTranslation } from 'react-i18next';
 
 
 
@@ -72,26 +73,35 @@ class PjPodDetail extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div>
         <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              { this.props.match.params.pod}
-              <small>Pod Overview</small>
+            {t("pods.pod.detail.title")}
+              <small>{ this.props.match.params.pod}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/projects">Projects</NavLink>
+                <NavLink to="/projects">{t("projects.title")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Resources
+                {t("projects.detail.resources.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.detail.resources.pods.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("pods.pod.detail.title")}
               </li>
             </ol>
           </section>
@@ -100,11 +110,11 @@ class PjPodDetail extends Component {
           <section className="content">
           {this.state.rows ? (
             [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <PodStatus rowData={this.state.rows.pod_status}/>,
-            <Containers rowData={this.state.rows.containers}/>,
-            <PhysicalResources rowData={this.state.rows.physical_resources}/>,
-            <Events rowData={this.state.rows.events}/>
+            <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
+            <PodStatus rowData={this.state.rows.pod_status} t={t}/>,
+            <Containers rowData={this.state.rows.containers} t={t}/>,
+            <PhysicalResources rowData={this.state.rows.physical_resources} t={t}/>,
+            <Events rowData={this.state.rows.events} t={t}/>
             ]
           ) : (
             <CircularProgress
@@ -122,10 +132,11 @@ class PjPodDetail extends Component {
 
 class BasicInfo extends Component {
   render(){
+    const t = this.props.t;
     return (
       <div className="content-box">
         <div className="cb-header">
-          <span>Basic Info</span>
+          <span>{t("pods.pod.detail.basicInfo.title")}</span>
           {/* <PdPodResourceConfig name={this.props.rowData.name} resources={this.props.rowData.resources}/> */}
           {/* <PdPodResourceConfig
             data={this.props.rowData}
@@ -256,6 +267,7 @@ class Containers extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -274,7 +286,7 @@ class Containers extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Containers</div>
+        <div className="cb-header">{t("pods.pod.detail.containers.title")}</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -383,6 +395,7 @@ class PodStatus extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -401,7 +414,7 @@ class PodStatus extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Pod Status</div>
+        <div className="cb-header">{t("pods.pod.detail.podStatus.title")}</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -452,10 +465,11 @@ class PodStatus extends Component {
 
 class PhysicalResources extends Component {
   render(){
+    const t = this.props.t;
     const network_title = ["in", "out"];
     return (
       <div className="content-box line-chart">
-        <div className="cb-header">Physical Resources</div>
+        <div className="cb-header">{t("pods.pod.detail.physicalResources.title")}</div>
         <div className="cb-body">
           <div className="cb-body-content">
             <LineReChart 
@@ -541,6 +555,7 @@ class Events extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -559,7 +574,7 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">{t("pods.pod.detail.events.title")}</div>
         <div className="cb-body">
         <Paper>
             {this.state.rows ? (
@@ -608,5 +623,4 @@ class Events extends Component {
   };
 };
 
-
-export default PjPodDetail;
+export default withTranslation()(PjPodDetail); 

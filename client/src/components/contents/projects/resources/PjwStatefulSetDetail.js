@@ -25,7 +25,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-
+import { withTranslation } from 'react-i18next';
 // import { withStyles, makeStyles } from "@material-ui/core/styles";
 // import clsx from "clsx";
 
@@ -101,12 +101,13 @@ class PjwStatefulSetDetail extends Component {
 
 
   render() {
+    const {t} = this.props;
     return (
       <div>
         <div className="sub-content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
           <section className="sub-content-header" style={{ paddingTop: 15 }}>
-            Overview
+          {t("projects.detail.resources.workloads.statefulsets.detail.title")}
             <small>
               <NavigateNext
                 style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
@@ -132,14 +133,14 @@ class PjwStatefulSetDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} />,
+                <BasicInfo rowData={this.state.rows.basic_info} t={t} />,
                 // <ReplicaStatus refresh={this.refresh} />,
-                <Pods rowData={this.state.rows.pods} />,
-                <Ports rowData={this.state.rows.ports} />,
+                <Pods rowData={this.state.rows.pods} t={t}/>,
+                <Ports rowData={this.state.rows.ports} t={t}/>,
                 // <PhysicalResources
                 //   rowData={this.state.rows.physical_resources}
                 // />,
-                <Events rowData={this.state.rows.events} />,
+                <Events rowData={this.state.rows.events} t={t}/>,
               ]
             ) : (
               <CircularProgress
@@ -157,9 +158,10 @@ class PjwStatefulSetDetail extends Component {
 
 class BasicInfo extends Component {
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.basicInfo.title")}</div>
         <div className="cb-body">
           <div style={{display:"flex"}}>
             <div className="cb-body-left">
@@ -461,6 +463,7 @@ class Pods extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -479,7 +482,7 @@ class Pods extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Pods</div>
+        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.pods.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -587,7 +590,7 @@ class Ports extends Component {
   // };
 
   render() {
-
+    const t = this.props.t;
     const Cell = (props) => {
       // const { column, row } = props;
 
@@ -634,7 +637,7 @@ class Ports extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Ports</div>
+        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.ports.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -785,6 +788,7 @@ class Events extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -803,7 +807,7 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Events</div>
+        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.events.title")}</div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -854,4 +858,4 @@ class Events extends Component {
   }
 }
 
-export default PjwStatefulSetDetail;
+export default withTranslation()(PjwStatefulSetDetail); 

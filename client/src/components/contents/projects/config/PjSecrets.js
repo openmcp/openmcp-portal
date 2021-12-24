@@ -23,6 +23,7 @@ import Editor from "./../../../modules/Editor";
 import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from './../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
+import { withTranslation } from 'react-i18next';
 
 let apiParams = "";
 class PjSecrets extends Component {
@@ -104,7 +105,7 @@ class PjSecrets extends Component {
   };
 
   render() {
-
+    const {t} = this.props;
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -195,20 +196,26 @@ class PjSecrets extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Secrets
+            {t("projects.detail.config.secrets.title")}
             <small>{apiParams}</small>
           </h1>
           <ol className="breadcrumb">
             <li>
-              <NavLink to="/dashboard">Home</NavLink>
+              <NavLink to="/dashboard">
+                {t("common.nav.home")}
+              </NavLink>
             </li>
             <li className="active">
               <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-              Projects
+              {t("projects.title")}
             </li>
             <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Config
+                {t("projects.detail.config.title")}
+            </li>
+            <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.detail.config.secrets.title")}
             </li>
           </ol>
         </section>
@@ -261,4 +268,4 @@ class PjSecrets extends Component {
   }
 }
 
-export default PjSecrets;
+export default withTranslation()(PjSecrets);

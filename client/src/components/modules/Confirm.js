@@ -5,7 +5,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import { withTranslation } from 'react-i18next';
 /* use example
 
 // state
@@ -53,9 +53,10 @@ class Confirm extends Component {
   componentDidMount() {}
 
   render() {
+    const {t} = this.props;
     const handleClickOpen = () => {
       if (this.props.confrimTarget === "false") {
-        alert("Please select target");
+        alert(t("common.msg.unselected-target"));
         this.setState({ open: false });
         return;
       }
@@ -123,7 +124,7 @@ class Confirm extends Component {
               <div>{this.state.context}</div>
               {this.state.confrimTarget !== "" ? (
                 <div style={{ fontSize: "16px" }}>
-                  <strong> Target : {this.state.confrimTarget}</strong>
+                  <strong> {t("common.label.target")} : {this.state.confrimTarget}</strong>
                 </div>
               ) : (
                 ""
@@ -144,4 +145,4 @@ class Confirm extends Component {
   }
 }
 
-export default Confirm;
+export default withTranslation()(Confirm); 

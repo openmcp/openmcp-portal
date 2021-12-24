@@ -24,6 +24,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
+import { withTranslation } from 'react-i18next';
 
 // let apiParams = "";
 class PjSecretDetail extends Component {
@@ -81,30 +82,33 @@ class PjSecretDetail extends Component {
   };
 
   render() {
+    const {t} = this.props;
     return (
       <div>
         <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              {this.props.match.params.secret}
-              <small>Secret Overview</small>
+              {t("projects.detail.config.secrets.detail.title")}
+              <small>{this.props.match.params.secret}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
-              </li>
-              <li>
-                <NavigateNext
-                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-                />
-                <NavLink to="/projects">Projects</NavLink>
+                <NavLink to="/dashboard">
+                  {t("common.nav.home")}
+                </NavLink>
               </li>
               <li className="active">
-                <NavigateNext
-                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-                />
-                Config
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.title")}
+              </li>
+              <li className="active">
+                  <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                  {t("projects.detail.config.title")}
+              </li>
+              <li className="active">
+                  <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                  {t("projects.detail.config.secrets.detail.title")}
               </li>
             </ol>
           </section>
@@ -113,8 +117,8 @@ class PjSecretDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} />,
-                <Data rowData={this.state.rows.data} />,
+                <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
+                <Data rowData={this.state.rows.data} t={t}/>,
               ]
             ) : (
               <CircularProgress
@@ -132,9 +136,10 @@ class PjSecretDetail extends Component {
 
 class BasicInfo extends Component {
   render() {
+    const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">Basic Info</div>
+        <div className="cb-header">{t("projects.detail.config.secrets.detail.basicInfo.title")}</div>
         <div className="cb-body">
           <div style={{ display: "flex" }}>
             <div className="cb-body-left">
@@ -216,6 +221,7 @@ class Data extends Component {
   // };
 
   render() {
+    const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -255,7 +261,9 @@ class Data extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">Data</div>
+        <div className="cb-header">
+          {t("projects.detail.config.secrets.detail.data.title")}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -306,4 +314,4 @@ class Data extends Component {
   }
 }
 
-export default PjSecretDetail;
+export default withTranslation()(PjSecretDetail); 

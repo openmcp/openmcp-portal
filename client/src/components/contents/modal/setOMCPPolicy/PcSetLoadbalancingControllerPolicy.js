@@ -13,6 +13,7 @@ import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
 import { TextField } from "@material-ui/core";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -152,6 +153,7 @@ class PcSetLoadbalancingControllerPolicy extends Component {
   };
   
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -188,7 +190,7 @@ class PcSetLoadbalancingControllerPolicy extends Component {
             textTransform: "capitalize",
           }}
         >
-          edit policy
+          {t("policy.omcpPolicy.pop-edit.btn-edit")}
         </Button>
         <Dialog
           onClose={this.handleClose}
@@ -260,10 +262,10 @@ class PcSetLoadbalancingControllerPolicy extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              save
+            {t("common.btn.save")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -272,4 +274,5 @@ class PcSetLoadbalancingControllerPolicy extends Component {
   }
 }
 
-export default PcSetLoadbalancingControllerPolicy;
+
+export default withTranslation()(PcSetLoadbalancingControllerPolicy); 

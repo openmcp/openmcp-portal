@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -149,6 +150,7 @@ class ExcuteSnapshot extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -182,7 +184,7 @@ class ExcuteSnapshot extends Component {
             textTransform: "capitalize",
           }}
         >
-          Take Snapshot
+         {t("snapshots.snapshot.pop-snapshot.btn-snapshot")}
         </Button>
         <Dialog
           onClose={this.handleClose}
@@ -198,7 +200,7 @@ class ExcuteSnapshot extends Component {
             <div className="md-contents-body migration">
               <section className="md-content">
                 {/* deployment informations */}
-                <p>Snapshot Info</p>
+                <p>{t("snapshots.snapshot.pop-snapshot.snapshotInfo.title")}</p>
                 <div
                   style={{
                     padding: "10px",
@@ -257,10 +259,10 @@ class ExcuteSnapshot extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              excution
+              {t("common.btn.excution")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -269,4 +271,4 @@ class ExcuteSnapshot extends Component {
   }
 }
 
-export default ExcuteSnapshot;
+export default withTranslation()(ExcuteSnapshot); 

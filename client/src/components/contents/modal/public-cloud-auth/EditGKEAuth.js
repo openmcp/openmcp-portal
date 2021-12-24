@@ -13,9 +13,10 @@
   } from "@material-ui/core";
   import axios from "axios";
   import * as utilLog from "../../../util/UtLogs.js";
-import { AsyncStorage } from 'AsyncStorage';
+  import { AsyncStorage } from 'AsyncStorage';
   // import Confirm2 from "../../../modules/Confirm2";
-  
+  import { withTranslation } from 'react-i18next';
+
   const styles = (theme) => ({
     root: {
       margin: 0,
@@ -84,23 +85,26 @@ import { AsyncStorage } from 'AsyncStorage';
     };
   
     handleSave = (e) => {
+      const {t} = this.props;
       if (this.state.cluster === ""){
-        alert("Please enter Cluster Name");
+        alert(t("config.publicCloudAuth.gke.pop-common.msg.chk-cluster"));
         return;
       } else if (this.state.type === ""){
-        alert("Please enter Credential Type");
+        alert(t("config.publicCloudAuth.gke.pop-common.msg.chk-credentialType"));
         return;
       } else if (this.state.clientEmail === ""){
-        alert("Please enter Client Email");
+        alert(t("config.publicCloudAuth.gke.pop-common.msg.chk-clientEmail"));
         return;
       } else if (this.state.projectID === ""){
-        alert("Please enter Project ID");
+        alert(t("config.publicCloudAuth.gke.pop-common.msg.chk-projectId"));
         return;
       } else if (this.state.privateKey === ""){
-        alert("Please enter Private Key");
+        alert(t("config.publicCloudAuth.gke.pop-common.msg.chk-privateKey"));
         return;
       } 
   
+
+     
       //post 호출
       const url = `/settings/config/pca/gke`;
     
@@ -168,6 +172,7 @@ import { AsyncStorage } from 'AsyncStorage';
     };
   
     render() {
+      const {t} = this.props;
       const DialogTitle = withStyles(styles)((props) => {
         const { children, classes, onClose, ...other } = props;
         return (
@@ -202,7 +207,7 @@ import { AsyncStorage } from 'AsyncStorage';
               <div className="md-contents-body" style={{minWidth:"500px"}}>
                 <section className="md-content">
                 <div className="props">
-                    <p>Cluster</p>
+                    <p>{t("config.publicCloudAuth.gke.pop-common.cluster")}</p>
                     <TextField
                       id="outlined-multiline-static"
                       rows={1}
@@ -215,7 +220,7 @@ import { AsyncStorage } from 'AsyncStorage';
                     />
                   </div>
                   <div className="props">
-                    <p>Credential Type</p>
+                    <p>{t("config.publicCloudAuth.gke.pop-common.credentialType")}</p>
                     <TextField
                       id="outlined-multiline-static"
                       rows={1}
@@ -228,7 +233,7 @@ import { AsyncStorage } from 'AsyncStorage';
                     />
                   </div>
                   <div className="props">
-                    <p>Client Email</p>
+                    <p>{t("config.publicCloudAuth.gke.pop-common.clientEmail")}</p>
                     <TextField
                       id="outlined-multiline-static"
                       rows={1}
@@ -241,7 +246,7 @@ import { AsyncStorage } from 'AsyncStorage';
                     />
                   </div>
                   <div className="props">
-                    <p>Project ID</p>
+                    <p>{t("config.publicCloudAuth.gke.pop-common.projectId")}</p>
                     <TextField
                       id="outlined-multiline-static"
                       rows={1}
@@ -254,7 +259,7 @@ import { AsyncStorage } from 'AsyncStorage';
                     />
                   </div>
                   <div className="props">
-                    <p>Private key</p>
+                    <p>{t("config.publicCloudAuth.gke.pop-common.privateKey")}</p>
                     <TextField
                       id="outlined-multiline-static"
                       rows={8}
@@ -272,10 +277,10 @@ import { AsyncStorage } from 'AsyncStorage';
             </DialogContent>
             <DialogActions>
               <Button onClick={this.handleSave} color="primary">
-                save
+                {t("common.btn.save")}
               </Button>
               <Button onClick={this.handleClose} color="primary">
-                cancel
+              {t("common.btn.cancel")}
               </Button>
             </DialogActions>
           </Dialog>
@@ -284,5 +289,4 @@ import { AsyncStorage } from 'AsyncStorage';
     }
   }
   
-  export default EditGKEAuth;
-  
+  export default withTranslation()(EditGKEAuth); 

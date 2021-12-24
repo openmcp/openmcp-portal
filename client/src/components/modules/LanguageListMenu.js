@@ -6,13 +6,13 @@ import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import i18next from "i18next";
 
 // import List from "@material-ui/core/List";
 // import ListItem from "@material-ui/core/ListItem";
 // import ListItemText from "@material-ui/core/ListItemText";
 // import Menu from "@material-ui/core/Menu";
-
 
 class LanguageListMenu extends Component {
   constructor(props) {
@@ -22,22 +22,29 @@ class LanguageListMenu extends Component {
       selectedIndex: "1",
     };
   }
+
   render() {
     const open = Boolean(this.state.anchorEl);
     const handleClickListItem = (event) => {
       this.setState({ anchorEl: event.currentTarget });
     };
 
+    const options = [
+      { value: "en", name: "English" },
+      { value: "ko", name: "한국어" },
+    ];
+
     const handleMenuItemClick = (event, index) => {
       this.setState({ selectedIndex: index });
       this.setState({ anchorEl: null });
+
+      i18next.changeLanguage(options[index].value);
     };
 
     const handleClose = () => {
       this.setState({ anchorEl: null });
     };
 
-    const options = ["English", "한국어"];
 
     return (
       <div className="language">
@@ -71,13 +78,13 @@ class LanguageListMenu extends Component {
                   <MenuList autoFocusItem={open} id="menu-list-grow">
                     {options.map((option, index) => (
                       <MenuItem
-                        key={option}
+                        key={option.value}
                         // disabled={index === 0}
                         selected={index === this.state.selectedIndex}
                         onClick={(event) => handleMenuItemClick(event, index)}
                         className="lang-list-menu-item"
                       >
-                        {option}
+                        {option.name}
                       </MenuItem>
                     ))}
                   </MenuList>

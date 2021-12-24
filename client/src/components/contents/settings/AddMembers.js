@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import axios from 'axios';
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -79,6 +80,7 @@ class AddMembers extends Component {
   };
 
   render() {
+    const {t} = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -111,7 +113,7 @@ class AddMembers extends Component {
             textTransform: "initial",
           }}
         >
-          Create an Account
+           {t("accounts.pop-craete.btn-create")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -121,7 +123,7 @@ class AddMembers extends Component {
           // maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Create Account
+            {t("accounts.pop-craete.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="signup">
@@ -152,10 +154,10 @@ class AddMembers extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleRegister} color="primary">
-              register
+              {t("common.btn.register")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+            {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -164,4 +166,4 @@ class AddMembers extends Component {
   }
 }
 
-export default withStyles(styles)(AddMembers);
+export default withTranslation()(withStyles(styles)(AddMembers));

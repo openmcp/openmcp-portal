@@ -20,6 +20,7 @@ import AddEKSNode from "./addnode/AddEKSNode"
 import AddAKSNode from "./addnode/AddAKSNode"
 import AddGKENode from "./addnode/AddGKENode"
 import AddKVMNode from "./addnode/AddKVMNode"
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -107,6 +108,8 @@ class NdAddNode extends Component {
   };
 
   render() {
+    const {t} = this.props;
+
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -140,7 +143,7 @@ class NdAddNode extends Component {
             textTransform: "capitalize",
           }}
         >
-          Add Node
+          {t("nodes.pop-addNode.btn-addNode")}
         </div>
         <Dialog
           aria-labelledby="customized-dialog-title"
@@ -149,7 +152,7 @@ class NdAddNode extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            Add Node
+            {t("nodes.pop-addNode.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body add-node">
@@ -170,25 +173,25 @@ class NdAddNode extends Component {
               <TabPanel className="tab-panel" value={this.state.value} index={0}>
                 {/* <AddEKSNode/> */}
                 {/* <AddEKSNode handleSaveData={this.handleSaveDialog}/> */}
-                <AddEKSNode ref={childAddNodeRef} handleClose={this.handleClose}/>
+                <AddEKSNode ref={childAddNodeRef} handleClose={this.handleClose} t={t}/>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={1}>
-                <AddGKENode ref={childAddNodeRef} handleClose={this.handleClose}/>
+                <AddGKENode ref={childAddNodeRef} handleClose={this.handleClose} t={t}/>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={2}>
-                <AddAKSNode ref={childAddNodeRef} handleClose={this.handleClose}/>
+                <AddAKSNode ref={childAddNodeRef} handleClose={this.handleClose} t={t}/>
               </TabPanel>
               <TabPanel className="tab-panel" value={this.state.value} index={3}>
-                <AddKVMNode ref={childAddNodeRef} handleClose={this.handleClose}/>
+                <AddKVMNode ref={childAddNodeRef} handleClose={this.handleClose} t={t}/>
               </TabPanel>
             </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSaveClick} color="primary">
-              update
+              {t("common.btn.update")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
-              cancel
+              {t("common.btn.cancel")}
             </Button>
           </DialogActions>
         </Dialog>
@@ -197,4 +200,4 @@ class NdAddNode extends Component {
   }
 }
 
-export default NdAddNode;
+export default withTranslation()(NdAddNode); 

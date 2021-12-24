@@ -7,6 +7,8 @@ import { CircularProgress } from "@material-ui/core";
 import { AsyncStorage } from "AsyncStorage";
 import * as utilLog from "../../util/UtLogs.js";
 import Axios from "axios";
+import { withTranslation } from 'react-i18next';
+import { t } from "i18next";
 
 class DbClusterJoinUnjoin extends Component {
   constructor(props) {
@@ -67,6 +69,7 @@ class DbClusterJoinUnjoin extends Component {
   };
 
   onRefresh = () => {
+    const {t} = this.props;
     this.callApi()
       .then((res) => {
         if (res === null) {
@@ -75,7 +78,7 @@ class DbClusterJoinUnjoin extends Component {
           if (res.hasOwnProperty("errno")) {
             if (res.code === "ECONNREFUSED") {
               clearInterval(this.timer2);
-              this.setState({ loadErr: "Connection Failed" });
+              this.setState({ loadErr: t("dashboard.connectionFailed") });
             }
 
             this.setState({ rows: "" });
@@ -104,13 +107,14 @@ class DbClusterJoinUnjoin extends Component {
   };
 
   render() {
+    const { t } = this.props;
     return (
       <div className="dash-comp">
         {/* 컨텐츠 내용 */}
         <div style={{ display: "flex" }}>
           <div className="content-box">
             <div className="cb-header" onClick={this.onRefresh}>
-              <span style={{ cursor: "pointer" }}>Cluster Join/Unjoin</span>
+              <span style={{ cursor: "pointer" }}>{t("dashboard.joinUnjoin.title")}</span>
             </div>
             <div
               className="cb-body"
@@ -121,7 +125,7 @@ class DbClusterJoinUnjoin extends Component {
               }}
             >
               {this.state.rows ? (
-                <ClusterDnd data={this.state.rows.joined_clusters} />
+                <ClusterDnd data={this.state.rows.joined_clusters} t={t}/>
               ) : (
                 <div  style={{
                   // position:"relative",
@@ -308,14 +312,15 @@ class ClusterDnd extends Component {
 
   render() {
     // a little function to help us with reordering the result
-
     return (
       <div>
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div className="cluster-joined">
             <Droppable droppableId="joined" direction="vertical">
               {(provided, snapshot) => [
-                <div className="join-unjoin-title">OpenMCP Cluster</div>,
+                <div className="join-unjoin-title">
+                  {this.props.t("dashboard.joinUnjoin.omcpCluster")}
+                </div>,
                 <div
                   className="dnd-list"
                   ref={provided.innerRef}
@@ -367,7 +372,9 @@ class ClusterDnd extends Component {
           <div className="cluster-joinable">
             <Droppable droppableId="joinable" direction="vertical">
               {(provided, snapshot) => [
-                <div className="join-unjoin-title">Joinable Cluster</div>,
+                <div className="join-unjoin-title">
+                 {this.props.t("dashboard.joinUnjoin.joinableCluster")}
+                </div>,
                 <div
                   className="dnd-list"
                   ref={provided.innerRef}
@@ -417,4 +424,4 @@ class ClusterDnd extends Component {
   }
 }
 
-export default DbClusterJoinUnjoin;
+export default withTranslation()(DbClusterJoinUnjoin); 

@@ -12,7 +12,7 @@ import { NavigateNext } from '@material-ui/icons';
 // import ProjectsPolicy from './ProjectsPolicy';
 import OpenMCPPolicy from './OpenMCPPolicy';
 import { IoKeyOutline} from "react-icons/io5";
-
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -73,7 +73,7 @@ class Policy extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "OMCP Policy", index: 1, param:"openmcp-policy" },
+      { label: "omcpPolicy", index: 1, param:"openmcp-policy" },
       // { label: "Project Policy", index: 2, param:"project-policy" },
     ],
   };
@@ -88,6 +88,7 @@ class Policy extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -99,20 +100,26 @@ class Policy extends Component {
           <section className="content-header">
             <h1>
               <i><IoKeyOutline/></i>
-              <span>Policy</span>
+              <span>{t("policy.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/settings">Settings</NavLink>
+                {t("policy.title")}
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Policy
+                {this.state.tabHeader.map((i) => {
+                  if(this.state.value+1 === i.index){
+                    return (
+                      <span>{t(`policy.${i.label}.title`)}</span>
+                    );
+                  }
+                  })}
               </li>
             </ol>
           </section>
@@ -137,7 +144,7 @@ class Policy extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
+                    <Tab label={t(`policy.${i.label}.title`)} {...a11yProps(i.index)}
                           component={Link}
                           to={{
                             pathname: `/settings/policy/${i.param}`
@@ -173,4 +180,4 @@ class Policy extends Component {
   }
 }
 
-export default withStyles(styles)(Policy);
+export default withTranslation()(withStyles(styles)(Policy));

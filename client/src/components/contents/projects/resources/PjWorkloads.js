@@ -33,6 +33,7 @@ import PjwDeploymentDetail from './PjwDeploymentDetail';
 import { NavigateNext } from '@material-ui/icons';
 import PjwStatefulsets from './PjwStatefulsets';
 import PjwStatefulSetDetail from './PjwStatefulSetDetail';
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -93,8 +94,8 @@ class PjWorkloads extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "Deployments", index: 1, param:"deployments" },
-      { label: "StatefulSets", index: 2, param:"statefulsets" },
+      { label: "deployments", index: 1, param:"deployments" },
+      { label: "statefulsets", index: 2, param:"statefulsets" },
     // { label: "DaemonSets", index: 3 },
     // { label: "CronJobs", index: 4 },
     // { label: "Jobs", index: 5 }
@@ -122,6 +123,7 @@ class PjWorkloads extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -147,21 +149,25 @@ class PjWorkloads extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              Workloads
+              {t(`projects.detail.resources.workloads.title`)}
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/Projects">Projects</NavLink>
+                <NavLink to="/Projects">{t("projects.title")}</NavLink>
               </li>
               
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Resources
+                {t("projects.detail.resources.title")}
+              </li>
+              <li className="active">
+                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                {t("projects.detail.resources.workloads.title")}
               </li>
             </ol>
           </section>
@@ -186,7 +192,7 @@ class PjWorkloads extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
+                    <Tab label={t(`projects.detail.resources.workloads.${i.label}.title`)} {...a11yProps(i.index)}
                           component={Link}
                           to={{
                             pathname: `/projects/${this.props.match.params.project}/resources/workloads/${i.param}`,
@@ -249,6 +255,4 @@ class PjWorkloads extends Component {
   }
 }
 
-
-
-export default withStyles(styles)(PjWorkloads);
+export default withTranslation()(withStyles(styles)(PjWorkloads));

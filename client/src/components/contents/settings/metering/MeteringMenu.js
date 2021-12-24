@@ -12,6 +12,7 @@ import { NavigateNext } from '@material-ui/icons';
 import { AiFillAlert, AiOutlineAreaChart} from "react-icons/ai";
 import Metering from "./Metering";
 import BillList from "./BillList";
+import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({
   root: {
@@ -89,6 +90,7 @@ class MeteringMenu extends Component {
   }
 
   render() {
+    const {t} = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -101,20 +103,16 @@ class MeteringMenu extends Component {
           <section className="content-header">
             <h1>
             <i><AiOutlineAreaChart/></i>
-              <span>Metering</span>
+              <span>{t("meterings.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
               <li>
-                <NavLink to="/dashboard">Home</NavLink>
-              </li>
-              <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/settings">Settings</NavLink>
+                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li className="active">
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                Metering
+                {t("metrings.title")}
               </li>
             </ol>
           </section>
@@ -172,4 +170,4 @@ class MeteringMenu extends Component {
   }
 }
 
-export default withStyles(styles)(MeteringMenu);
+export default withTranslation()(withStyles(styles)(MeteringMenu));

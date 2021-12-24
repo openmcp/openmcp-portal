@@ -25,6 +25,7 @@ import Paper from "@material-ui/core/Paper";
 import axios from 'axios';
 import ProgressTemp from './../../../modules/ProgressTemp';
 import Confirm2 from './../../../modules/Confirm2';
+import { withTranslation } from 'react-i18next';
 
 class AddAKSNode extends Component {
   constructor(props) {
@@ -37,14 +38,7 @@ class AddAKSNode extends Component {
 
       nodeName: "",
       desiredNumber: 0,
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "status", title: "Status" },
-        { name: "provider", title: "Type" },
-        // { name: "pools", title: "Pools" },
-        { name: "cpu", title: "CPU(%)" },
-        { name: "memory", title: "Memory(%)" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
         { columnName: "status", width: 130 },
@@ -116,6 +110,7 @@ class AddAKSNode extends Component {
 
 
   handleSaveClick = () => {
+    const t = this.props.t
     // console.log(this.state.selectedRow)
     // if (this.state.clientId === "") {
     //   alert("Please enter Client Id");
@@ -131,10 +126,10 @@ class AddAKSNode extends Component {
     //   return;
     // } else if (Object.keys(this.state.selectedRow).length  === 0){
     if (Object.keys(this.state.selectedRow).length === 0){
-      alert("Please select target Cluster");
+      alert(t("common.msg.unselected-target"));
       return;
     } else if (this.state.desiredNumber === 0){
-      alert("Desired number must be a number greater than 0")
+      alert(t("nodes.pop-addNode.msg-checkDesiredZero"));
     } else {
       this.setState({
         confirmOpen: true,
@@ -246,7 +241,7 @@ class AddAKSNode extends Component {
 
   RowDetail = ({ row }) => (
     <div>
-      <AKSNodePools cluster={row.name} onSelectionChange={this.onSelectionChange}/>
+      <AKSNodePools cluster={row.name} onSelectionChange={this.onSelectionChange} t={this.props.t}/>
     </div>
   );
 
@@ -256,6 +251,14 @@ class AddAKSNode extends Component {
 	// subID := "dc80d3cf-4e1a-4b9a-8785-65c4b739e8d2" 
 
   render() {
+    const t = this.props.t;
+    const columns = [
+      { name: "name", title: t("nodes.pop-addNode.grid.name") },
+      { name: "status", title: t("nodes.pop-addNode.grid.status") },
+      { name: "provider", title: t("nodes.pop-addNode.grid.type") },
+      { name: "cpu", title: t("nodes.pop-addNode.grid.cpu") },
+      { name: "memory", title: t("nodes.pop-addNode.grid.memory") },
+    ];
     return (
       <div>
         {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
@@ -271,10 +274,10 @@ class AddAKSNode extends Component {
           [
         <section className="md-content">
           <div className="outer-table">
-            <p>Clusters</p>
+            <p>{t("nodes.pop-addNode.grid.title")}</p>
             {/* cluster selector */}
             <Paper>
-            <Grid rows={this.state.clusters} columns={this.state.columns}>
+            <Grid rows={this.state.clusters} columns={columns}>
 
               {/* Sorting */}
               <SortingState
@@ -326,7 +329,7 @@ class AddAKSNode extends Component {
         <section className="md-content">
           <div style={{display:"flex"}}>
             <div className="props" style={{width:"30%"}}>
-              <p>Selected Desired Number</p>
+              <p>{t("nodes.pop-addNode.desiredNum")}</p>
               <TextField
                 id="outlined-multiline-static"
                 rows={1}
@@ -449,6 +452,7 @@ class AKSNodePools extends Component {
   }
 
   render(){
+    const t = this.props.t;
     return(
       <div className="inner-table">
         {this.state.rows ? (
@@ -482,7 +486,10 @@ class AKSNodePools extends Component {
           />
         </Grid>
         )  : this.state.loadErr ? (
-          <div style={{textAlign:"center"}}>Data does not exists<br/> Please check public-cloud config settings </div>
+          <div style={{textAlign:"center"}}>
+           {t("nodes.pop-addNode.msg-dataNotExists1")}<br/> 
+            {t("nodes.pop-addNode.msg-dataNotExists2")}
+          </div>
         ): <CircularProgress
         variant="determinate"
         value={this.state.completed}
@@ -493,4 +500,4 @@ class AKSNodePools extends Component {
   }
 }
 
-export default AddAKSNode;
+export default withTranslation()(AddAKSNode); 

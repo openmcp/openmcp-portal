@@ -31,6 +31,7 @@ import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
 import ExcuteMigration from "../../modal/ExcuteMigration";
+import { withTranslation } from 'react-i18next';
 
 class Migration extends Component {
   constructor(props) {
@@ -204,6 +205,7 @@ spec:
   };
 
   render() {
+    const {t}= this.props;
     const onSelectionChange = (selection) => {
       // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);
@@ -300,7 +302,7 @@ spec:
                               }}
                             >
                               <ExcuteMigration
-                                title="pod migration"
+                                title=""
                                 rowData={this.state.selectedRow}
                                 onUpdateData={this.onUpdateData}
                                 menuClose={handleClose}
@@ -381,4 +383,4 @@ spec:
   }
 }
 
-export default Migration;
+export default withTranslation()(Migration); 

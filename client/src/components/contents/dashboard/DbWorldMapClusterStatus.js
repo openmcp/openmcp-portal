@@ -3,6 +3,7 @@ import { AsyncStorage } from "AsyncStorage";
 import React, { Component } from "react";
 import WorldMap from "react-svg-worldmap";
 import * as utilLog from "../../util/UtLogs.js";
+import { withTranslation } from 'react-i18next';
 // import './App.css';
 
 class DbWorldMapClusterStatus extends Component {
@@ -72,6 +73,7 @@ class DbWorldMapClusterStatus extends Component {
   }
 
   onRefresh = () => {
+    const {t} = this.props;
     this.callApi()
       .then((res) => {
         if (res === null) {
@@ -80,7 +82,7 @@ class DbWorldMapClusterStatus extends Component {
           if (res.hasOwnProperty("errno")) {
             if (res.code === "ECONNREFUSED") {
               clearInterval(this.timer2);
-              this.setState({loadErr : "Connection Failed"})
+              this.setState({loadErr : t("dashboard.connectionFailed")})
             }
 
             this.setState({ rows: "" });
@@ -103,6 +105,7 @@ class DbWorldMapClusterStatus extends Component {
   };
 
   render() {
+    const {t} = this.props;
     // const data = [
     //   { country: "cn", value: 1 }, // china
     //   { country: "in", value: 2 }, // india
@@ -122,7 +125,7 @@ class DbWorldMapClusterStatus extends Component {
           style={{ width: this.props.width, display: "inline-block" }}
         >
           <div className="cb-header">
-            <span>World Cluster Status</span>
+            <span>{t("dashboard.worldClusterMap.title")}</span>
             <div style={{ float: "right" }}>
               <button class="btn-worldmap-size" onClick={this.onSizeUp}>
                 +
@@ -171,4 +174,5 @@ class DbWorldMapClusterStatus extends Component {
   }
 }
 
-export default DbWorldMapClusterStatus;
+export default withTranslation()(DbWorldMapClusterStatus); 
+

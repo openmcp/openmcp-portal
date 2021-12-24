@@ -22,7 +22,7 @@ import {
 // import { NavigateNext} from '@material-ui/icons';
 import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
-
+import { withTranslation } from 'react-i18next';
 // import Editor from "./../modules/Editor";
 
 // let apiParams = "";
@@ -30,11 +30,7 @@ class VPA extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [
-        { name: "name", title: "Name" },
-        { name: "namespace", title: "Project" },
-        { name: "reference", title: "Reference" },
-      ],
+      columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 200 },
         { columnName: "namespace", width: 130 },
@@ -106,6 +102,12 @@ class VPA extends Component {
   };
 
   render() {
+    const {t} = this.props;
+    const columns = [
+      { name: "name", title: t("pods.vpa.grid.name") },
+      { name: "namespace", title: t("pods.vpa.grid.project") },
+      { name: "reference", title: t("pods.vpa.grid.reference") },
+    ];
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -224,7 +226,7 @@ class VPA extends Component {
                 // <Editor title="create" context={this.state.editorContext}/>,
                 <Grid
                   rows={this.state.rows}
-                  columns={this.state.columns}
+                  columns={columns}
                 >
                   <Toolbar />
                   {/* 검색 */}
@@ -266,4 +268,5 @@ class VPA extends Component {
   }
 }
 
-export default VPA;
+export default withTranslation()(VPA); 
+

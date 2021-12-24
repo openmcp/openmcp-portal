@@ -28,7 +28,8 @@ import * as utilLog from '../../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 // import AddMembers from "./AddMembers";
 // import Editor from "../../modules/Editor";
-import PcSetOMCPPolicy from '../../modal/setOMCPPolicy/PcSetOMCPPolicy';;
+import PcSetOMCPPolicy from '../../modal/setOMCPPolicy/PcSetOMCPPolicy';
+import { withTranslation } from 'react-i18next';
 
 class OpenMCPPolicy extends Component {
   constructor(props) {
@@ -130,7 +131,7 @@ class OpenMCPPolicy extends Component {
   };
 
   render() {
-
+    const {t} = this.props;
     const Cell = (props) => {
       // const { column, row } = props;
       const { column } = props;
@@ -254,4 +255,4 @@ class OpenMCPPolicy extends Component {
   }
 }
 
-export default OpenMCPPolicy;
+export default withTranslation()(OpenMCPPolicy); 
