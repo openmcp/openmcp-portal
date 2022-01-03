@@ -837,7 +837,10 @@
       }
     },
     "loadbalancer":{
-      "title": "로드 밸런서"
+      "title": "로드 밸런서",
+      "msg" : {
+        "noneData" : "설정된 URL이 없습니다."
+      }
     }
   },
   "migrations": {

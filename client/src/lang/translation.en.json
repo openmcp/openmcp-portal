@@ -836,7 +836,10 @@
       }
     },
     "loadbalancer":{
-      "title": "Load Balancer"
+      "title": "Load Balancer",
+      "msg" : {
+        "noneData" : "There's no URL set up"
+      }
     }
   },
   "migrations": {

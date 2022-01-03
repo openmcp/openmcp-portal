@@ -2667,6 +2667,26 @@ app.get("/dns/:dns", (req, res) => {
   res.send(overview);
 });
 
+
+////////////////////////
+// Network > Load Balancer
+////////////////////////
+app.get("/apis/network/loadbalancer", (req, res) => {
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/getkialiurl?clusterName=${req.query.clusterName}`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+});
+
 ///////////////////////
 //Settings > Accounts
 ///////////////////////

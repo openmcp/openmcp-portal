@@ -6,6 +6,7 @@ import { AiOutlineUser } from "react-icons/ai";
 import { CircularProgress } from "@material-ui/core";
 import { AsyncStorage } from "AsyncStorage";
 import MetricSelectBox from "../metrics/module/MetricSelectBox";
+import { withTranslation } from "react-i18next";
 
 class LoadBalancer extends Component {
   constructor(props) {
@@ -60,6 +61,7 @@ class LoadBalancer extends Component {
   };
 
   render() {
+    const { t } = this.props;
     const onSelectBoxChange = (data) => {
       this.setState({ cluster: data });
     };
@@ -80,7 +82,7 @@ class LoadBalancer extends Component {
                   <div className="iframe-ti">
                     <Paper className="iframe-paper">
                       <div className="iframe-rel">
-                        {this.state.selectBoxData ? (
+                        {/* {this.state.selectBoxData ? (
                           <CircularProgress
                             variant="determinate"
                             value={this.state.completed}
@@ -90,8 +92,8 @@ class LoadBalancer extends Component {
                               marginTop: "20px",
                             }}
                           ></CircularProgress>
-                        ) : null}
-                        <IframeModule cluster={this.state.cluster} />
+                        ) : null} */}
+                        <IframeModule cluster={this.state.cluster} t={t} />
                       </div>
                     </Paper>
                   </div>,
@@ -122,7 +124,7 @@ class IframeModule extends Component {
 
   callApi = async () => {
     const response = await fetch(
-      `/apis/metric/apiServer?cluster=${this.props.cluster}`
+      `/apis/network/loadbalancer?clusterName=${this.props.cluster}`
     );
     const body = await response.json();
     return body;
@@ -131,27 +133,32 @@ class IframeModule extends Component {
   onApiExcute = () => {
     this.progressTimer = setInterval(this.progress, 20);
     this.iframeTimer = setInterval(this.showIframe, 3000);
-    if (this.props.cluster === "cluster01") {
-      this.setState({
-        url: "http://34.146.191.162:20001",
-      });
-    } else {
-      this.setState({
-        url: "http://13.86.153.192:20001",
-      });
-    }
+    // if (this.props.cluster === "cluster01") {
+    //   this.setState({
+    //     url: "http://34.146.191.162:20001",
+    //   });
+    // } else {
+    //   this.setState({
+    //     url: "http://13.86.153.192:20001",
+    //   });
+    // }
 
-    //
-    // this.callApi()
-    //   .then((res) => {
-    //     if (res !== null) {
-    //       this.setState({
-    //         url: res[0],
-    //       });
-    //     }
-    //     clearInterval(this.timer);
-    //   })
-    //   .catch((err) => console.log(err));
+    this.callApi()
+      .then((res) => {
+        if (res !== null) {
+          let url = "";
+          // url= "http://13.86.153.192:20001";
+          if (res.ip !== "-" && res.port !== 0) {
+            url = `http://${res.ip}:${res.port}`;
+          }
+
+          this.setState({
+            url: url,
+          });
+        }
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -175,13 +182,31 @@ class IframeModule extends Component {
   };
 
   render() {
+    const t = this.props.t;
     return (
       <div>
+        {this.state.url === "" ? (
+          <div
+            style={{
+              position: "absolute",
+              textAlign: "center",
+              top: "68px",
+              margin: "auto",
+              left: "0",
+              right: "0",
+              visibility: `${this.state.visibility}`,
+            }}
+          >
+            {t("network.loadbalancer.msg.noneData")}
+          </div>
+        ) : null}
         <div
           className="iframe-abs"
           style={{ visibility: `${this.state.visibility}` }}
         >
-          <iframe src={this.state.url} scrolling="no" />
+          {this.state.url !== "" ? (
+            <iframe src={this.state.url} scrolling="no" />
+          ) : null}
         </div>
         {this.state.visibility === "hidden" ? (
           <CircularProgress
@@ -199,4 +224,4 @@ class IframeModule extends Component {
   }
 }
 
-export default LoadBalancer;
+export default withTranslation()(LoadBalancer);
