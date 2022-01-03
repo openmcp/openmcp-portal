@@ -76,14 +76,16 @@
       "cancel": "CANCEL",
       "confirm": "CONFIRM",
       "update": "UPDATE",
-      "excution": "EXCUTION",
+      "execution": "EXECUTION",
       "register": "REGISTER",
       "back": "BACK",
       "next": "NEXT",
       "delete": "DELETE"
     },
     "label": {
-      "target": "Target"
+      "target": "Target",
+      "processing":"Processing...",
+      "loading":"Loading..."
     },
     "nav": {
       "home": "home"
@@ -95,6 +97,10 @@
   "dashboard": {
     "title": "Dashboard",
     "btn-edit": "Edit Dashboard",
+    "deploySmartCity":{
+      "btn-title":"Smartcity Deployment",
+      "title":"Smartcity Deployment"
+    },
     "pop-editDashboard": {
       "title": "Dashboard Custom View",
       "lb-choices": "Choices",
@@ -195,7 +201,7 @@
   "clusters": {
     "title": "Clusters",
     "joined": {
-      "title": "JOINED",
+      "title": "Joined",
       "btn-unjoin": "UNJOIN",
       "pop-unjoin": {
         "title": "Cluster Unjoin Confrim",
@@ -214,7 +220,7 @@
       "clusterResourceStatus": "Cluster Resource Status"
     },
     "joinable": {
-      "title": "JOINABLE",
+      "title": "Joinable",
       "btn-join": "JOIN",
       "pop-unjoin": {
         "title": "Cluster Join Confrim",
@@ -230,7 +236,7 @@
     },
     "detail": {
       "overview": {
-        "name": "Overview",
+        "name": "Cluster Overview",
         "basicInfo": {
           "name": "Basic Info",
           "sub": {
@@ -320,9 +326,9 @@
       "desiredNum": "Selected Desired Number"
     },
     "detail": {
-      "title": "Overview",
+      "title": "Node Overview",
       "basicInfo": {
-        "title": "",
+        "title": "Basic Info",
         "sub": {
           "name": "Name",
           "status": "Status",
@@ -364,7 +370,7 @@
     }
   },
   "projects": {
-    "title": "Project",
+    "title": "Projects",
     "grid": {
       "name": "Name",
       "status": "Status",
@@ -395,7 +401,7 @@
     },
     "detail": {
       "overview": {
-        "title": "Overvew",
+        "title": "Project Overview",
         "basicInfo": {
           "title": "Basic Info",
           "sub": {
@@ -433,7 +439,7 @@
           "deployments": {
             "title": "Deployments",
             "detail": {
-              "title": "Overview",
+              "title": "Deployment Overview",
               "basicInfo": {
                 "title": "Basic Info"
               },
@@ -454,7 +460,7 @@
           "statefulsets": {
             "title": "Statefulsets",
             "detail": {
-              "title": "Overview",
+              "title": "Statefulset Overview",
               "basicInfo": {
                 "title": "Basic Info"
               },
@@ -494,7 +500,7 @@
           "createdTime": "Created Time"
         },
         "detail": {
-          "title": "Overview",
+          "title": "Volume Overview",
           "basicInfo": {
             "title": "Basic Info"
           },
@@ -516,7 +522,7 @@
             "createdTime": "Created Time"
           },
           "detail": {
-            "title": "Overview",
+            "title": "Secret Overview",
             "basicInfo": {
               "title": "Basic Info"
             },
@@ -526,7 +532,7 @@
           }
         },
         "configmaps": {
-          "title": "Config Maps",
+          "title": "ConfigMaps",
           "grid": {
             "name": "Name",
             "project": "Project",
@@ -534,7 +540,7 @@
             "createdTime": "Created Time"
           },
           "detail": {
-            "title": "Overview",
+            "title": "ConfigMap Overview",
             "basicInfo": {
               "title": "Basic Info"
             },
@@ -548,30 +554,68 @@
   },
   "deployments": {
     "title": "Deployments",
+    "tabTitle": {
+      "deployment":"Deployment",
+      "omcpTitle" : "OpenMCP Deployment"
+    },
     "grid": {
       "name": "Name",
       "ready": "Ready",
+      "replicas": "Replicas",
       "cluster": "Cluster",
+      "clusterDp": "Cluster:Deployment count",
       "project": "Project",
       "image": "Image",
       "createdTime": "Created Time"
     },
     "pop-create": {
       "btn-create": "Create",
-      "title": "Create Deployment"
+      "title": "Create Deployment",
+      "omcpTitle":"Create OpenMCP Deployment",
+      "targetCluster": "Target Cluster",
+      "step" : {
+        "1" : {
+          "title" : "Set Definitions"
+        },
+        "2" : {
+          "title" : "Select Cluster"
+        },
+        "3" : {
+          "title" :"Execution"
+        }
+      },
+      "msg": {
+        "chk-name" : "Please enter 'Name' field",
+        "chk-namespace" : "Please enter 'Name' field",
+        "chk-replicas" : "Please enter 'Replicas' field",
+        "chk-containerImage" : "Please enter 'Container Image' field",
+        "chk-containerPort" : "Please enter 'Container Port' field"
+      }
+    },
+    "pop-delete": {
+      "btn-delete": "Delete",
+      "title": "Delete Deployment",
+      "omcpTitle":"Delete OpenMCP Deployment",
+      "context": "Are you sure you want to Delete Deployment?",
+      "msg": {
+        "chk-selectDeployment" : "Please select deployment"
+      }
     },
     "detail": {
-      "title": "Overview",
+      "title": "Deployment Overview",
       "basicInfo": {
         "title": "Basic Info",
         "name": "Name",
         "project": "Project",
         "labels": "Labels",
         "createdTime": "Created Time",
-        "uid": "UID"
+        "uid": "UID",
+        "replica":"Replica",
+        "kind":"Kind"
       },
       "replicaStatus": {
-        "title": "Replica Status"
+        "title": "Replica Status",
+        "total":"Total"
       },
       "pods": {
         "title": "Pods"
@@ -612,7 +656,7 @@
         "createdTime": "Created Time"
       },
       "detail": {
-        "title": "Overview",
+        "title": "Pod Overview",
         "basicInfo": {
           "title": "Basic Info",
           "name": "Name",
@@ -715,7 +759,7 @@
         "title": "Create Service"
       },
       "detail": {
-        "title": "Overview",
+        "title": "Service Overview",
         "basicInfo": {
           "title": "Basic Info",
           "name": "Name",
@@ -759,7 +803,7 @@
         "title": "Create Ingress"
       },
       "detail": {
-        "title": "Overview",
+        "title": "Ingress Overview",
         "basicInfo": {
           "title": "Basic Info",
           "name": "Name",
@@ -790,6 +834,9 @@
           }
         }
       }
+    },
+    "loadbalancer":{
+      "title": "Load Balancer"
     }
   },
   "migrations": {

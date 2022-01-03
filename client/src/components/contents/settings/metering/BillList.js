@@ -36,7 +36,7 @@ class BillList extends Component {
     this.state = {
       columns: [
         { name: "year", title: "Year" },
-        { name: "month", title: "month" },
+        { name: "month", title: "Month" },
         { name: "cost", title: "Total Cost" },
       ],
       defaultColumnWidths: [

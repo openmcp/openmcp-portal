@@ -44,11 +44,11 @@ import Grow from "@material-ui/core/Grow";
 import { AiOutlineDeploymentUnit } from "react-icons/ai";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withTranslation } from "react-i18next";
-import CreateDeployment from "../modal/deployment/CreateDeployment";
-import Confirm2 from "./../../modules/Confirm2";
+import CreateOmcpDeployment from "../modal/deployment/CreateOmcpDeployment";
+import Confirm2 from "../../modules/Confirm2";
 
 // let apiParams = "";
-class Deployments extends Component {
+class OMCPDeployment extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +56,7 @@ class Deployments extends Component {
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
         { columnName: "status", width: 100 },
-        { columnName: "cluster", width: 130 },
+        { columnName: "cluster", width: 300 },
         { columnName: "project", width: 200 },
         { columnName: "image", width: 370 },
         { columnName: "created_time", width: 170 },
@@ -72,27 +72,25 @@ class Deployments extends Component {
       completed: 0,
       selection: [],
       selectedRow: "",
-      //       editorContext: `apiVersion: apps/v1
-      // kind: Deployment
+      //       editorContext: `apiVersion: openmcp.k8s.io/v1alpha1
+      // kind: OpenMCPDeployment
       // metadata:
-      //   name: [deployment name]
-      //   labels:
-      //     app: [deployment label]
+      //   name: [object name]
+      //   namespace: [namespace name]
       // spec:
-      //   replicas: [replica number]
-      //   selector:
-      //     matchLabels:
-      //       app: [matchLabels]
+      //   clusters:
+      //   - [cluster1]
+      //   - [cluster2]
+      //   replicas: [replicas(number)]
+      //   labels:
+      //       app: [application name]
       //   template:
-      //     metadata:
-      //       labels:
-      //         app: [labels]
       //     spec:
-      //       containers:
-      //       - name: [container name]
-      //         image: [image name]
-      //         ports:
-      //         - containerPort: [container port]`,
+      //       template:
+      //         spec:
+      //           containers:
+      //           - image: [container image]
+      //             name: [container name]`,
       openProgress: false,
       anchorEl: null,
       projects: "",
@@ -129,7 +127,7 @@ class Deployments extends Component {
       },
       body: JSON.stringify({
         g_clusters: g_clusters,
-        ynOmcpDp: false,
+        ynOmcpDp: true,
       }),
     };
     // var param = this.props.match.params.cluster;
@@ -195,7 +193,7 @@ class Deployments extends Component {
     utilLog.fn_insertPLogs(userId, "log-DP-VW01");
   };
 
-  excuteScript = (cluster, context) => {
+  excuteScript = (context) => {
     if (this.state.openProgress) {
       this.setState({ openProgress: false });
     } else {
@@ -204,7 +202,7 @@ class Deployments extends Component {
 
     const url = `/deployments/create`;
     const data = {
-      cluster: cluster,
+      cluster: "openmcp",
       yaml: context,
     };
 
@@ -246,10 +244,10 @@ class Deployments extends Component {
       const url = `/deployments/delete`;
 
       const data = {
-        cluster: this.state.selectedRow.cluster,
+        cluster: "openmcp",
         namespace: this.state.selectedRow.project,
         deployment: this.state.selectedRow.name,
-        ynOmcpDp: false,
+        ynOmcpDp: true,
       };
 
       // console.log(data);
@@ -297,7 +295,7 @@ class Deployments extends Component {
         <Table.Cell {...props} style={{ cursor: "pointer" }}>
           <Link
             to={{
-              pathname: `/deployments/deployment/${props.value}`,
+              pathname: `/deployments/omcp-deployment/${props.value}`,
               search: `cluster=${row.cluster}&project=${row.project}`,
               state: {
                 data: row,
@@ -336,7 +334,7 @@ class Deployments extends Component {
   render() {
     const { t } = this.props;
     const confirmInfo = {
-      title: t("deployments.pop-delete.title"),
+      title: t("deployments.pop-delete.omcpTitle"),
       context: t("deployments.pop-delete.context"),
       button: {
         open: "",
@@ -346,8 +344,8 @@ class Deployments extends Component {
     };
     const columns = [
       { name: "name", title: t("deployments.grid.name") },
-      { name: "status", title: t("deployments.grid.ready") },
-      { name: "cluster", title: t("deployments.grid.cluster") },
+      { name: "status", title: t("deployments.grid.replicas") },
+      { name: "cluster", title: t("deployments.grid.clusterDp") },
       { name: "project", title: t("deployments.grid.project") },
       { name: "image", title: t("deployments.grid.image") },
       { name: "created_time", title: t("deployments.grid.createdTime") },
@@ -360,9 +358,7 @@ class Deployments extends Component {
         selectedRow: this.state.rows[selection[0]]
           ? this.state.rows[selection[0]]
           : {},
-        confrimTarget: this.state.rows[selection[0]]
-          ? this.state.rows[selection[0]].name
-          : "",
+        confrimTarget : this.state.rows[selection[0]] ? this.state.rows[selection[0]].name : "" ,
       });
     };
 
@@ -445,9 +441,10 @@ class Deployments extends Component {
                                 fontSize: "14px",
                               }}
                             >
-                              <CreateDeployment
+                              <CreateOmcpDeployment
                                 btTitle={t("deployments.pop-create.btn-create")}
-                                title={t("deployments.pop-create.title")}
+                                title={t("deployments.pop-create.omcpTitle")}
+                                // context={this.state.editorContext}
                                 excuteScript={this.excuteScript}
                                 menuClose={this.handleClose}
                               />
@@ -539,4 +536,4 @@ class Deployments extends Component {
   }
 }
 
-export default withTranslation()(Deployments);
+export default withTranslation()(OMCPDeployment);

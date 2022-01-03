@@ -9,10 +9,11 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from "@material-ui/icons";
-import ClustersJoinable from "./ClustersJoinable";
-import ClustersJoined from "./ClustersJoined";
 import { FaBuffer } from "react-icons/fa";
 import { withTranslation } from 'react-i18next';
+import { AiOutlineDeploymentUnit } from "react-icons/ai";
+import Deployments from "./Deployments";
+import OMCPDeployment from "./OMCPDeployment";
 
 const styles = (theme) => ({
   root: {
@@ -64,7 +65,7 @@ function a11yProps(index) {
   };
 }
 
-class ClustersMenu extends Component {
+class DeploymentMenu extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -77,20 +78,17 @@ class ClustersMenu extends Component {
   }
 
   componentWillMount() {
-    const {t} = this.props;
-    if (this.props.match.url.indexOf("joinable") > 0) {
-      this.setState({ value: 1 , tabHeader: [
-        { label: "joined", index: 1, param: "joined" },
-        { label: "joinable", index: 2, param: "joinable" },
-        // { label: "DaemonSets", index: 3 },
-      ],});
+    this.setState({ value: 1 , tabHeader: [
+      { label: "deployments.tabTitle.deployment", index: 1, param: "deployment" },
+      { label: "deployments.tabTitle.omcpTitle", index: 2, param: "omcp-deployment" },
+    ],});
+   
+    if(this.props.match.url.indexOf("omcp-deployment") > 0 ){
+      this.setState({ value: 1 });
     } else {
-      this.setState({ value: 0 , tabHeader: [
-        { label: "joined", index: 1, param: "joined" },
-        { label: "joinable", index: 2, param: "joinable" },
-        // { label: "DaemonSets", index: 3 },
-      ],});
+     this.setState({ value: 0 });
     }
+
     this.props.menuData("none");
   }
 
@@ -109,36 +107,34 @@ class ClustersMenu extends Component {
       <div>
         <div className="content-wrapper fulled">
           {/* 컨텐츠 헤더 */}
-          <section className="content-header">
-            <h1>
-              <i>
-                <FaBuffer />
-              </i>
-              <span>{t("clusters.title")}</span>
-              <small>{this.props.match.params.project}</small>
-            </h1>
-            <ol className="breadcrumb">
-              <li>
-                <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
-              </li>
-              <li>
-                <NavigateNext
-                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-                />
-                <NavLink to="/clusters">{t("clusters.title")}</NavLink>
-              </li>
-              <li>
+          <section className="content-header" onClick={this.onRefresh}>
+          <h1>
+            <i><AiOutlineDeploymentUnit/></i>
+            <span>{t("deployments.title")}</span>
+            <small></small>
+          </h1>
+          <ol className="breadcrumb">
+            <li>
+              <Link to="/dashboard">{t("common.nav.home")}</Link>
+            </li>
+            <li className="active">
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
+              {t("deployments.title")}
+            </li>
+            <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
                 {this.state.tabHeader.map((i) => {
                   if(this.state.value+1 === i.index){
                     return (
-                      <span>{t(`clusters.${i.label}.title`)}</span>
+                      <span>{t(`${i.label}`)}</span>
                     );
                   }
                   })}
               </li>
-            </ol>
-          </section>
+          </ol>
+        </section>
 
           {/* 내용부분 */}
           <section>
@@ -160,19 +156,13 @@ class ClustersMenu extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                      <Tab
-                        label={t(`clusters.${i.label}.title`)}
-                        {...a11yProps(i.index)}
-                        component={Link}
-                        to={{
-                          pathname: `/clusters/${i.param}`,
-                        }}
-                        style={{
-                          minHeight: "42px",
-                          fontSize: "13px",
-                          minWidth: "100px",
-                        }}
-                      />
+                    <Tab label={t(`${i.label}`)} {...a11yProps(i.index)}
+                          component={Link}
+                          to={{
+                            pathname: `/deployments/${i.param}`
+                          }}
+                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
+                    />
                     );
                   })}
                 </Tabs>
@@ -184,9 +174,9 @@ class ClustersMenu extends Component {
               >
                 <Switch>
                   <Route
-                    path="/clusters/joined"
+                    path="/deployments/deployment"
                     render={({ match, location }) => (
-                      <ClustersJoined
+                      <Deployments
                         match={match}
                         location={location}
                         menuData={this.onMenuData}
@@ -203,9 +193,9 @@ class ClustersMenu extends Component {
               >
                 <Switch>
                   <Route
-                    path="/clusters/joinable"
+                    path="/deployments/omcp-deployment"
                     render={({ match, location }) => (
-                      <ClustersJoinable
+                      <OMCPDeployment
                         match={match}
                         location={location}
                         menuData={this.onMenuData}
@@ -225,15 +215,5 @@ class ClustersMenu extends Component {
   }
 }
 
-// function App(){
-//   const notify = () => toast("Wow so easy!");
 
-//   return (
-//     <div>
-//       <button onClick={notify}>Notify!</button>
-//       <ToastContainer />
-//     </div>
-//   );
-// }
-
-export default withTranslation()(withStyles(styles)(ClustersMenu));
+export default withTranslation()(withStyles(styles)(DeploymentMenu));

@@ -294,18 +294,6 @@ class Accounts extends Component {
             )}
           </Paper>
         </section>
-
-      <div className="iframe-ti">
-        <Paper className="iframe-paper">
-          <div className="iframe-rel">
-            <div className="iframe-abs">
-              <iframe src="http://34.146.191.162:20001" scrolling="no"/>
-            </div>
-          </div>
-        </Paper>
-      </div>
-
-
       </div>
     );
   }

@@ -235,7 +235,7 @@ class SetThreshold extends Component {
           : {},
         confrimTarget: this.state.rows[selection[0]]
           ? this.state.rows[selection[0]].group_name
-          : "false",
+          : "",
       });
     };
 
@@ -310,7 +310,7 @@ class SetThreshold extends Component {
           </Table.Cell>
         );
       }
-      return <Table.Cell>{props.value}%</Table.Cell>;
+      return <Table.Cell>{props.value}</Table.Cell>;
     };
 
     return (

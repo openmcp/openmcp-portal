@@ -54,14 +54,14 @@ class Metering extends Component {
       columns: [
         { name: "region", title: "Region" },
         { name: "region_name", title: "Region Name" },
-        { name: "cost", title: "Cost" },
+        { name: "cost", title: "Cluster Cost" },
         { name: "created_time", title: "Created Time" },
         { name: "workers", title: "workers" },
       ],
       defaultColumnWidths: [
         { columnName: "region", width: 100 },
         { columnName: "region_name", width: 160 },
-        { columnName: "cost", width: 100 },
+        { columnName: "cost", width: 150 },
         { columnName: "created_time", width: 200 },
         { columnName: "workers", width: 1 },
       ],
@@ -325,10 +325,10 @@ class MeteringWorker extends Component {
       rows: "",
       columns: [
         { name: "id", title: "ID" },
-        { name: "cpu", title: "CPU" },
+        { name: "cpu", title: "vCPU" },
         { name: "memory", title: "Memory" },
         { name: "disk", title: "Disk" },
-        { name: "cost", title: "Cost" },
+        { name: "cost", title: "Worker Node Cost" },
         { name: "created_time", title: "Created time" },
         { name: "updated_time", title: "Updated Time" },
       ],
@@ -337,24 +337,24 @@ class MeteringWorker extends Component {
         { columnName: "cpu", width: "80px" },
         { columnName: "memory", width: "100px" },
         { columnName: "disk", width: "80px" },
-        { columnName: "cost", width: "80px"},
+        { columnName: "cost", width: "200px"},
         { columnName: "created_time", width: "200px"},
         { columnName: "updated_time", width: "200px"},
         
       ],
       value: 0,
-      confirmOpen: false,
-      confirmInfo: {
-        title: "confirmTitle",
-        context: "confirmText",
-        button: {
-          open: "",
-          yes: "OK",
-          no: "CANCEL",
-        },
-      },
-      confrimTarget: "false",
-      confirmTargetKeyname: "snapshot",
+      // confirmOpen: false,
+      // confirmInfo: {
+      //   title: "confirmTitle",
+      //   context: "confirmText",
+      //   button: {
+      //     open: "",
+      //     yes: "OK",
+      //     no: "CANCEL",
+      //   },
+      // },
+      // confrimTarget: "false",
+      // confirmTargetKeyname: "snapshot",
       selectedRow: [],
     };
   }

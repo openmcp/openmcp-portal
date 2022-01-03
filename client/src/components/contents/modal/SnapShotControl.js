@@ -102,7 +102,7 @@ class SnapShotControl extends Component {
           no: "CANCEL",
         },
       },
-      confrimTarget: "false",
+      confrimTarget: "",
       confirmTargetKeyname: "snapshot",
     };
     // this.onChange = this.onChange.bind(this);

@@ -40,6 +40,7 @@ import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
 import Confirm2 from "../../../modules/Confirm2.js";
 import axios from "axios";
 import { dateFormat } from "../../../util/Utitlity.js";
+import { withTranslation } from "react-i18next";
 
 class Snapshot extends Component {
   constructor(props) {
@@ -209,6 +210,7 @@ class Snapshot extends Component {
   );
 
   render() {
+    const {t} = this.props;
     const onSelectionChange = (selection) => {
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
@@ -238,7 +240,7 @@ class Snapshot extends Component {
                   }}
                 >
                   <ExcuteSnapshot
-                    title=""
+                    title={t("snapshots.snapshot.pop-snapshot.title")}
                     rowData={this.state.selectedRow}
                     onUpdateData={this.onUpdateData}
                   />
@@ -543,4 +545,4 @@ class SnapshotDetail extends Component {
   }
 }
 
-export default Snapshot;
+export default withTranslation()(Snapshot);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { withTranslation } from "react-i18next";
 
 // let completed = 0;
 class ProgressTemp extends Component {
@@ -26,12 +27,13 @@ class ProgressTemp extends Component {
   }
   
   render(){
+    const {t} = this.props;
     return(
-      <div onClick={this.closeProcess}>
+      <div >
         {this.props.openProgress ? 
         <div className="loading-full">
-          <div>
-          Loading...
+          <div onClick={this.closeProcess}>
+          {t("common.label.processing")}
           <CircularProgress
             variant="determinate"
             value={this.state.completed}
@@ -47,4 +49,4 @@ class ProgressTemp extends Component {
   }
 }
 
-export default ProgressTemp;
+export default withTranslation()(ProgressTemp);

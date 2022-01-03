@@ -1327,7 +1327,7 @@ tbody {
 }
 
 .small-grid.md-contents-body section {
-  margin-bottom: 20px !important;
+  margin-bottom: 15px !important;
 }
 
 .small-grid .MuiOutlinedInput-input {
@@ -1887,7 +1887,7 @@ g {
 .md-contents-body section.md-content p {
   font-weight: bold;
   color: #367fa9;
-  margin: 10px 0;
+  margin: 5px 0;
 }
 
 .MuiCheckbox-colorSecondary.Mui-checked {
@@ -2069,7 +2069,7 @@ g {
   width: 100%;
   position: fixed;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 100;
+  z-index: 1000000;
   top: 0;
   left: 0;
   margin: auto;
@@ -2153,8 +2153,8 @@ g {
   cursor: pointer;
 }
 
-.toast-warn {
-  width: 400px;
+.toast-warn, .toast-danger {
+  min-width: 400px;
 }
 
 .Toastify__toast-container--bottom-right {
@@ -2753,6 +2753,7 @@ g {
 
 .iframe-ti iframe {
   display:block;
-  width:100vw;
+  width:98.5vw;
   height: 100vh;
+  
 }

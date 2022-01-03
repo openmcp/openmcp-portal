@@ -68,7 +68,9 @@ class PcSetSelectBoxPolicy extends Component {
     });
   };
 
-  selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}];
+  // selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}];
+  // selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}];
+  selectBoxData = this.props.selectBoxData;
 
   onSelectBoxChange = (data) => {
       let tempData = this.state.policyData;

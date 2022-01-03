@@ -12,6 +12,7 @@ import { NavigateNext } from '@material-ui/icons';
 import DNS from './DNS';
 import Services from './Services';
 import Ingress from './Ingress';
+import LoadBalancer from "./LoadBalancer";
 import { BiNetworkChart } from "react-icons/bi";
 import { withTranslation } from 'react-i18next';
 
@@ -77,6 +78,7 @@ class NetworkMenu extends Component {
       { label: "dns", index: 1, param:"dns" },
       { label: "services", index: 2, param:"services" },
       { label: "ingress", index: 3, param:"ingress" },
+      { label: "loadbalancer", index: 4, param:"loadbalancer" },
     ],
   };
 
@@ -85,6 +87,8 @@ class NetworkMenu extends Component {
        this.setState({ value: 1 });
      } else if(this.props.match.url.indexOf("ingress") > 0){
       this.setState({ value: 2 });
+     } else if(this.props.match.url.indexOf("loadbalancer") > 0){
+      this.setState({ value: 3 });
      } else {
       this.setState({ value: 0 });
      }
@@ -148,7 +152,7 @@ class NetworkMenu extends Component {
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={i.label} {...a11yProps(i.index)}
+                    <Tab label={t(`network.${i.label}.title`)} {...a11yProps(i.index)}
                           component={Link}
                           to={{
                             pathname: `/network/${i.param}`
@@ -180,7 +184,13 @@ class NetworkMenu extends Component {
                   </Route>
                 </Switch>
               </TabPanel>
-             
+              <TabPanel className="tab-panel" value={this.state.value} index={3}>
+               <Switch>
+                  <Route path="/network/loadbalancer"
+                    render={({match,location}) => <LoadBalancer match={match} location={location} menuData={this.onMenuData}/>} >
+                  </Route>
+                </Switch>
+              </TabPanel>
             </div>
           </section>
         </div>

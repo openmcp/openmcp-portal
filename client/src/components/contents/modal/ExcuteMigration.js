@@ -462,7 +462,7 @@ class ExcuteMigration extends Component {
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleSave} color="primary">
-              {t("common.btn.excution")}
+              {t("common.btn.execution")}
             </Button>
             <Button onClick={this.handleClose} color="primary">
             {t("common.btn.cancel")}

@@ -216,9 +216,6 @@ class ClustersJoined extends Component {
 
   confirmed = (result) => {
     if (result) {
-      //Unjoin proceed
-      console.log("confirmed");
-
       const url = `/cluster/unjoin`;
       const data = {
         clusterName: this.state.selectedRow.name,

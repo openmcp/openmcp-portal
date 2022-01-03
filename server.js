@@ -326,7 +326,7 @@ app.post("/apimcp/portal-log", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err);
+        console.log("error", err);
         result_set = {
           data: [],
           message: "Update log failed : " + err,
@@ -995,17 +995,99 @@ app.get("/deployments/:deployment", (req, res) => {
   });
 });
 
-app.post("/deployments/create", (req, res) => {
-  const YAML = req.body.yaml;
+app.get("/deployments/omcp-deployment/:deployment", (req, res) => {
+
+  let clusters = [];
+  let cluster = req.query.cluster;
+  cluster.split(" ").forEach(item => {
+    clusters.push(item.split(':')[0]);
+  });
+
+  let data = {
+    deployClusters : clusters
+  };
 
   var request = require("request");
   var options = {
-    uri: `${apiServer}/apis/yamlapply`,
+    uri: `${apiServer}/apis/clsuters/openmcp/projects/${req.query.project}/deployments/omcp-deployment/${req.params.deployment}`,
     method: "POST",
-    body: YAML,
+    body: JSON.stringify(data)
   };
 
   request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+});
+
+app.get(
+  "/projects/:project/resources/workloads/deployments/omcp-deployment/:deployment/replica_status",
+  (req, res) => {
+    var request = require("request");
+
+    var options = {
+      uri: `${apiServer}/apis/clsuters/openmcp/projects/${req.query.project}/deployments/omcp-deployment/${req.params.deployment}/replica_status`,
+      method: "GET"
+    };
+
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        res.send(body);
+      } else {
+        console.log("error", error);
+      }
+    });
+  }
+);
+
+
+
+
+app.post("/deployments/create", (req, res) => {
+  const YAML = req.body.yaml;
+  const data = {
+    cluster : req.body.cluster,
+    yaml : YAML
+  }
+  
+  var options = {
+    uri: `${apiServer}/apis/deployments/create`,
+    method: "POST",
+    body: JSON.stringify(data),
+    // body: YAML
+  };
+  
+  var request = require("request");
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+});
+
+app.post("/deployments/delete", (req, res) => {
+  const data = {
+    cluster : req.body.cluster,
+    namespace : req.body.namespace,
+    deployment : req.body.deployment,
+    ynOmcpDp : req.body.ynOmcpDp
+  }
+  
+  var options = {
+    uri: `${apiServer}/apis/deployments/delete`,
+    method: "POST",
+    body: JSON.stringify(data),
+    // body: YAML
+  };
+  
+  var request = require("request");
+  request(options, function (error, response, body) {
+    console.log("response : ",response.statusCode);
     if (!error && response.statusCode == 200) {
       res.send(body);
     } else {
@@ -1054,8 +1136,6 @@ app.post("/clusters", (req, res) => {
     body: data,
   };
 
-  console.log(options);
-
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
@@ -1069,7 +1149,6 @@ app.post("/clusters-joinable", (req, res) => {
   // let rawdata = fs.readFileSync("./json_data/clusters_joinable.json");
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
-  console.log("joinable-start");
 
   var request = require("request");
   let data = JSON.stringify(req.body);
@@ -1081,7 +1160,6 @@ app.post("/clusters-joinable", (req, res) => {
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log("joinable")
       res.send(body);
     } else {
       console.log("error", error);
@@ -1662,7 +1740,7 @@ app.get("/nodes/:node/power-usage", async (req, res) => {
   if (queryResult2.length > 0) {
     let data = queryResult2[0];
     let usage = parseFloat(parseFloat(data.usage).toFixed(1));
-    console.log("usage : ", data.usage);
+    // console.log("usage : ", data.usage);
     if (data.usage === null) {
       usage = 0;
     }
@@ -2235,7 +2313,7 @@ app.get("/eks/clusters/workers", (req, res) => {
       request(options, function (error, response, body) {
         if (!error && response.statusCode == 200) {
           var result = JSON.parse(body);
-          console.log(result);
+          
           result.map((item) => {
             if (item.name == clusterName) {
               res.send(item.nodegroups);
@@ -2942,7 +3020,7 @@ app.post("/settings/config/pca/eks", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err);
+        console.log("error",err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
@@ -3038,7 +3116,7 @@ app.post("/settings/config/pca/gke", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err);
+        console.log("error",err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
@@ -3136,7 +3214,7 @@ app.post("/settings/config/pca/aks", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err);
+        console.log("error",err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
@@ -3229,7 +3307,7 @@ app.post("/settings/config/pca/kvm", (req, res) => {
       };
 
       if (err !== null) {
-        console.log(err);
+        console.log("error",err);
         result_set = {
           data: [],
           message: "Insert log failed : " + err,
@@ -3398,20 +3476,24 @@ app.delete("/settings/threshold", (req, res) => {
 });
 
 app.post("/settings/threshold/log", (req, res) => {
-  var create_time = getDateTime();
-  //connection.connect();
   let data = req.body.g_clusters;
 
   let clusters = "";
+  let condition = "1=1";
   data.forEach((item, index) => {
-    if (index === data.length - 1) {
-      clusters = clusters + `'${item}'`;
+    if(item === 'allClusters'){
+      return false;
     } else {
-      clusters = clusters + `'${item}',`;
+
+      if (index === data.length - 1) {
+        clusters = clusters + `'${item}'`;
+      } else {
+        clusters = clusters + `'${item}',`;
+      }
     }
   });
 
-  let condition = `cluster_name in (${clusters})`;
+  if(clusters !== "") condition = `cluster_name in (${clusters})`;
 
   let queryString = `select
   tl.node_name,
@@ -3423,12 +3505,13 @@ app.post("/settings/threshold/log", (req, res) => {
   from tb_threshold_log tl
   where ${condition}
   order by created_time desc, node_name;`;
+
   connection.query(queryString, (err, result) => {
     res.send(result.rows);
   });
 });
 
-app.post("/settings/threshold/log", (req, res) => {
+app.post("/settings/threshold/setlog", (req, res) => {
   var now = getDateTime();
   let query = `
 
@@ -3540,7 +3623,6 @@ app.get("/apis/metering", async (req, res) => {
 
 //metering region add
 app.post("/apis/metering", (req, res) => {
-  console.log("region-cost");
   var date = getDateTime();
   let query = `
   INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('${req.body.regionCode}', ${req.body.regionCost}, '${req.body.regionName}', '${date}', '${date}');
@@ -3625,9 +3707,6 @@ app.post("/apis/metering/worker", (req, res) => {
     })
   }
 
-
-  console.log(query);
-
   connection.query(query, (err, result) => {
     if (err !== "null") {
       const result_set = {
@@ -3651,8 +3730,6 @@ app.get("/apis/billing", async (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("apis/billing");
-  
   var date = getDateTime();
   var dateBeforeDay = getDateBefore("d", 1);
 
@@ -3856,6 +3933,25 @@ app.put("/apis/dashboard/components", (req, res) => {
   });
 });
 
+app.post("/apis/dashboard/smartcity/deployment", (req, res) => {
+  const YAML = req.body.yaml;
+  
+  var options = {
+    uri: `${apiServer}/apis/yamlapply`,
+    method: "POST",
+    body: YAML,
+  };
+  
+  var request = require("request");
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+});
+
 app.post("/apis/dashboard/status", (req, res) => {
   let data = JSON.stringify(req.body);
   let request = require("request");
@@ -3881,7 +3977,6 @@ app.post("/apis/dashboard/region_groups", (req, res) => {
   // let overview = JSON.parse(rawdata);
   // res.send(overview);
 
-  console.log("ddd");
   let request = require("request");
   let data = JSON.stringify(req.body);
   let options = {
@@ -3906,7 +4001,6 @@ app.post("/apis/dashboard/omcp", (req, res) => {
   // res.send(overview);
   let request = require("request");
   let data = JSON.stringify(req.body);
-  console.log(data);
 
   let options = {
     uri: `${apiServer}/apis/dashboard/omcp`,
@@ -4067,7 +4161,7 @@ app.post("/apis/dashboard/power_usage", async (req, res) => {
   if (queryResult2.length > 0) {
     let data = queryResult2[0];
     let usage = parseFloat(parseFloat(data.usage).toFixed(1));
-    console.log("usage : ", data.usage);
+    // console.log("usage : ", data.usage);
     if (data.usage === null) {
       usage = 0;
     }
@@ -4090,7 +4184,6 @@ app.post("/apis/dashboard/power_usage", async (req, res) => {
 // #######################
 
 app.post("/apis/metric/clusterlist", (req, res) => {
-  console.log("apis/metric/clusterlist");
   let request = require("request");
   let data = JSON.stringify(req.body);
   let options = {
@@ -4098,11 +4191,9 @@ app.post("/apis/metric/clusterlist", (req, res) => {
     method: "POST",
     body: data,
   };
-  console.log(options);
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body);
       res.send(body);
     } else {
       console.log("error", error);
@@ -4471,7 +4562,6 @@ app.get("/apis/metric/nodelist", (req, res) => {
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       res.send(body);
-      console.log("body:", body);
     } else {
       console.log("error", error);
     }

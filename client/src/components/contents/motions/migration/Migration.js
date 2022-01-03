@@ -111,7 +111,10 @@ spec:
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      body: JSON.stringify({ 
+        g_clusters : g_clusters,
+        ynOmcpDp: false,
+       })
     };
 
     const response = await fetch(`/deployments`, requestOptions);

@@ -31,7 +31,7 @@ import { withTranslation } from 'react-i18next';
 
 
 let apiParams = "";
-class DeploymentDetail extends Component {
+class OMCPDeploymentDetail extends Component {
   state = {
     rows: "",
     completed: 0,
@@ -66,7 +66,7 @@ class DeploymentDetail extends Component {
   callApi = async () => {
     var param = this.props.match.params;
     const response = await fetch(
-      `/deployments/${param.deployment}${this.props.location.search}`
+      `/deployments/omcp-deployment/${param.deployment}${this.props.location.search}`
     );
     const body = await response.json();
     return body;
@@ -132,6 +132,7 @@ class DeploymentDetail extends Component {
                 <ReplicaStatus
                   refresh={this.refresh}
                   queryString={this.props.location.search}
+                  replica = {this.state.rows.basic_info.status}
                   t={t}
                 />,
                 <Pods rowData={this.state.rows.pods} t={t} />,
@@ -179,6 +180,10 @@ class BasicInfo extends Component {
                 {this.props.rowData.project}
               </div>
               <div>
+                <span>{t("deployments.detail.basicInfo.replica")} : </span>
+                  {this.props.rowData.status}
+              </div>
+              {/* <div>
                 <span>{t("deployments.detail.basicInfo.labels")} : </span>
                 <div style={{ margin: "-25px 0px 0px 66px" }}>
                   {Object.keys(this.props.rowData.labels).length > 0
@@ -187,9 +192,13 @@ class BasicInfo extends Component {
                       })
                     : "-"}
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="cb-body-right">
+              <div>
+                <span>{t("deployments.detail.basicInfo.kind")} : </span>
+                {this.props.rowData.kind}
+              </div>
               <div>
                 <span>{t("deployments.detail.basicInfo.createdTime")} : </span>
                 {this.props.rowData.created_time}
@@ -199,6 +208,7 @@ class BasicInfo extends Component {
                 {this.props.rowData.uid}
               </div>
             </div>
+            
           </div>
         </div>
       </div>
@@ -210,11 +220,7 @@ class ReplicaStatus extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rows: {},
-      ready: 0,
-      notReady: 0,
-      currentPodNum : 0,
-      // status,
+      rows: "",
     };
   }
 
@@ -224,7 +230,7 @@ class ReplicaStatus extends React.Component {
     const response = await fetch(
       `/projects/${
         this.props.queryString.split("project=")[1]
-      }/resources/workloads/deployments/${apiParams.deployment}/replica_status${
+      }/resources/workloads/deployments/omcp-deployment/${apiParams.deployment}/replica_status${
         this.props.queryString
       }`
     );
@@ -243,12 +249,10 @@ class ReplicaStatus extends React.Component {
     this.callApi()
       .then((res) => {
         if (res === null) {
-          this.setState({ rows: {} });
+          this.setState({ rows: "" });
         } else {
           this.setState({
             rows: res,
-            ready: res.ready_replicas,
-            notReady: res.replicas - res.ready_replicas,
           });
         }
       })
@@ -261,80 +265,20 @@ class ReplicaStatus extends React.Component {
     this.callApi()
       .then((res) => {
         if (res === null) {
-          this.setState({ rows: {} });
+          this.setState({ rows: "" });
         } else {
           this.setState({
             rows: res,
-            ready: res.ready_replicas,
-            notReady: res.replicas - res.ready_replicas,
-            currentPodNum : parseInt(res.replicas)
           });
         }
       })
       .catch((err) => console.log(err));
-    this.timer = setInterval(this.repeatCallApi, 30000);
+    // this.timer = setInterval(this.repeatCallApi, 20000);
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
   }
-
-  delClickEventHandler = (e, cluster) => {
-    e.preventDefault();
-    // console.log("delClickEventHandler", e, cluster)
-    this.delPod(cluster).then((res) => {
-      this.repeatCallApi();
-    });
-  };
-
-  addClickEventHandler = (e, cluster) => {
-    e.preventDefault();
-    this.addPod(cluster).then((res) => {
-      this.repeatCallApi();
-    });
-  };
-
-  addPod = (cluster) => {
-    const url = `/apis/deployments/replica_status/set_pod_num`;
-    let podNum = this.state.currentPodNum + 1;
-    this.setState({currentPodNum : podNum})
-    const data = {
-      cluster: cluster,
-      namespace: this.props.queryString.split("project=")[1],
-      deployment: apiParams.deployment,
-      value: [
-        {
-          op: "replace",
-          path: "/spec/replicas",
-          value: podNum,
-        },
-      ],
-    };
-    return axios.post(url, data);
-  };
-
-  delPod = (cluster) => {
-    if (parseInt(this.state.rows.replicas) === 1) {
-      alert("It can't because Pod is the last");
-    } else {
-      let podNum = this.state.currentPodNum - 1;
-      this.setState({currentPodNum : podNum})
-      const url = `/apis/deployments/replica_status/set_pod_num`;
-      const data = {
-        cluster: cluster,
-        namespace: this.props.queryString.split("project=")[1],
-        deployment: apiParams.deployment,
-        value: [
-          {
-            op: "replace",
-            path: "/spec/replicas",
-            value: podNum,
-          },
-        ],
-      };
-      return axios.post(url, data);
-    }
-  };
 
   render() {
     const t = this.props.t;
@@ -360,71 +304,31 @@ class ReplicaStatus extends React.Component {
 
     return (
       <div className="content-box replica-set">
-        <div className="cb-header">{t("deployments.detail.replicaStatus.title")}</div>
+        <div className="cb-header">
+          {t("deployments.detail.replicaStatus.title") + " ("+t("deployments.detail.replicaStatus.total")+" : " +this.props.replica + ")"}
+        </div>
         <div className="cb-body" style={{ width: "100%" }}>
           <div>
             {this.state.rows ? (
-              // this.state.rows.map((i) => {
-              //   const ready_count = i.pods.reduce((obj, v) => {
-              //     obj[v.status] = (obj[v.status] || 0) + 1;
-              //     return obj;
-              //   }, {})
-
-              //   const count = i.pods.length
-              // <div className="rs-cluster">
-              //   <div className="cluster-title">
-              //     {i.cluster} </div>
-              //   <div className="cluster-content">
-              //   <div className="pod-count">
-              //     <span>{ready_count.ready}</span>
-              //     <span>/</span>
-              //     <span>{count}</span>
-              //   </div>
-              //   {i.pods.map((p)=>{
-              //     return (
-              //       rectangle(p.status)
-              //     );
-              //   })}
-              //   </div>
-              //   <div className="cluster-button">
-
-              //     <div onClick= {e => this.addClickEventHandler(e, i.cluster)}>+</div>
-              //     <div onClick={e => this.delClickEventHandler(e, i.cluster)}>-</div>
-              //   </div>
-              // </div>
-              // })
-              <div className="rs-cluster">
-                <div className="cluster-title">{this.state.rows.cluster} </div>
-                <div className="cluster-content">
-                  <div className="pod-count">
-                    <span>{this.state.rows.ready_replicas}</span>
-                    <span>/</span>
-                    <span>{this.state.rows.replicas}</span>
+              this.state.rows.map((item, index) => {
+                return(
+                <div className="rs-cluster">
+                  <div className="cluster-title">
+                    {item.cluster}
                   </div>
-                  {[...Array(this.state.notReady)].map((n, index) => {
-                    return <div>{rectangle("notReady")}</div>;
-                  })}
-                  {[...Array(this.state.ready)].map((n, index) => {
-                    return <div>{rectangle("ready")}</div>;
-                  })}
-                </div>
-                <div className="cluster-button">
-                  <div
-                    onClick={(e) =>
-                      this.addClickEventHandler(e, this.state.rows.cluster)
-                    }
-                  >
-                    +
-                  </div>
-                  <div
-                    onClick={(e) =>
-                      this.delClickEventHandler(e, this.state.rows.cluster)
-                    }
-                  >
-                    -
+                  <div className="cluster-content">
+                    <div className="pod-count" style={{marginBottom:"17px"}}>
+                      <span style={{fontSize:"19px"}}>
+                        Pods : {item.replicas}
+                      </span>
+                    </div>
+                    {[...Array(item.replicas)].map((n, index) => {
+                      return <div>{rectangle("ready")}</div>;
+                    })}
                   </div>
                 </div>
-              </div>
+                )
+              })
             ) : (
               <CircularProgress
                 variant="determinate"
@@ -1015,4 +919,4 @@ class Events extends Component {
   }
 }
 
-export default withTranslation()(DeploymentDetail); 
+export default withTranslation()(OMCPDeploymentDetail); 

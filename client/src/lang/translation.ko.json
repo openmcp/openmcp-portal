@@ -76,14 +76,16 @@
       "cancel": "취소",
       "confirm": "승인",
       "update": "업데이트",
-      "excution": "실행",
+      "execution": "실행",
       "register": "등록",
       "back": "이전",
       "next": "다음",
       "delete": "삭제"
     },
     "label": {
-      "target": "대상"
+      "target": "대상",
+      "processing":"처리중...",
+      "loading":"로딩중..."
     },
     "nav": {
       "home": "홈"
@@ -95,6 +97,10 @@
   "dashboard": {
     "title": "대시보드",
     "btn-edit": "사용자 정의",
+    "deploySmartCity":{
+      "btn-title":"스마트시티 배포",
+      "title":"스마트시티 배포"
+    },
     "pop-editDashboard": {
       "title": "대시보드 사용자 정의",
       "lb-choices": "선택안됨",
@@ -230,7 +236,7 @@
     },
     "detail": {
       "overview": {
-        "name": "개요",
+        "name": "클러스터 개요",
         "basicInfo": {
           "name": "기본정보",
           "sub": {
@@ -320,7 +326,7 @@
       "desiredNum": "희망 노드수 입력"
     },
     "detail": {
-      "title": "개요",
+      "title": "노드 개요",
       "basicInfo": {
         "title": "기본정보",
         "sub": {
@@ -395,7 +401,7 @@
     },
     "detail": {
       "overview": {
-        "title": "개요",
+        "title": "프로젝트 개요",
         "basicInfo": {
           "title": "기본정보",
           "sub": {
@@ -433,7 +439,7 @@
           "deployments": {
             "title": "디플로이먼트",
             "detail": {
-              "title": "개요",
+              "title": "디플로이먼트 개요",
               "basicInfo": {
                 "title": "기본정보"
               },
@@ -454,7 +460,7 @@
           "statefulsets": {
             "title": "스테이트풀셋",
             "detail": {
-              "title": "개요",
+              "title": "스테이트풀셋 개요",
               "basicInfo": {
                 "title": "기본정보"
               },
@@ -494,7 +500,7 @@
           "createdTime": "Created Time"
         },
         "detail": {
-          "title": "개요",
+          "title": "볼륨 개요",
           "basicInfo": {
             "title": "기본정보"
           },
@@ -517,7 +523,7 @@
             "createdTime": "Created Time"
           },
           "detail": {
-            "title": "개요",
+            "title": "Secret 개요",
             "basicInfo": {
               "title": "기본정보"
             },
@@ -535,7 +541,7 @@
             "createdTime": "Created Time"
           },
           "detail": {
-            "title": "개요",
+            "title": "ConfigMap 개요",
             "basicInfo": {
               "title": "기본정보"
             },
@@ -549,30 +555,68 @@
   },
   "deployments": {
     "title": "디플로이먼트",
+    "tabTitle": {
+      "deployment":"디플로이먼트",
+      "omcpTitle" : "OpenMCP 디플로이먼트"
+    },
     "grid": {
       "name": "이름",
       "ready": "준비",
+      "replicas": "레플리카",
       "cluster": "클러스터",
+      "clusterDp": "클러스터:디플로이먼트 수",
       "project": "프로젝트",
       "image": "이미지",
       "createdTime": "생성일시"
     },
     "pop-create": {
       "btn-create": "디플로이먼트 생성",
-      "title": "디플로이먼트 생성"
+      "title": "디플로이먼트 생성",
+      "omcpTitle":"OpenMCP 디플로이먼트 생성",
+      "targetCluster": "대상 클러스터 선택",
+      "step" : {
+        "1" : {
+          "title" : "기본설정"
+        },
+        "2" : {
+          "title" : "클러스터 선택"
+        },
+        "3" : {
+          "title" :"실행"
+        }
+      },
+      "msg": {
+        "chk-name" : "'Name'을 입력해주세요",
+        "chk-namespace" : "'Namespace'를 입력해주세요",
+        "chk-replicas" : "'Replicas'를 입력해주세요",
+        "chk-containerImage" : "'Container Image'를 입력해주세요",
+        "chk-containerPort" : "'Container Port'를 입력해주세요"
+      }
+    },
+    "pop-delete": {
+      "btn-delete": "디플로이먼트 삭제",
+      "title": "디플로이먼트 삭제",
+      "omcpTitle":"OpenMCP 디플로이먼트 삭제",
+      "context": "디플로이먼트를 삭제하시겠습니까?",
+      "msg": {
+        "chk-selectDeployment" : "디플로이먼트를 선택하세요"
+      }
     },
     "detail": {
-      "title": "개요",
+      "title": "디플로이먼트 개요",
       "basicInfo": {
         "title": "기본정보",
         "name": "이름",
         "project": "프로젝트",
         "labels": "레이블",
         "createdTime": "생성일시",
-        "uid": "UID"
+        "uid": "UID",
+        "replica":"레플리카",
+        "kind":"종류"
       },
       "replicaStatus": {
-        "title": "레플리카 현황"
+        "title": "레플리카 현황",
+        "total":"전체"
       },
       "pods": {
         "title": "파드"
@@ -613,7 +657,7 @@
         "createdTime": "생성일시"
       },
       "detail": {
-        "title": "개요",
+        "title": "파드 개요",
         "basicInfo": {
           "title": "기본정보",
           "name": "이름",
@@ -716,7 +760,7 @@
         "title": "서비스 생성"
       },
       "detail": {
-        "title": "개요",
+        "title": "서비스 개요",
         "basicInfo": {
           "title": "기본정보",
           "name": "이름",
@@ -760,7 +804,7 @@
         "title": "인그레스 생성"
       },
       "detail": {
-        "title": "개요",
+        "title": "인그레스 개요",
         "basicInfo": {
           "title": "기본정보",
           "name": "이름",
@@ -791,6 +835,9 @@
           }
         }
       }
+    },
+    "loadbalancer":{
+      "title": "로드 밸런서"
     }
   },
   "migrations": {

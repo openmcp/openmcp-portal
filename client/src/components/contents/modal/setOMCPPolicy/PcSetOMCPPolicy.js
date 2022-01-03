@@ -31,17 +31,33 @@ class PcSetOMCPPolicy extends Component {
 
   render() {
     const PolicyDialog = () => {
+      let selectBoxData = [{name:"select", value:"select"}]
       switch(this.state.policyName){
         case "metric-collector-period":
+        case  "cpa-period" :
           return <PcSetTextValuePolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData}/>
         case "log-level":
           return <PcSetNumericPolicy max={5} step={1} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData}/>
+        case "lb-scoring-weight":
         case "loadbalancing-controller-policy":
           return <PcSetLoadbalancingControllerPolicy policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData}/>
         case "analytic-metrics-weight":
           return <PcSetNumericPolicy max={1} step={0.1} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData}/>
+        case "post-scheduling-type":
+          selectBoxData = [{name:"FIFO", value:"FIFO"},{name:"OPENMCP", value:"OPENMCP"}]
+          
+          return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData} selectBoxData={selectBoxData}/>
+        case "scheduling-policy":
+          selectBoxData = [{name:"RR", value:"RR"},{name:"OpenMCP", value:"OpenMCP"}]
+          
+          return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.
+          state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData} selectBoxData={selectBoxData}/>
+        case "hpa-minmax-distribution-mode":
+          selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}]
+          
+          return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData} selectBoxData={selectBoxData}/>
         default : //hpa-minmax-distribution-mode
-         return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData}/>
+         return <PcSetTextValuePolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData}/>
 
       }
     }

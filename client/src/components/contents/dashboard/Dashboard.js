@@ -6,6 +6,9 @@ import CustomDynamicView from "./CustomDynamicView";
 import DashboardSelectModule from "../modal/dashboard/DashboardSelectModule";
 import { CircularProgress } from "@material-ui/core";
 import { withTranslation } from 'react-i18next';
+import Editor from "../../modules/Editor";
+import axios from "axios";
+import ProgressTemp from "../../modules/ProgressTemp";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -17,6 +20,29 @@ class Dashboard extends Component {
       componentCodes:"",
       componentList: "",
       myComponentList: "",
+      anchorEl: null,
+      openProgress: false,
+            editorContext: `apiVersion: apps/v1
+      kind: Smartcity
+      metadata:
+        name: [Smartcity name]
+        labels:
+          app: [Smartcity label]
+      spec:
+        replicas: [replica number]
+        selector:
+          matchLabels:
+            app: [matchLabels]
+        template:
+          metadata:
+            labels:
+              app: [labels]
+          spec:
+            containers:
+            - name: [container name]
+              image: [image name]
+              ports:
+              - containerPort: [container port]`,
     };
   }
 
@@ -103,10 +129,49 @@ class Dashboard extends Component {
     },
   };
 
+  excuteScript = (cluster, context) => {
+    if (this.state.openProgress) {
+      this.setState({ openProgress: false });
+    } else {
+      this.setState({ openProgress: true });
+    }
+
+    const url = `/smartcity/deployment`;
+    const data = {
+      yaml: context,
+    };
+
+    axios
+      .post(url, data)
+      .then((res) => {
+        alert(res.data[0].text);
+        this.setState({ openProgress: false });
+        this.onRefresh();
+      })
+      .catch((err) => {
+        alert(err);
+        this.setState({ openProgress: false });
+      });
+  };
+
+  closeProgress = () => {
+    this.setState({ openProgress: false });
+  };
+
+  smartCityHandleClose = () => {}
+
   render() {
     const {t} = this.props;
     return (
       <div className="content-wrapper dashboard-main">
+        {this.state.openProgress ? (
+          <ProgressTemp
+            openProgress={this.state.openProgress}
+            closeProgress={this.closeProgress}
+          />
+        ) : (
+          ""
+        )}
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
@@ -125,10 +190,29 @@ class Dashboard extends Component {
                   componentList={this.state.componentList}
                   myComponentList={this.state.myComponentList}
                 />
-              ) : (
-                <div></div>
+                ) : (
+                  <div></div>
               )}
             </span>
+            <div style={{
+                  position: "absolute",
+                  fontSize: "14px",
+                  padding: "3px 15px 7px 15px",
+                  top: "45px",
+                  left: "307px",
+                  color: "#4a5bb9",
+                  border: "1px solid #a1abd9",
+                  borderRadius: "4px",
+                  cursor:"pointer"
+            }}>
+              <Editor
+                btTitle={t("dashboard.deploySmartCity.btn-title")}
+                title={t("dashboard.deploySmartCity.title")}
+                context={this.state.editorContext}
+                excuteScript={this.excuteScript}
+                menuClose={this.smartCityHandleClose}
+              />
+            </div>
             <small></small>
           </h1>
           <ol className="breadcrumb">

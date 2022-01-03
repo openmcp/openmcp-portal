@@ -255,7 +255,7 @@ class Editor extends Component {
             // top: "26px",
             // textAlign:"center",
             zIndex: "10",
-            width: "148px",
+            // minWidth: "148px",
             textTransform: "capitalize",
           }}
         >
@@ -277,7 +277,7 @@ class Editor extends Component {
           <DialogContent dividers>{editor}</DialogContent>
           <DialogActions>
             <Button autoFocus onClick={this.handleExcute} color="primary">
-              {t("common.btn.excution")}
+              {t("common.btn.execution")}
             </Button>
             <Button autoFocus onClick={this.handleClose} color="primary">
             {t("common.btn.cancel")}

@@ -271,7 +271,7 @@ class GroupRole extends Component {
       this.setState({ selection: selection });
       this.setState({ 
         selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {},
-        confrimTarget : this.state.rows[selection[0]] ? this.state.rows[selection[0]].group_name : "false" ,
+        confrimTarget : this.state.rows[selection[0]] ? this.state.rows[selection[0]].group_name : "" ,
       });
 
 
