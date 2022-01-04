@@ -3970,7 +3970,7 @@ app.put("/apis/dashboard/components", (req, res) => {
   });
 });
 
-app.post("/apis/dashboard/smartcity/deployment", (req, res) => {
+app.post("/apis/smartcity/deployment", (req, res) => {
   const YAML = req.body.yaml;
   
   var options = {

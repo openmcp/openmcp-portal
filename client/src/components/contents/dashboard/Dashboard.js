@@ -116,7 +116,7 @@ class Dashboard extends Component {
       this.setState({ openProgress: true });
     }
 
-    const url = `/smartcity/deployment`;
+    const url = `/apis/smartcity/deployment`;
     const data = {
       yaml: context,
     };
