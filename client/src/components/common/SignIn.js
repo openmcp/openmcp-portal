@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom";
 import axios from "axios";
 import * as utilLog from "./../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import { fn_refreshAsyncStorage } from "../util/Utitlity.js";
+import { fn_refreshAsyncStorage } from "../util/Utility.js";
 
 // AsyncStorage 사용방법
 // var username = "test"

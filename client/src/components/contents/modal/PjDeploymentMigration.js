@@ -47,7 +47,7 @@ import Paper from "@material-ui/core/Paper";
 // import IconButton from "@material-ui/core/IconButton";
 import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
-import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utility.js";
 
 const styles = (theme) => ({
   root: {

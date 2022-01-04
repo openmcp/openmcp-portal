@@ -38,7 +38,7 @@ import LensIcon from "@material-ui/icons/Lens";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utility.js";
 import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({

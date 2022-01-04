@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@material-ui/core";
 import axios from "axios";
-import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utility.js";
 import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({

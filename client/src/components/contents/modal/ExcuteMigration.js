@@ -32,7 +32,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
 import axios from "axios";
-import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utitlity.js";
+import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utility.js";
 import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({

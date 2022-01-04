@@ -28,7 +28,7 @@ import { AsyncStorage } from "AsyncStorage";
 import WarningRoundedIcon from "@material-ui/icons/WarningRounded";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import PlayCircleFilledWhiteRoundedIcon from "@material-ui/icons/PlayCircleFilledWhiteRounded";
-import { convertUTCTime } from "../../../util/Utitlity.js";
+import { convertUTCTime } from "../../../util/Utility.js";
 import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
 
 class SnapshotLog extends Component {

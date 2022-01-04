@@ -39,7 +39,7 @@ import LinearProgressBar from "../../../modules/LinearProgressBar.js";
 import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
 import Confirm2 from "../../../modules/Confirm2.js";
 import axios from "axios";
-import { dateFormat } from "../../../util/Utitlity.js";
+import { dateFormat } from "../../../util/Utility.js";
 import { AiOutlineAreaChart } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { NavigateNext } from "@material-ui/icons";

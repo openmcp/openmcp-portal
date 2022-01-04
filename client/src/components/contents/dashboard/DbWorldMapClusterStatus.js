@@ -1,10 +1,11 @@
 import { CircularProgress } from "@material-ui/core";
 import { AsyncStorage } from "AsyncStorage";
 import React, { Component } from "react";
-import WorldMap from "react-svg-worldmap";
 import * as utilLog from "../../util/UtLogs.js";
-import { withTranslation } from 'react-i18next';
+import * as util from "../../util/Utility.js";
+import { withTranslation } from "react-i18next";
 // import './App.css';
+import WorldMap, { CountryContext, Data } from "react-svg-worldmap";
 
 class DbWorldMapClusterStatus extends Component {
   constructor(props) {
@@ -12,7 +13,7 @@ class DbWorldMapClusterStatus extends Component {
     this.state = {
       mapSize: Math.min(window.innerHeight - 363, window.innerWidth),
       rows: "",
-      loadErr:"",
+      loadErr: "",
       completed: 0,
       refreshCycle: 5000,
     };
@@ -73,7 +74,7 @@ class DbWorldMapClusterStatus extends Component {
   }
 
   onRefresh = () => {
-    const {t} = this.props;
+    const { t } = this.props;
     this.callApi()
       .then((res) => {
         if (res === null) {
@@ -82,7 +83,7 @@ class DbWorldMapClusterStatus extends Component {
           if (res.hasOwnProperty("errno")) {
             if (res.code === "ECONNREFUSED") {
               clearInterval(this.timer2);
-              this.setState({loadErr : t("dashboard.connectionFailed")})
+              this.setState({ loadErr: t("dashboard.connectionFailed") });
             }
 
             this.setState({ rows: "" });
@@ -105,7 +106,7 @@ class DbWorldMapClusterStatus extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     // const data = [
     //   { country: "cn", value: 1 }, // china
     //   { country: "in", value: 2 }, // india
@@ -118,6 +119,53 @@ class DbWorldMapClusterStatus extends Component {
     //   { country: "ru", value: 9 }, // russia
     //   { country: "kr", value: 10 }, // mexico
     // ];
+    const stylingFunction = (context) => {
+      const opacityLevel =
+        0.3 +
+        (1.5 * (context.countryValue - context.minValue)) /
+          (context.maxValue - context.minValue);
+
+      let ynNew = false;
+      let values = this.state.rows;
+      for (let i=0; i < values.length; i++){
+        ynNew = false;
+        
+        if (values[i].country === context.countryCode) {
+          // var date = new Date(item.created_time);
+          var before5min = new Date(util.getDateBefore("m", 5));
+          // before5min = new Date("2022-12-13 06:27:49");
+          // if(values[i].country === 'US'){
+          //   before5min = new Date("2020-12-13 06:27:47");
+          // }
+  
+          var utcTime = new Date(
+            util.convertUTCTime(
+              new Date(values[i].created_time),
+              "%Y-%m-%d %H:%M:%S",
+              true
+            )
+          );
+
+          if (utcTime > before5min) {
+            ynNew = true;
+          }
+
+          break;
+        }
+      }
+     
+
+      return {
+        fill: ynNew ? "#1FB476" : 
+                !ynNew && (context.countryValue !== 0 && context.countryValue !== undefined) ? "#0088fe" : context.color,
+        fillOpacity: opacityLevel,
+        stroke: "#0088fe",
+        strokeWidth: 1,
+        strokeOpacity: 0.2,
+        cursor: "pointer",
+      };
+    };
+
     return (
       <div className="dash-comp">
         <div
@@ -137,34 +185,37 @@ class DbWorldMapClusterStatus extends Component {
           </div>
           <div
             className="cb-body"
-            style={{ position: "relative", width: "100%"}}
+            style={{ position: "relative", width: "100%" }}
           >
             {this.state.rows ? (
               <div style={{ textAlign: "center" }}>
                 <WorldMap
-                  color="#0088fe"
+                  // color="#0088fe"
                   // title="Top 10 Populous Countries"
                   value-suffix="people"
                   // size="responsive"
                   size={this.state.mapSize}
                   // frame={true}
                   data={this.state.rows}
+                  styleFunction={stylingFunction}
                 />
               </div>
             ) : (
-              <div  style={{
-                position:"relative",
-                margin: "20px 10px 10px",
-                textAlign:"center",
-              }}>
-              {this.state.loadErr ? 
-                <div>{this.state.loadErr}</div>
-                :
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-               
-              ></CircularProgress>}
+              <div
+                style={{
+                  position: "relative",
+                  margin: "20px 10px 10px",
+                  textAlign: "center",
+                }}
+              >
+                {this.state.loadErr ? (
+                  <div>{this.state.loadErr}</div>
+                ) : (
+                  <CircularProgress
+                    variant="determinate"
+                    value={this.state.completed}
+                  ></CircularProgress>
+                )}
               </div>
             )}
           </div>
@@ -174,5 +225,4 @@ class DbWorldMapClusterStatus extends Component {
   }
 }
 
-export default withTranslation()(DbWorldMapClusterStatus); 
-
+export default withTranslation()(DbWorldMapClusterStatus);

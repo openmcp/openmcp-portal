@@ -61,6 +61,7 @@ import MultipleMetrics from "../contents/metrics/MultipleMetrics";
 import LoadBalancer from "../contents/netowork/LoadBalancer";
 import DeploymentMenu from "../contents/deployments/DeploymentMenu";
 import OMCPDeploymentDetail from "../contents/deployments/OMCPDeploymentDetail";
+import GlobalCache from "../contents/motions/global_cache/GlobalCache";
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
 // 각 컨텐츠는 Route를 이용해서 전환되도록 해야한다.
@@ -268,15 +269,11 @@ class Contents extends Component {
 
 
           {/* motion contents */}
-          {/* snapshot contents */}
-          <Route path="/motions/snapshot/:snapshot"
+          {/* <Route path="/motions/snapshot/:snapshot"
               render={({match,location}) => <Snapshot  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
-          {/* snapshot contents END*/}
 
-          {/* migration contents */}
           <Route path="/motions/migration/:migration"
-              render={({match,location}) => <Migration  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
-          {/* migration contents END*/}
+              render={({match,location}) => <Migration  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route> */}
 
           <Route path="/motions/migration/execute"
             render={({match,location}) => <MigrationMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
@@ -301,8 +298,9 @@ class Contents extends Component {
               pathname : `/motions/snapshot/execute`,
             }}  />} >
           </Route>
-          {/* motion contents END*/}
 
+          <Route exact path="/motions/globalcache" ><GlobalCache menuData={this.onMenuData}/></Route>
+          {/* motion contents END*/}
 
           {/* Nodes contents */}
           <Route path="/nodes/:node" 
@@ -507,8 +505,9 @@ class Contents extends Component {
           {/* <Route exact path="/network/services" ><Services menuData={this.onMenuData}/></Route>
           <Route exact path="/network/ingress" ><Ingress menuData={this.onMenuData}/></Route>
           <Route exact path="/network/dns" ><DNS menuData={this.onMenuData}/></Route> */}
-          <Route exact path="/motions/snapshot" ><Snapshot menuData={this.onMenuData}/></Route>
-          <Route exact path="/motions/migration" ><Migration menuData={this.onMenuData}/></Route>
+          {/* <Route exact path="/motions/snapshot" ><Snapshot menuData={this.onMenuData}/></Route>
+          <Route exact path="/motions/migration" ><Migration menuData={this.onMenuData}/></Route> */}
+   
           <Route exact path="/login" ><SignIn/></Route>
           <Redirect from="/" to="/dashboard" />
           

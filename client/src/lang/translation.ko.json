@@ -28,7 +28,8 @@
       "name": "모션",
       "sub": {
         "migrations": "마이그레이션",
-        "snapshots": "스냅샷"
+        "snapshots": "스냅샷",
+        "globalCache": "글로벌 캐시"
       }
     },
     "settings": {
@@ -44,26 +45,26 @@
       }
     }
   },
-  "detailLeftMenu":{
-    "cluster":{
-      "overview" : "개요",
-      "nodes" : "노드",
-      "pods" : "파드"
+  "detailLeftMenu": {
+    "cluster": {
+      "overview": "개요",
+      "nodes": "노드",
+      "pods": "파드"
     },
-    "project":{
-      "overview" : "개요",
-      "resources" : {
+    "project": {
+      "overview": "개요",
+      "resources": {
         "title": "리소스",
-        "workloads" : "워크로드",
-        "pods" : "파드",
-        "services" : "서비스",
-        "ingress" : "인그레스"
+        "workloads": "워크로드",
+        "pods": "파드",
+        "services": "서비스",
+        "ingress": "인그레스"
       },
-      "volumnes" : "볼륨",
-      "config" : {
-        "title" : "Config",
-        "secrets" : "Secrets",
-        "configmaps" : "ConfigMaps"
+      "volumnes": "볼륨",
+      "config": {
+        "title": "Config",
+        "secrets": "Secrets",
+        "configmaps": "ConfigMaps"
       }
     }
   },
@@ -84,8 +85,8 @@
     },
     "label": {
       "target": "대상",
-      "processing":"처리중...",
-      "loading":"로딩중..."
+      "processing": "처리중...",
+      "loading": "로딩중..."
     },
     "nav": {
       "home": "홈"
@@ -97,9 +98,9 @@
   "dashboard": {
     "title": "대시보드",
     "btn-edit": "사용자 정의",
-    "deploySmartCity":{
-      "btn-title":"스마트시티 배포",
-      "title":"스마트시티 배포"
+    "deploySmartCity": {
+      "btn-title": "스마트시티 배포",
+      "title": "스마트시티 배포"
     },
     "pop-editDashboard": {
       "title": "대시보드 사용자 정의",
@@ -556,8 +557,8 @@
   "deployments": {
     "title": "디플로이먼트",
     "tabTitle": {
-      "deployment":"디플로이먼트",
-      "omcpTitle" : "OpenMCP 디플로이먼트"
+      "deployment": "디플로이먼트",
+      "omcpTitle": "OpenMCP 디플로이먼트"
     },
     "grid": {
       "name": "이름",
@@ -572,34 +573,34 @@
     "pop-create": {
       "btn-create": "디플로이먼트 생성",
       "title": "디플로이먼트 생성",
-      "omcpTitle":"OpenMCP 디플로이먼트 생성",
+      "omcpTitle": "OpenMCP 디플로이먼트 생성",
       "targetCluster": "대상 클러스터 선택",
-      "step" : {
-        "1" : {
-          "title" : "기본설정"
+      "step": {
+        "1": {
+          "title": "기본설정"
         },
-        "2" : {
-          "title" : "클러스터 선택"
+        "2": {
+          "title": "클러스터 선택"
         },
-        "3" : {
-          "title" :"실행"
+        "3": {
+          "title": "실행"
         }
       },
       "msg": {
-        "chk-name" : "'Name'을 입력해주세요",
-        "chk-namespace" : "'Namespace'를 입력해주세요",
-        "chk-replicas" : "'Replicas'를 입력해주세요",
-        "chk-containerImage" : "'Container Image'를 입력해주세요",
-        "chk-containerPort" : "'Container Port'를 입력해주세요"
+        "chk-name": "'Name'을 입력해주세요",
+        "chk-namespace": "'Namespace'를 입력해주세요",
+        "chk-replicas": "'Replicas'를 입력해주세요",
+        "chk-containerImage": "'Container Image'를 입력해주세요",
+        "chk-containerPort": "'Container Port'를 입력해주세요"
       }
     },
     "pop-delete": {
       "btn-delete": "디플로이먼트 삭제",
       "title": "디플로이먼트 삭제",
-      "omcpTitle":"OpenMCP 디플로이먼트 삭제",
+      "omcpTitle": "OpenMCP 디플로이먼트 삭제",
       "context": "디플로이먼트를 삭제하시겠습니까?",
       "msg": {
-        "chk-selectDeployment" : "디플로이먼트를 선택하세요"
+        "chk-selectDeployment": "디플로이먼트를 선택하세요"
       }
     },
     "detail": {
@@ -611,12 +612,12 @@
         "labels": "레이블",
         "createdTime": "생성일시",
         "uid": "UID",
-        "replica":"레플리카",
-        "kind":"종류"
+        "replica": "레플리카",
+        "kind": "종류"
       },
       "replicaStatus": {
         "title": "레플리카 현황",
-        "total":"전체"
+        "total": "전체"
       },
       "pods": {
         "title": "파드"
@@ -836,10 +837,10 @@
         }
       }
     },
-    "loadbalancer":{
+    "loadbalancer": {
       "title": "로드 밸런서",
-      "msg" : {
-        "noneData" : "설정된 URL이 없습니다."
+      "msg": {
+        "noneData": "설정된 URL이 없습니다."
       }
     }
   },
@@ -885,6 +886,9 @@
     "snapshotLog": {
       "title": "스냅샷 로그"
     }
+  },
+  "globalCache": {
+    "title": "글로벌 캐시"
   },
   "accounts": {
     "title": "사용자",
@@ -1265,11 +1269,11 @@
     },
     "dashboardConfig": {
       "title": "Dashboard 설정",
-      "refreshCycle":{
-        "title" : "갱신 주기(초)"
+      "refreshCycle": {
+        "title": "갱신 주기(초)"
       },
-      "powerUsageRange":{
-        "title" : "전력사용 효율 범주(watt)"
+      "powerUsageRange": {
+        "title": "전력사용 효율 범주(watt)"
       }
     }
   }

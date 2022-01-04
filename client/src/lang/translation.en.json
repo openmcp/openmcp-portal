@@ -28,7 +28,8 @@
       "name": "Motions",
       "sub": {
         "migrations": "Migragions",
-        "snapshots": "Snapshots"
+        "snapshots": "Snapshots",
+        "globalCache": "Global Cache"
       }
     },
     "settings": {
@@ -44,26 +45,26 @@
       }
     }
   },
-  "detailLeftMenu":{
-    "cluster":{
-      "overview" : "Overview",
-      "nodes" : "Nodes",
-      "pods" : "Pods"
+  "detailLeftMenu": {
+    "cluster": {
+      "overview": "Overview",
+      "nodes": "Nodes",
+      "pods": "Pods"
     },
-    "project":{
-      "overview" : "Overview",
-      "resources" : {
+    "project": {
+      "overview": "Overview",
+      "resources": {
         "title": "Resources",
-        "workloads" : "Workloads",
-        "pods" : "Pods",
-        "services" : "Services",
-        "ingress" : "Ingress"
+        "workloads": "Workloads",
+        "pods": "Pods",
+        "services": "Services",
+        "ingress": "Ingress"
       },
-      "volumnes" : "Volumnes",
-      "config" : {
-        "title" : "Config",
-        "secrets" : "Secrets",
-        "configmaps" : "ConfigMaps"
+      "volumnes": "Volumnes",
+      "config": {
+        "title": "Config",
+        "secrets": "Secrets",
+        "configmaps": "ConfigMaps"
       }
     }
   },
@@ -84,8 +85,8 @@
     },
     "label": {
       "target": "Target",
-      "processing":"Processing...",
-      "loading":"Loading..."
+      "processing": "Processing...",
+      "loading": "Loading..."
     },
     "nav": {
       "home": "home"
@@ -97,9 +98,9 @@
   "dashboard": {
     "title": "Dashboard",
     "btn-edit": "Edit Dashboard",
-    "deploySmartCity":{
-      "btn-title":"Smartcity Deployment",
-      "title":"Smartcity Deployment"
+    "deploySmartCity": {
+      "btn-title": "Smartcity Deployment",
+      "title": "Smartcity Deployment"
     },
     "pop-editDashboard": {
       "title": "Dashboard Custom View",
@@ -555,8 +556,8 @@
   "deployments": {
     "title": "Deployments",
     "tabTitle": {
-      "deployment":"Deployment",
-      "omcpTitle" : "OpenMCP Deployment"
+      "deployment": "Deployment",
+      "omcpTitle": "OpenMCP Deployment"
     },
     "grid": {
       "name": "Name",
@@ -571,34 +572,34 @@
     "pop-create": {
       "btn-create": "Create",
       "title": "Create Deployment",
-      "omcpTitle":"Create OpenMCP Deployment",
+      "omcpTitle": "Create OpenMCP Deployment",
       "targetCluster": "Target Cluster",
-      "step" : {
-        "1" : {
-          "title" : "Set Definitions"
+      "step": {
+        "1": {
+          "title": "Set Definitions"
         },
-        "2" : {
-          "title" : "Select Cluster"
+        "2": {
+          "title": "Select Cluster"
         },
-        "3" : {
-          "title" :"Execution"
+        "3": {
+          "title": "Execution"
         }
       },
       "msg": {
-        "chk-name" : "Please enter 'Name' field",
-        "chk-namespace" : "Please enter 'Name' field",
-        "chk-replicas" : "Please enter 'Replicas' field",
-        "chk-containerImage" : "Please enter 'Container Image' field",
-        "chk-containerPort" : "Please enter 'Container Port' field"
+        "chk-name": "Please enter 'Name' field",
+        "chk-namespace": "Please enter 'Name' field",
+        "chk-replicas": "Please enter 'Replicas' field",
+        "chk-containerImage": "Please enter 'Container Image' field",
+        "chk-containerPort": "Please enter 'Container Port' field"
       }
     },
     "pop-delete": {
       "btn-delete": "Delete",
       "title": "Delete Deployment",
-      "omcpTitle":"Delete OpenMCP Deployment",
+      "omcpTitle": "Delete OpenMCP Deployment",
       "context": "Are you sure you want to Delete Deployment?",
       "msg": {
-        "chk-selectDeployment" : "Please select deployment"
+        "chk-selectDeployment": "Please select deployment"
       }
     },
     "detail": {
@@ -610,12 +611,12 @@
         "labels": "Labels",
         "createdTime": "Created Time",
         "uid": "UID",
-        "replica":"Replica",
-        "kind":"Kind"
+        "replica": "Replica",
+        "kind": "Kind"
       },
       "replicaStatus": {
         "title": "Replica Status",
-        "total":"Total"
+        "total": "Total"
       },
       "pods": {
         "title": "Pods"
@@ -835,10 +836,10 @@
         }
       }
     },
-    "loadbalancer":{
+    "loadbalancer": {
       "title": "Load Balancer",
-      "msg" : {
-        "noneData" : "There's no URL set up"
+      "msg": {
+        "noneData": "There's no URL set up"
       }
     }
   },
@@ -884,6 +885,9 @@
     "snapshotLog": {
       "title": "SnapshotLogs"
     }
+  },
+  "globalCache": {
+    "title": "Global Cache"
   },
   "accounts": {
     "title": "Accounts",
@@ -1087,192 +1091,192 @@
     }
   },
   "meterings": {
-    "title" : "Meterings",
-    "pop-add" : {
-      "btn-add" : "Add Region",
-      "title" :"Add Region",
-      "region" : "Region",
-      "costDescription" : "(cost per hour for each cluster)"
+    "title": "Meterings",
+    "pop-add": {
+      "btn-add": "Add Region",
+      "title": "Add Region",
+      "region": "Region",
+      "costDescription": "(cost per hour for each cluster)"
     },
-    "pop-edit" : {
-      "btn-add" : "Edit Metering",
-      "title" :"Edit Metering",
-      "region" : "Region",
-      "clusterCost" : "Cluster Cost",
-      "costDescription" : "per hour for each cluster",
-      "workerNodeCost" : "Worker Node Cost"
+    "pop-edit": {
+      "btn-add": "Edit Metering",
+      "title": "Edit Metering",
+      "region": "Region",
+      "clusterCost": "Cluster Cost",
+      "costDescription": "per hour for each cluster",
+      "workerNodeCost": "Worker Node Cost"
     }
   },
   "billing": {
-    "title" : "Billing"
+    "title": "Billing"
   },
   "config": {
-    "title" : "Config",
-    "publicCloudAuth":{
-      "title":"Public Cloud Auth",
-      "eks":{
-        "title":"EKS",
-        "description":"EKS Cluster Authentications Configration",
-        "pop-common":{
-          "cluster" : "Cluster",
-          "secretKey" : "Secret Key",
-          "accessKey" : "Access Key",
-          "region" : "Region",
-          "msg" : {
-            "chk-cluster" : "Please enter Cluster Name",
-            "chk-secretKey" : "Please enter Secret Key",
-            "chk-accessKey" : "Please enter Access Key",
-            "chk-region" : "Please enter Region"
+    "title": "Config",
+    "publicCloudAuth": {
+      "title": "Public Cloud Auth",
+      "eks": {
+        "title": "EKS",
+        "description": "EKS Cluster Authentications Configration",
+        "pop-common": {
+          "cluster": "Cluster",
+          "secretKey": "Secret Key",
+          "accessKey": "Access Key",
+          "region": "Region",
+          "msg": {
+            "chk-cluster": "Please enter Cluster Name",
+            "chk-secretKey": "Please enter Secret Key",
+            "chk-accessKey": "Please enter Access Key",
+            "chk-region": "Please enter Region"
           }
         },
         "pop-new": {
-          "btn-open" : "New",
-          "title" : "Add EKS Cluster Authentication"
+          "btn-open": "New",
+          "title": "Add EKS Cluster Authentication"
         },
-        "pop-edit":{
-          "btn-open" : "Edit",
-          "title" : "Edit EKS Cluster Authentication",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-edit": {
+          "btn-open": "Edit",
+          "title": "Edit EKS Cluster Authentication",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         },
-        "pop-delete":{
-          "btn-open" : "Delete",
-          "title" : "Delete EKS Cluster Authentication",
-          "context":"Are you sure you want to delete EKS PCA config?",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-delete": {
+          "btn-open": "Delete",
+          "title": "Delete EKS Cluster Authentication",
+          "context": "Are you sure you want to delete EKS PCA config?",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         }
       },
-      "gke":{
-        "title":"GKE",
-        "description":"GKE Cluster Authentications Configration",
-        "pop-common":{
-          "cluster" : "Cluster",
-          "credentialType" : "Credential Type",
-          "clientEmail" : "Client Email",
-          "projectId" : "Project ID",
-          "privateKey" : "Private Key",
-          "msg" : {
-            "chk-cluster" : "Please enter Cluster Name",
-            "chk-credentialType" : "Please enter Credential Type",
-            "chk-clientEmail" : "Please enter Client Email",
-            "chk-projectId" : "Please enter Project ID",
-            "chk-privateKey" : "Please enter Private Key"
+      "gke": {
+        "title": "GKE",
+        "description": "GKE Cluster Authentications Configration",
+        "pop-common": {
+          "cluster": "Cluster",
+          "credentialType": "Credential Type",
+          "clientEmail": "Client Email",
+          "projectId": "Project ID",
+          "privateKey": "Private Key",
+          "msg": {
+            "chk-cluster": "Please enter Cluster Name",
+            "chk-credentialType": "Please enter Credential Type",
+            "chk-clientEmail": "Please enter Client Email",
+            "chk-projectId": "Please enter Project ID",
+            "chk-privateKey": "Please enter Private Key"
           }
         },
         "pop-new": {
-          "btn-open" : "New",
-          "title" : "Add GKE Cluster Authentication",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+          "btn-open": "New",
+          "title": "Add GKE Cluster Authentication",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         },
-        "pop-edit":{
-          "btn-open" : "Edit",
-          "title" : "Add GKE Cluster Authentication",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-edit": {
+          "btn-open": "Edit",
+          "title": "Add GKE Cluster Authentication",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         },
-        "pop-delete":{
-          "btn-open" : "Delete",
-          "title" : "Delete GKE Cluster Authentication",
-          "context":"Are you sure you want to delete GKE PCA config?",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-delete": {
+          "btn-open": "Delete",
+          "title": "Delete GKE Cluster Authentication",
+          "context": "Are you sure you want to delete GKE PCA config?",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         }
       },
-      "aks":{
-        "title":"AKS",
-        "description":"AKS Cluster Authentications Configration",
-        "pop-common":{
-          "cluster" : "Cluster",
-          "clusterId" : "Cluster ID",
-          "clientSec" : "Client Sec",
-          "tenantId" : "Tenant ID",
-          "subId" : "Sub ID",
-          "msg" : {
-            "chk-cluster" : "Please enter Cluster Name",
-            "chk-clusterId" : "Please enter Client ID",
-            "chk-clientSec" : "Please enter Client Sec",
-            "chk-tenantId" : "Please enter Tenant ID",
-            "chk-subId" : "Please enter Sub ID"
+      "aks": {
+        "title": "AKS",
+        "description": "AKS Cluster Authentications Configration",
+        "pop-common": {
+          "cluster": "Cluster",
+          "clusterId": "Cluster ID",
+          "clientSec": "Client Sec",
+          "tenantId": "Tenant ID",
+          "subId": "Sub ID",
+          "msg": {
+            "chk-cluster": "Please enter Cluster Name",
+            "chk-clusterId": "Please enter Client ID",
+            "chk-clientSec": "Please enter Client Sec",
+            "chk-tenantId": "Please enter Tenant ID",
+            "chk-subId": "Please enter Sub ID"
           }
         },
         "pop-new": {
-          "btn-open" : "New",
-          "title" : "Add AKS Cluster Authentication",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+          "btn-open": "New",
+          "title": "Add AKS Cluster Authentication",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         },
-        "pop-edit":{
-          "btn-open" : "Edit",
-          "title" : "Edit AKS Cluster Authentication",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-edit": {
+          "btn-open": "Edit",
+          "title": "Edit AKS Cluster Authentication",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         },
-        "pop-delete":{
-          "btn-open" : "Delete",
-          "title" : "Delete AKS Cluster Authentication",
-          "context":"Are you sure you want to delete AKS PCA config?",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-delete": {
+          "btn-open": "Delete",
+          "title": "Delete AKS Cluster Authentication",
+          "context": "Are you sure you want to delete AKS PCA config?",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         }
       },
-      "kvm":{
-        "title":"KVM",
-        "description":"KVM Cluster Authentications Configration",
-        "pop-common":{
-          "cluster" : "Cluster",
-          "kvmAgentUrl" : "KVM Agent URL",
-          "kvmAgentPort" : "KVM Agent Port",
-          "masterVmName" : "Cluster Master VM Name",
-          "masterVmPwd" : "Cluster Master VM Password",
-          "msg" : {
-            "chk-cluster" : "Please enter Cluster Name",
-            "chk-kvmAgentUrl" : "Please enter KVM Agent URL",
-            "chk-kvmAgentPort" : "Please enter KVM Agent Port",
-            "chk-masterVmName" : "Please enter Cluster Master VM Name",
-            "chk-masterVmPwd" : "Please enter Cluster Master VM Password"
+      "kvm": {
+        "title": "KVM",
+        "description": "KVM Cluster Authentications Configration",
+        "pop-common": {
+          "cluster": "Cluster",
+          "kvmAgentUrl": "KVM Agent URL",
+          "kvmAgentPort": "KVM Agent Port",
+          "masterVmName": "Cluster Master VM Name",
+          "masterVmPwd": "Cluster Master VM Password",
+          "msg": {
+            "chk-cluster": "Please enter Cluster Name",
+            "chk-kvmAgentUrl": "Please enter KVM Agent URL",
+            "chk-kvmAgentPort": "Please enter KVM Agent Port",
+            "chk-masterVmName": "Please enter Cluster Master VM Name",
+            "chk-masterVmPwd": "Please enter Cluster Master VM Password"
           }
         },
         "pop-new": {
-          "btn-open" : "New",
-          "title" : "Add KVM Cluster Authentication",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+          "btn-open": "New",
+          "title": "Add KVM Cluster Authentication",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         },
-        "pop-edit":{
-          "btn-open" : "Edit",
-          "title" : "Edit KVM Cluster Authentication",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-edit": {
+          "btn-open": "Edit",
+          "title": "Edit KVM Cluster Authentication",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         },
-        "pop-delete":{
-          "btn-open" : "Delete",
-          "title" : "Delete KVM Cluster Authentication",
-          "context":"Are you sure you want to delete KVM PCA config?",
-          "msg" : {
-            "chk-selectAuth" : "Please select a authentication data row"
+        "pop-delete": {
+          "btn-open": "Delete",
+          "title": "Delete KVM Cluster Authentication",
+          "context": "Are you sure you want to delete KVM PCA config?",
+          "msg": {
+            "chk-selectAuth": "Please select a authentication data row"
           }
         }
       }
     },
-    "dashboardConfig":{
-      "title":"Dashboard Config",
-      "refreshCycle":{
-        "title" : "Refresh-Cycle(second)"
+    "dashboardConfig": {
+      "title": "Dashboard Config",
+      "refreshCycle": {
+        "title": "Refresh-Cycle(second)"
       },
-      "powerUsageRange":{
-        "title" : "Power Usage Range(watt)"
+      "powerUsageRange": {
+        "title": "Power Usage Range(watt)"
       }
     }
   }

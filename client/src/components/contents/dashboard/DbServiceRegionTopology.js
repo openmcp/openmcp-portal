@@ -105,21 +105,21 @@ class DbServiceRegionTopology extends Component {
     );
     chart.legend = new am4charts.Legend();
 
-    // chart.zoomable = true;
-    chart.mouseWheelBehavior = "zoom";
+    chart.zoomable = true;
+    chart.mouseWheelBehavior = "none";
     chart.zoomStep = 2;
 
     chart.zoomOutButton.background.cornerRadius(5, 5, 5, 5);
     chart.zoomOutButton.background.fill = am4core.color("#25283D");
     chart.zoomOutButton.icon.stroke = am4core.color("#EFD9CE");
     chart.zoomOutButton.icon.strokeWidth = 2;
-    chart.events.on("ready", function () {
-      chart.zoomToPoint(
-        { x: chart.innerWidth / 2, y: chart.innerHeight / 2 },
-        1,
-        true
-      );
-    });
+    // chart.events.on("ready", function () {
+    //   chart.zoomToPoint(
+    //     { x: chart.innerWidth / 2, y: chart.innerHeight / 2 },
+    //     1,
+    //     true
+    //   );
+    // });
     // series.colors.list = [
     // am4core.color("#67b7dc"),
     // am4core.color("#6771dc"),

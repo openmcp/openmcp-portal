@@ -39,7 +39,7 @@ import LinearProgressBar from "../../../modules/LinearProgressBar.js";
 import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
 import Confirm2 from "../../../modules/Confirm2.js";
 import axios from "axios";
-import { dateFormat } from "../../../util/Utitlity.js";
+import { dateFormat } from "../../../util/Utility.js";
 import { withTranslation } from "react-i18next";
 
 class Snapshot extends Component {

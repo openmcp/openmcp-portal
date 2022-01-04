@@ -4165,16 +4165,24 @@ app.post("/apis/dashboard/power_usage", async (req, res) => {
     ];
   }
 
-  query = `SELECT AVG(power) AS usage
-          FROM (
-            select cluster_name, sum(power) power, collected_time
-            from node_power_usage 
-            group by cluster_name, collected_time
-          ) AS node_power_usage
-          WHERE (cluster_name, collected_time) in (
-          select cluster_name, MAX(collected_time) as max_date
-          from node_power_usage group by cluster_name order by max_date desc
-          );
+  // query = `SELECT AVG(power) AS usage
+  //         FROM (
+  //           select cluster_name, sum(power) power, collected_time
+  //           from node_power_usage 
+  //           group by cluster_name, collected_time
+  //         ) AS node_power_usage
+  //         WHERE (cluster_name, collected_time) in (
+  //         select cluster_name, MAX(collected_time) as max_date
+  //         from node_power_usage group by cluster_name order by max_date desc
+  //         );
+  //   `;
+  query = `SELECT SUM(power) AS usage 
+  FROM node_power_usage
+  WHERE (cluster_name, node_name, collected_time) IN (
+      SELECT cluster_name, node_name, MAX(collected_time) as max_date
+      FROM node_power_usage group by cluster_name, node_name
+      ORDER BY max_date desc
+      );
     `;
 
   let queryResult2 = await excuteQuery(query);

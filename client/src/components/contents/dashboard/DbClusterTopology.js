@@ -4,6 +4,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import * as am4plugins_forceDirected from "@amcharts/amcharts4/plugins/forceDirected";
 import * as utilLog from "../../util/UtLogs.js";
+import * as util from "../../util/Utility.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
 import { Button, CircularProgress } from "@material-ui/core";
@@ -112,8 +113,6 @@ class DbClusterTopology extends Component {
   }
 
   onInitTopology = () => {
-    
-
     var chart = am4core.create(
       "clusterTopology",
       am4plugins_forceDirected.ForceDirectedTree
@@ -123,9 +122,9 @@ class DbClusterTopology extends Component {
     );
     chart.legend = new am4charts.Legend();
 
-    // chart.zoomable = true;
-    // chart.mouseWheelBehavior = "none";
-    // chart.zoomStep = 2;
+    chart.zoomable = true;
+    chart.mouseWheelBehavior = "none";
+    chart.zoomStep = 2;
 
     chart.zoomOutButton.background.cornerRadius(5, 5, 5, 5);
     chart.zoomOutButton.background.fill = am4core.color("#25283D");
@@ -248,11 +247,25 @@ class DbClusterTopology extends Component {
         return fill.lighten(target.dataItem.level * -0.15);
       } else if (target.dataItem.level === 2) {
         target.label.dy = 8;
+
+        var before5min = new Date(util.getDateBefore("m", 5));
+
+        var createdTime = new Date(
+          util.convertUTCTime(
+            new Date(target.dataItem.dataContext.created_time),
+            "%Y-%m-%d %H:%M:%S",
+            true
+          )
+        );
+
         if(target.dataItem.dataContext.status !== "Running"){
           return am4core.color("#EC4E05");
+        } else if (createdTime > before5min){
+          return am4core.color("#2682D8");
         }
         return am4core.color("#0B2844");
       } else {
+        
       }
       return fill.lighten(target.dataItem.level * -0.15);
     });

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { AiOutlineDashboard, AiFillDashboard, AiOutlineDeploymentUnit, AiOutlineUser, AiFillAlert, AiOutlineSetting, AiOutlineAreaChart} from "react-icons/ai";
+import { MdCached } from "react-icons/md";
 import { RiDashboardFill } from "react-icons/ri";
 import { GrBundle } from "react-icons/gr";
 import { FaBuffer} from "react-icons/fa";
@@ -125,6 +126,12 @@ class LeftMenu2 extends Component {
             title: t("leftMenu.motions.sub.snapshots"),
             path: "/motions/snapshot",
             icon : <HiOutlineCamera className="leftMenu-sub-icon"/>,
+          },
+          {
+            role: "all",
+            title: t("leftMenu.motions.sub.globalCache"),
+            path: "/motions/globalcache",
+            icon : <MdCached className="leftMenu-sub-icon"/>,
           },
         ],
       },
