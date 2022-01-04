@@ -86,7 +86,6 @@ class OMCPDeploymentDetail extends Component {
         } else {
           this.setState({ rows: res });
         }
-        console.log(res);
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));

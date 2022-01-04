@@ -73,7 +73,6 @@ class MetricNode extends Component {
   componentDidMount() {
     this.callApiFirst()
       .then((res) => {
-        console.log(res);
         if (res === null) {
           this.setState({ rows: [] });
         } else {

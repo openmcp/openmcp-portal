@@ -86,7 +86,6 @@ class PjwDeploymentDetail extends Component {
   };
 
   refresh = () =>{
-    console.log("refresh");
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     // this.timer = setInterval(this.progress, 20);
     this.callApi()
@@ -96,7 +95,6 @@ class PjwDeploymentDetail extends Component {
         } else {
           this.setState({ rows: res });
         }
-        console.log(res);
         // clearInterval(this.timer);
       })
       .catch((err) => console.log(err));

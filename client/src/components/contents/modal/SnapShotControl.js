@@ -145,7 +145,6 @@ class SnapShotControl extends Component {
 
     this.callApi()
       .then((res) => {
-        console.log(res);
         this.setState({ rows: res });
       })
       .catch((err) => console.log(err));

@@ -26,7 +26,6 @@ class BillDetail extends Component {
   //   this.timer = setInterval(this.progress, 20);
   //   this.callApi()
   //     .then((res) => {
-  //       console.log(res);
   //       if(res == null){
   //         this.setState({ rows: [] });
   //       } else {

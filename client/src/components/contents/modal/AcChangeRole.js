@@ -101,7 +101,6 @@ class AcChangeRole extends Component {
     // cluster list를 가져오는 api 호출
     // this.callApi()
     //   .then((res) => {
-    //     // console.log(res);
     //     this.setState({ rows: res });
     //     // console.log(res[0])
     //     // this.setState({ cluster: res[0], firstValue: res[0] });

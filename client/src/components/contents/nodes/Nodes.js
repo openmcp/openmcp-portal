@@ -126,7 +126,6 @@ class Nodes extends Component {
                   }
                 })
               });
-              console.log(res);
               this.setState({ rows: res });
             }
           })

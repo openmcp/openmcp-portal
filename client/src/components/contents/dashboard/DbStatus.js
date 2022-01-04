@@ -82,7 +82,6 @@ class DbStatus extends Component {
               this.setState({ loadErr: t("dashboard.connectionFailed") });
             }
 
-            console.log(res);
             this.setState({ rows: "" });
           } else {
             this.setState({ rows: res });
