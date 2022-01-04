@@ -109,7 +109,7 @@ class Dashboard extends Component {
     },
   };
 
-  excuteScript = (cluster, context) => {
+  excuteScript = (context) => {
     if (this.state.openProgress) {
       this.setState({ openProgress: false });
     } else {
