@@ -22,27 +22,7 @@ class Dashboard extends Component {
       myComponentList: "",
       anchorEl: null,
       openProgress: false,
-            editorContext: `apiVersion: apps/v1
-      kind: Smartcity
-      metadata:
-        name: [Smartcity name]
-        labels:
-          app: [Smartcity label]
-      spec:
-        replicas: [replica number]
-        selector:
-          matchLabels:
-            app: [matchLabels]
-        template:
-          metadata:
-            labels:
-              app: [labels]
-          spec:
-            containers:
-            - name: [container name]
-              image: [image name]
-              ports:
-              - containerPort: [container port]`,
+            editorContext: `---`,
     };
   }
 
