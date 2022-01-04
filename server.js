@@ -3912,6 +3912,23 @@ app.get("/apis/snapshot/log", (req, res) => {
   });
 });
 
+app.get("/apis/globalcache", (req, res) => {
+  let request = require("request");
+
+  let options = {
+    uri: `${apiServer}/apis/globalcache`,
+    method: "GET",
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+});
+
 ///////////////////////
 // Dashboard APIs
 ///////////////////////

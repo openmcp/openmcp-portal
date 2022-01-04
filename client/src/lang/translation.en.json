@@ -887,7 +887,11 @@
     }
   },
   "globalCache": {
-    "title": "Global Cache"
+    "title": "Global Cache",
+    "sub":{
+      "history" : "Global Cache History",
+      "updateList" : "Global Cache Update List"
+    }
   },
   "accounts": {
     "title": "Accounts",

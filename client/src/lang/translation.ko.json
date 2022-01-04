@@ -888,7 +888,11 @@
     }
   },
   "globalCache": {
-    "title": "글로벌 캐시"
+    "title": "글로벌 캐시",
+    "sub":{
+      "history" : "글로벌 캐시 이력",
+      "updateList" : "글로벌 캐시 업데이트 목록"
+    }
   },
   "accounts": {
     "title": "사용자",

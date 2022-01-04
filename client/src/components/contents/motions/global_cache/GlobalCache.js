@@ -20,36 +20,47 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 // import Editor from "./../../modules/Editor";
-import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import PjCreateProject from './../../modal/PjCreateProject.js';
-import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
+import { NavigateNext } from "@material-ui/icons";
+import * as utilLog from "./../../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import PjCreateProject from "./../../modal/PjCreateProject.js";
+import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
+import Grow from "@material-ui/core/Grow";
 // import { HiOutlineDuplicate } from "react-icons/hi";
 import { MdCached } from "react-icons/md";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
 
 class GlobalCache extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      columns: [],
-      defaultColumnWidths: [
-        { columnName: "name", width: 200 },
-        { columnName: "status", width: 100 },
-        { columnName: "cluster", width: 100 },
-        { columnName: "labels", width: 180 },
-        { columnName: "created_time", width: 180 },
+      historyColumns: [
+        { name: "image_name", title: "Image Name" },
+        { name: "image_count", title: "Image Count" },
+        { name: "time", title: "Timestamp" },
       ],
-      rows: "",
+      historyColumnWidths: [
+        { columnName: "image_name", width: 350 },
+        { columnName: "image_count", width: 100 },
+        { columnName: "time", width: 160 },
+      ],
+      updateListColumns: [
+        { name: "image_name", title: "Image Name" },
+        { name: "image_status", title: "Image Status" },
+        { name: "time", title: "Timestamp" },
+      ],
+      updateListColumnWidths: [
+        { columnName: "image_name", width: 350 },
+        { columnName: "image_status", width: 100 },
+        { columnName: "time", width: 160 },
+      ],
+      rows : "",
 
       // Paging Settings
       currentPage: 0,
@@ -58,7 +69,7 @@ class GlobalCache extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      anchorEl:null,
+      anchorEl: null,
     };
   }
 
@@ -66,23 +77,8 @@ class GlobalCache extends Component {
     this.props.menuData("none");
   }
 
-  
-
   callApi = async () => {
-    let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => {
-      g_clusters = result.split(',');
-    });
-
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ g_clusters : g_clusters })
-    };
-
-    const response = await fetch("/projects", requestOptions);
+    const response = await fetch("/apis/globalcache");
     const body = await response.json();
     return body;
   };
@@ -98,32 +94,33 @@ class GlobalCache extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
-          this.setState({ rows: [] });
+        if (res === null) {
+          this.setState({ historyRows: "", updateListRows: "" });
         } else {
-          this.setState({ rows: res });
+          this.setState({
+            rows: res,
+          });
         }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
 
-
-
     let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW01');
-
-  };
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-GC-VW01");
+  }
 
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res === null){
-          this.setState({ rows: [] });
+        if (res === null) {
+          this.setState({ historyRows: "", updateListRows: "" });
         } else {
-          this.setState({ rows: res });
+          this.setState({
+            rows: res,
+          });
         }
         clearInterval(this.timer);
       })
@@ -131,14 +128,7 @@ class GlobalCache extends Component {
   };
 
   render() {
-    const {t} = this.props;
-    const columns= [
-      { name: "name", title: t("projects.grid.name") },
-      { name: "status", title: t("projects.grid.status") },
-      { name: "cluster", title: t("projects.grid.cluster") },
-      { name: "labels", title: t("projects.grid.labels") },
-      { name: "created_time", title: t("projects.grid.createdTime") },
-    ];
+    const { t } = this.props;
 
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
@@ -146,26 +136,42 @@ class GlobalCache extends Component {
         <span
           style={{
             color:
-            value === "Active" ? "#1ab726"
-              : value === "Deactive" ? "red" : "black",
+              value === "Active"
+                ? "#1ab726"
+                : value === "Deactive"
+                ? "red"
+                : "black",
           }}
         >
-          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
-          backgroundColor: 
-          value === "Active" ? "rgba(85,188,138,.1)"
-            : value === "Deactive" ? "rgb(152 13 13 / 10%)" : "white",
-          boxShadow: 
-          value === "Active" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
-            : value === "Deactive" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px" : "white",
-          borderRadius: "20px",
-          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
-          }}></FiberManualRecordSharpIcon>
+          <FiberManualRecordSharpIcon
+            style={{
+              fontSize: 12,
+              marginRight: 4,
+              backgroundColor:
+                value === "Active"
+                  ? "rgba(85,188,138,.1)"
+                  : value === "Deactive"
+                  ? "rgb(152 13 13 / 10%)"
+                  : "white",
+              boxShadow:
+                value === "Active"
+                  ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                  : value === "Deactive"
+                  ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                  : "white",
+              borderRadius: "20px",
+              // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+            }}
+          ></FiberManualRecordSharpIcon>
         </span>
         <span
           style={{
             color:
-              value === "Active" ? "#1ab726" 
-                : value === "Deactive" ? "red" : undefined,
+              value === "Active"
+                ? "#1ab726"
+                : value === "Deactive"
+                ? "red"
+                : undefined,
           }}
         >
           {value}
@@ -173,33 +179,27 @@ class GlobalCache extends Component {
       </Table.Cell>
     );
 
-
-    
-    
     const Cell = (props) => {
       const fnEnterCheck = (prop) => {
         var arr = [];
         var i;
-        for(i=0; i < Object.keys(prop.value).length; i++){
-          const str = Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i]
-          arr.push(str)
+        for (i = 0; i < Object.keys(prop.value).length; i++) {
+          const str =
+            Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i];
+          arr.push(str);
         }
-        return (
-         arr.map(item => {
-           return (
-             <p>{item}</p>
-           )
-         })
-        )
+        return arr.map((item) => {
+          return <p>{item}</p>;
+        });
         // return (
-          // props.value.indexOf("|") > 0 ? 
-          //   props.value.split("|").map( item => {
-          //     return (
-          //       <p>{item}</p>
-          //   )}) : 
-          //     props.value
+        // props.value.indexOf("|") > 0 ?
+        //   props.value.split("|").map( item => {
+        //     return (
+        //       <p>{item}</p>
+        //   )}) :
+        //     props.value
         // )
-      }
+      };
 
       const { column, row } = props;
       // console.log("cell : ", props);
@@ -207,21 +207,22 @@ class GlobalCache extends Component {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/projects/${props.value}/overview`,
-            search: "cluster="+row.cluster,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/projects/${props.value}/overview`,
+                search: "cluster=" + row.cluster,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {props.value}
+            </Link>
+          </Table.Cell>
         );
-      } else if (column.name === "labels"){
-        return (
-        <Table.Cell>{fnEnterCheck(props)}</Table.Cell>
-        )
+      } else if (column.name === "labels") {
+        return <Table.Cell>{fnEnterCheck(props)}</Table.Cell>;
       }
       return <Table.Cell {...props} />;
     };
@@ -240,7 +241,7 @@ class GlobalCache extends Component {
 
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
@@ -248,8 +249,10 @@ class GlobalCache extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            <i><MdCached/></i>
-            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+            <i>
+              <MdCached />
+            </i>
+            <span onClick={this.onRefresh} style={{ cursor: "pointer" }}>
               {t("globalCache.title")}
             </span>
             <small></small>
@@ -259,59 +262,118 @@ class GlobalCache extends Component {
               <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("globalCache.title")}
             </li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
-          <Paper>
-            {this.state.rows ? (
-              [
-                <Grid
-                  rows={this.state.rows}
-                  columns={columns}
-                >
-                  <Toolbar />
-                  {/* 검색 */}
-                  <SearchState defaultValue="" />
-                  <IntegratedFiltering />
-                  <SearchPanel style={{ marginLeft: 0 }} />
+          {this.state.rows ? (
+            [
+              <div className="gc-content">
+                <div className="gc-sub-title">
+                  <span>{t("globalCache.sub.history")}</span>
+                </div>
+                <Paper>
+                  <Grid
+                    rows={this.state.rows.gc_history}
+                    columns={this.state.historyColumns}
+                  >
+                    <Toolbar />
+                    {/* 검색 */}
+                    <SearchState defaultValue="" />
+                    <IntegratedFiltering />
+                    <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* Sorting */}
-                  <SortingState
-                    defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
-                  />
-                  <IntegratedSorting />
+                    {/* Sorting */}
+                    <SortingState
+                      defaultSorting={[
+                        { columnName: "created_time", direction: "desc" },
+                      ]}
+                    />
+                    <IntegratedSorting />
 
-                  {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
-                  <IntegratedPaging />
-                  <PagingPanel pageSizes={this.state.pageSizes} />
+                    {/* 페이징 */}
+                    <PagingState
+                      defaultCurrentPage={0}
+                      defaultPageSize={this.state.pageSize}
+                    />
+                    <IntegratedPaging />
+                    <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  
+                    {/* 테이블 */}
+                    <Table cellComponent={Cell} rowComponent={Row} />
+                    <TableColumnResizing
+                      defaultColumnWidths={this.state.historyColumnWidths}
+                    />
+                    <TableHeaderRow
+                      showSortingControls
+                      rowComponent={HeaderRow}
+                    />
+                  </Grid>
+                </Paper>
+              </div>,
+              <div className="gc-content">
+                <div className="gc-sub-title">
+                  <span>{t("globalCache.sub.updateList")}</span>
+                </div>
+                <Paper>
+                  <Grid
+                    rows={this.state.rows.gc_update_list}
+                    columns={this.state.updateListColumns}
+                  >
+                    <Toolbar />
+                    {/* 검색 */}
+                    <SearchState defaultValue="" />
+                    <IntegratedFiltering />
+                    <SearchPanel style={{ marginLeft: 0 }} />
 
-                  {/* 테이블 */}
-                  <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-                  <TableHeaderRow
-                    showSortingControls
-                    rowComponent={HeaderRow}
-                  />
-                </Grid>,
-              ]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
-          </Paper>
+                    {/* Sorting */}
+                    <SortingState
+                      defaultSorting={[
+                        { columnName: "created_time", direction: "desc" },
+                      ]}
+                    />
+                    <IntegratedSorting />
+
+                    {/* 페이징 */}
+                    <PagingState
+                      defaultCurrentPage={0}
+                      defaultPageSize={this.state.pageSize}
+                    />
+                    <IntegratedPaging />
+                    <PagingPanel pageSizes={this.state.pageSizes} />
+
+                    {/* 테이블 */}
+                    <Table cellComponent={Cell} rowComponent={Row} />
+                    <TableColumnResizing
+                      defaultColumnWidths={this.state.updateListColumnWidths}
+                    />
+                    <TableHeaderRow
+                      showSortingControls
+                      rowComponent={HeaderRow}
+                    />
+                  </Grid>
+                </Paper>
+              </div>,
+            ]
+          ) : (
+            <CircularProgress
+              variant="determinate"
+              value={this.state.completed}
+              style={{
+                position: "absolute",
+                left: "50%",
+                marginTop: "20px",
+              }}
+            ></CircularProgress>
+          )}
         </section>
       </div>
     );
   }
 }
 
-export default withTranslation()(GlobalCache); 
+export default withTranslation()(GlobalCache);

@@ -2755,5 +2755,18 @@ g {
   display:block;
   width:98.5vw;
   height: 100vh;
-  
+}
+
+
+.gc-content {
+  margin-bottom : 30px;
+}
+.gc-sub-title {
+  padding: 8px 0px 30px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    height: 36px;
+    background-color: #e3e3e3;
+    margin-bottom: 5px;
+    color: #444444;
 }
