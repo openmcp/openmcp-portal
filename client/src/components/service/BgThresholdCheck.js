@@ -15,7 +15,7 @@ class BgThresholdCheck extends Component {
 
   componentDidMount() {
     this.timer = setInterval(this.checkResource, 60000);
-    clearInterval(this.timer);
+    // clearInterval(this.timer);
   }
 
   callApiThreshold = async () => {
