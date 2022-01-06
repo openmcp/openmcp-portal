@@ -200,7 +200,7 @@ class ClusterDnd extends Component {
       this.props.data.length > 1
         ? this.props.data[1].children.map((item, i) => ({
             id: `${item.attributes.zone}||${item.attributes.region}||${item.name}||${item.attributes.endpoint}`,
-            content: `${item.name} (${item.attributes.endpoint})`,
+            content: `${item.name}`,
           }))
         : [];
 

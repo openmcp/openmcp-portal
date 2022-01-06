@@ -2204,7 +2204,7 @@ g {
 
 .dashboard-main .dash-comp {
   float: left;
-  /* min-height: 404px; */
+  min-height: 404px;
 }
 
 .MuiSwitch-switchBase.Mui-checked {
@@ -2663,7 +2663,7 @@ g {
 
   padding: 12px 8px 12px 12px;
   width: 285px;
-  height: 274px;
+  height: 272px;
   overflow-y: scroll;
 }
 .dnd-item {
