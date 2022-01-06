@@ -254,7 +254,7 @@ class DbClusterTopology extends Component {
           util.convertUTCTime(
             new Date(target.dataItem.dataContext.created_time),
             "%Y-%m-%d %H:%M:%S",
-            true
+            false
           )
         );
 

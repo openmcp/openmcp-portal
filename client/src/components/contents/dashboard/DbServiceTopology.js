@@ -259,11 +259,10 @@ class DbServiceTopology extends Component {
           util.convertUTCTime(
             new Date(target.dataItem.dataContext.created_time),
             "%Y-%m-%d %H:%M:%S",
-            true
+            false
           )
         );
 
-        console.log(before5min, createdTime);
         if(target.dataItem.dataContext.status !== "Running"){
           return am4core.color("#EC4E05");
         } else if (createdTime > before5min){

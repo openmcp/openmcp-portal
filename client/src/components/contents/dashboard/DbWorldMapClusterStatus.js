@@ -148,8 +148,6 @@ class DbWorldMapClusterStatus extends Component {
             )
           );
 
-          console.log(utcTime);
-
           if (utcTime > before5min) {
             ynNew = true;
           }
