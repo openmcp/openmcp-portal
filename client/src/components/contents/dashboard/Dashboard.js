@@ -186,8 +186,8 @@ class Dashboard extends Component {
                   cursor:"pointer"
             }}>
               <Editor
-                btTitle={t("dashboard.deploySmartCity.btn-title")}
-                title={t("dashboard.deploySmartCity.title")}
+                btTitle={t("dashboard.deployService.btn-title")}
+                title={t("dashboard.deployService.title")}
                 context={this.state.editorContext}
                 excuteScript={this.excuteScript}
                 menuClose={this.smartCityHandleClose}

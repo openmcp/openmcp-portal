@@ -56,6 +56,8 @@ class DbWorldMapClusterStatus extends Component {
       `/apis/dashboard/world_cluster_map`,
       requestOptions
     );
+
+    // apis/core.kubefed.io/v1beta1/namespaces/kube-federation-system/kubefedclusters
     const body = await response.json();
     return body;
   };
@@ -142,9 +144,11 @@ class DbWorldMapClusterStatus extends Component {
             util.convertUTCTime(
               new Date(values[i].created_time),
               "%Y-%m-%d %H:%M:%S",
-              true
+              false
             )
           );
+
+          console.log(utcTime);
 
           if (utcTime > before5min) {
             ynNew = true;
@@ -188,7 +192,7 @@ class DbWorldMapClusterStatus extends Component {
             style={{ position: "relative", width: "100%" }}
           >
             {this.state.rows ? (
-              <div style={{ textAlign: "center" }}>
+              <div style={{ textAlign: "center", padding:"8px"}}>
                 <WorldMap
                   // color="#0088fe"
                   // title="Top 10 Populous Countries"
