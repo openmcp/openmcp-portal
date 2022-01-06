@@ -287,7 +287,7 @@ class ReplicaStatus extends React.Component {
           <FaCube
             className="cube"
             style={{
-              color: status === "ready" ? "#367fa9" : "orange",
+              color: status === "ready" ? "#367fa9" : "#C4C4C4",
             }}
           />
         </div>,
@@ -312,18 +312,22 @@ class ReplicaStatus extends React.Component {
               this.state.rows.map((item, index) => {
                 return(
                 <div className="rs-cluster">
-                  <div className="cluster-title">
+                  <div className="cluster-title" style={{backgroundColor:parseInt(item.replicas) === 0 ?"#C4C4C4" : "#2877a5"}}>
                     {item.cluster}
                   </div>
                   <div className="cluster-content">
                     <div className="pod-count" style={{marginBottom:"17px"}}>
-                      <span style={{fontSize:"19px"}}>
+                      <span style={{fontSize:"19px", color:parseInt(item.replicas) === 0 ?"#C4C4C4" : "#000000"}}>
                         Pods : {item.replicas}
                       </span>
                     </div>
-                    {[...Array(item.replicas)].map((n, index) => {
+                    {parseInt(item.replicas) === 0 ? 
+                    <div>{rectangle("none")}</div> : 
+                    [...Array(parseInt(item.replicas))].map((n, index) => {
                       return <div>{rectangle("ready")}</div>;
                     })}
+                  
+                    
                   </div>
                 </div>
                 )
