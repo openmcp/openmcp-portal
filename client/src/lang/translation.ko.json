@@ -98,9 +98,9 @@
   "dashboard": {
     "title": "대시보드",
     "btn-edit": "사용자 정의",
-    "deploySmartCity": {
-      "btn-title": "스마트시티 배포",
-      "title": "스마트시티 배포"
+    "deployService": {
+      "btn-title": "서비스 배포",
+      "title": "서비스 배포"
     },
     "pop-editDashboard": {
       "title": "대시보드 사용자 정의",
