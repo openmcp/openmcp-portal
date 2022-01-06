@@ -65,7 +65,8 @@ class MultipleMetrics extends Component {
             selectBoxData.push({name : item, value: item});
           })
           this.setState({ 
-            cluster : res[0],
+            // cluster : res[0],
+            cluster : "cluster08",
             selectBoxData: selectBoxData 
           });
         }
@@ -97,7 +98,8 @@ class MultipleMetrics extends Component {
   render() {
     const {t} = this.props;
     const onSelectBoxChange = (data) => {
-      this.setState({cluster : data});
+      // this.setState({cluster : data});
+      this.setState({cluster : "cluster08"})
     }
 
     return (
