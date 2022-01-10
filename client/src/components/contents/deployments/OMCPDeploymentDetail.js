@@ -326,8 +326,6 @@ class ReplicaStatus extends React.Component {
                     [...Array(parseInt(item.replicas))].map((n, index) => {
                       return <div>{rectangle("ready")}</div>;
                     })}
-                  
-                    
                   </div>
                 </div>
                 )

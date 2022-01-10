@@ -190,7 +190,7 @@ class DbWorldMapClusterStatus extends Component {
             style={{ position: "relative", width: "100%" }}
           >
             {this.state.rows ? (
-              <div style={{ textAlign: "center", padding:"8px"}}>
+              <div style={{ textAlign: "center"}}>
                 <WorldMap
                   // color="#0088fe"
                   // title="Top 10 Populous Countries"

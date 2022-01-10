@@ -2204,7 +2204,7 @@ g {
 
 .dashboard-main .dash-comp {
   float: left;
-  min-height: 404px;
+  min-height: 410px;
 }
 
 .MuiSwitch-switchBase.Mui-checked {
@@ -2747,8 +2747,8 @@ g {
 
 .iframe-ti .iframe-rel .iframe-abs{
   position:absolute;
-  top:-78px;
-  left:-213px;
+  /* top:-78px;
+  left:-213px; */
 }
 
 .iframe-ti iframe {

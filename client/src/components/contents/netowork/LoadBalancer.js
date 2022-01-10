@@ -66,10 +66,15 @@ class LoadBalancer extends Component {
       this.setState({ cluster: data });
     };
 
+    const u = `http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
+
     return (
       <div className="sub-content-wrapper fulled">
         <section className="content">
           <Paper>
+         {/* <iframe src={`https://localhost:3000/iframeRedirect`} scrolling="no" /> */}
+         {/* <iframe src={`https://www.google.ie/gwt/x?u=${u}`} scrolling="no" /> */}
+         {/* <iframe src={`${u}`} scrolling="no" /> */}
             {this.state.selectBoxData
               ? [
                   <div style={{ padding: "10px 15px 0px 15px" }}>
@@ -190,8 +195,11 @@ class IframeModule extends Component {
 
   render() {
     const t = this.props.t;
+
+    
     return (
       <div>
+        
         {this.state.url === "" ? (
           <div
             style={{
@@ -212,7 +220,7 @@ class IframeModule extends Component {
           style={{ visibility: `${this.state.visibility}` }}
         >
           {this.state.url !== "" ? (
-            <iframe src={this.state.url} scrolling="no" />
+            <iframe src={`${this.state.url}`} scrolling="no" />
           ) : null}
         </div>
         {this.state.visibility === "hidden" ? (
