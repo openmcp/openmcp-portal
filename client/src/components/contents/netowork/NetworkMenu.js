@@ -8,13 +8,15 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
-import { NavigateNext } from '@material-ui/icons';
-import DNS from './DNS';
-import Services from './Services';
-import Ingress from './Ingress';
+import { NavigateNext } from "@material-ui/icons";
+import DNS from "./DNS";
+import Services from "./Services";
+import Ingress from "./Ingress";
 import LoadBalancer from "./LoadBalancer";
 import { BiNetworkChart } from "react-icons/bi";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
+import MdLoadBalancer from "./modal/MdLoadBalancer";
+import { AsyncStorage } from "AsyncStorage";
 
 const styles = (theme) => ({
   root: {
@@ -46,9 +48,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Container>
-          <Box>
-            {children}
-          </Box>
+          <Box>{children}</Box>
         </Container>
       )}
     </div>
@@ -75,24 +75,61 @@ class NetworkMenu extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "dns", index: 1, param:"dns" },
-      { label: "services", index: 2, param:"services" },
-      { label: "ingress", index: 3, param:"ingress" },
-      { label: "loadbalancer", index: 4, param:"loadbalancer" },
+      { label: "dns", index: 1, param: "dns" },
+      { label: "services", index: 2, param: "services" },
+      { label: "ingress", index: 3, param: "ingress" },
+      // { label: "loadbalancer", index: 4, param:"loadbalancer" },
     ],
   };
 
   componentWillMount() {
-     if(this.props.match.url.indexOf("services") > 0 ){
-       this.setState({ value: 1 });
-     } else if(this.props.match.url.indexOf("ingress") > 0){
+    if (this.props.match.url.indexOf("services") > 0) {
+      this.setState({ value: 1 });
+    } else if (this.props.match.url.indexOf("ingress") > 0) {
       this.setState({ value: 2 });
-     } else if(this.props.match.url.indexOf("loadbalancer") > 0){
-      this.setState({ value: 3 });
-     } else {
+    }
+    //   else if(this.props.match.url.indexOf("loadbalancer") > 0){
+    //   this.setState({ value: 3 });
+    //  }
+    else {
       this.setState({ value: 0 });
-     }
-     this.props.menuData("none");
+    }
+    this.props.menuData("none");
+  }
+
+  callApi = async () => {
+    let g_clusters;
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
+    });
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ g_clusters: g_clusters }),
+    };
+
+    const response = await fetch(`/apis/metric/clusterlist`, requestOptions);
+    const body = await response.json();
+    return body;
+  };
+
+  componentDidMount() {
+    //클러스터 목록
+    this.callApi()
+      .then((res) => {
+        if (res !== null) {
+          let selectBoxData = [];
+          res.forEach((item) => {
+            selectBoxData.push({ name: item, value: item });
+          });
+
+          this.setState({
+            selectBoxData: selectBoxData,
+          });
+        }
+      })
+      .catch((err) => console.log(err));
   }
 
   render() {
@@ -107,27 +144,33 @@ class NetworkMenu extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            <i><BiNetworkChart/></i>
+              <i>
+                <BiNetworkChart />
+              </i>
               <span>{t("network.title")}</span>
-              <small>{this.props.match.params.project}</small>
+              {this.state.selectBoxData ? (
+                <MdLoadBalancer selectBoxData={this.state.selectBoxData} />
+              ) : null}
             </h1>
             <ol className="breadcrumb">
               <li>
                 <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/network">{t("network.title")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {this.state.tabHeader.map((i) => {
-                  if(this.state.value+1 === i.index){
-                    return (
-                      <span>{t(`network.${i.label}.title`)}</span>
-                    );
+                  if (this.state.value + 1 === i.index) {
+                    return <span>{t(`network.${i.label}.title`)}</span>;
                   }
-                  })}
+                })}
               </li>
             </ol>
           </section>
@@ -137,7 +180,7 @@ class NetworkMenu extends Component {
             {/* 탭매뉴가 들어간다. */}
             <div className={classes.root}>
               <AppBar position="static" className="app-bar">
-              <Tabs
+                <Tabs
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
@@ -148,49 +191,88 @@ class NetworkMenu extends Component {
                     width: "100%",
                     zIndex: "990",
                   }}
-                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
+                  TabIndicatorProps={{ style: { backgroundColor: "#00d0ff" } }}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={t(`network.${i.label}.title`)} {...a11yProps(i.index)}
-                          component={Link}
-                          to={{
-                            pathname: `/network/${i.param}`
-                          }}
-                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
-                    />
+                      <Tab
+                        label={t(`network.${i.label}.title`)}
+                        {...a11yProps(i.index)}
+                        component={Link}
+                        to={{
+                          pathname: `/network/${i.param}`,
+                        }}
+                        style={{
+                          minHeight: "42px",
+                          fontSize: "13px",
+                          minWidth: "100px",
+                        }}
+                      />
                     );
                   })}
                 </Tabs>
               </AppBar>
-              <TabPanel className="tab-panel" value={this.state.value} index={0}>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={0}
+              >
                 <Switch>
-                <Route path="/network/dns"
-                    render={({match,location}) => <DNS  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+                  <Route
+                    path="/network/dns"
+                    render={({ match, location }) => (
+                      <DNS
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={1}>
-               <Switch>
-                  <Route path="/network/services"
-                    render={({match,location}) => <Services  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={1}
+              >
+                <Switch>
+                  <Route
+                    path="/network/services"
+                    render={({ match, location }) => (
+                      <Services
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={2}>
-               <Switch>
-                  <Route path="/network/ingress"
-                    render={({match,location}) => <Ingress  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={2}
+              >
+                <Switch>
+                  <Route
+                    path="/network/ingress"
+                    render={({ match, location }) => (
+                      <Ingress
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={3}>
+              {/* <TabPanel className="tab-panel" value={this.state.value} index={3}>
                <Switch>
                   <Route path="/network/loadbalancer"
                     render={({match,location}) => <LoadBalancer match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
                 </Switch>
-              </TabPanel>
+              </TabPanel> */}
             </div>
           </section>
         </div>

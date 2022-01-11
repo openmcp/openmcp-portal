@@ -81,7 +81,8 @@
       "register": "REGISTER",
       "back": "BACK",
       "next": "NEXT",
-      "delete": "DELETE"
+      "delete": "DELETE",
+      "open": "OPEN"
     },
     "label": {
       "target": "Target",

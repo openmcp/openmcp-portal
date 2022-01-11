@@ -17,21 +17,21 @@ import {
   SearchPanel,
   TableColumnResizing,
   TableHeaderRow,
-  PagingPanel,  
+  PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../modules/Editor";
 // import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import axios from 'axios';
+import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import axios from "axios";
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
+import Grow from "@material-ui/core/Grow";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 
 // let apiParams = "";
 class Services extends Component {
@@ -55,20 +55,20 @@ class Services extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-//       editorContext2 : `apiVersion: v1
-// kind: Service
-// metadata:
-//   namespace: openmcp
-//   labels: {}
-// spec:
-//   sessionAffinity: None
-//   selector: {}
-// `,
-editorContext : `apiVersion: openmcp.k8s.io/v1alpha1
+      //       editorContext2 : `apiVersion: v1
+      // kind: Service
+      // metadata:
+      //   namespace: openmcp
+      //   labels: {}
+      // spec:
+      //   sessionAffinity: None
+      //   selector: {}
+      // `,
+      editorContext: `apiVersion: openmcp.k8s.io/v1alpha1
 kind: OpenMCPService
 metadata:
   name: [service name]
@@ -84,6 +84,7 @@ spec:
     app: [openmcp-nginx]
 `,
       anchorEl: null,
+
     };
   }
 
@@ -93,22 +94,24 @@ spec:
 
   callApi = async () => {
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => {
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/services`,requestOptions);
+    const response = await fetch(`/services`, requestOptions);
     const body = await response.json();
     return body;
   };
+
+
 
   progress = () => {
     const { completed } = this.state;
@@ -121,7 +124,7 @@ spec:
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -129,19 +132,18 @@ spec:
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-    
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW09');
 
-  };
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-PJ-VW09");
+  }
 
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -152,37 +154,38 @@ spec:
   };
 
   excuteScript = (context) => {
-    if(this.state.openProgress){
-      this.setState({openProgress:false})
+    if (this.state.openProgress) {
+      this.setState({ openProgress: false });
     } else {
-      this.setState({openProgress:true})
+      this.setState({ openProgress: true });
     }
 
     const url = `/services/create`;
     const data = {
-      yaml:context
+      yaml: context,
     };
-    console.log(context)
-    axios.post(url, data)
-    .then((res) => {
+    console.log(context);
+    axios
+      .post(url, data)
+      .then((res) => {
         // alert(res.data.message);
         this.setState({ open: false });
         this.onUpdateData();
-    })
-    .catch((err) => {
+      })
+      .catch((err) => {
         alert(err);
-    });
-  }
+      });
+  };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     const columns = [
-      { name: "name", title: t("network.services.grid.name")},
+      { name: "name", title: t("network.services.grid.name") },
       { name: "cluster", title: t("network.services.grid.cluster") },
       { name: "project", title: t("network.services.grid.project") },
-      { name: "type", title: t("network.services.grid.type")},
-      { name: "cluster_ip", title: t("network.services.grid.clusterIp")},
-      { name: "external_ip", title: t("network.services.grid.externalIp")},
+      { name: "type", title: t("network.services.grid.type") },
+      { name: "cluster_ip", title: t("network.services.grid.clusterIp") },
+      { name: "external_ip", title: t("network.services.grid.externalIp") },
       { name: "selector", title: t("network.services.grid.selector") },
       // { name: "port", title: "Port" },
       { name: "created_time", title: t("network.services.grid.createdTime") },
@@ -196,15 +199,22 @@ spec:
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           // cursor: "pointer",
           ...style,
-        }}>
+        }}
+      >
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "#1ab726" : "black"
-          }}>
+              value === "Warning"
+                ? "orange"
+                : value === "Unschedulable"
+                ? "red"
+                : value === "Stop"
+                ? "red"
+                : value === "Running"
+                ? "#1ab726"
+                : "black",
+          }}
+        >
           {value}
         </span>
       </Table.Cell>
@@ -216,42 +226,41 @@ spec:
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      
+
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value === undefined){
-          return ""
+        if (props.value === undefined) {
+          return "";
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          return props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item) => {
+                return <p>{item}</p>;
+              })
+            : props.value;
         }
-      }
-
+      };
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/network/services/${props.value}`,
-            search:`cluster=${row.cluster}`,
-            state: {
-              data : row
-            }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/network/services/${props.value}`,
+                search: `cluster=${row.cluster}`,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {fnEnterCheck()}
+            </Link>
+          </Table.Cell>
         );
-      } 
+      }
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
@@ -268,14 +277,14 @@ spec:
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     const handleClick = (event) => {
-      if(this.state.anchorEl === null){
-        this.setState({anchorEl : event.currentTarget});
+      if (this.state.anchorEl === null) {
+        this.setState({ anchorEl: event.currentTarget });
       } else {
-        this.setState({anchorEl : null});
+        this.setState({ anchorEl: null });
       }
     };
 
@@ -326,31 +335,51 @@ spec:
                   >
                     <MoreVertIcon />
                   </IconButton>
-                  <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                  <Popper
+                    open={open}
+                    anchorEl={this.state.anchorEl}
+                    role={undefined}
+                    transition
+                    disablePortal
+                    placement={"bottom-end"}
+                  >
                     {({ TransitionProps, placement }) => (
                       <Grow
-                      {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === "bottom"
+                              ? "center top"
+                              : "center top",
+                        }}
                       >
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem 
+                            <MenuItem
                               onKeyDown={(e) => e.stopPropagation()}
-                              style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
-                                <Editor btTitle={t("network.services.pop-create.btn-create")} title={t("network.services.pop-create.title")} context={this.state.editorContext} excuteScript={this.excuteScript}
+                              style={{
+                                textAlign: "center",
+                                display: "block",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <Editor
+                                btTitle={t(
+                                  "network.services.pop-create.btn-create"
+                                )}
+                                title={t("network.services.pop-create.title")}
+                                context={this.state.editorContext}
+                                excuteScript={this.excuteScript}
                                 menuClose={handleClose}
-                                />
-                              </MenuItem>
-                            </MenuList>
-                          </Paper>
+                              />
+                            </MenuItem>
+                          </MenuList>
+                        </Paper>
                       </Grow>
                     )}
                   </Popper>
                 </div>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={columns}
-                >
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -359,18 +388,25 @@ spec:
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
+                    defaultSorting={[
+                      { columnName: "created_time", direction: "desc" },
+                    ]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}

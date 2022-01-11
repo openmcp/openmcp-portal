@@ -1746,6 +1746,7 @@ g {
 .pd-resource-config.select .res #select-mode {
   font-weight: bold;
   color: #367fa9;
+  /* padding-top: 4px; */
 }
 
 .pd-resource-config .MuiSlider-markLabel {

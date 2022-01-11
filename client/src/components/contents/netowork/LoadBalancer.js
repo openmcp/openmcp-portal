@@ -36,6 +36,59 @@ class LoadBalancer extends Component {
   };
 
   componentDidMount() {
+
+
+    let innerHeight = window.innerHeight;
+    let outerHeight= window.outerHeight;
+    let topAreaHeight = 124;
+    // let top = 1005;
+
+    let popupWidth = 995;
+    let innerWidth = window.innerWidth; //1618;
+    let menuWidth= 178;
+    let areaWidth = menuWidth + (innerWidth-menuWidth)/2 - (popupWidth)/2;
+    //menuWidth + (innerWidth-menuWidth)/2 - (popupWidth)/2;
+    // menuWidth + innerWidth/2
+    // let top = 124;
+    var options = {
+        height: innerHeight-150, // sets the height in pixels of the window.
+        width: popupWidth, // sets the width in pixels of the window.
+        toolbar: 0, // determines whether a toolbar (includes the forward and back buttons) is displayed {1 (YES) or 0 (NO)}.
+        scrollbars: 0, // determines whether scrollbars appear on the window {1 (YES) or 0 (NO)}.
+        status: 0, // whether a status line appears at the bottom of the window {1 (YES) or 0 (NO)}.
+        resizable: 1, // whether the window can be resized {1 (YES) or 0 (NO)}. Can also be overloaded using resizable.
+        left: areaWidth, // left position when the window appears.
+        top: outerHeight-topAreaHeight, // top position when the window appears.
+        center: 0, // should we center the window? {1 (YES) or 0 (NO)}. overrides top and left
+        createnew: 0, // should we create a new window for each occurance {1 (YES) or 0 (NO)}.
+        location: 0, // determines whether the address bar is displayed {1 (YES) or 0 (NO)}.
+        menubar: 0 // determines whether the menu bar is displayed {1 (YES) or 0 (NO)}.
+    };
+
+    var parameters = "location=" + options.location +
+    ",menubar=" + options.menubar +
+    ",height=" + options.height +
+    ",width=" + options.width +
+    ",toolbar=" + options.toolbar +
+    ",scrollbars=" + options.scrollbars +
+    ",status=" + options.status +
+    ",resizable=" + options.resizable +
+    ",left=" + options.left +
+    ",screenX=" + options.left +
+    ",top=" + options.top +
+    ",screenY=" + options.top;
+
+    // window.open("http://www.naver.com", "Popup","toolbar=1,location=1,statusbar=1,menubar=1,scrollbars=1,resizable=1,width=1000,height=600,left=0,top=1000")
+
+    // var test = window.open("http://google.com", "test", "width=500,height=400")
+    // // test.opener.document.getElementsByClassName('gsfi')["0"].value = "test"
+    window.open("http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default", "Popup",parameters)
+    // window.open("http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default", "Popup","toolbar=0,location=0,statusbar=0,menubar=0,scrollbars=0,resizable=0,width=995,height=610,left=500,top=1005")
+    
+    // window.open("http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default", "Popup","top=500,left=-500,height=30,width=300,menubar=1,location=1,resizable=0,scrollbars=1,status=1")
+
+    // window.open('http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default','popup',parameters);
+
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
