@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { NavLink, Link, Route, Switch } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
-
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -9,11 +8,12 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from "@material-ui/icons";
-import AlertLog from "./AlertLog";
-import SetThreshold from "./SetThreshold";
 import { AiFillAlert } from "react-icons/ai";
+import { AiOutlineUser } from "react-icons/ai";
 import { AsyncStorage } from "AsyncStorage";
 import { withTranslation } from "react-i18next";
+import Accounts from "./Accounts";
+import UserLogs from "./UserLogs";
 
 const styles = (theme) => ({
   root: {
@@ -65,24 +65,27 @@ function a11yProps(index) {
   };
 }
 
-class Threshold extends Component {
-  state = {
-    // rows: "",
-    // completed: 0,
-    reRender: "",
-    value: 0,
-    tabHeader: [
-      { label: "alertLog", index: 1, param: "alert-log" },
-      { label: "threshold", index: 2, param: "set-threshold" },
-      // { label: "DaemonSets", index: 3 },
-    ],
-  };
+class AccountMenu extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // rows: "",
+      // completed: 0,
+      reRender: "",
+      value: 0,
+      tabHeader: [
+        { label: "account", index: 1, param: "account" },
+        { label: "userLog", index: 2, param: "user-log" },
+        // { label: "DaemonSets", index: 3 },
+      ],
+    };
+  }
 
   componentWillMount() {
     if (this.props.match.url.indexOf("log") > 0) {
-      this.setState({ value: 0 });
-    } else {
       this.setState({ value: 1 });
+    } else {
+      this.setState({ value: 0 });
     }
     this.props.menuData("none");
   }
@@ -106,9 +109,9 @@ class Threshold extends Component {
           <section className="content-header">
             <h1>
               <i>
-                <AiFillAlert />
+                <AiOutlineUser />
               </i>
-              <span>{t("alert.title")}</span>
+              <span>{t("accounts.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
             <ol className="breadcrumb">
@@ -119,7 +122,7 @@ class Threshold extends Component {
                 <NavigateNext
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
-                {t("alert.title")}
+                {t("accounts.title")}
               </li>
               <li className="active">
                 <NavigateNext
@@ -127,7 +130,7 @@ class Threshold extends Component {
                 />
                 {this.state.tabHeader.map((i) => {
                   if (this.state.value + 1 === i.index) {
-                    return <span>{t(`alert.${i.label}.title`)}</span>;
+                    return <span>{t(`accounts.${i.label}.title`)}</span>;
                   }
                 })}
               </li>
@@ -155,11 +158,11 @@ class Threshold extends Component {
                   {this.state.tabHeader.map((i) => {
                     return (
                       <Tab
-                        label={t(`alert.${i.label}.title`)}
+                        label={t(`accounts.${i.label}.title`)}
                         {...a11yProps(i.index)}
                         component={Link}
                         to={{
-                          pathname: `/settings/alert/${i.param}`,
+                          pathname: `/settings/accounts/${i.param}`,
                         }}
                         style={{
                           minHeight: "42px",
@@ -180,9 +183,9 @@ class Threshold extends Component {
               >
                 <Switch>
                   <Route
-                    path="/settings/alert/alert-log"
+                    path="/settings/accounts/account"
                     render={({ match, location }) => (
-                      <AlertLog
+                      <Accounts
                         match={match}
                         location={location}
                         menuData={this.onMenuData}
@@ -198,9 +201,9 @@ class Threshold extends Component {
               >
                 <Switch>
                   <Route
-                    path="/settings/alert/set-threshold"
+                    path="/settings/accounts/user-log"
                     render={({ match, location }) => (
-                      <SetThreshold
+                      <UserLogs
                         match={match}
                         location={location}
                         menuData={this.onMenuData}
@@ -210,8 +213,8 @@ class Threshold extends Component {
                 </Switch>
               </TabPanel>
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>
-                Item Three
-              </TabPanel> */}
+              Item Three
+            </TabPanel> */}
             </div>
           </section>
         </div>
@@ -220,15 +223,4 @@ class Threshold extends Component {
   }
 }
 
-// function App(){
-//   const notify = () => toast("Wow so easy!");
-
-//   return (
-//     <div>
-//       <button onClick={notify}>Notify!</button>
-//       <ToastContainer />
-//     </div>
-//   );
-// }
-
-export default withTranslation()(withStyles(styles)(Threshold));
+export default withTranslation()(withStyles(styles)(AccountMenu));

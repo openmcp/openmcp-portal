@@ -62,6 +62,7 @@ import LoadBalancer from "../contents/netowork/LoadBalancer";
 import DeploymentMenu from "../contents/deployments/DeploymentMenu";
 import OMCPDeploymentDetail from "../contents/deployments/OMCPDeploymentDetail";
 import GlobalCache from "../contents/motions/global_cache/GlobalCache";
+import AccountMenu from "../contents/settings/AccountMenu";
 
 // 선택 매뉴에 따라 Contents를 변경하면서 보여줘야함
 // 각 컨텐츠는 Route를 이용해서 전환되도록 해야한다.
@@ -333,8 +334,16 @@ class Contents extends Component {
           {/* Pods contents END*/}
 
           {/* Settings contents */}
-          <Route exact path="/settings/accounts" 
-            render={({match,location}) => <Accounts  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
+          <Route exact path="/settings/accounts/account" 
+            render={({match,location}) => <AccountMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
+          </Route>
+          <Route exact path="/settings/accounts/user-log"
+            render={({match,location}) => <AccountMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
+          </Route>
+          <Route exact path="/settings/accounts"
+            render={({match,location}) => <Redirect to={{
+              pathname : `/settings/accounts/account`,
+            }}  />} >
           </Route>
 
           <Route path="/settings/group-role" 

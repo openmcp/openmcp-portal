@@ -1,117 +1,177 @@
 -- Login/Logout
-insert into tb_codes values ('LOG-PT','log-LG-VW01','Enter login page','Login');
-insert into tb_codes values ('LOG-PT','log-LG-LG01','Log in','Login');
-insert into tb_codes values ('LOG-PT','log-LG-LG02','Log out','Logout');
-
+insert into tb_codes values ('LOG-PT','log-LG-VW01','Enter login Page','Login');
+insert into tb_codes values ('LOG-PT','log-LG-EX01','Log in','Login');
+insert into tb_codes values ('LOG-PT','log-LG-EX02','Log out','Logout');
 
 -- Dashboard Pages
-insert into tb_codes values ('LOG-PT','log-DS-VW01','View Dashboard page','Dashboard');
+insert into tb_codes values ('LOG-PT','log-DS-VW01','View Dashboard System Status','Dashboard > System Status');
+insert into tb_codes values ('LOG-PT','log-DS-VW02','View Dashboard Cluster Power Usage','Dashboard > Cluster Power Usage');
+insert into tb_codes values ('LOG-PT','log-DS-VW03','View Dashboard Cluster Join/Unjoin','Dashboard > Cluster Join/Unjoin');
+insert into tb_codes values ('LOG-PT','log-DS-VW04','View Dashboard Cluster Regions','Dashboard > Cluster Regions');
+insert into tb_codes values ('LOG-PT','log-DS-VW05','View Dashboard World Cluster Status','Dashboard > World Cluster Status');
+insert into tb_codes values ('LOG-PT','log-DS-VW06','View Dashboard Cluster Topology','Dashboard > Cluster Topology');
+insert into tb_codes values ('LOG-PT','log-DS-VW07','View Dashboard Service Topology','Dashboard > Service Topology');
+insert into tb_codes values ('LOG-PT','log-DS-VW08','View Dashboard Region Topology','Dashboard > Region Topology');
+insert into tb_codes values ('LOG-PT','log-DS-MD01','Modify Dashboard Contents','Dashboard > Edit Dashboard > Save');
+insert into tb_codes values ('LOG-PT','log-DS-EX01','Execute Service Deployment','Dashboard > Service Deployment > Execution');
+insert into tb_codes values ('LOG-PT','log-DS-EX02','Execute Cluster Join','Dashboard > Cluster Join/Unjoin > Join');
+insert into tb_codes values ('LOG-PT','log-DS-EX03','Execute Cluster Unjoin','Dashboard > Cluster Join/Unjoin > Unjoin');
 
+-- Multiple Metrics
+insert into tb_codes values ('LOG-PT','log-MM-VW01','View Multiple Metrics','Multiple Metrics');
+insert into tb_codes values ('LOG-PT','log-MM-CG01','Change Multiple Metrics Cluster Item','Multiple Metrics > Cluster Selector');
+insert into tb_codes values ('LOG-PT','log-MM-CG02','Change Multiple Metrics Namespace Metric Item','Multiple Metrics > Namespace Selector');
+insert into tb_codes values ('LOG-PT','log-MM-CG03','Change Multiple Metrics Node Metric Item','Multiple Metrics > Node Selector');
 
 -- Cluster Pages
-insert into tb_codes values ('LOG-PT','log-CL-VW01','View cluster list page','Clusters');
-insert into tb_codes values ('LOG-PT','log-CL-VW02','View cluster overview page','Clusters > Overview');
-insert into tb_codes values ('LOG-PT','log-CL-VW03','View cluster nodes list page','Clusters > Nodes');
-insert into tb_codes values ('LOG-PT','log-CL-VW04','View cluster nodes detail page','Clusters > Nodes > Node Information');
-insert into tb_codes values ('LOG-PT','log-CL-VW05','View cluster pods list page','Clusters > Pods');
-insert into tb_codes values ('LOG-PT','log-CL-VW06','View cluster pods detail page','Clusters > Pods > Pod Information');
-insert into tb_codes values ('LOG-PT','log-CL-SR01','Search cluster list page','Clusters');
-insert into tb_codes values ('LOG-PT','log-CL-SR02','Search clusters events','Clusters - Events');
-insert into tb_codes values ('LOG-PT','log-CL-SR03','Search cluster nodes','Clusters > Nodes');
-insert into tb_codes values ('LOG-PT','log-CL-SR04','Search cluster nodes events','Clusters > Nodes > Node Information - Events');
-insert into tb_codes values ('LOG-PT','log-CL-SR05','Search cluster pods','Clusters > Pods');
-insert into tb_codes values ('LOG-PT','log-CL-SR06','Search cluster pod status','Clusters > Pods - Pod Status');
-insert into tb_codes values ('LOG-PT','log-CL-SR07','Search cluster containers','Clusters > Pods - Containers');
-insert into tb_codes values ('LOG-PT','log-CL-SR08','Search cluster pods events','Clusters > Pods > Pod Information - Events');
-insert into tb_codes values ('LOG-PT','log-CL-MD01','Modify cluster pod resources(cpu,memory)','Clusters > Pods > Pod Information - Resource Config');
+insert into tb_codes values ('LOG-PT','log-CL-VW01','View Clusters Joined Page','Clusters > Jonied');
+insert into tb_codes values ('LOG-PT','log-CL-VW02','View Clusters Joinable Page','Clusters > Joinable');
+insert into tb_codes values ('LOG-PT','log-CL-EX01','Execute Cluster Joine','Clusters > Joinable > Joined');
+insert into tb_codes values ('LOG-PT','log-CL-EX02','Execute Cluster Unjoin','Clusters > Joined > Unjoin');
+insert into tb_codes values ('LOG-PT','log-CL-VW03','View Clusters Overview','Clusters > Overview');
+insert into tb_codes values ('LOG-PT','log-CL-VW04','View Clusters Node List','Clusters > Nodes');
+insert into tb_codes values ('LOG-PT','log-CL-VW05','View Clusters Pod List','Clusters > Pods');
+insert into tb_codes values ('LOG-PT','log-CL-VW06','View Clusters Node Overview','Clusters > Nodes > Overview');
+insert into tb_codes values ('LOG-PT','log-CL-VW07','View Clusters Pod Overivew','Clusters > Pods > Overview');
 
 -- Nodes Pages
-insert into tb_codes values ('LOG-PT','log-ND-VW01','View node list page','Nodes');
-insert into tb_codes values ('LOG-PT','log-ND-VW02','View node detail page','Nodes > Node Information');
-insert into tb_codes values ('LOG-PT','log-ND-SR01','Search nodes','Nodes');
-insert into tb_codes values ('LOG-PT','log-ND-SR02','Search nodes events','Nodes > Node Information - Events');
-insert into tb_codes values ('LOG-PT','log-ND-MD01','Modify node taint','Nodes > Node Information - BasicInfo(Taint)');
-insert into tb_codes values ('LOG-PT','log-ND-MD02','Modify public cloud node resource','Nodes > Node Information - BasicInfo(Config Resource)');
--- 2021-03-29
-insert into tb_codes values ('LOG-PT','log-ND-CR01','Add EKS Node','Nodes > Add EKS Node');
-insert into tb_codes values ('LOG-PT','log-ND-CR02','Add GKE Node','Nodes > Add GKE Node');
-insert into tb_codes values ('LOG-PT','log-ND-CR03','Add AKS Node','Nodes > Add AKS Node');
-insert into tb_codes values ('LOG-PT','log-ND-CR04','Add KVM Node','Nodes > Add KVM Node');
-
+insert into tb_codes values ('LOG-PT','log-ND-VW01','View Nodes Page','Nodes');
+insert into tb_codes values ('LOG-PT','log-ND-VW02','View Node Overview Page','Nodes > Node Overview');
+insert into tb_codes values ('LOG-PT','log-ND-EX01','Execute Node Start','Nodes > Node Overview > Start Node');
+insert into tb_codes values ('LOG-PT','log-ND-EX02','Execute Node Stop','Nodes > Node Overview > Stop Node');
+insert into tb_codes values ('LOG-PT','log-ND-EX03','Execute Node Delete','Nodes > Node Overview > Delete Node');
+insert into tb_codes values ('LOG-PT','log-ND-VW03','View Add Node EKS','Nodes > Add Node > EKS');
+insert into tb_codes values ('LOG-PT','log-ND-VW04','View Add Node GKE','Nodes > Add Node > GKE');
+insert into tb_codes values ('LOG-PT','log-ND-VW05','View Add Node AKS','Nodes > Add Node > AKS');
+insert into tb_codes values ('LOG-PT','log-ND-VW06','View Add Node KVM','Nodes > Add Node > KVM');
+insert into tb_codes values ('LOG-PT','log-ND-EX04','Execute Add EKS Node','Nodes > Add EKS Node');
+insert into tb_codes values ('LOG-PT','log-ND-EX05','Execute Add GKE Node','Nodes > Add GKE Node');
+insert into tb_codes values ('LOG-PT','log-ND-EX06','Execute Add AKS Node','Nodes > Add AKS Node');
+insert into tb_codes values ('LOG-PT','log-ND-EX07','Execute Add KVM Node','Nodes > Add KVM Node');
 
 -- Projects Pages
-insert into tb_codes values ('LOG-PT','log-PJ-VW01','View project list page','Projects');
-insert into tb_codes values ('LOG-PT','log-PJ-VW02','View project overview page','Projects > Overview');
-insert into tb_codes values ('LOG-PT','log-PJ-VW03','View project deployment list page','Projects > Resources > Workloads > Deplotments');
-insert into tb_codes values ('LOG-PT','log-PJ-VW04','View project deployment detail page','Projects > Resources > Workloads > Deplotments > Deployment Information');
-insert into tb_codes values ('LOG-PT','log-PJ-VW05','View project statefulsets list page','Projects > Resources > Workloads > Statefulsets');
-insert into tb_codes values ('LOG-PT','log-PJ-VW06','View project statefulsets detail page','Projects > Resources > Workloads > Statefulsets > Statefulset Information');
-insert into tb_codes values ('LOG-PT','log-PJ-VW07','View project pods list page','Projects > Resources > Pods');
-insert into tb_codes values ('LOG-PT','log-PJ-VW08','View project pods detail page','Projects > Resources > Pods > Pod Information');
-insert into tb_codes values ('LOG-PT','log-PJ-VW09','View project services list page','Projects > Resources > Services');
-insert into tb_codes values ('LOG-PT','log-PJ-VW10','View project services detail page','Projects > Resources > Services > Service Information');
-insert into tb_codes values ('LOG-PT','log-PJ-VW11','View project ingress list page','Projects > Resources > Ingress');
-insert into tb_codes values ('LOG-PT','log-PJ-VW12','View project ingress detail page','Projects > Resources > Ingress > Ingress Information');
-insert into tb_codes values ('LOG-PT','log-PJ-VW13','View project volumes page','Projects > Volumes');
-insert into tb_codes values ('LOG-PT','log-PJ-VW14','View project volumes detail page','Projects > Volumes > Volume Information');
-insert into tb_codes values ('LOG-PT','log-PJ-VW15','View project secrets page','Projects > Config > Secrets');
-insert into tb_codes values ('LOG-PT','log-PJ-VW16','View project secrets detail page','Projects > Config > Secrets > Secrets Information');
-insert into tb_codes values ('LOG-PT','log-PJ-VW17','View project config maps page','Projects > Config > ConfigMaps');
-insert into tb_codes values ('LOG-PT','log-PJ-VW18','View project config maps detail page','Projects > Config > ConfigMaps > ConfigMaps Information');
+insert into tb_codes values ('LOG-PT','log-PJ-VW01','View Projects Page','WorkLoads > Projects');
+insert into tb_codes values ('LOG-PT','log-PJ-VW02','View Project Overview Page','WorkLoads > Projects > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW03','View Project Deployment Page','WorkLoads > Projects > Resources > Workloads > Deplotments');
+insert into tb_codes values ('LOG-PT','log-PJ-VW04','View Project Statefulsets Page','WorkLoads > Projects > Resources > Workloads > Statefulsets');
+insert into tb_codes values ('LOG-PT','log-PJ-VW05','View Project Pods Page','WorkLoads > Projects > Resources > Pods');
+insert into tb_codes values ('LOG-PT','log-PJ-VW06','View Project Services Page','WorkLoads > Projects > Resources > Services');
+insert into tb_codes values ('LOG-PT','log-PJ-VW07','View Project Ingress Page','WorkLoads > Projects > Resources > Ingress');
+insert into tb_codes values ('LOG-PT','log-PJ-VW08','View Project Volumes Page','WorkLoads > Projects > Volumes');
+insert into tb_codes values ('LOG-PT','log-PJ-VW09','View Project Secrets Page','WorkLoads > Projects > Config > Secrets');
+insert into tb_codes values ('LOG-PT','log-PJ-VW10','View Project ConfigMaps Page','WorkLoads > Projects > Config > ConfigMaps');
+insert into tb_codes values ('LOG-PT','log-PJ-VW11','View Project Deployment Overview','WorkLoads > Projects > Resources > Workloads > Deplotments > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW12','View Project Statefulsets Overview','WorkLoads > Projects > Resources > Workloads > Statefulsets > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW13','View Project Pods Overview','WorkLoads > Projects > Resources > Pods > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW14','View Project Services Overview','WorkLoads > Projects > Resources > Services > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW15','View Project Ingress Overview','WorkLoads > Projects > Resources > Ingress > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW16','View Project Volumes Overview ','WorkLoads > Projects > Volumes > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW17','View Project Secrets Overview ','WorkLoads > Projects > Config > Secrets > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-VW18','View Project ConfigMaps Overview ','WorkLoads > Projects > Config > ConfigMaps > Overview');
+insert into tb_codes values ('LOG-PT','log-PJ-EX01','Execute Create Project','WorkLoads > Projects > Create Project');
 
+-- Deployments
+insert into tb_codes values ('LOG-PT','log-DP-VW01','View Deployments Page','WorkLoads > Deployments > Deployment');
+insert into tb_codes values ('LOG-PT','log-DP-VW02','View OpenMCP Deployments Page','WorkLoads > Deployments > OpenMCP Deployment');
+insert into tb_codes values ('LOG-PT','log-DP-VW03','View Deployment Overview','WorkLoads > Deployments > Overview');
+insert into tb_codes values ('LOG-PT','log-DP-VW04','View Deployment OpenMCP Overview','WorkLoads > Deployments > OpenMCP Overview');
+insert into tb_codes values ('LOG-PT','log-DP-EX01','Execute Create Deployment','WorkLoads > Deployment > Create Deployment');
+insert into tb_codes values ('LOG-PT','log-DP-EX02','Execute Delete Deployment','WorkLoads > Deployment > Delete Deployment');
+insert into tb_codes values ('LOG-PT','log-DP-EX03','Execute Create OpenMCP Deployment','WorkLoads > Deployment > Create OpenMCP Deployment');
+insert into tb_codes values ('LOG-PT','log-DP-EX04','Execute Delete OpenMCP Deployment','WorkLoads > Deployment > Delete OpenMCP Deployment');
+insert into tb_codes values ('LOG-PT','log-DP-EX05','Execute Deployment Add Replicas','WorkLoads > Deployment > Overview > Add Replicas');
+insert into tb_codes values ('LOG-PT','log-DP-EX06','Execute Deployment Delete Replicas','WorkLoads > Deployment > Overview > Delete Replicas');
 
-insert into tb_codes values ('LOG-PT','log-PJ-SR01','Search project list page','Projects');
-insert into tb_codes values ('LOG-PT','log-PJ-SR02','Search deployments','Projects > Resources > Workloads > Deplotments');
-insert into tb_codes values ('LOG-PT','log-PJ-SR03','Search deployments pods','Projects > Resources > Workloads > Deplotment Information - Pods');
-insert into tb_codes values ('LOG-PT','log-PJ-SR04','Search deployments ports','Projects > Resources > Workloads > Deplotment Information - Ports');
-insert into tb_codes values ('LOG-PT','log-PJ-SR05','Search deployments events','Projects > Resources > Workloads > Deplotment Information - Events');
-insert into tb_codes values ('LOG-PT','log-PJ-SR06','Search statefulsets','Projects > Resources > Workloads > Statefulsets');
-insert into tb_codes values ('LOG-PT','log-PJ-SR07','Search statefulsets events','Projects > Resources > Workloads > Statefulsets - Events');
-insert into tb_codes values ('LOG-PT','log-PJ-SR08','Search project pods','Projects > Resources > Pods');
-insert into tb_codes values ('LOG-PT','log-PJ-SR09','Search project pod status','Projects > Resources > Pods > Pods Information - Pod Status');
-insert into tb_codes values ('LOG-PT','log-PJ-SR10','Search project pod containters','Projects > Resources > Pods > Pods Information - Containters');
-insert into tb_codes values ('LOG-PT','log-PJ-SR11','Search project pod events','Projects > Resources > Pods > Pods Information - Events');
-insert into tb_codes values ('LOG-PT','log-PJ-SR12','Search project services','Projects > Resources > Services');
-insert into tb_codes values ('LOG-PT','log-PJ-SR13','Search project service workloads','Projects > Resources > Services > Pods Information - Pod Status');
-insert into tb_codes values ('LOG-PT','log-PJ-SR14','Search project service pods','Projects > Resources > Services > Pods Information - Containters');
-insert into tb_codes values ('LOG-PT','log-PJ-SR15','Search project services events','Projects > Resources > Services > Pods Information - Events');
-insert into tb_codes values ('LOG-PT','log-PJ-SR16','Search project ingress','Projects > Resources > Ingress');
-insert into tb_codes values ('LOG-PT','log-PJ-SR17','Search project ingress workloads','Projects > Resources > Ingress > Ingress Information - Rules');
-insert into tb_codes values ('LOG-PT','log-PJ-SR18','Search project ingress events','Projects > Resources > Ingress > Ingress Information - Events');
-insert into tb_codes values ('LOG-PT','log-PJ-SR19','Search project volumes','Projects > Volumes');
-insert into tb_codes values ('LOG-PT','log-PJ-SR20','Search project volumes workloads','Projects > Volumes > Volume Information - Rules');
-insert into tb_codes values ('LOG-PT','log-PJ-SR21','Search project volumes events','Projects > Volumes > Volume Information - Events');
-insert into tb_codes values ('LOG-PT','log-PJ-SR22','Search project secrets','Projects > Config > Secrets');
-insert into tb_codes values ('LOG-PT','log-PJ-SR23','Search project secrets mounted-by','Projects > Config > Secrets > Secrets Information - Mounted By');
-insert into tb_codes values ('LOG-PT','log-PJ-SR24','Search project secrets events','Projects > Config > Secrets > Secrets Information - Events');
-insert into tb_codes values ('LOG-PT','log-PJ-SR25','Search project configmaps','Projects > Config > ConfigMaps');
-insert into tb_codes values ('LOG-PT','log-PJ-SR26','Search project configmaps data','Projects > Config > ConfigMaps > ConfigMap Information - Data');
-insert into tb_codes values ('LOG-PT','log-PJ-CR01','Create project','Projects > Create Project');
-insert into tb_codes values ('LOG-PT','log-PJ-MD01','Migration deployment','Projects > Resources > Workloads > Deployments > Migration');
+-- Pods
+insert into tb_codes values ('LOG-PT','log-PD-VW01','View Pods Page','WorkLoads > Pods > Pod');
+insert into tb_codes values ('LOG-PT','log-PD-VW02','View HPA Page','WorkLoads > Pods > HPA');
+insert into tb_codes values ('LOG-PT','log-PD-VW03','View VPA Page','WorkLoads > Pods > VPA');
+insert into tb_codes values ('LOG-PT','log-PD-VW04','View Pods Overview','WorkLoads > Pods > Pod Overview');
+insert into tb_codes values ('LOG-PT','log-PD-EX01','Modify pod resources(cpu,memory)','WorkLoads > Pod Information - Basic Info(Resource Config)');
 
--- Pods Pages
-insert into tb_codes values ('LOG-PT','log-PD-VW01','View pod list page','Pods');
-insert into tb_codes values ('LOG-PT','log-PD-VW02','View pod overview page','Pods > Pod Information');
-insert into tb_codes values ('LOG-PT','log-PD-SR01','Search pods','Pods');
-insert into tb_codes values ('LOG-PT','log-PD-SR02','Search pod status','Pods > Pod Information - Pod Status');
-insert into tb_codes values ('LOG-PT','log-PD-SR03','Search pod containers ','Pods > Pod Information - Containers');
-insert into tb_codes values ('LOG-PT','log-PD-SR04','Search pod events','Pods > Pod Information - Events');
-insert into tb_codes values ('LOG-PT','log-PD-MD01','Modify pod resources(cpu,memory)','Pod Information - Basic Info(Resource Config)');
+-- Network
+insert into tb_codes values ('LOG-PT','log-NW-VW01','View Network DNS Page','WorkLoads > Network > DNS');
+insert into tb_codes values ('LOG-PT','log-NW-VW02','View Network Services Page','WorkLoads > Network > Services');
+insert into tb_codes values ('LOG-PT','log-NW-VW03','View Network Ingress Page','WorkLoads > Network > Ingress');
+insert into tb_codes values ('LOG-PT','log-NW-VW04','View Network DNS Overview','WorkLoads > Network > DNS > Overview');
+insert into tb_codes values ('LOG-PT','log-NW-VW05','View Network Services Overview','WorkLoads > Network > Services > Overview');
+insert into tb_codes values ('LOG-PT','log-NW-VW06','View Network Ingress Overview','WorkLoads > Network > Ingress > Overview');
+insert into tb_codes values ('LOG-PT','log-NW-EX01','Execute Create Service','WorkLoads > Network > Services > Create Service');
+insert into tb_codes values ('LOG-PT','log-NW-EX02','Execute Create Ingress','WorkLoads > Network > Ingress > Create Ingress');
+
+-- Migrations
+insert into tb_codes values ('LOG-PT','log-MG-VW01','View Migration Page','Motions > Migrations > Migrations');
+insert into tb_codes values ('LOG-PT','log-MG-VW02','View Migration Log Page','Motions > Migrations > Migration Logs');
+insert into tb_codes values ('LOG-PT','log-MG-EX01','Execute Migration','Motions > Migrations > Migrations > Migration');
+
+-- Snapshots
+insert into tb_codes values ('LOG-PT','log-SS-VW01','View Snapshots Page','Motions > Snapshots > Snapshot');
+insert into tb_codes values ('LOG-PT','log-SS-VW02','View Snapshots Log Page','Motions > Snapshots > Snapshot Log');
+insert into tb_codes values ('LOG-PT','log-SS-EX01','Execute Take Snapshot','Motions > Snapshots > Snapshot > Take Snapshot');
+insert into tb_codes values ('LOG-PT','log-SS-EX02','Execute Restore Snapshot','Motions > Snapshots > Snapshot > Restore');
+
+-- Global Cache
+insert into tb_codes values ('LOG-PT','log-GC-VW01','View Global Cache Page','Global Cache');
 
 -- Accounts
-insert into tb_codes values ('LOG-PT','log-AC-VW01','View account list page','Settings > Accounts');
-insert into tb_codes values ('LOG-PT','log-AC-SR01','Search accounts','Settings > Accounts');
-insert into tb_codes values ('LOG-PT','log-AC-MD01','Modify account group','Settings > Accounts - edit');
-insert into tb_codes values ('LOG-PT','log-AC-CR01','Create accounts','Settings > Accounts - Create Account');
+insert into tb_codes values ('LOG-PT','log-AC-VW01','View Accounts Page','Settings > Accounts > Account');
+insert into tb_codes values ('LOG-PT','log-AC-VW02','View User Log Page','Settings > Accounts > User Log');
+insert into tb_codes values ('LOG-PT','log-AC-EX01','Execute Create Account','Settings > Accounts > Account > Create an Account');
+insert into tb_codes values ('LOG-PT','log-AC-EX02','Execute Account Change Role','Settings > Accounts > Account > Change Role');
+
+-- Group Role
+insert into tb_codes values ('LOG-PT','log-GR-VW01','View Group Role Page','Settings > Group Role');
+insert into tb_codes values ('LOG-PT','log-GR-EX01','Execute Create Group Role','Settings > Group Role > Create Group');
+insert into tb_codes values ('LOG-PT','log-GR-EX02','Execute Edit Group Role','Settings > Group Role > Edit Group');
+insert into tb_codes values ('LOG-PT','log-GR-EX03','Execute Delete Group Role','Settings > Group Role > Delete Group');
 
 -- policy
-insert into tb_codes values ('LOG-PT','log-PO-MD01','Modify OMCP Policy','Settings > Policy > OMCP Policy - Update');
-  -- 2021-03-29
-insert into tb_codes values ('LOG-PT','log-PO-CR01','Create Project Policy','Settings > Policy > Project Policy - Policy Create');
-insert into tb_codes values ('LOG-PT','log-PO-MD02','Modify Project Policy','Settings > Policy > Project Policy - Policy Update');
+insert into tb_codes values ('LOG-PT','log-PO-VW01','View OMCP Policy','Settings > Policy > OMCP Policy');
+insert into tb_codes values ('LOG-PT','log-PO-EX01','Execute Edit Policy','Settings > Policy > OMCP Policy > Edit Policy');
 
--- Vendors
-insert into tb_codes values ('VENDOR','AWS','Cloud Service Vender - Amazon Wep Service','');
+-- Alert
+insert into tb_codes values ('LOG-PT','log-AL-VW01','View Alerts Log Page','Settings > Alerts > Alert Log');
+insert into tb_codes values ('LOG-PT','log-AL-VW02','View Threshold Page','Settings > Alerts > Threshold');
+insert into tb_codes values ('LOG-PT','log-AL-EX01','Execute Create Threshold','Settings > Alerts > Threshold > Create Threshold');
+insert into tb_codes values ('LOG-PT','log-AL-EX02','Execute Edit Threshold','Settings > Alerts > Threshold > Edit Threshold');
+insert into tb_codes values ('LOG-PT','log-AL-EX03','Execute Delete Threshold','Settings > Alerts > Threshold > Delete Threshold');
+
+-- Meterings
+insert into tb_codes values ('LOG-PT','log-MR-VW01','View Meterings Page','Settings > Meterings');
+insert into tb_codes values ('LOG-PT','log-MR-EX01','Execute Add Region','Settings > Meterings > Add Region');
+insert into tb_codes values ('LOG-PT','log-MR-EX02','Execute Edit Metering','Settings > Meterings > Edit Metering');
+
+-- Billings
+insert into tb_codes values ('LOG-PT','log-BL-VW01','View Billings Page','Settings > Billings');
+
+-- Config
+insert into tb_codes values ('LOG-PT','log-CF-VW01','View Public Cloud Auth EKS Page','Settings > Config > Public Cloud Auth > EKS');
+insert into tb_codes values ('LOG-PT','log-CF-EX01','Execute Add EKS Configrations','Settings > Config > Public Cloud Auth > EKS > New');
+insert into tb_codes values ('LOG-PT','log-CF-EX02','Execute Edit EKS Configrations','Settings > Config > Public Cloud Auth > EKS > Edit');
+insert into tb_codes values ('LOG-PT','log-CF-EX03','Execute Delete EKS Configrations','Settings > Config > Public Cloud Auth > EKS > Delete');
+
+insert into tb_codes values ('LOG-PT','log-CF-VW02','View Public Cloud Auth GKE Page','Settings > Config > Public Cloud Auth > GKE');
+insert into tb_codes values ('LOG-PT','log-CF-EX04','Execute Add GKE Configrations','Settings > Config > Public Cloud Auth > GKE > New');
+insert into tb_codes values ('LOG-PT','log-CF-EX05','Execute Edit GKE Configrations','Settings > Config > Public Cloud Auth > GKE > Edit');
+insert into tb_codes values ('LOG-PT','log-CF-EX06','Execute Delete GKE Configrations','Settings > Config > Public Cloud Auth > GKE > Delete');
+
+insert into tb_codes values ('LOG-PT','log-CF-VW03','View Public Cloud Auth AKS Page','Settings > Config > Public Cloud Auth > AKS');
+insert into tb_codes values ('LOG-PT','log-CF-EX07','Execute Add AKS Configrations','Settings > Config > Public Cloud Auth > AKS > New');
+insert into tb_codes values ('LOG-PT','log-CF-EX08','Execute Edit AKS Configrations','Settings > Config > Public Cloud Auth > AKS > Edit');
+insert into tb_codes values ('LOG-PT','log-CF-EX09','Execute Delete AKS Configrations','Settings > Config > Public Cloud Auth > AKS > Delete');
+
+insert into tb_codes values ('LOG-PT','log-CF-VW04','View Public Cloud Auth KVM Page','Settings > Config > Public Cloud Auth > KVM');
+insert into tb_codes values ('LOG-PT','log-CF-EX10','Execute Add KVM Configrations','Settings > Config > Public Cloud Auth > KVM > New');
+insert into tb_codes values ('LOG-PT','log-CF-EX11','Execute Edit KVM Configrations','Settings > Config > Public Cloud Auth > KVM > Edit');
+insert into tb_codes values ('LOG-PT','log-CF-EX12','Execute Delete KVM Configrations','Settings > Config > Public Cloud Auth > KVM > Delete');
+
+insert into tb_codes values ('LOG-PT','log-CF-VW05','View Dashboard Config Page','Settings > Config > Dashboard Config');
+insert into tb_codes values ('LOG-PT','log-CF-EX13','Execute Edit Dashboard Config Refresh Cycle','Settings > Config > Dashboard Config > Refresh Cycle');
+insert into tb_codes values ('LOG-PT','log-CF-EX14','Execute Edit Dashboard Config Power Usage Range','Settings > Config > Dashboard Config > Power Usage Range');
+
+-- Public Cloud Vendors
+insert into tb_codes values ('VENDOR','EKS','Cloud Service Vender - Amazon Elastic Kubernetes Servic','');
+insert into tb_codes values ('VENDOR','AKS','Cloud Service Vender - Azure Kubernetes Service','');
 insert into tb_codes values ('VENDOR','GCP','Cloud Service Vender - Google Cloud Platform','');
 
 --public cloud instance type

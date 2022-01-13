@@ -2711,6 +2711,26 @@ app.get("/settings/accounts", (req, res) => {
   );
 });
 
+app.get("/settings/accounts/userLog", (req, res) => {
+  //connection.connect();
+  connection.query(
+    `SELECT
+    pl.user_id,
+    pl.code,
+    cd.description,
+    cd.etc,
+    pl.created_time
+    FROM tb_portal_logs pl
+    LEFT OUTER JOIN tb_codes cd ON pl.code = cd.code
+    ORDER BY pl.created_time DESC
+    `,
+    (err, result) => {
+      res.send(result.rows);
+      //connection.end();
+    }
+  );
+});
+
 app.post("/create_account", (req, res) => {
   const bcrypt = require("bcrypt");
   const saltRounds = 10;

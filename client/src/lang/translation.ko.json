@@ -896,24 +896,30 @@
     }
   },
   "accounts": {
-    "title": "사용자",
-    "pop-craete": {
-      "title": "신규 등록",
-      "btn-create": "사용자 신규 등록"
-    },
-    "pop-changeRole": {
-      "title": "사용자 역할 설정",
-      "btn-change": "역할 설정",
-      "userInfo": {
-        "title": "사용자 정보"
+    "title":"사용자",
+    "account":{
+      "title": "사용자",
+      "pop-craete": {
+        "title": "신규 등록",
+        "btn-create": "사용자 신규 등록"
       },
-      "selectRole": {
-        "title": "역할 선택"
-      },
-      "msg": {
-        "chk-selectAccount": "사용자 계정을 선택해주세요",
-        "chk-selectRole": "역할을 선택해주세요"
+      "pop-changeRole": {
+        "title": "사용자 역할 설정",
+        "btn-change": "역할 설정",
+        "userInfo": {
+          "title": "사용자 정보"
+        },
+        "selectRole": {
+          "title": "역할 선택"
+        },
+        "msg": {
+          "chk-selectAccount": "사용자 계정을 선택해주세요",
+          "chk-selectRole": "역할을 선택해주세요"
+        }
       }
+    },
+    "userLog":{
+      "title":"사용자 로그"
     }
   },
   "groupRole": {

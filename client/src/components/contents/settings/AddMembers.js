@@ -121,7 +121,7 @@ class AddMembers extends Component {
             textTransform: "initial",
           }}
         >
-           {t("accounts.pop-craete.btn-create")}
+           {t("accounts.account.pop-craete.btn-create")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -131,7 +131,7 @@ class AddMembers extends Component {
           // maxWidth={false}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            {t("accounts.pop-craete.title")}
+            {t("accounts.account.pop-craete.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="signup">

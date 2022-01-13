@@ -118,7 +118,7 @@ class AcChangeRole extends Component {
   handleClickOpen = () => {
     const {t} = this.props;
     if (Object.keys(this.props.rowData).length === 0) {
-      alert(t("accounts.pop-changeRole.msg.chk-selectAccount"));
+      alert(t("accounts.account.pop-changeRole.msg.chk-selectAccount"));
       this.setState({ open: false });
       return;
     }
@@ -154,7 +154,7 @@ class AcChangeRole extends Component {
   handleSave = (e) => {
     const {t} = this.props;
     if (Object.keys(this.state.selectedRow).length === 0) {
-      alert(t("accounts.pop-changeRole.msg.chk-selectRole"));
+      alert(t("accounts.account.pop-changeRole.msg.chk-selectRole"));
       return;
     } 
 
@@ -239,7 +239,7 @@ class AcChangeRole extends Component {
             textTransform: "capitalize",
           }}
         >
-          {t("accounts.pop-changeRole.btn-change")}
+          {t("accounts.account.pop-changeRole.btn-change")}
         </div>
         <Dialog
           // onClose={this.handleClose}
@@ -249,13 +249,13 @@ class AcChangeRole extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-            {t("accounts.pop-changeRole.title")}
+            {t("accounts.account.pop-changeRole.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body">
               <section className="md-content">
                 {/* deployment informations */}
-                <p>{t("accounts.pop-changeRole.userInfo.title")}</p>
+                <p>{t("accounts.account.pop-changeRole.userInfo.title")}</p>
                 <div id="md-content-info">
                   <div class="md-partition">
                     <div class="md-item">
@@ -272,7 +272,7 @@ class AcChangeRole extends Component {
                 </div>
               </section>
               <section className="md-content">
-                <p>{t("accounts.pop-changeRole.selectRole.title")}</p>
+                <p>{t("accounts.account.pop-changeRole.selectRole.title")}</p>
                 {/* cluster selector */}
                 <Paper>
                 <Grid rows={this.state.rows} columns={this.state.columns}>

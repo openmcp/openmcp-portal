@@ -895,27 +895,33 @@
     }
   },
   "accounts": {
-    "title": "Accounts",
-    "pop-craete": {
-      "title": "Create Account",
-      "btn-create": "Create an Account",
-      "msg": {
-        "chk-selectAccount": "Please select account"
+    "title":"Accounts",
+    "account":{
+      "title": "Account",
+      "pop-craete": {
+        "title": "Create Account",
+        "btn-create": "Create an Account",
+        "msg": {
+          "chk-selectAccount": "Please select account"
+        }
+      },
+      "pop-changeRole": {
+        "title": "Change Account Role",
+        "btn-change": "Change Role",
+        "userInfo": {
+          "title": "User Info"
+        },
+        "selectRole": {
+          "title": "Select Role"
+        },
+        "msg": {
+          "chk-selectAccount": "Please select account",
+          "chk-selectRole": "Please select account role"
+        }
       }
     },
-    "pop-changeRole": {
-      "title": "Change Account Role",
-      "btn-change": "Change Role",
-      "userInfo": {
-        "title": "User Info"
-      },
-      "selectRole": {
-        "title": "Select Role"
-      },
-      "msg": {
-        "chk-selectAccount": "Please select account",
-        "chk-selectRole": "Please select account role"
-      }
+    "userLog":{
+      "title":"User Log"
     }
   },
   "groupRole": {
