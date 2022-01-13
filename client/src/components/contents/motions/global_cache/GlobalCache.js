@@ -60,7 +60,6 @@ class GlobalCache extends Component {
         { columnName: "image_status", width: 100 },
         { columnName: "time", width: 160 },
       ],
-      rows : "",
 
       // Paging Settings
       currentPage: 0,
@@ -70,6 +69,8 @@ class GlobalCache extends Component {
 
       completed: 0,
       anchorEl: null,
+      gcHistory: "",
+      gcUpdateList: "",
     };
   }
 
@@ -94,13 +95,18 @@ class GlobalCache extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if (res === null) {
-          this.setState({ historyRows: "", updateListRows: "" });
+        if (res.hasOwnProperty("gc_history") && res["gc_history"] !== null) {
+          this.setState({ gcHistory: res.gc_history });
         } else {
-          this.setState({
-            rows: res,
-          });
+          this.setState({ gcHistory: []  });
         }
+
+        if (res.hasOwnProperty("gc_update_list") && res["gc_update_list"] !== null) {
+          this.setState({ gcUpdateList: res.gc_update_list });
+        } else {
+          this.setState({ gcUpdateList: [] });
+        }
+        
         clearInterval(this.timer);
         let userId = null;
         AsyncStorage.getItem("userName", (err, result) => {
@@ -109,19 +115,23 @@ class GlobalCache extends Component {
         utilLog.fn_insertPLogs(userId, "log-GC-VW01");
       })
       .catch((err) => console.log(err));
-
   }
 
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if (res === null) {
-          this.setState({ historyRows: "", updateListRows: "" });
+        if (res.hasOwnProperty("gc_history") && res["gc_history"] !== null) {
+          this.setState({ gcHistory: res.gc_history });
         } else {
-          this.setState({
-            rows: res,
-          });
+          this.setState({ gcHistory: []  });
         }
+
+        if (res.hasOwnProperty("gc_update_list") && res["gc_update_list"] !== null) {
+          this.setState({ gcUpdateList: res.gc_update_list });
+        } else {
+          this.setState({ gcUpdateList: [] });
+        }
+
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -270,106 +280,114 @@ class GlobalCache extends Component {
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
-          {this.state.rows ? (
-            [
-              <div className="gc-content">
-                <div className="gc-sub-title">
-                  <span>{t("globalCache.sub.history")}</span>
-                </div>
-                <Paper>
-                  <Grid
-                    rows={this.state.rows.gc_history}
-                    columns={this.state.historyColumns}
-                  >
-                    <Toolbar />
-                    {/* 검색 */}
-                    <SearchState defaultValue="" />
-                    <IntegratedFiltering />
-                    <SearchPanel style={{ marginLeft: 0 }} />
+          <div className="gc-content">
+            <div className="gc-sub-title">
+              <span>{t("globalCache.sub.history")}</span>
+            </div>
+            {this.state.gcHistory ? (
+              <Paper>
+                <Grid
+                  rows={this.state.gcHistory}
+                  columns={this.state.historyColumns}
+                >
+                  <Toolbar />
+                  {/* 검색 */}
+                  <SearchState defaultValue="" />
+                  <IntegratedFiltering />
+                  <SearchPanel style={{ marginLeft: 0 }} />
 
-                    {/* Sorting */}
-                    <SortingState
-                      defaultSorting={[
-                        { columnName: "created_time", direction: "desc" },
-                      ]}
-                    />
-                    <IntegratedSorting />
+                  {/* Sorting */}
+                  <SortingState
+                    defaultSorting={[
+                      { columnName: "created_time", direction: "desc" },
+                    ]}
+                  />
+                  <IntegratedSorting />
 
-                    {/* 페이징 */}
-                    <PagingState
-                      defaultCurrentPage={0}
-                      defaultPageSize={this.state.pageSize}
-                    />
-                    <IntegratedPaging />
-                    <PagingPanel pageSizes={this.state.pageSizes} />
+                  {/* 페이징 */}
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
 
-                    {/* 테이블 */}
-                    <Table cellComponent={Cell} rowComponent={Row} />
-                    <TableColumnResizing
-                      defaultColumnWidths={this.state.historyColumnWidths}
-                    />
-                    <TableHeaderRow
-                      showSortingControls
-                      rowComponent={HeaderRow}
-                    />
-                  </Grid>
-                </Paper>
-              </div>,
-              <div className="gc-content">
-                <div className="gc-sub-title">
-                  <span>{t("globalCache.sub.updateList")}</span>
-                </div>
-                <Paper>
-                  <Grid
-                    rows={this.state.rows.gc_update_list}
-                    columns={this.state.updateListColumns}
-                  >
-                    <Toolbar />
-                    {/* 검색 */}
-                    <SearchState defaultValue="" />
-                    <IntegratedFiltering />
-                    <SearchPanel style={{ marginLeft: 0 }} />
+                  {/* 테이블 */}
+                  <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.historyColumnWidths}
+                  />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={HeaderRow}
+                  />
+                </Grid>
+              </Paper>
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{
+                  display: "block",
+                  margin: "30px auto 20px auto",
+                }}
+              ></CircularProgress>
+            )}
+          </div>
+          <div className="gc-content">
+            <div className="gc-sub-title">
+              <span>{t("globalCache.sub.updateList")}</span>
+            </div>
+            {this.state.gcUpdateList ? (
+              <Paper>
+                <Grid
+                  rows={this.state.gcUpdateList}
+                  columns={this.state.updateListColumns}
+                >
+                  <Toolbar />
+                  {/* 검색 */}
+                  <SearchState defaultValue="" />
+                  <IntegratedFiltering />
+                  <SearchPanel style={{ marginLeft: 0 }} />
 
-                    {/* Sorting */}
-                    <SortingState
-                      defaultSorting={[
-                        { columnName: "created_time", direction: "desc" },
-                      ]}
-                    />
-                    <IntegratedSorting />
+                  {/* Sorting */}
+                  <SortingState
+                    defaultSorting={[
+                      { columnName: "created_time", direction: "desc" },
+                    ]}
+                  />
+                  <IntegratedSorting />
 
-                    {/* 페이징 */}
-                    <PagingState
-                      defaultCurrentPage={0}
-                      defaultPageSize={this.state.pageSize}
-                    />
-                    <IntegratedPaging />
-                    <PagingPanel pageSizes={this.state.pageSizes} />
+                  {/* 페이징 */}
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
+                  <IntegratedPaging />
+                  <PagingPanel pageSizes={this.state.pageSizes} />
 
-                    {/* 테이블 */}
-                    <Table cellComponent={Cell} rowComponent={Row} />
-                    <TableColumnResizing
-                      defaultColumnWidths={this.state.updateListColumnWidths}
-                    />
-                    <TableHeaderRow
-                      showSortingControls
-                      rowComponent={HeaderRow}
-                    />
-                  </Grid>
-                </Paper>
-              </div>,
-            ]
-          ) : (
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-              style={{
-                position: "absolute",
-                left: "50%",
-                marginTop: "20px",
-              }}
-            ></CircularProgress>
-          )}
+                  {/* 테이블 */}
+                  <Table cellComponent={Cell} rowComponent={Row} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.updateListColumnWidths}
+                  />
+                  <TableHeaderRow
+                    showSortingControls
+                    rowComponent={HeaderRow}
+                  />
+                </Grid>
+              </Paper>
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{
+                  display: "block",
+                  margin: "30px auto 20px auto",
+                }}
+              ></CircularProgress>
+            )}
+          </div>
         </section>
       </div>
     );

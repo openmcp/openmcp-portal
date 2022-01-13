@@ -122,8 +122,8 @@ class LeftMenu extends Component {
                           color: "#fff",
                         }}
                       />
-                      {/* {this.props.title} */}
-                      {t("common.btn.prev")}
+                      {this.props.title}
+                      {/* {t("common.btn.prev")} */}
                     </Link>
                   </p>
                   {/* <a href="/">{this.state.createDate}</a> */}
