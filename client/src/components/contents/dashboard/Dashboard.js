@@ -137,7 +137,7 @@ class Dashboard extends Component {
         utilLog.fn_insertPLogs(userId, "log-DS-EX01");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
         this.setState({ openProgress: false });
       });
   };

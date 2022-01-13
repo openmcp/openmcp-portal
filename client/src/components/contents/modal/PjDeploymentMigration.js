@@ -308,7 +308,7 @@ spec:
         this.props.menuClose();
     })
     .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
     });
 
     // implement migration workflow

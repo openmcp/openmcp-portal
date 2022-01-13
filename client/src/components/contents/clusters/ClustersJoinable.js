@@ -148,7 +148,7 @@ class ClustersJoinable extends Component {
           this.onRefresh();
         })
         .catch((err) => {
-          alert(err);
+          AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
         });
 
       let userId = null;

@@ -207,7 +207,7 @@ class GrEditGroup extends Component {
         utilLog.fn_insertPLogs(userId, "log-GR-EX02");
     })
     .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
 
 

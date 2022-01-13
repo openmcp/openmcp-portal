@@ -35,7 +35,6 @@
 //         this.onUpdateData();
 //     })
 //     .catch((err) => {
-//         alert(err);
 //     });
 //   }
 // */

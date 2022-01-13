@@ -211,7 +211,7 @@ class OMCPDeployment extends Component {
         utilLog.fn_insertPLogs(userId, "log-DP-EX03");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
         this.setState({ openProgress: false });
       });
   };
@@ -256,7 +256,7 @@ class OMCPDeployment extends Component {
           this.onUpdateData();
         })
         .catch((err) => {
-          alert(err);
+          AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
           this.setState({ openProgress: false });
         });
 

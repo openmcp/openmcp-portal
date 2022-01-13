@@ -1,5 +1,7 @@
 import { AsyncStorage } from "AsyncStorage";
 import Axios from "axios";
+import conf from "../../config/config.json"
+
 
 export function dateFormat (date, fstr, utc) {
   utc = utc ? 'getUTC' : 'get';
@@ -71,7 +73,7 @@ export async function fn_tokenValid (res){
         }
         
       }).catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
     } else {
       console.log("expired2");
@@ -143,4 +145,8 @@ export function getDateBefore(type, time) {
       ? d.getSeconds().toString()
       : "0" + d.getSeconds().toString());
   return date_format_str;
+}
+
+export function useErrAlert(){
+  AsyncStorage.setItem("useErrAlert", conf.config.useErrAlert);
 }

@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import { AsyncStorage } from "AsyncStorage";
 
 class BgThresholdCheck extends Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class BgThresholdCheck extends Component {
       .post(url, data)
       .then((res) => {})
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
   };
 

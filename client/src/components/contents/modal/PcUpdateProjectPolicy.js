@@ -115,7 +115,7 @@ class PcUpdateProjectPolicy extends Component {
       this.props.onUpdateData();
     })
     .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
     });
 
     

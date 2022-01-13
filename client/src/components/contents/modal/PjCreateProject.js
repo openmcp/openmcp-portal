@@ -198,7 +198,7 @@ class PjCreateProject extends Component {
         utilLog.fn_insertPLogs(userId, "log-PJ-EX01");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
 
     this.handleClose();

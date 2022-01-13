@@ -193,7 +193,7 @@ class ThCreateThreshold extends Component {
         utilLog.fn_insertPLogs(userId, "log-AL-EX01");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
 
    

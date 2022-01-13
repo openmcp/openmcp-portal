@@ -162,7 +162,7 @@ class DNS extends Component {
         this.onUpdateData();
     })
     .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
     });
   }
 

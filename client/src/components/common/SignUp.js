@@ -70,7 +70,7 @@ class SignUp extends Component {
           this.setState({ open: false });
       })
       .catch((err) => {
-          alert(err);
+          AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
 
     }

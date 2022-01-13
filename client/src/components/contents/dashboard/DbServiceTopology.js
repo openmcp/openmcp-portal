@@ -107,7 +107,7 @@ class DbServiceTopology extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
   };
 

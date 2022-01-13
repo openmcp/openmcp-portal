@@ -81,7 +81,7 @@ class AddMembers extends Component {
           utilLog.fn_insertPLogs(userId, "log-AC-EX01");
       })
       .catch((err) => {
-          alert(err);
+          AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
 
     }

@@ -4,6 +4,7 @@ import Contents from "./components/layout/Contents";
 import { Redirect } from "react-router-dom";
 import { AsyncStorage } from 'AsyncStorage';
 import MainLeftMenu2 from './components/layout/MainLeftMenu2';
+import * as util from "./components/util/Utility.js";
 
 class Main extends Component {
   constructor(props) {
@@ -12,6 +13,8 @@ class Main extends Component {
     AsyncStorage.getItem("token", (err, result) => { 
       token = result;
     })
+    util.useErrAlert()
+    
 
     let loggedIn = false;
     if (token !== "null" && token !== undefined) {
@@ -36,6 +39,10 @@ class Main extends Component {
     windowHeight: window.innerHeight,
     windowWidth: window.innerWidth
   });
+
+  componentWillMount(){
+
+  }
 
   componentDidMount() {
     this.handleResize();

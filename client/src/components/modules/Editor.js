@@ -31,7 +31,7 @@ import { withTranslation } from 'react-i18next';
         this.onUpdateData();
     })
     .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
     });
   }
 */

@@ -172,7 +172,7 @@ spec:
         utilLog.fn_insertPLogs(userId, "log-NW-EX02");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
   };
 

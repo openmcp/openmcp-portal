@@ -8,7 +8,7 @@ import * as util from "../../util/Utility.js";
 import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
 import { Button, CircularProgress } from "@material-ui/core";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 
 am4core.useTheme(am4themes_animated);
 let series;
@@ -18,7 +18,7 @@ class DbClusterTopology extends Component {
     super(props);
     this.state = {
       rows: "",
-      loadErr:"",
+      loadErr: "",
       completed: 0,
       reRender: "",
       masterCluster: "",
@@ -26,9 +26,7 @@ class DbClusterTopology extends Component {
     };
   }
 
-  componentWillMount(){
-    
-  }
+  componentWillMount() {}
   progress = () => {
     const { completed } = this.state;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
@@ -39,7 +37,7 @@ class DbClusterTopology extends Component {
     this.onInitTopology();
     this.onRefresh();
     urlHistory = this.props.propsData.info.history;
-    
+
     let userId = null;
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
@@ -65,21 +63,20 @@ class DbClusterTopology extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
-
-  onRefresh=()=>{
-    const {t} = this.props;
-    this.setState({ loadErr:"" });
+  onRefresh = () => {
+    const { t } = this.props;
+    this.setState({ loadErr: "" });
 
     this.timer = setInterval(this.progress, 20);
 
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => { 
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
-    
+
     const url = `/apis/dashboard/cluster_topology`;
     const data = {
-      g_clusters : g_clusters,
+      g_clusters: g_clusters,
       pathRegion:
         "M13,23l5.5-5.5a7.778,7.778,0,1,0-11,0Zm0,3.142L5.929,19.071a10,10,0,1,1,14.142,0Zm0-11.92A2.222,2.222,0,1,0,10.778,12,2.222,2.222,0,0,0,13,14.222Zm0,2.222A4.444,4.444,0,1,1,17.444,12,4.444,4.444,0,0,1,13,16.444Z",
       pathCluster:
@@ -96,7 +93,7 @@ class DbClusterTopology extends Component {
         } else {
           if (res.data.hasOwnProperty("errno")) {
             if (res.data.code === "ECONNREFUSED") {
-              this.setState({loadErr : t("dashboard.connectionFailed")})
+              this.setState({ loadErr: t("dashboard.connectionFailed") });
             }
             this.setState({ rows: "" });
           } else {
@@ -109,14 +106,13 @@ class DbClusterTopology extends Component {
         AsyncStorage.getItem("userName", (err, result) => {
           userId = result;
         });
-    
+
         utilLog.fn_insertPLogs(userId, "log-DS-VW05");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
-
-  }
+  };
 
   onInitTopology = () => {
     var chart = am4core.create(
@@ -202,14 +198,12 @@ class DbClusterTopology extends Component {
     hoverState.properties.strokeOpacity = 1;
 
     series.nodes.template.events.on("hit", function (event) {
-      
-      
-      if(event.target.dataItem.level === 2){
+      if (event.target.dataItem.level === 2) {
         let podName = event.target.dataItem.dataContext.name;
         let cluster = event.target.dataItem.dataContext.data.cluster;
         let namespace = event.target.dataItem.dataContext.data.namespace;
-  
-        let url = `/pods/${podName}/overview?cluster=${cluster}&project=${namespace}`
+
+        let url = `/pods/${podName}/overview?cluster=${cluster}&project=${namespace}`;
         urlHistory.push(url);
       } else {
         chart.zoomToDataItem(event.target.dataItem, 2, true);
@@ -264,14 +258,13 @@ class DbClusterTopology extends Component {
           )
         );
 
-        if(target.dataItem.dataContext.status !== "Running"){
+        if (target.dataItem.dataContext.status !== "Running") {
           return am4core.color("#EC4E05");
-        } else if (createdTime > before5min){
+        } else if (createdTime > before5min) {
           return am4core.color("#2682D8");
         }
         return am4core.color("#0B2844");
       } else {
-        
       }
       return fill.lighten(target.dataItem.level * -0.15);
     });
@@ -282,51 +275,58 @@ class DbClusterTopology extends Component {
     //   }
     //   return distance;
     // });
-
-
   };
 
-
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
-      
       <div className="dash-comp" style={{ width: "100%" }}>
-        <Button variant="outlined" color="primary" onClick={this.onRefresh} style={{position:"absolute", right:"2px", top:"-42px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
-                    {t("dashboard.topology.btn-refresh")}
-              </Button>
-        
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.onRefresh}
+          style={{
+            position: "absolute",
+            right: "2px",
+            top: "-42px",
+            zIndex: "10",
+            width: "148px",
+            height: "31px",
+            textTransform: "capitalize",
+          }}
+        >
+          {t("dashboard.topology.btn-refresh")}
+        </Button>
+
         <div
           className="topology"
           id="clusterTopology"
           style={{ width: "100%", height: "600px" }}
-        >
-        </div>
-        {this.state.rows ? (
-         null
-          ) : (
-            <div  style={{
-              position:"absolute",
-              textAlign:"center",
-              top : "0px",
-              left : "0px",
+        ></div>
+        {this.state.rows ? null : (
+          <div
+            style={{
+              position: "absolute",
+              textAlign: "center",
+              top: "0px",
+              left: "0px",
               right: "0px",
               margin: "25% auto",
-            }}>
-            {this.state.loadErr ? 
+            }}
+          >
+            {this.state.loadErr ? (
               <div>{this.state.loadErr}</div>
-              :
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-             
-            ></CircularProgress>}
-            </div>
-          )}
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+              ></CircularProgress>
+            )}
+          </div>
+        )}
       </div>
     );
   }
 }
 
-export default withTranslation()(DbClusterTopology); 
-
+export default withTranslation()(DbClusterTopology);

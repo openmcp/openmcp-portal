@@ -108,7 +108,7 @@ class DashBoardConfigSet extends Component {
         utilLog.fn_insertPLogs(userId, "log-CF-EX13");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
   };
 
@@ -158,7 +158,7 @@ class DashBoardConfigSet extends Component {
         utilLog.fn_insertPLogs(userId, "log-CF-EX14");
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
   }
 

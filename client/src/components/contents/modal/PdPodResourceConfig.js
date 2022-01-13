@@ -171,7 +171,7 @@ class PdPodResourceConfig extends Component {
         }
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
     this.setState({ open: false });
 

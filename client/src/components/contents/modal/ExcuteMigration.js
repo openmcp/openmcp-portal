@@ -228,7 +228,7 @@ class ExcuteMigration extends Component {
         this.props.menuClose();
       })
       .catch((err) => {
-        alert(err);
+        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
       });
 
     this.props.onUpdateData();

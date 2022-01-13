@@ -189,7 +189,7 @@ class ClustersJoined extends Component {
                   }
                 })
                 .catch((err) => {
-                  alert(err);
+                  AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
                 });
             } else {
               alert("인증이 만료되어 로그인페이지로 이동합니다.");
@@ -229,7 +229,7 @@ class ClustersJoined extends Component {
           this.onRefresh();
         })
         .catch((err) => {
-          alert(err);
+          AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
         });
 
       let userId = null;
