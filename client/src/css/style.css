@@ -640,7 +640,7 @@ body {
 .user-panel {
   position: relative;
   width: 100%;
-  padding: 10px;
+  padding: 11px 5px;
   overflow: hidden;
 }
 
@@ -672,8 +672,8 @@ body {
 
 .user-panel > .info > p {
   font-weight: 600;
-  margin: 9px 0;
-  font-size: 20px;
+  margin: 3px 0;
+  font-size: 14px;
 }
 
 .pull-left {
@@ -692,7 +692,8 @@ body {
 }
 
 .skin-blue .user-panel > .info,
-.skin-blue .user-panel > .info > a {
+.skin-blue .user-panel > .info > a,
+.skin-blue .user-panel > .info > p > a {
   color: #fff;
 }
 
