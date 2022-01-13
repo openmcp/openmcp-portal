@@ -5,7 +5,7 @@ import LeftMenu from './LeftMenu';
 import Dashboard from "./../contents/dashboard/Dashboard";
 import Projects from "./../contents/projects/Projects";
 import Nodes from './../contents/nodes/Nodes';
-import Deployments from '../contents/deployments/Deployments';
+// import Deployments from '../contents/deployments/Deployments';
 
 // Sub menu contents
 import PjOverview from "../contents/projects/PjOverview";
@@ -33,7 +33,7 @@ import PjVolumeDetail from './../contents/projects/PjVolumeDetail';
 import PjSecretDetail from './../contents/projects/config/PjSecretDetail';
 import PjConfigMapDetail from './../contents/projects/config/PjConfigMapDetail';
 import PjMembers from './../contents/projects/settings/PjMembers';
-import Accounts from './../contents/settings/Accounts';
+// import Accounts from './../contents/settings/Accounts';
 import Policy from '../contents/settings/policy/Policy';
 import DeploymentDetail from './../contents/deployments/DeploymentDetail';
 import ServicesDetail from './../contents/netowork/ServicesDetail';
@@ -41,8 +41,8 @@ import IngressDetail from './../contents/netowork/IngressDetail';
 import DNSDetail from './../contents/netowork/DNSDetail';
 import Config from "../contents/settings/config/Config";
 import GroupRole from './../contents/settings/GroupRole';
-import Migration from "../contents/motions/migration/MigrationMenu";
-import Snapshot from "../contents/motions/snapshot/SnapshotMenu";
+// import Migration from "../contents/motions/migration/MigrationMenu";
+// import Snapshot from "../contents/motions/snapshot/SnapshotMenu";
 import Threshold from "../contents/settings/alert/Alert";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -54,11 +54,11 @@ import PodMenu from "../contents/pods/PodMenu";
 import NetworkMenu from "../contents/netowork/NetworkMenu";
 import Metering from "../contents/settings/metering/Metering";
 import BillList from "../contents/settings/metering/BillList";
-import MeteringMenu from "../contents/settings/metering/MeteringMenu";
+// import MeteringMenu from "../contents/settings/metering/MeteringMenu";
 import BillDetail from "../contents/settings/metering/BillDetail";
 import SignIn from "../common/SignIn";
 import MultipleMetrics from "../contents/metrics/MultipleMetrics";
-import LoadBalancer from "../contents/netowork/LoadBalancer";
+// import LoadBalancer from "../contents/netowork/LoadBalancer";
 import DeploymentMenu from "../contents/deployments/DeploymentMenu";
 import OMCPDeploymentDetail from "../contents/deployments/OMCPDeploymentDetail";
 import GlobalCache from "../contents/motions/global_cache/GlobalCache";
@@ -113,7 +113,7 @@ class Contents extends Component {
           <Route path="/clusters/:cluster/storage_class/:storage_class" 
             render={({match,location}) => <CsStorageClassDetail  match={match} location={location} menuData={this.onMenuData}/>} ></Route>
           <Route path="/clusters/:cluster/storage_class" 
-            render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData} propsData = {this.props} propsData = {this.props}/>} ></Route>
+            render={({match,location}) => <CsStorageClass  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
           <Route path="/clusters-joinable/:cluster/overview" 
             render={({match,location}) => <CsOverview  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>

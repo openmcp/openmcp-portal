@@ -26,20 +26,20 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import IconButton from "@material-ui/core/IconButton";
-import MenuItem from "@material-ui/core/MenuItem";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import Popper from "@material-ui/core/Popper";
-import MenuList from "@material-ui/core/MenuList";
-import Grow from "@material-ui/core/Grow";
-import ExcuteMigration from "../../modal/ExcuteMigration";
-import { Button } from "@material-ui/core";
-import ExcuteSnapshot from "../../modal/ExcuteSnapshot.js";
-import LinearProgressBar from "../../../modules/LinearProgressBar.js";
-import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
-import Confirm2 from "../../../modules/Confirm2.js";
-import axios from "axios";
-import { dateFormat } from "../../../util/Utility.js";
+// import IconButton from "@material-ui/core/IconButton";
+// import MenuItem from "@material-ui/core/MenuItem";
+// import MoreVertIcon from "@material-ui/icons/MoreVert";
+// import Popper from "@material-ui/core/Popper";
+// import MenuList from "@material-ui/core/MenuList";
+// import Grow from "@material-ui/core/Grow";
+// import ExcuteMigration from "../../modal/ExcuteMigration";
+// import { Button } from "@material-ui/core";
+// import ExcuteSnapshot from "../../modal/ExcuteSnapshot.js";
+// import LinearProgressBar from "../../../modules/LinearProgressBar.js";
+// import LinearProgressBar2 from "../../../modules/LinearProgressBar2.js";
+// import Confirm2 from "../../../modules/Confirm2.js";
+// import axios from "axios";
+// import { dateFormat } from "../../../util/Utility.js";
 import { AiOutlineAreaChart } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 import { NavigateNext } from "@material-ui/icons";
@@ -135,7 +135,7 @@ class Metering extends Component {
 
   //셀
   Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
     if (props.value !== null && column.name === "cost"){
       return (
         <Table.Cell {...props} style={{textAlign:"center"}}>
@@ -381,31 +381,31 @@ class MeteringWorker extends Component {
 
   
   Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
 
-    const fn_linearProgressBar = () => {
-      var data = [];
-      if (props.value.indexOf(" ") > -1) {
-        props.value.split(" ").forEach((item) => {
-          if (item.indexOf("/") > -1) {
-            item.split("/").map((i, index) => (data[index] = i));
-          }
-        });
-      } else {
-        data = [];
-      }
+    // const fn_linearProgressBar = () => {
+    //   var data = [];
+    //   if (props.value.indexOf(" ") > -1) {
+    //     props.value.split(" ").forEach((item) => {
+    //       if (item.indexOf("/") > -1) {
+    //         item.split("/").map((i, index) => (data[index] = i));
+    //       }
+    //     });
+    //   } else {
+    //     data = [];
+    //   }
 
-      var percent = (data[0] / data[1]) * 100;
+    //   var percent = (data[0] / data[1]) * 100;
 
-      return (
-        <div>
-          <p>{props.value + " (" + percent.toFixed(1) + "%)"}</p>
-          <p style={{ marginTop: "5px" }}>
-            <LinearProgressBar value={data[0]} total={data[1]} />
-          </p>
-        </div>
-      );
-    };
+    //   return (
+    //     <div>
+    //       <p>{props.value + " (" + percent.toFixed(1) + "%)"}</p>
+    //       <p style={{ marginTop: "5px" }}>
+    //         <LinearProgressBar value={data[0]} total={data[1]} />
+    //       </p>
+    //     </div>
+    //   );
+    // };
 
     // console.log("cell : ", props);
     if (column.name === "cpu" || column.name === "memory" || column.name === "disk") {

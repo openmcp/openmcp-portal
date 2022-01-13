@@ -8,13 +8,12 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
-import { NavigateNext } from '@material-ui/icons';
-import Pods from './Pods';
-import HPA from './HPA';
-import VPA from './VPA';
+import { NavigateNext } from "@material-ui/icons";
+import Pods from "./Pods";
+import HPA from "./HPA";
+import VPA from "./VPA";
 import { FiBox } from "react-icons/fi";
-import { withTranslation } from 'react-i18next';
-
+import { withTranslation } from "react-i18next";
 
 const styles = (theme) => ({
   root: {
@@ -46,9 +45,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Container>
-          <Box>
-            {children}
-          </Box>
+          <Box>{children}</Box>
         </Container>
       )}
     </div>
@@ -75,21 +72,21 @@ class PodMenu extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "pod", index: 1, param:"pod" },
-      { label: "hpa", index: 2, param:"hpa" },
-      { label: "vpa", index: 3, param:"vpa" },
+      { label: "pod", index: 1, param: "pod" },
+      { label: "hpa", index: 2, param: "hpa" },
+      { label: "vpa", index: 3, param: "vpa" },
     ],
   };
 
   componentWillMount() {
-     if(this.props.match.url.indexOf("hpa") > 0 ){
-       this.setState({ value: 1 });
-     } else if(this.props.match.url.indexOf("vpa") > 0){
+    if (this.props.match.url.indexOf("hpa") > 0) {
+      this.setState({ value: 1 });
+    } else if (this.props.match.url.indexOf("vpa") > 0) {
       this.setState({ value: 2 });
-     } else {
+    } else {
       this.setState({ value: 0 });
-     }
-     this.props.menuData("none");
+    }
+    this.props.menuData("none");
   }
 
   render() {
@@ -103,8 +100,9 @@ class PodMenu extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            
-            <i><FiBox/></i>
+              <i>
+                <FiBox />
+              </i>
               <span>{t("pods.title")}</span>
               <small>{this.props.match.params.project}</small>
             </h1>
@@ -113,18 +111,20 @@ class PodMenu extends Component {
                 <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/pods">{t("pods.title")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {this.state.tabHeader.map((i) => {
-                  if(this.state.value+1 === i.index){
-                    return (
-                      <span>{t(`pods.${i.label}.title`)}</span>
-                    );
-                  }
-                  })}
+                  return (this.state.value + 1 === i.index ? (
+                    <span>{t(`pods.${i.label}.title`)}</span>
+                  ) : null)
+                })}
               </li>
             </ol>
           </section>
@@ -134,7 +134,7 @@ class PodMenu extends Component {
             {/* 탭매뉴가 들어간다. */}
             <div className={classes.root}>
               <AppBar position="static" className="app-bar">
-              <Tabs
+                <Tabs
                   value={this.state.value}
                   onChange={handleChange}
                   aria-label="simple tabs example"
@@ -145,43 +145,81 @@ class PodMenu extends Component {
                     width: "100%",
                     zIndex: "990",
                   }}
-                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
+                  TabIndicatorProps={{ style: { backgroundColor: "#00d0ff" } }}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={t(`pods.${i.label}.title`)} {...a11yProps(i.index)}
-                          component={Link}
-                          to={{
-                            pathname: `/pods/${i.param}`
-                          }}
-                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
-                    />
+                      <Tab
+                        label={t(`pods.${i.label}.title`)}
+                        {...a11yProps(i.index)}
+                        component={Link}
+                        to={{
+                          pathname: `/pods/${i.param}`,
+                        }}
+                        style={{
+                          minHeight: "42px",
+                          fontSize: "13px",
+                          minWidth: "100px",
+                        }}
+                      />
                     );
                   })}
                 </Tabs>
               </AppBar>
-              <TabPanel className="tab-panel" value={this.state.value} index={0}>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={0}
+              >
                 <Switch>
-                <Route path="/pods/pod"
-                    render={({match,location}) => <Pods  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+                  <Route
+                    path="/pods/pod"
+                    render={({ match, location }) => (
+                      <Pods
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={1}>
-               <Switch>
-                  <Route path="/pods/hpa"
-                    render={({match,location}) => <HPA  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={1}
+              >
+                <Switch>
+                  <Route
+                    path="/pods/hpa"
+                    render={({ match, location }) => (
+                      <HPA
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={2}>
-               <Switch>
-                  <Route path="/pods/vpa"
-                    render={({match,location}) => <VPA  match={match} location={location} menuData={this.onMenuData}/>} >
-                  </Route>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={2}
+              >
+                <Switch>
+                  <Route
+                    path="/pods/vpa"
+                    render={({ match, location }) => (
+                      <VPA
+                        match={match}
+                        location={location}
+                        menuData={this.onMenuData}
+                      />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
-             
             </div>
           </section>
         </div>

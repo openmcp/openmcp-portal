@@ -45,7 +45,7 @@ import axios from "axios";
 // import IconButton from "@material-ui/core/IconButton";
 // import axios from 'axios';
 // import { ContactlessOutlined } from "@material-ui/icons";
-import { dateFormat, fn_goLoginPage, fn_tokenValid } from "../../util/Utility.js";
+import { fn_goLoginPage, fn_tokenValid } from "../../util/Utility.js";
 import { withTranslation } from 'react-i18next';
 
 const styles = (theme) => ({

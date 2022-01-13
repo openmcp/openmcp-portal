@@ -11,7 +11,7 @@ import LineReChart from './../../modules/LineReChart';
 import {
   Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import PdPodResourceConfig from './../modal/PdPodResourceConfig';
+// import PdPodResourceConfig from './../modal/PdPodResourceConfig';
 import * as utilLog from './../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 

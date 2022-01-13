@@ -25,7 +25,7 @@ import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 import ProgressTemp from "./../../../modules/ProgressTemp";
 import Confirm2 from "./../../../modules/Confirm2";
-import { t } from "i18next";
+// import { t } from "i18next";
 // import { withTranslation } from 'react-i18next';
 
 class AddEKSNode extends Component {

@@ -317,7 +317,6 @@ class KubernetesStatus extends Component {
         context: this.props.t("nodes.detail.nodeStatus.pop-deleteNode.context"),
         button: {
           open: "",
-          open: "",
           yes: this.props.t("common.btn.confirm"),
           no: this.props.t("common.btn.cancel"),
         },

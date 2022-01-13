@@ -1,8 +1,8 @@
-import { CircularProgress, Paper } from "@material-ui/core";
-import { AsyncStorage } from "AsyncStorage";
+import { CircularProgress } from "@material-ui/core";
+// import { AsyncStorage } from "AsyncStorage";
 import React, { Component } from "react";
 import MetricPieChart from "../module/MetricPieChart";
-import * as utilLog from "./../../../util/UtLogs.js";
+// import * as utilLog from "./../../../util/UtLogs.js";
 import { withTranslation } from 'react-i18next';
 
 class MetricCluster extends Component {

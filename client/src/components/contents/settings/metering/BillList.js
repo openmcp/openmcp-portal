@@ -8,7 +8,7 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  IntegratedSelection,
+  // IntegratedSelection,
   RowDetailState,
 } from "@devexpress/dx-react-grid";
 import {
@@ -24,7 +24,7 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import LinearProgressBar from "../../../modules/LinearProgressBar.js";
+// import LinearProgressBar from "../../../modules/LinearProgressBar.js";
 import { NavLink } from "react-router-dom";
 import { NavigateNext } from "@material-ui/icons";
 import { BiDollarCircle } from "react-icons/bi";
@@ -107,7 +107,7 @@ class BillList extends Component {
 
   //셀
   Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
     if (column.name === "year" || column.name === "month" ) {
       return (
         <Table.Cell {...props} style={{textAlign:"center"}}>
@@ -317,31 +317,31 @@ class BillingSubData extends Component {
 
   
   Cell = (props) => {
-    const { column, row } = props;
+    const { column } = props;
 
-    const fn_linearProgressBar = () => {
-      var data = [];
-      if (props.value.indexOf(" ") > -1) {
-        props.value.split(" ").forEach((item) => {
-          if (item.indexOf("/") > -1) {
-            item.split("/").map((i, index) => (data[index] = i));
-          }
-        });
-      } else {
-        data = [];
-      }
+    // const fn_linearProgressBar = () => {
+    //   var data = [];
+    //   if (props.value.indexOf(" ") > -1) {
+    //     props.value.split(" ").forEach((item) => {
+    //       if (item.indexOf("/") > -1) {
+    //         item.split("/").map((i, index) => (data[index] = i));
+    //       }
+    //     });
+    //   } else {
+    //     data = [];
+    //   }
 
-      var percent = (data[0] / data[1]) * 100;
+    //   var percent = (data[0] / data[1]) * 100;
 
-      return (
-        <div>
-          <p>{props.value + " (" + percent.toFixed(1) + "%)"}</p>
-          <p style={{ marginTop: "5px" }}>
-            <LinearProgressBar value={data[0]} total={data[1]} />
-          </p>
-        </div>
-      );
-    };
+    //   return (
+    //     <div>
+    //       <p>{props.value + " (" + percent.toFixed(1) + "%)"}</p>
+    //       <p style={{ marginTop: "5px" }}>
+    //         <LinearProgressBar value={data[0]} total={data[1]} />
+    //       </p>
+    //     </div>
+    //   );
+    // };
 
     // console.log("cell : ", props);
     if (column.name === "region" || column.name === "clusters" || column.name === "worker_spec" || column.name === "workers" || column.name === "hours" ){

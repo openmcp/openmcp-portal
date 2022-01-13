@@ -3,7 +3,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { NavigateNext } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
-import axios from "axios";
+// import axios from "axios";
 import {
   SearchState,
   IntegratedFiltering,
@@ -26,7 +26,7 @@ import * as utilLog from "./../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import { FaCube } from "react-icons/fa";
-import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
+// import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
 import { withTranslation } from 'react-i18next';
 
 

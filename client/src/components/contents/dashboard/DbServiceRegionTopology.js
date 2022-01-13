@@ -38,13 +38,7 @@ class DbServiceRegionTopology extends Component {
     utilLog.fn_insertPLogs(userId, "log-DS-VW08");
   }
 
-  componentWillUnmount() {
-    // clearInterval(this.timer2);
-    if (this.chart) {
-      this.chart.dispose();
-    }
-  }
-
+  
   progress = () => {
     const { completed } = this.state;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });

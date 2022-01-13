@@ -50,8 +50,7 @@ class PcSetOMCPPolicy extends Component {
         case "scheduling-policy":
           selectBoxData = [{name:"RR", value:"RR"},{name:"OpenMCP", value:"OpenMCP"}]
           
-          return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.
-          state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData} selectBoxData={selectBoxData}/>
+          return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData} selectBoxData={selectBoxData}/>
         case "hpa-minmax-distribution-mode":
           selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}]
           

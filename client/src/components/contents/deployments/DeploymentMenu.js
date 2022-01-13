@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink, Link, Route, Switch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
@@ -9,7 +9,7 @@ import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
 import { Container } from "@material-ui/core";
 import { NavigateNext } from "@material-ui/icons";
-import { FaBuffer } from "react-icons/fa";
+// import { FaBuffer } from "react-icons/fa";
 import { withTranslation } from 'react-i18next';
 import { AiOutlineDeploymentUnit } from "react-icons/ai";
 import Deployments from "./Deployments";
@@ -126,11 +126,11 @@ class DeploymentMenu extends Component {
             <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
                 {this.state.tabHeader.map((i) => {
-                  if(this.state.value+1 === i.index){
-                    return (
-                      <span>{t(`${i.label}`)}</span>
-                    );
-                  }
+                  return(
+                    this.state.value+1 === i.index ? 
+                    <span>{t(`${i.label}`)}</span>
+                    : null
+                  )
                   })}
               </li>
           </ol>

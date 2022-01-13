@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { NavLink } from "react-router-dom";
-import { NavigateNext } from "@material-ui/icons";
-import { AiOutlineUser } from "react-icons/ai";
+// import { NavLink } from "react-router-dom";
+// import { NavigateNext } from "@material-ui/icons";
+// import { AiOutlineUser } from "react-icons/ai";
 import { CircularProgress } from "@material-ui/core";
 import { AsyncStorage } from "AsyncStorage";
 import MetricSelectBox from "../metrics/module/MetricSelectBox";
@@ -119,7 +119,7 @@ class LoadBalancer extends Component {
       this.setState({ cluster: data });
     };
 
-    const u = `http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
+    // const u = `http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
 
     return (
       <div className="sub-content-wrapper fulled">
@@ -273,7 +273,7 @@ class IframeModule extends Component {
           style={{ visibility: `${this.state.visibility}` }}
         >
           {this.state.url !== "" ? (
-            <iframe src={`${this.state.url}`} scrolling="no" />
+            <iframe title="loadBalancer" src={`${this.state.url}`} scrolling="no" />
           ) : null}
         </div>
         {this.state.visibility === "hidden" ? (

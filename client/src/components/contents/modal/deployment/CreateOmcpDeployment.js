@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
-import * as utilLog from "../../../util/UtLogs.js";
+// import * as utilLog from "../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -34,7 +34,7 @@ import {
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from "axios";
+// import axios from "axios";
 import LensIcon from "@material-ui/icons/Lens";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
@@ -220,7 +220,7 @@ spec:
   };
 
   handleBack = () => {
-    const { t } = this.props;
+    // const { t } = this.props;
     this.setState({ activeStep: this.state.activeStep - 1 });
   };
 

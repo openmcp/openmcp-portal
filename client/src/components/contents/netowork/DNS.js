@@ -22,8 +22,8 @@ import {
 import * as utilLog from '../../util/UtLogs.js';
 import { AsyncStorage } from 'AsyncStorage';
 import axios from 'axios';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+// import IconButton from '@material-ui/core/IconButton';
+// import MoreVertIcon from '@material-ui/icons/MoreVert';
 // import Editor from "../../modules/Editor";
 // import MenuItem from '@material-ui/core/MenuItem';
 // import Popper from '@material-ui/core/Popper';
@@ -82,18 +82,18 @@ class DNS extends Component {
   }
 
   callApi = async () => {
-    let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => {
-      g_clusters = result.split(',');
-    });
+    // let g_clusters;
+    // AsyncStorage.getItem("g_clusters",(err, result) => {
+    //   g_clusters = result.split(',');
+    // });
 
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ g_clusters : g_clusters })
-    };
+    // const requestOptions = {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ g_clusters : g_clusters })
+    // };
     
     // var param = this.props.match.params.cluster;
     const response = await fetch(`/dns`);
@@ -262,13 +262,13 @@ class DNS extends Component {
       return <Table.Row {...props} key={props.tableRow.key}/>;
     };
 
-    const handleClick = (event) => {
-      if(this.state.anchorEl === null){
-        this.setState({anchorEl : event.currentTarget});
-      } else {
-        this.setState({anchorEl : null});
-      }
-    };
+    // const handleClick = (event) => {
+    //   if(this.state.anchorEl === null){
+    //     this.setState({anchorEl : event.currentTarget});
+    //   } else {
+    //     this.setState({anchorEl : null});
+    //   }
+    // };
 
     // const handleClose = () => {
     //   this.setState({anchorEl : null});

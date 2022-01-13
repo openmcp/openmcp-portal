@@ -25,14 +25,14 @@ import {
   // TableFilterRow,
 } from "@devexpress/dx-react-grid-material-ui";
 // import {  Button,} from "@material-ui/core";
-import Editor from "./../../modules/Editor";
+// import Editor from "./../../modules/Editor";
 import * as utilLog from "./../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
-import { NavigateNext } from "@material-ui/icons";
+// import PjDeploymentMigration from "./../modal/PjDeploymentMigration";
+// import { NavigateNext } from "@material-ui/icons";
 import axios from "axios";
 import ProgressTemp from "./../../modules/ProgressTemp";
-import SnapShotControl from "./../modal/SnapShotControl";
+// import SnapShotControl from "./../modal/SnapShotControl";
 
 import IconButton from "@material-ui/core/IconButton";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -41,7 +41,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import Popper from "@material-ui/core/Popper";
 import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
-import { AiOutlineDeploymentUnit } from "react-icons/ai";
+// import { AiOutlineDeploymentUnit } from "react-icons/ai";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withTranslation } from "react-i18next";
 import CreateDeployment from "../modal/deployment/CreateDeployment";

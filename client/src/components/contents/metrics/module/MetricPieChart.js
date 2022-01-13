@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { PieChart, Pie, Sector, Cell, Legend, ResponsiveContainer, Tooltip  } from "recharts";
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip  } from "recharts";
 
 class MetricPieChart extends Component {
   constructor(props) {
@@ -64,11 +64,11 @@ class MetricPieChart extends Component {
         </g>
       );
     };
-    const style = {
-      right:"8px",
-      lineHeight: "25px",
-      fontSize:"0.9vw",
-    };
+    // const style = {
+    //   right:"8px",
+    //   lineHeight: "25px",
+    //   fontSize:"0.9vw",
+    // };
     return (
       <div style={{ position: "relative", width: `170px`,height: "171.3px"}} className="pie-chart">
         <ResponsiveContainer  width="100%" height="100%">

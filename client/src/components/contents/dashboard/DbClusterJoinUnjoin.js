@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FaServer } from "react-icons/fa";
-import { RiArrowLeftRightFill, RiArrowLeftRightLine } from "react-icons/ri";
-import { BsArrowLeftRight } from "react-icons/bs";
+import { RiArrowLeftRightLine } from "react-icons/ri";
+// import { BsArrowLeftRight } from "react-icons/bs";
 import { CircularProgress } from "@material-ui/core";
 import { AsyncStorage } from "AsyncStorage";
 import * as utilLog from "../../util/UtLogs.js";
 import Axios from "axios";
 import { withTranslation } from 'react-i18next';
-import { t } from "i18next";
+// import { t } from "i18next";
 
 class DbClusterJoinUnjoin extends Component {
   constructor(props) {
@@ -156,13 +156,13 @@ class DbClusterJoinUnjoin extends Component {
 }
 
 // fake data generator
-const getItems = (count, offset = 0) =>
-  Array.from({ length: count }, (v, k) => k).map((k) => ({
-    id: `cluster-${k + offset}`,
-    content: `cluster ${k + offset}`,
-  }));
+// const getItems = (count, offset = 0) =>
+//   Array.from({ length: count }, (v, k) => k).map((k) => ({
+//     id: `cluster-${k + offset}`,
+//     content: `cluster ${k + offset}`,
+//   }));
 
-const grid = 8;
+// const grid = 8;
 const getItemStyle = (isDragging, draggableStyle) => ({
   // some basic styles to make the joined look a bit nicer
   userSelect: "none",

@@ -1,26 +1,26 @@
 import React, { Component } from "react";
-import { NavLink, Link, Route, Switch } from "react-router-dom";
-import { withStyles } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
+// import { withStyles } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import Box from "@material-ui/core/Box";
-import { Button, Container } from "@material-ui/core";
-import { NavigateNext } from "@material-ui/icons";
-import { FaBuffer } from "react-icons/fa";
+import { Container } from "@material-ui/core";
+// import { NavigateNext } from "@material-ui/icons";
+// import { FaBuffer } from "react-icons/fa";
 import DbClusterTopology from "./DbClusterTopology";
 import DbServiceTopology from "./DbServiceTopology";
 import DbServiceRegionTopology from "./DbServiceRegionTopology";
 import { withTranslation } from "react-i18next";
 
-const styles = (theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-});
+// const styles = (theme) => ({
+//   root: {
+//     flexGrow: 1,
+//     backgroundColor: theme.palette.background.paper,
+//   },
+// });
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,7 +63,7 @@ class DbTopology extends Component {
   };
 
   componentWillMount() {
-    const {t} = this.props;
+    // const {t} = this.props;
     this.setState({
       value: 0,
       tabHeader: [

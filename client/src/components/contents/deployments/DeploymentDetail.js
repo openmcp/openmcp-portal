@@ -26,7 +26,7 @@ import * as utilLog from "./../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import { FaCube } from "react-icons/fa";
-import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
+// import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
 import { withTranslation } from 'react-i18next';
 
 

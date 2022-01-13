@@ -41,14 +41,14 @@ class MetricNode extends Component {
           let cpuLineTitles = [];
           let memoryLineTitles = [];
           if(res.cpuUsage.length > 0){
-            Object.keys(res.cpuUsage[0]).map((key) => {
+            Object.keys(res.cpuUsage[0]).forEach((key) => {
               if (key !== "unit" && key !== "time") {
                 cpuLineTitles.push(key);
               }
             });
           }
           if(res.memoryUsage.length > 0 ){
-            Object.keys(res.memoryUsage[0]).map((key) => {
+            Object.keys(res.memoryUsage[0]).forEach((key) => {
               if (key !== "unit" && key !== "time") {
                 memoryLineTitles.push(key);
               }
@@ -124,29 +124,29 @@ class MetricNode extends Component {
 
   render() {
     const {t} = this.props;
-    const angle = {
-      full: {
-        startAngle: 0,
-        endAngle: 360,
-      },
-      half: {
-        startAngle: 180,
-        endAngle: 0,
-      },
-    };
+    // const angle = {
+    //   full: {
+    //     startAngle: 0,
+    //     endAngle: 360,
+    //   },
+    //   half: {
+    //     startAngle: 180,
+    //     endAngle: 0,
+    //   },
+    // };
 
     // const colors = ["#0088FE", "#ecf0f5"];
-    const colors = [
-      "#00C49F",
-      "#0088FE",
-      "#ff8042",
-      "#FFBB28",
-      "#cccccc",
-      "#00C49F",
-      "#FFBB28",
-      "#00C49F",
-      "#FFBB28",
-    ];
+    // const colors = [
+    //   "#00C49F",
+    //   "#0088FE",
+    //   "#ff8042",
+    //   "#FFBB28",
+    //   "#cccccc",
+    //   "#00C49F",
+    //   "#FFBB28",
+    //   "#00C49F",
+    //   "#FFBB28",
+    // ];
 
     return (
       <div className="m-area node-metric">

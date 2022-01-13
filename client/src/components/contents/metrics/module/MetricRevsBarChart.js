@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import {
   BarChart,
-  ComposedChart,
-  Line,
-  Area,
+  // ComposedChart,
+  // Line,
+  // Area,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
+  // Legend,
   ResponsiveContainer,
   LabelList,
 } from "recharts";
@@ -19,8 +19,8 @@ class MetricRevsBarChart extends Component {
     const data = this.props.rowData;
 
     const renderCustomizedLabel = (props) => {
-      const { x, y, width, value } = props;
-      const radius = 10;
+      const { x, y, value } = props;
+      // const radius = 10;
 
       return (
         <g>

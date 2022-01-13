@@ -6,12 +6,7 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
-import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import * as utilLog from "../../../util/UtLogs.js";
-import { AsyncStorage } from "AsyncStorage";
-import axios from "axios";
-import SelectBox from "../../../modules/SelectBox.js";
 import { withTranslation } from "react-i18next";
 import MetricSelectBox from "../../metrics/module/MetricSelectBox.js";
 

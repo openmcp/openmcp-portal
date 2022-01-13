@@ -1,6 +1,6 @@
 import { CircularProgress } from "@material-ui/core";
-import React, { Component, useState } from "react";
-import { PieChart, Pie, Sector, Cell } from "recharts";
+import React, { Component } from "react";
+// import { PieChart, Pie, Sector, Cell } from "recharts";
 import PieReChartPowerRange from "../../modules/PieReChartPowerRange";
 import { AsyncStorage } from "AsyncStorage";
 import * as utilLog from "../../util/UtLogs.js";

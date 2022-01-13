@@ -3,7 +3,7 @@ import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import { Link } from "react-router-dom";
 import * as utilLog from "./../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import LanguageSwitch from "../modules/LanguageSwitch.js";
+// import LanguageSwitch from "../modules/LanguageSwitch.js";
 import LanguageListMenu from "../modules/LanguageListMenu.js";
 
 class Head extends Component {

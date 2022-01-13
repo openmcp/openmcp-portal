@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import { PieChart, Pie, Sector, Cell } from "recharts";
 
 class PieReChartPowerRange extends Component {

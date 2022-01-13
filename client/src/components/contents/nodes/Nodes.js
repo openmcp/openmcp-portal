@@ -270,7 +270,7 @@ class Nodes extends Component {
         var data = [];
         var predict = [];
         if(props.value.indexOf("|") > -1) {
-          props.value.split("|").map((item, idx) => {
+          props.value.split("|").forEach((item, idx) => {
             if(item.indexOf(" ") > -1) {
               item.split(" ").map((i, index) => data[index] = i);
             }

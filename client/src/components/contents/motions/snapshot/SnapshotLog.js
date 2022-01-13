@@ -8,8 +8,8 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
-  RowDetailState,
-  SelectionState,
+  // RowDetailState,
+  // SelectionState,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -19,8 +19,8 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
-  TableSelection,
-  TableRowDetail,
+  // TableSelection,
+  // TableRowDetail,
   TableColumnVisibility
 } from "@devexpress/dx-react-grid-material-ui";
 import * as utilLog from "../../../util/UtLogs.js";
@@ -252,7 +252,7 @@ class SnapshotLog extends Component {
           </Table.Cell>
         );
       } else  if (column.name === "progress") {
-        let progress = parseFloat(props.value.split('%')[0]).toFixed(1);
+        // let progress = parseFloat(props.value.split('%')[0]).toFixed(1);
             
         return (
           <Table.Cell>
@@ -337,85 +337,85 @@ class SnapshotLog extends Component {
   }
 }
 
-class SnapshotLogDetail extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      rows: "",
-      columns: [
-        { name: "cluster", title: "Cluster" },
-        { name: "resource_name", title: "Resource Name" },
-        { name: "namespace", title: "Namespace" },
-        { name: "type", title: "Type" },
-        { name: "snapshot_key", title: "SnapshotKey" },
-      ],
-      defaultColumnWidths: [
-        { columnName: "cluster", width: 150 },
-        { columnName: "resource_name", width: 150 },
-        { columnName: "namespace", width: 100 },
-        { columnName: "type", width: 200 },
-        { columnName: "snapshot_key", width: 500 },
-      ],
-      value: 0,
-    };
-  }
+// class SnapshotLogDetail extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       rows: "",
+//       columns: [
+//         { name: "cluster", title: "Cluster" },
+//         { name: "resource_name", title: "Resource Name" },
+//         { name: "namespace", title: "Namespace" },
+//         { name: "type", title: "Type" },
+//         { name: "snapshot_key", title: "SnapshotKey" },
+//       ],
+//       defaultColumnWidths: [
+//         { columnName: "cluster", width: 150 },
+//         { columnName: "resource_name", width: 150 },
+//         { columnName: "namespace", width: 100 },
+//         { columnName: "type", width: 200 },
+//         { columnName: "snapshot_key", width: 500 },
+//       ],
+//       value: 0,
+//     };
+//   }
 
-  componentDidMount() {
-    let result = [];
-    this.props.row.map((item)=> result.push(item));
-    this.setState({ rows: result });
-  }
+//   componentDidMount() {
+//     let result = [];
+//     this.props.row.map((item)=> result.push(item));
+//     this.setState({ rows: result });
+//   }
 
-  initState = () => {
-    this.setState({
-      selection: [],
-      selectedRow: "",
-    });
-  };
+//   initState = () => {
+//     this.setState({
+//       selection: [],
+//       selectedRow: "",
+//     });
+//   };
 
-  HeaderRow = ({ row, ...restProps }) => (
-    <Table.Row
-      {...restProps}
-      style={{
-        cursor: "pointer",
-        // backgroundColor: "#ffe7e7",
-        // backgroundColor: "whitesmoke",
-        // ...styles[row.sector.toLowerCase()],
-      }}
-      // onClick={()=> alert(JSON.stringify(row))}
-    />
-  );
+//   HeaderRow = ({ row, ...restProps }) => (
+//     <Table.Row
+//       {...restProps}
+//       style={{
+//         cursor: "pointer",
+//         // backgroundColor: "#ffe7e7",
+//         // backgroundColor: "whitesmoke",
+//         // ...styles[row.sector.toLowerCase()],
+//       }}
+//       // onClick={()=> alert(JSON.stringify(row))}
+//     />
+//   );
 
-  render() {
-    return (
-      <div className="inner-table">
-        {this.state.rows ? (
-          <Grid rows={this.state.rows} columns={this.state.columns}>
-            {/* Sorting */}
-            <SortingState
-              defaultSorting={[{ columnName: "status", direction: "asc" }]}
-            />
+//   render() {
+//     return (
+//       <div className="inner-table">
+//         {this.state.rows ? (
+//           <Grid rows={this.state.rows} columns={this.state.columns}>
+//             {/* Sorting */}
+//             <SortingState
+//               defaultSorting={[{ columnName: "status", direction: "asc" }]}
+//             />
 
-            <IntegratedFiltering />
-            <IntegratedSorting />
+//             <IntegratedFiltering />
+//             <IntegratedSorting />
 
-            {/* 테이블 */}
-            <Table />
-            <TableColumnResizing
-              defaultColumnWidths={this.state.defaultColumnWidths}
-            />
-            <TableHeaderRow showSortingControls rowComponent={this.HeaderRow} />
-          </Grid>
-        ) : (
-          <CircularProgress
-            variant="determinate"
-            value={this.state.completed}
-            style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-          ></CircularProgress>
-        )}
-      </div>
-    );
-  }
-}
+//             {/* 테이블 */}
+//             <Table />
+//             <TableColumnResizing
+//               defaultColumnWidths={this.state.defaultColumnWidths}
+//             />
+//             <TableHeaderRow showSortingControls rowComponent={this.HeaderRow} />
+//           </Grid>
+//         ) : (
+//           <CircularProgress
+//             variant="determinate"
+//             value={this.state.completed}
+//             style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+//           ></CircularProgress>
+//         )}
+//       </div>
+//     );
+//   }
+// }
 
 export default SnapshotLog;

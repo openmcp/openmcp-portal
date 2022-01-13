@@ -231,8 +231,8 @@ class LeftMenu2 extends Component {
               </div>
               <ul className="treeview-menu sidebar-sub-title">
                 {item.sub.map((subItem) => {
-                  if(subItem.role !== 'admin'){
                   return (
+                    subItem.role !== 'admin' ? 
                     <li>
                       <NavLink
                         to={{
@@ -244,7 +244,8 @@ class LeftMenu2 extends Component {
                         <span>{subItem.title}</span>
                       </NavLink>
                     </li>
-                  );}
+                    : null
+                  )
                 })}
               </ul>
             </li>

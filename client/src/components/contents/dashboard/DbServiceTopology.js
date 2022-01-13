@@ -65,14 +65,6 @@ class DbServiceTopology extends Component {
     utilLog.fn_insertPLogs(userId, "log-DS-VW07");
   }
 
-  componentWillUnmount() {
-    // clearInterval(this.timer2);
-    if (this.chart) {
-      this.chart.dispose();
-    }
-  }
-
-
   onRefresh = () => {
     const {t} = this.props;
     this.setState({ loadErr:"" });

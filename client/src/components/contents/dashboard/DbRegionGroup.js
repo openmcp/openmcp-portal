@@ -158,25 +158,25 @@ class DbRegionGroup extends Component {
   }
 }
 
-class DashboardCard04 extends Component {
-  render() {
-    return (
-      <div className="content-box">
-        <div className="cb-header">
-          <span>{this.props.title}</span>
-          {/* <div className="cb-btn">
-          <Link to={this.props.path}>detail</Link>
-        </div> */}
-        </div>
-        <div
-          className="cb-body"
-          style={{ position: "relative", display: "flex" }}
-        >
-          <TreeView2 data={this.props.data} />
-        </div>
-      </div>
-    );
-  }
-}
+// class DashboardCard04 extends Component {
+//   render() {
+//     return (
+//       <div className="content-box">
+//         <div className="cb-header">
+//           <span>{this.props.title}</span>
+//           {/* <div className="cb-btn">
+//           <Link to={this.props.path}>detail</Link>
+//         </div> */}
+//         </div>
+//         <div
+//           className="cb-body"
+//           style={{ position: "relative", display: "flex" }}
+//         >
+//           <TreeView2 data={this.props.data} />
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 
 export default withTranslation()(DbRegionGroup); 

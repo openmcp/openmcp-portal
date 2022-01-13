@@ -201,7 +201,7 @@ spec:
   };
 
   render() {
-    const {t}= this.props;
+    // const {t}= this.props;
     const onSelectionChange = (selection) => {
       // console.log(this.state.rows[selection[0]])
       if (selection.length > 1) selection.splice(0, 1);

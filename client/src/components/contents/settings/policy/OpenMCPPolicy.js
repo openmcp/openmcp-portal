@@ -131,7 +131,7 @@ class OpenMCPPolicy extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    // const {t} = this.props;
     const Cell = (props) => {
       // const { column, row } = props;
       const { column } = props;

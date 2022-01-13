@@ -33,8 +33,8 @@ import Popper from '@material-ui/core/Popper';
 import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 import axios from "axios";
-import DndJoinUnjoin from "./dnd/DndJoinUnjoin.js";
-import DndJoinUnjoinThree from "./dnd/DndJoinUnjoinThree.js";
+// import DndJoinUnjoin from "./dnd/DndJoinUnjoin.js";
+// import DndJoinUnjoinThree from "./dnd/DndJoinUnjoinThree.js";
 import { withTranslation } from 'react-i18next';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 

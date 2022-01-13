@@ -22,18 +22,18 @@ import {
   PagingPanel,
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
-import Editor from "./../../../modules/Editor";
+// import Editor from "./../../../modules/Editor";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from 'AsyncStorage';
 import axios from 'axios';
 
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+// import IconButton from '@material-ui/core/IconButton';
+// import MenuItem from '@material-ui/core/MenuItem';
+// import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
+// import Popper from '@material-ui/core/Popper';
+// import MenuList from '@material-ui/core/MenuList';
+// import Grow from '@material-ui/core/Grow';
 
 
 // let apiParams = "";
@@ -247,19 +247,19 @@ spec:
       this.setState({ selectedRow: this.state.rows[selection[0]] ? this.state.rows[selection[0]] : {} });
     };
 
-    const handleClick = (event) => {
-      if(this.state.anchorEl === null){
-        this.setState({anchorEl : event.currentTarget});
-      } else {
-        this.setState({anchorEl : null});
-      }
-    };
+    // const handleClick = (event) => {
+    //   if(this.state.anchorEl === null){
+    //     this.setState({anchorEl : event.currentTarget});
+    //   } else {
+    //     this.setState({anchorEl : null});
+    //   }
+    // };
 
-    const handleClose = () => {
-      this.setState({anchorEl : null});
-    };
+    // const handleClose = () => {
+    //   this.setState({anchorEl : null});
+    // };
 
-    const open = Boolean(this.state.anchorEl);
+    // const open = Boolean(this.state.anchorEl);
 
     return (
       <div className="sub-content-wrapper fulled">

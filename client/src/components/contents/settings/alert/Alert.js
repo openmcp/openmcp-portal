@@ -126,9 +126,11 @@ class Threshold extends Component {
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
                 {this.state.tabHeader.map((i) => {
-                  if (this.state.value + 1 === i.index) {
-                    return <span>{t(`alert.${i.label}.title`)}</span>;
-                  }
+                  return(
+                    this.state.value+1 === i.index ? 
+                    <span>{t(`alert.${i.label}.title`)}</span>
+                    : null
+                  )
                 })}
               </li>
             </ol>

@@ -1,4 +1,4 @@
-import { CircularProgress, Paper } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import { AsyncStorage } from "AsyncStorage";
 import React, { Component } from "react";
 import MetricLineNetworkChart from "../module/MetricLineNetworkChart";

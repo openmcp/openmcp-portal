@@ -52,15 +52,15 @@ class SignIn extends Component {
   submitForm(e) {
     e.preventDefault();
 
-    var originText = "openmcp-client:openmcp-secret";
+    // var originText = "openmcp-client:openmcp-secret";
 
     // Base64 Encoding
-    let base64EncodedText = Buffer.from(originText, "utf8").toString("base64");
+    // let base64EncodedText = Buffer.from(originText, "utf8").toString("base64");
 
     // Base64 Decoding
-    let base64DecodedText = Buffer.from(base64EncodedText, "base64").toString(
-      "utf8"
-    );
+    // let base64DecodedText = Buffer.from(base64EncodedText, "base64").toString(
+    //   "utf8"
+    // );
 
     const config = {
       headers: {
@@ -101,10 +101,10 @@ class SignIn extends Component {
               }
               AsyncStorage.setItem("g_clusters", g_clusters);
 
-              let role ;
-              AsyncStorage.getItem("roles", (err, result) => {
-                role = result;
-              });
+              // let role ;
+              // AsyncStorage.getItem("roles", (err, result) => {
+              //   role = result;
+              // });
 
               if(res.data.data.rows[0].role_id[0] === 'user'){
                 if( g_clusters[0].length <= 0){

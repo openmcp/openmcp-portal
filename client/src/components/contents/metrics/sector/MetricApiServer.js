@@ -1,7 +1,7 @@
-import { CircularProgress, Paper } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import React, { Component } from "react";
-import MetricLineChart from "../module/MetricLineChart";
-import MetricPieChart from "../module/MetricPieChart";
+// import MetricLineChart from "../module/MetricLineChart";
+// import MetricPieChart from "../module/MetricPieChart";
 import MetricSyncLineChart from "../module/MetricSyncLineChart";
 import { withTranslation } from 'react-i18next';
 
@@ -51,17 +51,17 @@ class MetricApiServer extends Component {
     const {t} = this.props;
     const lineTitles = ["requests_per_sec", "latency"];
 
-    const colors = [
-      // "#00C49F",
-      "#0088FE",
-      "#ff8042",
-      // "#FFBB28",
-      // "#cccccc",
-      // "#00C49F",
-      // "#FFBB28",
-      // "#00C49F",
-      // "#FFBB28",
-    ];
+    // const colors = [
+    //   // "#00C49F",
+    //   "#0088FE",
+    //   "#ff8042",
+    //   // "#FFBB28",
+    //   // "#cccccc",
+    //   // "#00C49F",
+    //   // "#FFBB28",
+    //   // "#00C49F",
+    //   // "#FFBB28",
+    // ];
 
     return (
       <div className="m-area api-server-metric">

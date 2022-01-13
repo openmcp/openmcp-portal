@@ -12,7 +12,7 @@ import { NavigateNext } from "@material-ui/icons";
 import DNS from "./DNS";
 import Services from "./Services";
 import Ingress from "./Ingress";
-import LoadBalancer from "./LoadBalancer";
+// import LoadBalancer from "./LoadBalancer";
 import { BiNetworkChart } from "react-icons/bi";
 import { withTranslation } from "react-i18next";
 import MdLoadBalancer from "./modal/MdLoadBalancer";
@@ -167,9 +167,11 @@ class NetworkMenu extends Component {
                   style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
                 />
                 {this.state.tabHeader.map((i) => {
-                  if (this.state.value + 1 === i.index) {
-                    return <span>{t(`network.${i.label}.title`)}</span>;
-                  }
+                  return (
+                    this.state.value + 1 === i.index ? 
+                    <span>{t(`network.${i.label}.title`)}</span>
+                    : null
+                  )
                 })}
               </li>
             </ol>

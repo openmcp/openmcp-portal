@@ -1,6 +1,6 @@
-import React, { Component, useCallback } from "react";
+import React, { Component } from "react";
 import Paper from "@material-ui/core/Paper";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {
   SearchState,

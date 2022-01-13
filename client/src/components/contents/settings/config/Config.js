@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { NavLink, Link, Route, Switch } from "react-router-dom";
+import { NavLink, Link, Route } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 
 import PropTypes from "prop-types";
@@ -110,11 +110,9 @@ class Config extends Component {
               <li>
                 <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
                 {this.state.tabHeader.map((i) => {
-                  if(this.state.value+1 === i.index){
-                    return (
-                      <span>{t(`config.${i.label}.title`)}</span>
-                    );
-                  }
+                  return (this.state.value + 1 === i.index ? (
+                    <span>{t(`config.${i.label}.title`)}</span>
+                  ) : null)
                   })}
               </li>
             </ol>

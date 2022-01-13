@@ -5,7 +5,7 @@ import * as utilLog from "../../util/UtLogs.js";
 import * as util from "../../util/Utility.js";
 import { withTranslation } from "react-i18next";
 // import './App.css';
-import WorldMap, { CountryContext, Data } from "react-svg-worldmap";
+import WorldMap from "react-svg-worldmap";
 
 class DbWorldMapClusterStatus extends Component {
   constructor(props) {

@@ -71,8 +71,8 @@ const styles = (theme) => ({
     marginBottom: theme.spacing(1),
   },
 });
-let preRoleSelection=[];
-let preRoleSelectedRow=[];
+// let preRoleSelection=[];
+// let preRoleSelectedRow=[];
 let preUserSelection=[];
 let preUserSelectedRow=[];
 let preClusterSelection=[];
@@ -102,8 +102,8 @@ class GrEditGroup extends Component {
     // this.onChange = this.onChange.bind(this);
   }
   componentWillMount(){
-    preRoleSelection=[];
-    preRoleSelectedRow=[];
+    // preRoleSelection=[];
+    // preRoleSelectedRow=[];
     preUserSelection=[];
     preUserSelectedRow=[];
     preClusterSelection=[];
@@ -155,8 +155,8 @@ class GrEditGroup extends Component {
       activeStep : 0,
       open: false,
     });
-    preRoleSelection = [];
-    preRoleSelectedRow = [];
+    // preRoleSelection = [];
+    // preRoleSelectedRow = [];
     preUserSelection = [];
     preUserSelectedRow = [];
     this.props.menuClose();
@@ -683,7 +683,7 @@ class Grclusters extends Component{
           this.setState({ rows: [] });
         } else {
 
-          let resData = res;
+          // let resData = res;
           let result = await fn_tokenValid(res);
 
           if(result === "valid"){

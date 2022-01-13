@@ -21,7 +21,7 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import PdPodResourceConfig from "../modal/PdPodResourceConfig";
+// import PdPodResourceConfig from "../modal/PdPodResourceConfig";
 // import LineChart from './../../modules/LineChart';
 import * as utilLog from "./../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";

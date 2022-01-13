@@ -2,11 +2,11 @@ import React, { Component } from "react";
 import PieReChart from "../../modules/PieReChart";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Link } from "react-router-dom";
-import { NavigateNext } from "@material-ui/icons";
+// import { NavigateNext } from "@material-ui/icons";
 import * as utilLog from "../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
-import { RiDashboardFill } from "react-icons/ri";
-import CustomDynamicView from "./CustomDynamicView";
+// import { RiDashboardFill } from "react-icons/ri";
+// import CustomDynamicView from "./CustomDynamicView";
 import { withTranslation } from 'react-i18next';
 
 class DbStatus extends Component {
@@ -186,7 +186,7 @@ class DashboardCard01 extends Component {
     this.props.onClickRefresh();
   };
   render() {
-    const {t} = this.props;
+    // const {t} = this.props;
     const colors = [
       "#0088FE",
       // "#00C49F",

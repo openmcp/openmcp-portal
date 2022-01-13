@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import DbClusterJoinUnjoin from "./DbClusterJoinUnjoin";
-import DbClusterTopology from "./DbClusterTopology";
-import DbOmcp from "./DbOmcp";
+// import DbClusterTopology from "./DbClusterTopology";
+// import DbOmcp from "./DbOmcp";
 import DbPowerUsage from "./DbPowerUsage";
 import DbRegionGroup from "./DbRegionGroup";
-import DbServiceRegionTopology from "./DbServiceRegionTopology";
-import DbServiceTopology from "./DbServiceTopology";
+// import DbServiceRegionTopology from "./DbServiceRegionTopology";
+// import DbServiceTopology from "./DbServiceTopology";
 import DbStatus from "./DbStatus";
 import DbTopology from "./DbTopology";
 import DbWorldMapClusterStatus from "./DbWorldMapClusterStatus";
@@ -47,6 +47,8 @@ class CustomDynamicView extends Component {
           case "Cluster Power Usage":
             componentsTag.push(<DbPowerUsage propsData = {this.props.propsData} />);
             break;
+          default:
+            break;
           // case "Cluster Topology":
           //   componentsTag.push(<DbClusterTopology />);
           //   break;
@@ -64,7 +66,7 @@ class CustomDynamicView extends Component {
   }
 
   componentWillMount() {
-    const {t} = this.props;
+    // const {t} = this.props;
     var componentsTag = [];
     this.state.myComponentList.forEach((item) => {
       switch (item) {
@@ -88,6 +90,8 @@ class CustomDynamicView extends Component {
           break;
         case "Cluster Power Usage":
           componentsTag.push(<DbPowerUsage propsData = {this.props.propsData} />);
+          break;
+        default:
           break;
       // case "Cluster Topology":
       //   componentsTag.push(<DbClusterTopology />);

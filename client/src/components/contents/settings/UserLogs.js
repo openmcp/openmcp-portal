@@ -85,9 +85,9 @@ class UserLogs extends Component {
   }
 
   render() {
-    const { t } = this.props;
+    // const { t } = this.props;
     const Cell = (props) => {
-      const { column } = props;
+      // const { column } = props;
       return <Table.Cell>{props.value}</Table.Cell>;
     };
 

@@ -109,7 +109,7 @@ class Accounts extends Component {
   };
 
   render() {
-    const { t } = this.props;
+    // const { t } = this.props;
     const Cell = (props) => {
       const { column } = props;
 

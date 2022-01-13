@@ -28,7 +28,7 @@ class MetricSyncLineChart extends Component {
   }
 
   render() {
-    const color = ["#367fa9", "#3cb0bc"];
+    // const color = ["#367fa9", "#3cb0bc"];
     let fillColor ="url(#"+ this.props.dataKey +")";
 
     return (
