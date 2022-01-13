@@ -57,14 +57,14 @@ class IngressDetail extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, 'log-NW-VW06');
       })
       .catch((err) => console.log(err));
       
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW12');
   }
 
   callApi = async () => {

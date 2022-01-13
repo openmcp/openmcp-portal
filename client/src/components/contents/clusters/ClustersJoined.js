@@ -204,14 +204,14 @@ class ClustersJoined extends Component {
           }
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-CL-VW01");
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-CL-VW01");
   }
 
   confirmed = (result) => {
@@ -236,7 +236,7 @@ class ClustersJoined extends Component {
       AsyncStorage.getItem("userName", (err, result) => {
         userId = result;
       });
-      utilLog.fn_insertPLogs(userId, "log-CL-MO03");
+      utilLog.fn_insertPLogs(userId, "log-CL-EX02");
     } else {
       console.log("cancel");
     }

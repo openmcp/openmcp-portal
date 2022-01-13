@@ -40,7 +40,7 @@ class DbRegionGroup extends Component {
       userId = result;
     });
 
-    utilLog.fn_insertPLogs(userId, "log-DS-VW02");
+    utilLog.fn_insertPLogs(userId, "log-DS-VW04");
   }
 
   componentWillUnmount() {

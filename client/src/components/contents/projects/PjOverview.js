@@ -62,14 +62,14 @@ class PjOverview extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, 'log-PJ-VW02');
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW02');
   }  
 
   callApi = async () => {

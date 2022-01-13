@@ -182,7 +182,7 @@ class PcAddProjectPolicy extends Component {
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-    utilLog.fn_insertPLogs(userId, "log-PO-CR01");
+    utilLog.fn_insertPLogs(userId, "log-PO-XX00");
 
     //close modal popup
     this.setState({ open: false });

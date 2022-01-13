@@ -452,9 +452,23 @@ class Contents extends Component {
             }}  />} >
           </Route>
 
+
+          {/* Services contents */}
+          <Route path="/network/services/:service"
+              render={({match,location}) => <ServicesDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
+          {/* Services contents END*/}
+
+          {/* Ingress contents */}
+          <Route path="/network/ingress/:ingress"
+              render={({match,location}) => <IngressDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
+          {/* Ingress contents END*/}
+
+          {/* Dns contents */}
+          <Route path="/network/dns/:dns"
+              render={({match,location}) => <DNSDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
+          {/* Dns contents END*/}
+
           
-
-
           <Route path="/network/dns"
             render={({match,location}) => <NetworkMenu  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} >
           </Route>
@@ -472,21 +486,6 @@ class Contents extends Component {
               pathname : `/network/dns`,
             }}  />} >
           </Route>
-
-          {/* Services contents */}
-          <Route path="/network/services/:service"
-              render={({match,location}) => <ServicesDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
-          {/* Services contents END*/}
-
-          {/* Ingress contents */}
-          <Route path="/network/ingress/:ingress"
-              render={({match,location}) => <IngressDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
-          {/* Ingress contents END*/}
-
-          {/* Dns contents */}
-          <Route path="/network/dns/:dns"
-              render={({match,location}) => <DNSDetail  match={match} location={location} menuData={this.onMenuData} propsData = {this.props}/>} ></Route>
-          {/* Dns contents END*/}
 
 
           

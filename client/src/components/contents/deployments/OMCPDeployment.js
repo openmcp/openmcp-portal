@@ -150,27 +150,21 @@ class OMCPDeployment extends Component {
     this.callApi()
       .then((result) => {
         // var res = [];
-        // if (result == null) {
-        //   this.setState({ rows: [] });
-        // } else {
-        //   result.map((item) => {
-        //     if (this.state.projects.indexOf(item.project) < 0) {
-        //       res.push(item);
-        //     }
-        //   });
-
-        //   // this.setState({ rows: res });
-        // }
-        this.setState({ rows: result });
+        if (result === null) {
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: result });
+        }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-DP-VW02");
+
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   }
 
   onUpdateData = () => {
@@ -186,11 +180,6 @@ class OMCPDeployment extends Component {
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-DP-VW01");
   };
 
   excuteScript = (context) => {
@@ -214,6 +203,12 @@ class OMCPDeployment extends Component {
         this.setState({ rows: "" });
         this.setState({ openProgress: false });
         this.onUpdateData();
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-DP-EX03");
       })
       .catch((err) => {
         alert(err);
@@ -270,7 +265,7 @@ class OMCPDeployment extends Component {
       AsyncStorage.getItem("userName", (err, result) => {
         userId = result;
       });
-      utilLog.fn_insertPLogs(userId, "log-DP-DL01");
+      utilLog.fn_insertPLogs(userId, "log-DP-EX04");
     } else {
       this.setState({ openProgress: false });
     }

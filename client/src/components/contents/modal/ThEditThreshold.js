@@ -135,17 +135,18 @@ class ThEditThreshold extends Component {
         this.setState({ open: false });
         this.props.menuClose();
         this.props.onUpdateData();
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-AL-EX02");
       })
       .catch((err) => {
         alert(err);
       });
 
-    // loging deployment migration
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
+    
 
     //close modal popup
     this.setState({ open: false });

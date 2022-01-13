@@ -30,6 +30,12 @@ class DbServiceRegionTopology extends Component {
     // this.timer2 = setInterval(this.onRefresh, 5000);
     this.onInitTopology();
     this.onRefresh();
+
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-DS-VW08");
   }
 
   componentWillUnmount() {
@@ -85,13 +91,6 @@ class DbServiceRegionTopology extends Component {
       .catch((err) => {
         alert(err);
       });
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-
-    utilLog.fn_insertPLogs(userId, "log-DS-VW06");
   };
 
 

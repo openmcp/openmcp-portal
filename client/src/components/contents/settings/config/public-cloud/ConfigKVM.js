@@ -33,6 +33,8 @@ import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withTranslation } from 'react-i18next';
+import { AsyncStorage } from "AsyncStorage";
+import * as utilLog from "../../../../util/UtLogs.js";
 
 class ConfigKVM extends Component {
   constructor(props) {
@@ -88,6 +90,12 @@ class ConfigKVM extends Component {
     this.callApi()
       .then((res) => {
         this.setState({ rows: res });
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-CF-VW04");
       })
       .catch((err) => console.log(err));
   }
@@ -171,6 +179,12 @@ class ConfigKVM extends Component {
       axios.delete(url, {data:data})
       .then((res) => {
         this.callBackClosed();
+
+        let userId = null;
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-CF-EX012");
       })
       .catch((err) => {
         console.log("Error : ",err);

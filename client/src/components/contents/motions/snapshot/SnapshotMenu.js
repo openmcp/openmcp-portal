@@ -150,7 +150,7 @@ class SnapshotMenu extends Component {
                   {this.state.tabHeader.map((i) => {
                     return (
                       <Tab
-                        label={i.label}
+                        label={t(`snapshots.${i.label}.title`)}
                         {...a11yProps(i.index)}
                         component={Link}
                         to={{

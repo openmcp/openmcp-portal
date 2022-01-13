@@ -131,6 +131,12 @@ class ExcuteSnapshot extends Component {
       .then((res) => {
         alert(res.data[0].text);
         this.setState({ open: false });
+        
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-SS-EX01");
       })
       .catch((err) => {
         alert(err);
@@ -138,12 +144,7 @@ class ExcuteSnapshot extends Component {
 
     this.props.onUpdateData();
 
-    // loging deployment migration
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-SS-MD01");
+   
 
     //close modal popup
     this.setState({ open: false });

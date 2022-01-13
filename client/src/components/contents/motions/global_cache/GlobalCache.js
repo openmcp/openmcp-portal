@@ -102,14 +102,14 @@ class GlobalCache extends Component {
           });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-GC-VW01");
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-GC-VW01");
   }
 
   onRefresh = () => {

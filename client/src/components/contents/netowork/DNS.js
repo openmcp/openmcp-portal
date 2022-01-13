@@ -118,15 +118,13 @@ class DNS extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, 'log-NW-VW01');
       })
       .catch((err) => console.log(err));
-    
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW09');
-
   };
 
   onRefresh = () => {

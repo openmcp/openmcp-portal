@@ -71,14 +71,14 @@ class MultipleMetrics extends Component {
           });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, 'log-MM-VW01');
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-MM-VW01');
   };
 
   onRefresh = () => {
@@ -100,6 +100,12 @@ class MultipleMetrics extends Component {
     const onSelectBoxChange = (data) => {
       // this.setState({cluster : data});
       this.setState({cluster : "cluster08"})
+
+      let userId = null;
+      AsyncStorage.getItem("userName",(err, result) => {
+        userId= result;
+      })
+      utilLog.fn_insertPLogs(userId, 'log-MM-CG01');
     }
 
     return (

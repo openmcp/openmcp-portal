@@ -185,17 +185,18 @@ class ThCreateThreshold extends Component {
         this.setState({ open: false });
         this.props.menuClose();
         this.props.onUpdateData();
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-AL-EX01");
       })
       .catch((err) => {
         alert(err);
       });
 
-    // loging 호스트 임계설정
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-TH-TH01"); //호스트 임계설정(insert)
+   
 
     //close modal popup
     this.setState({ open: false });

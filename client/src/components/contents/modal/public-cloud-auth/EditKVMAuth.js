@@ -119,6 +119,11 @@ class EditKVMAuth extends Component {
       axios.post(url, data)
       .then((res) => {
         this.props.callBackClosed()
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-CF-EX10");
       })
       .catch((err) => {
         //close modal popup
@@ -137,6 +142,11 @@ class EditKVMAuth extends Component {
       axios.put(url, data)
       .then((res) => {
         this.props.callBackClosed()
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-CF-EX11");
       })
       .catch((err) => {
         //close modal popup
@@ -147,15 +157,6 @@ class EditKVMAuth extends Component {
       
 
     // alert(this.state.cluster+","+ this.state.secretKey+","+this.state.accessKey)
-
-    // loging deployment migration
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
-
-    
   };
 
   callApi = async (uri) => {

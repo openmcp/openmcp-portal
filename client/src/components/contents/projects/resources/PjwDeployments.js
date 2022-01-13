@@ -115,14 +115,13 @@ spec:
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
       })
       .catch((err) => console.log(err));
-
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   }
 
   onUpdateData = () => {
@@ -136,16 +135,9 @@ spec:
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
   excuteScript = (context) => {
-
     if(this.state.openProgress){
       this.setState({openProgress:false})
     } else {
@@ -277,43 +269,43 @@ spec:
           <Paper>
             {this.state.rows ? (
               [
-                <div style={{
-                  position: "absolute",
-                  right: "21px",
-                  top: "20px",
-                  zIndex: "10",
-                  textTransform: "capitalize",
-                }}>
-                  <IconButton
-                    aria-label="more"
-                    aria-controls="long-menu"
-                    aria-haspopup="true"
-                    onClick={handleClick}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
+                // <div style={{
+                //   position: "absolute",
+                //   right: "21px",
+                //   top: "20px",
+                //   zIndex: "10",
+                //   textTransform: "capitalize",
+                // }}>
+                //   <IconButton
+                //     aria-label="more"
+                //     aria-controls="long-menu"
+                //     aria-haspopup="true"
+                //     onClick={handleClick}
+                //   >
+                //     <MoreVertIcon />
+                //   </IconButton>
                  
-                  <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
-                    {({ TransitionProps, placement }) => (
-                      <Grow
-                      {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
-                      >
-                        <Paper>
-                          <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem 
-                              onKeyDown={(e) => e.stopPropagation()}
-                                // onClick={handleClose}
-                                style={{ textAlign: "center", display: "block", fontSize:"14px"}}
-                              >
-                                <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
-                              </MenuItem>
-                            </MenuList>
-                          </Paper>
-                      </Grow>
-                    )}
-                  </Popper>
-                </div>,
+                //   <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                //     {({ TransitionProps, placement }) => (
+                //       <Grow
+                //       {...TransitionProps}
+                //       style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                //       >
+                //         <Paper>
+                //           <MenuList autoFocusItem={open} id="menu-list-grow">
+                //               <MenuItem 
+                //               onKeyDown={(e) => e.stopPropagation()}
+                //                 // onClick={handleClose}
+                //                 style={{ textAlign: "center", display: "block", fontSize:"14px"}}
+                //               >
+                //                 <Editor btTitle="create" title="Create Deployment" context={this.state.editorContext} excuteScript={this.excuteScript} menuClose={handleClose}/>
+                //               </MenuItem>
+                //             </MenuList>
+                //           </Paper>
+                //       </Grow>
+                //     )}
+                //   </Popper>
+                // </div>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   <SearchState defaultValue="" />

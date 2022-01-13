@@ -83,6 +83,12 @@ class AddEKSNode extends Component {
       .then((res) => {
         this.setState({ clusters: res });
         clearInterval(this.timer);
+
+        let userId = null;
+            AsyncStorage.getItem("userName", (err, result) => {
+              userId = result;
+            });
+            utilLog.fn_insertPLogs(userId, "log-ND-VW03");
       })
       .catch((err) => console.log(err));
   }
@@ -158,7 +164,7 @@ class AddEKSNode extends Component {
             AsyncStorage.getItem("userName", (err, result) => {
               userId = result;
             });
-            utilLog.fn_insertPLogs(userId, "log-ND-CR01");
+            utilLog.fn_insertPLogs(userId, "log-ND-EX04");
           }
           this.setState({ openProgress: false });
         })

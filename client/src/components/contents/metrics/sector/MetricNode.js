@@ -4,6 +4,7 @@ import MetricLineChart from "../module/MetricLineChart";
 import MetricSelectBox from "../module/MetricSelectBox";
 import * as utilLog from "./../../../util/UtLogs.js";
 import { withTranslation } from 'react-i18next';
+import { AsyncStorage } from "AsyncStorage";
 
 class MetricNode extends Component {
   constructor(props) {
@@ -62,12 +63,6 @@ class MetricNode extends Component {
         }
       })
       .catch((err) => console.log(err));
-
-    // let userId = null;
-    // AsyncStorage.getItem("userName",(err, result) => {
-    //   userId= result;
-    // })
-    // utilLog.fn_insertPLogs(userId, 'log-MM-CM01');
   };
 
   componentDidMount() {
@@ -119,6 +114,12 @@ class MetricNode extends Component {
   onSelectBoxChange = (data) => {
     this.setState({ node: data });
     this.onApiExcute(data);
+
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => {
+      userId= result;
+    })
+    utilLog.fn_insertPLogs(userId, 'log-MM-CG03');
   };
 
   render() {

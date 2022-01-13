@@ -119,14 +119,14 @@ class SetThreshold extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-AL-VW02");
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-AC-VW01");
   }
 
   onUpdateData = () => {
@@ -183,17 +183,18 @@ class SetThreshold extends Component {
           this.setState({ open: false });
           this.handleClose();
           this.onUpdateData();
+          
+          let userId = null;
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-AL-EX03");
         })
         .catch((err) => {});
 
       this.setState({ openProgress: false });
 
-      // loging Add Node
-      let userId = null;
-      AsyncStorage.getItem("userName", (err, result) => {
-        userId = result;
-      });
-      utilLog.fn_insertPLogs(userId, "log-ND-MD02");
+     
     } else {
       this.setState({ openProgress: false });
     }

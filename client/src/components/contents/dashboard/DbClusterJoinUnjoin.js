@@ -44,7 +44,7 @@ class DbClusterJoinUnjoin extends Component {
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    utilLog.fn_insertPLogs(userId, "log-DS-VW09");
+    utilLog.fn_insertPLogs(userId, "log-DS-VW03");
   }
 
   componentWillUnmount() {
@@ -84,6 +84,7 @@ class DbClusterJoinUnjoin extends Component {
             this.setState({ rows: "" });
           } else {
             this.setState({ rows: res });
+
           }
         }
         clearInterval(this.timer);
@@ -275,11 +276,13 @@ class ClusterDnd extends Component {
       let cluster = droppableIdArr[droppableIdArr.length - 2];
       let endpoint = droppableIdArr[droppableIdArr.length - 1];
 
+      let logType = 'log-DS-EX01'
       if (destination.droppableId === "joinable") {
         url = `/cluster/unjoin`;
         data = {
           clusterName: cluster,
         };
+        logType = 'log-DS-EX02';
       } else if (destination.droppableId === "joined") {
         url = `/cluster/join`;
         data = {
@@ -302,6 +305,13 @@ class ClusterDnd extends Component {
               joined: result.joined,
               joinable: result.joinable,
             });
+
+            let userId = null;
+            AsyncStorage.getItem("userName", (err, result) => {
+              userId = result;
+            });
+
+            utilLog.fn_insertPLogs(userId, logType);
           }
         })
         .catch((err) => {

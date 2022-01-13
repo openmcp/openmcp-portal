@@ -137,7 +137,7 @@ class DashboardSelectModule extends Component {
           this.props.onUpdateData();
           // console.log("sdfsdf",this.props)
           
-          utilLog.fn_insertPLogs(userId, "log-DB-MD01");
+          utilLog.fn_insertPLogs(userId, "log-DS-MD01");
           alert(res.data.message);
         }
       })

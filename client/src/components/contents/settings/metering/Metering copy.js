@@ -102,7 +102,7 @@
 //     AsyncStorage.getItem("userName", (err, result) => {
 //       userId = result;
 //     });
-//     utilLog.fn_insertPLogs(userId, "log-AC-VW01");
+//     utilLog.fn_insertPLogs(userId, "log-MR-VW01");
 //   }
 
 //   onUpdateData = () => {

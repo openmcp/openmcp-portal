@@ -10,6 +10,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import axios from 'axios';
 import { withTranslation } from 'react-i18next';
+import { AsyncStorage } from "AsyncStorage";
+import * as utilLog from "../../util/UtLogs.js";
 
 const styles = (theme) => ({
   root: {
@@ -71,6 +73,12 @@ class AddMembers extends Component {
           alert(res.data.message);
           this.setState({ open: false });
           this.props.onUpdateData();
+
+          let userId = null;
+          AsyncStorage.getItem("userName",(err, result) => { 
+            userId= result;
+          })
+          utilLog.fn_insertPLogs(userId, "log-AC-EX01");
       })
       .catch((err) => {
           alert(err);

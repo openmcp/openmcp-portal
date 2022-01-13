@@ -83,7 +83,7 @@ class MtSetMetering extends Component {
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-    utilLog.fn_insertPLogs(userId, 'log-PD-MD01');
+    utilLog.fn_insertPLogs(userId, 'log-MR-XX00');
     this.setState({open:false});
   };
 

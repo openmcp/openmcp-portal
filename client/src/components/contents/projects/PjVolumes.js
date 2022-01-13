@@ -97,17 +97,16 @@ class PjVolumes extends Component {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
+
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, 'log-PJ-VW08');
       })
       .catch((err) => console.log(err));
-      
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW13');
-      
   };
 
   render() {

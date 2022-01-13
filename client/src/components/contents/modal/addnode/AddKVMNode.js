@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // import CircularProgress from "@material-ui/core/CircularProgress";
 import { TextField } from "@material-ui/core";
 import * as utilLog from "../../../util/UtLogs.js";
-import { AsyncStorage } from 'AsyncStorage';
+import { AsyncStorage } from "AsyncStorage";
 import {
   PagingState,
   SortingState,
@@ -22,10 +22,10 @@ import {
   // TableRowDetail,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios';
-import ProgressTemp from './../../../modules/ProgressTemp';
-import Confirm2 from './../../../modules/Confirm2';
-import { withTranslation } from 'react-i18next';
+import axios from "axios";
+import ProgressTemp from "./../../../modules/ProgressTemp";
+import Confirm2 from "./../../../modules/Confirm2";
+import { withTranslation } from "react-i18next";
 
 class AddKVMNode extends Component {
   constructor(props) {
@@ -33,7 +33,7 @@ class AddKVMNode extends Component {
     this.state = {
       newVmName: "",
       newVmPassword: "",
-      templateVm : "",
+      templateVm: "",
       columns: [],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
@@ -50,29 +50,34 @@ class AddKVMNode extends Component {
       selection: [],
       selectedRow: "",
       value: 0,
-      
+
       confirmOpen: false,
-      confirmInfo : {
-        title :"Add Node Confirm",
-        context :"Are you sure you want to add Node?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
+      confirmInfo: {
+        title: "Add Node Confirm",
+        context: "Are you sure you want to add Node?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
       },
-      confrimTarget : "",
-      confirmTargetKeyname:""
+      confrimTarget: "",
+      confirmTargetKeyname: "",
     };
   }
 
   componentDidMount() {
     this.initState();
     this.callApi("/kvm/clusters")
-    .then((res) => {
-      this.setState({ clusters: res });
-    })
-    .catch((err) => console.log(err));
+      .then((res) => {
+        this.setState({ clusters: res });
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-ND-VW06");
+      })
+      .catch((err) => console.log(err));
   }
 
   initState = () => {
@@ -81,73 +86,74 @@ class AddKVMNode extends Component {
       selectedRow: "",
       newVmName: "",
       newVmPassword: "",
-      templateVm : "",
+      templateVm: "",
     });
   };
 
   handleSaveClick = () => {
-    const t = this.props.t
-    
-    if (this.state.newVmName === ""){
+    const t = this.props.t;
+
+    if (this.state.newVmName === "") {
       alert(t("nodes.pop-addNode.msg-checkVmName"));
       return;
-    } else if (this.state.newVmPassword === ""){
+    } else if (this.state.newVmPassword === "") {
       alert(t("nodes.pop-addNode.msg-checkVmPassword"));
       return;
-    } else if (Object.keys(this.state.selectedRow).length  === 0){
+    } else if (Object.keys(this.state.selectedRow).length === 0) {
       alert(t("common.msg.unselected-target"));
       return;
-    } else if (this.state.templateVm === ""){
+    } else if (this.state.templateVm === "") {
       alert(t("nodes.pop-addNode.msg-checkTempImgName"));
       return;
     } else {
       this.setState({
         confirmOpen: true,
-      })
+      });
     }
   };
 
-
   //callback
   confirmed = (result) => {
-    this.setState({confirmOpen:false})
+    this.setState({ confirmOpen: false });
 
     //loading이 보여지게 해야함
-    this.setState({openProgress:true})
+    this.setState({ openProgress: true });
 
-    if(result) {
+    if (result) {
       //Add Node 수행
       const url = `/nodes/add/kvm`;
       const data = {
         newvm: this.state.newVmName,
-        template : this.state.templateVm,
+        template: this.state.templateVm,
         newVmPassword: this.state.newVmPassword,
-        cluster:this.state.selectedRow.name,
+        cluster: this.state.selectedRow.name,
       };
-      axios.post(url, data)
-          .then((res) => {
-            if(res.data.code === 500){
-              alert(res.data.result+"\n"+res.data.text);
-            } else {
-              this.props.handleClose()
-            }
-            this.setState({openProgress:false})
-          })
-          .catch((err) => {
-            this.setState({openProgress:false})
-            this.props.handleClose()
-          });
-      let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-      utilLog.fn_insertPLogs(userId, "log-ND-CR01");
+      axios
+        .post(url, data)
+        .then((res) => {
+          if (res.data.code === 500) {
+            alert(res.data.result + "\n" + res.data.text);
+          } else {
+            this.props.handleClose();
+            let userId = null;
+            AsyncStorage.getItem("userName", (err, result) => {
+              userId = result;
+            });
+            utilLog.fn_insertPLogs(userId, "log-ND-EX07");
+          }
+          this.setState({ openProgress: false });
+        })
+        .catch((err) => {
+          this.setState({ openProgress: false });
+          this.props.handleClose();
+        });
+      
     } else {
-      this.setState({confirmOpen:false})
-      this.setState({openProgress:false})
+      this.setState({ confirmOpen: false });
+      this.setState({ openProgress: false });
     }
-  }
-  
+  };
+
   callApi = async (uri) => {
     // const response = await fetch("/aws/clusters");
     const response = await fetch(uri);
@@ -159,7 +165,6 @@ class AddKVMNode extends Component {
     this.setState({
       [e.target.name]: e.target.value,
     });
-    
   };
 
   HeaderRow = ({ row, ...restProps }) => (
@@ -196,14 +201,22 @@ class AddKVMNode extends Component {
     ];
     return (
       <div>
-        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        {this.state.openProgress ? (
+          <ProgressTemp
+            openProgress={this.state.openProgress}
+            closeProgress={this.closeProgress}
+          />
+        ) : (
+          ""
+        )}
 
         <Confirm2
-                  confirmInfo={this.state.confirmInfo} 
-                  confrimTarget ={this.state.confrimTarget} 
-                  confirmTargetKeyname = {this.state.confirmTargetKeyname}
-                  confirmed={this.confirmed}
-                  confirmOpen={this.state.confirmOpen}/>
+          confirmInfo={this.state.confirmInfo}
+          confrimTarget={this.state.confrimTarget}
+          confirmTargetKeyname={this.state.confirmTargetKeyname}
+          confirmed={this.confirmed}
+          confirmOpen={this.state.confirmOpen}
+        />
 
         <section className="md-content">
           <div style={{ display: "flex" }}>
@@ -221,7 +234,6 @@ class AddKVMNode extends Component {
                 fullWidth={true}
                 name="newVmName"
                 onChange={this.onChange}
-                
               />
             </div>
             <div className="props" style={{ width: "60%" }}>
@@ -287,18 +299,18 @@ class AddKVMNode extends Component {
         <section className="md-content">
           <div>
             <div className="props">
-                <p>{t("nodes.pop-addNode.templateImgVm")}</p>
-                <TextField
-                  id="outlined-multiline-static"
-                  rows={1}
-                  placeholder={t("nodes.pop-addNode.templateImgVm-placeholder")}
-                  variant="outlined"
-                  value={this.state.accessKey}
-                  fullWidth={true}
-                  name="templateVm"
-                  onChange={this.onChange}
-                />
-              </div>
+              <p>{t("nodes.pop-addNode.templateImgVm")}</p>
+              <TextField
+                id="outlined-multiline-static"
+                rows={1}
+                placeholder={t("nodes.pop-addNode.templateImgVm-placeholder")}
+                variant="outlined"
+                value={this.state.accessKey}
+                fullWidth={true}
+                name="templateVm"
+                onChange={this.onChange}
+              />
+            </div>
           </div>
         </section>
       </div>
@@ -306,4 +318,4 @@ class AddKVMNode extends Component {
   }
 }
 
-export default withTranslation()(AddKVMNode); 
+export default withTranslation()(AddKVMNode);

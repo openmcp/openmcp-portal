@@ -91,18 +91,17 @@ class Snapshot extends Component {
 
   callApi = async () => {
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => {
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
-
 
     const response = await fetch(`/apis/snapshot/list`, requestOptions);
     const body = await response.json();
@@ -122,14 +121,13 @@ class Snapshot extends Component {
       .then((result) => {
         this.setState({ rows: result });
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-SS-VW01");
       })
       .catch((err) => console.log(err));
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-SS-VW01");
   }
 
   onUpdateData = () => {
@@ -144,12 +142,6 @@ class Snapshot extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
   onRefresh = () => {
@@ -210,7 +202,7 @@ class Snapshot extends Component {
   );
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     const onSelectionChange = (selection) => {
       if (selection.length > 1) selection.splice(0, 1);
       this.setState({ selection: selection });
@@ -357,7 +349,7 @@ class SnapshotDetail extends Component {
       },
       confrimTarget: "false",
       confirmTargetKeyname: "snapshot",
-      selectedRow:[],
+      selectedRow: [],
     };
   }
 
@@ -402,13 +394,13 @@ class SnapshotDetail extends Component {
       const data = {
         cluster: "openmcp",
         namespace: this.props.namespace,
-        deployment : this.props.deployment,
-        snapshot :  this.state.selectedRow.snapshot,
-        restoreName : `restore-${this.state.selectedRow.snapshot}-${dateFormat(
+        deployment: this.props.deployment,
+        snapshot: this.state.selectedRow.snapshot,
+        restoreName: `restore-${this.state.selectedRow.snapshot}-${dateFormat(
           new Date(),
           "%Y%m%d%H%M%S",
           false
-        )}`
+        )}`,
       };
       axios
         .post(url, data)
@@ -421,12 +413,11 @@ class SnapshotDetail extends Component {
           alert(err);
         });
 
-
       let userId = null;
       AsyncStorage.getItem("userName", (err, result) => {
         userId = result;
       });
-      utilLog.fn_insertPLogs(userId, "log-SS-CR01");
+      utilLog.fn_insertPLogs(userId, "log-SS-EX02");
     } else {
       console.log("cancel");
     }
@@ -457,12 +448,18 @@ class SnapshotDetail extends Component {
         let mBtye = (props.value / Math.pow(1024, 2)).toFixed(2);
         return (
           <Table.Cell
-          {...props}
+            {...props}
             style={{
               padding: "0px",
-            }}>
+            }}
+          >
             <div className="progressbar" style={{ display: "float" }}>
-              <LinearProgressBar2 value={mBtye} total={10}  mColor={"normalColor"} bColor={"normalBaseColor"}/>
+              <LinearProgressBar2
+                value={mBtye}
+                total={10}
+                mColor={"normalColor"}
+                bColor={"normalBaseColor"}
+              />
               {mBtye} MB
             </div>
           </Table.Cell>
@@ -483,7 +480,7 @@ class SnapshotDetail extends Component {
                 className="revert"
                 style={{ cursor: "pointer", display: "inline-block" }}
                 onClick={() => {
-                  this.setState({selectedRow: row});
+                  this.setState({ selectedRow: row });
                   this.onSnapshotRestore(row.snapshot);
                 }}
               >

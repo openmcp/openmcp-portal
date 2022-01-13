@@ -46,16 +46,16 @@ class PjConfigMapDetail extends Component {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
+
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, 'log-PJ-VW18');
       })
       .catch((err) => console.log(err));
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-PJ-VW18');
-      
   }  
 
   callApi = async () => {

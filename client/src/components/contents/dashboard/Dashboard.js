@@ -9,6 +9,7 @@ import { withTranslation } from 'react-i18next';
 import Editor from "../../modules/Editor";
 import axios from "axios";
 import ProgressTemp from "../../modules/ProgressTemp";
+import * as utilLog from "../../util/UtLogs.js";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -127,6 +128,13 @@ class Dashboard extends Component {
         alert(res.data[0].text);
         this.setState({ openProgress: false });
         this.onRefresh();
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+
+        utilLog.fn_insertPLogs(userId, "log-DS-EX01");
       })
       .catch((err) => {
         alert(err);

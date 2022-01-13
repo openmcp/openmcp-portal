@@ -170,7 +170,7 @@ class SnapShotControl extends Component {
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-    utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
+    utilLog.fn_insertPLogs(userId, "log-SS-EX03");
 
     //close modal popup
     this.setState({ open: false });

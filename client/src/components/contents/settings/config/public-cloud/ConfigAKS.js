@@ -34,7 +34,8 @@ import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withTranslation } from 'react-i18next';
-
+import { AsyncStorage } from "AsyncStorage";
+import * as utilLog from "../../../../util/UtLogs.js";
 
 class ConfigAKS extends Component {
   constructor(props) {
@@ -90,6 +91,12 @@ class ConfigAKS extends Component {
     this.callApi()
       .then((res) => {
         this.setState({ rows: res });
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-CF-VW03");
       })
       .catch((err) => console.log(err));
   }
@@ -173,6 +180,12 @@ class ConfigAKS extends Component {
         .delete(url, { data: data })
         .then((res) => {
           this.callBackClosed();
+
+          let userId = null;
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-CF-EX09");
         })
         .catch((err) => {
           console.log("Error : ", err);

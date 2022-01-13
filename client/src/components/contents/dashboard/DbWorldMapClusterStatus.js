@@ -72,7 +72,7 @@ class DbWorldMapClusterStatus extends Component {
       userId = result;
     });
 
-    utilLog.fn_insertPLogs(userId, "log-DS-VW04");
+    utilLog.fn_insertPLogs(userId, "log-DS-VW05");
   }
 
   onRefresh = () => {

@@ -78,14 +78,14 @@ class BillList extends Component {
         console.log(result)
         this.setState({ rows: result });
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-BL-VW01");
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-BL-VW01");
   }
 
   onUpdateData = () => {
@@ -99,12 +99,6 @@ class BillList extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-BL-VW01");
   };
 
   closeProgress = () => {

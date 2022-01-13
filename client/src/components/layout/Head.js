@@ -54,7 +54,7 @@ class Head extends Component {
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    utilLog.fn_insertPLogs(userId, "log-LG-LG02");
+    utilLog.fn_insertPLogs(userId, "log-LG-EX02");
 
     // localStorage.removeItem("token");
     // localStorage.removeItem("userName");

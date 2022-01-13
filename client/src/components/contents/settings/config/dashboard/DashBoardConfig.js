@@ -4,6 +4,7 @@ import { AsyncStorage } from "AsyncStorage";
 import { Button, TextField } from "@material-ui/core";
 import Axios from "axios";
 import { withTranslation } from 'react-i18next';
+import * as utilLog from "../../../../util/UtLogs.js";
 
 class DashBoardConfig extends Component {
   constructor(props) {
@@ -36,6 +37,12 @@ class DashBoardConfig extends Component {
           })
           
           this.setState({flag : true});
+
+          let userId = null;
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-CF-VW05");
         }
         clearInterval(this.timer);
       })
@@ -93,6 +100,12 @@ class DashBoardConfigSet extends Component {
       .then((res) => {
         alert(res.data.message);
         AsyncStorage.setItem("dashboard-cycle", this.state["DASHBOARD-CYCLE"]);
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-CF-EX13");
       })
       .catch((err) => {
         alert(err);
@@ -137,6 +150,12 @@ class DashBoardConfigSet extends Component {
     Axios.put(url, data)
       .then((res) => {
         alert(res.data.message);
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-CF-EX14");
       })
       .catch((err) => {
         alert(err);

@@ -190,16 +190,16 @@ class PjCreateProject extends Component {
         this.setState({ open: false });
         this.props.menuClose();
         this.props.onUpdateData();
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-PJ-EX01");
       })
       .catch((err) => {
         alert(err);
       });
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-PJ-CR01");
 
     this.handleClose();
     // this.setState({ open: false });

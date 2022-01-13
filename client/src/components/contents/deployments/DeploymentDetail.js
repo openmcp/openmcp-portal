@@ -53,14 +53,14 @@ class DeploymentDetail extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-DP-VW03");
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW04");
   }
 
   callApi = async () => {
@@ -238,7 +238,6 @@ class ReplicaStatus extends React.Component {
   };
 
   repeatCallApi = () => {
-    console.log("repeat");
     this.callApi()
       .then((res) => {
         if (res === null) {
@@ -283,6 +282,12 @@ class ReplicaStatus extends React.Component {
     // console.log("delClickEventHandler", e, cluster)
     this.delPod(cluster).then((res) => {
       this.repeatCallApi();
+
+      let userId = null;
+      AsyncStorage.getItem("userName", (err, result) => {
+        userId = result;
+      });
+      utilLog.fn_insertPLogs(userId, "log-DP-EX06");
     });
   };
 
@@ -290,6 +295,12 @@ class ReplicaStatus extends React.Component {
     e.preventDefault();
     this.addPod(cluster).then((res) => {
       this.repeatCallApi();
+
+      let userId = null;
+      AsyncStorage.getItem("userName", (err, result) => {
+        userId = result;
+      });
+      utilLog.fn_insertPLogs(userId, "log-DP-EX05");
     });
   };
 

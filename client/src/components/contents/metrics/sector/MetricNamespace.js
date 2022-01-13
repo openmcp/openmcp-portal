@@ -103,6 +103,12 @@ class MetricNamespace extends Component {
   onSelectBoxChange = (data) => {
     this.setState({namespace : data});
     this.onApiExcute(data);
+
+    let userId = null;
+    AsyncStorage.getItem("userName",(err, result) => {
+      userId= result;
+    })
+    utilLog.fn_insertPLogs(userId, 'log-MM-CG02');
   }
 
   render() {

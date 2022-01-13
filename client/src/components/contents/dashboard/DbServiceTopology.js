@@ -57,6 +57,12 @@ class DbServiceTopology extends Component {
     this.onInitTopology();
     this.onRefresh();
     urlHistory = this.props.propsData.info.history;
+
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-DS-VW07");
   }
 
   componentWillUnmount() {
@@ -111,13 +117,6 @@ class DbServiceTopology extends Component {
       .catch((err) => {
         alert(err);
       });
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-
-    utilLog.fn_insertPLogs(userId, "log-DS-VW06");
   };
 
   onInitTopology = () => {

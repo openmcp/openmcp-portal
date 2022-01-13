@@ -124,7 +124,7 @@ class PcUpdateProjectPolicy extends Component {
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-    utilLog.fn_insertPLogs(userId, "log-PO-MD02");
+    utilLog.fn_insertPLogs(userId, "log-PO-XX00");
 
     //close modal popup
     this.props.onCloseUpdatePolicy(false);

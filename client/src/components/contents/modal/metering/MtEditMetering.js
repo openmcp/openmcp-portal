@@ -152,17 +152,17 @@ class MtEditMetering extends React.Component {
       .then((res) => {
         this.props.onUpdateData();
         alert(res.data.message);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+    
+        utilLog.fn_insertPLogs(userId, "log-MR-EX02");
       })
       .catch((err) => {
         console.log("Error : ", err);
       });
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-
-    utilLog.fn_insertPLogs(userId, "log-PD-MD01");
     this.setState({ open: false });
   };
 

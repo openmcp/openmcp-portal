@@ -39,6 +39,12 @@ class DbClusterTopology extends Component {
     this.onInitTopology();
     this.onRefresh();
     urlHistory = this.props.propsData.info.history;
+    
+    let userId = null;
+    AsyncStorage.getItem("userName", (err, result) => {
+      userId = result;
+    });
+    utilLog.fn_insertPLogs(userId, "log-DS-VW06");
   }
 
   callApi = async () => {
@@ -99,17 +105,17 @@ class DbClusterTopology extends Component {
           }
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+    
+        utilLog.fn_insertPLogs(userId, "log-DS-VW05");
       })
       .catch((err) => {
         alert(err);
       });
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-
-    utilLog.fn_insertPLogs(userId, "log-DS-VW05");
   }
 
   onInitTopology = () => {

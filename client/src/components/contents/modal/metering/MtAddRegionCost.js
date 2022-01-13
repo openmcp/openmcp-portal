@@ -81,16 +81,17 @@ class MtAddRegionCost extends Component {
       .post(url, data)
       .then((res) => {
         this.props.onUpdateData();
+
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-MR-EX01");
       })
       .catch((err) => {
         console.log("Error : ", err);
       });
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-MT-MD01");
     this.setState({ open: false });
   };
 

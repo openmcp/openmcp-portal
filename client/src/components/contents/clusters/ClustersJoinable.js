@@ -126,7 +126,7 @@ class ClustersJoinable extends Component {
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-    utilLog.fn_insertPLogs(userId, 'log-CL-VW01');
+    utilLog.fn_insertPLogs(userId, 'log-CL-VW02');
   };
 
   confirmed = (result) => {
@@ -155,7 +155,7 @@ class ClustersJoinable extends Component {
     AsyncStorage.getItem("userName",(err, result) => { 
       userId= result;
     })
-      utilLog.fn_insertPLogs(userId, "log-CL-MO03");
+      utilLog.fn_insertPLogs(userId, "log-CL-EX01");
     } else {
       console.log("cancel")
     }

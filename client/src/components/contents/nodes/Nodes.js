@@ -133,18 +133,14 @@ class Nodes extends Component {
           
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName",(err, result) => { 
+          userId= result;
+        })
+        utilLog.fn_insertPLogs(userId, 'log-ND-VW01');
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, 'log-ND-VW01');
-
-
-    
-    
   };
 
   onUpdateData = () => {
@@ -159,12 +155,6 @@ class Nodes extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
   onRefresh = () => {

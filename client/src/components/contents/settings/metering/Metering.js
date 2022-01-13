@@ -110,7 +110,7 @@ class Metering extends Component {
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-    utilLog.fn_insertPLogs(userId, "log-SS-VW01");
+    utilLog.fn_insertPLogs(userId, "log-MR-VW01");
   }
 
   onUpdateData = () => {
@@ -127,11 +127,6 @@ class Metering extends Component {
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-PJ-VW03");
   };
 
   closeProgress = () => {

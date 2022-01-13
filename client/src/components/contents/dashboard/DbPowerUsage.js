@@ -77,8 +77,7 @@ class DbPowerUsage extends Component {
     AsyncStorage.getItem("userName", (err, result) => {
       userId = result;
     });
-
-    utilLog.fn_insertPLogs(userId, "log-DS-VW10");
+    utilLog.fn_insertPLogs(userId, "log-DS-VW02");
   }
 
   onRefresh = () => {

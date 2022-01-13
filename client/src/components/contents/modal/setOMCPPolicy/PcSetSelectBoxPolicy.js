@@ -114,7 +114,7 @@ class PcSetSelectBoxPolicy extends Component {
             AsyncStorage.getItem("userName", (err, result) => {
               userId = result;
             });
-            utilLog.fn_insertPLogs(userId, "log-PO-MD01");
+            utilLog.fn_insertPLogs(userId, "log-PO-EX01");
           }
           alert(res.data[0].text);
         }

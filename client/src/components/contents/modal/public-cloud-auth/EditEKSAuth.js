@@ -115,6 +115,11 @@ class EditEKSAuth extends Component {
       axios.post(url, data)
       .then((res) => {
         this.props.callBackClosed()
+        let userId = null;
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-CF-EX01");
       })
       .catch((err) => {
         //close modal popup
@@ -132,25 +137,18 @@ class EditEKSAuth extends Component {
       axios.put(url, data)
       .then((res) => {
         this.props.callBackClosed()
+        let userId = null;
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-CF-EX02");
       })
       .catch((err) => {
         //close modal popup
         console.log("Error : ",err);
       });
     }
-
-      
-
     // alert(this.state.cluster+","+ this.state.secretKey+","+this.state.accessKey)
-
-    // loging deployment migration
-    let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-    utilLog.fn_insertPLogs(userId, "log-PJ-MD01");
-
-    
   };
 
   callApi = async (uri) => {

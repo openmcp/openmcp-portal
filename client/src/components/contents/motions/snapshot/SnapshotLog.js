@@ -100,15 +100,16 @@ class SnapshotLog extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-SS-VW02");
+        
         this.timer = setInterval(this.repeatApiCall, 5000);
       })
       .catch((err) => console.log(err));
 
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-SS-VW02");
   }
 
   componentWillUnmount() {

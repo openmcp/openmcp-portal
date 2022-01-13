@@ -27,7 +27,7 @@
     "motions": {
       "name": "Motions",
       "sub": {
-        "migrations": "Migragions",
+        "migrations": "Migrations",
         "snapshots": "Snapshots",
         "globalCache": "Global Cache"
       }
@@ -757,7 +757,7 @@
         "createdTime": "Created Time"
       },
       "pop-create": {
-        "btn-create": "Create",
+        "btn-create": "Create Service",
         "title": "Create Service"
       },
       "detail": {
@@ -801,7 +801,7 @@
         "createdTime": "Created Time"
       },
       "pop-create": {
-        "btn-create": "Create",
+        "btn-create": "Create Ingress",
         "title": "Create Ingress"
       },
       "detail": {
@@ -847,7 +847,7 @@
   "migrations": {
     "title": "Migrations",
     "migration": {
-      "title": "Migrations",
+      "title": "Migration",
       "pop-migration": {
         "btn-migration": "Migration",
         "title": "Migration",
@@ -864,13 +864,13 @@
       }
     },
     "migrationLog": {
-      "title": "MigrationLogs"
+      "title": "Migration Log"
     }
   },
   "snapshots": {
     "title": "Snapshots",
     "snapshot": {
-      "title": "Snapshots",
+      "title": "Snapshot",
       "pop-snapshot": {
         "btn-snapshot": "Take Snapshot",
         "title": "Take Snapshot",
@@ -884,7 +884,7 @@
       }
     },
     "snapshotLog": {
-      "title": "SnapshotLogs"
+      "title": "Snapshot Log"
     }
   },
   "globalCache": {
@@ -1018,12 +1018,12 @@
     }
   },
   "alert": {
-    "title": "Alert",
+    "title": "Alerts",
     "alertLog": {
       "title": "Alert Log"
     },
     "threshold": {
-      "title": "threshold",
+      "title": "Threshold",
       "pop-create": {
         "btn-create": "Create Threshold",
         "title": "Create Node Threshold",

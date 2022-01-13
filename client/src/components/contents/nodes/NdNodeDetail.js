@@ -62,13 +62,13 @@ class NdNodeDetail extends Component {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-ND-VW02");
       })
       .catch((err) => console.log(err));
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-    utilLog.fn_insertPLogs(userId, "log-ND-VW02");
   }
 
   callApi = async () => {
@@ -334,18 +334,19 @@ class KubernetesStatus extends Component {
     const provider = this.props.propsRow.provider;
     let data = {};
     let url = "";
+    let logType = "";
 
     if (result) {
       if (this.state.confirmType === "power") {
         if (this.state.powerFlag === "on") {
           url = `/nodes/${provider}/start`;
-          // utilLog.fn_insertPLogs(userId, "log-ND-PO01"); //poweron log
+          logType = 'log-ND-EX01';
         } else if (this.state.powerFlag === "off") {
           url = `/nodes/${provider}/stop`;
-          // utilLog.fn_insertPLogs(userId, "log-ND-PO02"); //poweroff log
+          logType = 'log-ND-EX02';
         }
 
-        if (provider === "eks") {
+        if (provider === "EKS") {
           //eks
           data = {
             region: "ap-northeast-2",
@@ -356,14 +357,14 @@ class KubernetesStatus extends Component {
             // node: this.props.propsRow.name,
             // cluster : this.props.propsRow.cluster
           };
-        } else if (provider === "aks") {
+        } else if (provider === "AKS") {
           data = {
             // cluster : this.props.propsRow.cluster,
             // node : this.props.propsRow.name,
             cluster: "aks-cluster-01",
             node: "aks-np01-47695231-vmss_4",
           };
-        } else if (provider === "kvm") {
+        } else if (provider === "KVM") {
           data = {
             cluster: this.props.propsRow.cluster,
             node: this.props.propsRow.name,
@@ -379,6 +380,7 @@ class KubernetesStatus extends Component {
           cluster: this.props.propsRow.cluster,
           node: this.props.propsRow.name,
         };
+        logType = 'log-ND-EX03';
       }
 
       axios
@@ -386,6 +388,12 @@ class KubernetesStatus extends Component {
         .then((res) => {
           if (res.data.error) {
             alert(res.data.message);
+          } else {
+            let userId = null;
+            AsyncStorage.getItem("userName", (err, result) => {
+              userId = result;
+            });
+            utilLog.fn_insertPLogs(userId, logType);
           }
         })
         .catch((err) => {
@@ -420,7 +428,7 @@ class KubernetesStatus extends Component {
 
         <div className="cb-header">
           <span>{t("nodes.detail.nodeStatus.title")}</span>
-          {this.props.propsRow.provider !== "gke" ? (
+          {this.props.propsRow.provider === "KVM" ? (
             <div style={{ position: "absolute", top: "0px", right: "0px" }}>
               <Button
                 variant="outlined"
@@ -451,7 +459,7 @@ class KubernetesStatus extends Component {
                 {t("nodes.detail.nodeStatus.btn-stopNode")}
               </Button>
 
-              {this.props.propsRow.provider === "kvm" ? (
+              {this.props.propsRow.provider === "KVM" ? (
                 <Button
                   variant="outlined"
                   color="primary"
@@ -470,9 +478,7 @@ class KubernetesStatus extends Component {
                 ""
               )}
             </div>
-          ) : (
-            ""
-          )}
+          ) : null}
         </div>
         <div className="cb-body flex">
           {this.state.rows.map((item) => {
@@ -613,13 +619,6 @@ class NodePowerUsage extends Component {
     // this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
     this.timer = setInterval(this.progress, 20);
     this.onRefresh();
-
-    let userId = null;
-    AsyncStorage.getItem("userName", (err, result) => {
-      userId = result;
-    });
-
-    utilLog.fn_insertPLogs(userId, "log-DS-VW10");
   }
 
   onRefresh = () => {

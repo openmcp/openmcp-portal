@@ -114,14 +114,14 @@ class SignIn extends Component {
                   this.setState({
                     loggedIn: true,
                   });
-                  utilLog.fn_insertPLogs(username, "log-LG-LG01");
+                  utilLog.fn_insertPLogs(username, "log-LG-EX01");
                 }
               } else if (res.data.data.rows[0].role_id[0] === 'admin'){
                 this.setState({
                   loggedIn: true,
                 });
                     // log - logined
-                utilLog.fn_insertPLogs(username, "log-LG-LG01");
+                utilLog.fn_insertPLogs(username, "log-LG-EX01");
               } else {
                 alert('You cannot log in because there is no assigned cluster.\nPlease ask the manager.');
                 fn_refreshAsyncStorage();
