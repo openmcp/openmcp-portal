@@ -120,9 +120,9 @@ class NdResourceConfig extends Component {
            Node Resource Configration
           </DialogTitle>
           <DialogContent dividers>
-            {this.props.propsRow.provider === "eks" 
+            {this.props.propsRow.provider === "EKS" 
             ? <ChangeEKSReource ref={childChangeNodeRes} handleClose={this.handleClose} nodeData={this.props.nodeData} propsRow={this.props.propsRow} />
-            : (this.props.propsRow.provider === "kvm" 
+            : (this.props.propsRow.provider === "KVM" 
                 ? <ChangeKVMReource ref={childChangeNodeRes} handleClose={this.handleClose} nodeData={this.props.nodeData} propsRow={this.props.propsRow} rows={this.props.rows}/> 
                 : "")
             }

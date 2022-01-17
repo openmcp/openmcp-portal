@@ -17,11 +17,11 @@ import {
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios';
-import ProgressTemp from './../../../modules/ProgressTemp';
-import Confirm2 from './../../../modules/Confirm2';
+import axios from "axios";
+import ProgressTemp from "./../../../modules/ProgressTemp";
+import Confirm2 from "./../../../modules/Confirm2";
 import * as utilLog from "./../../../util/UtLogs.js";
-import { AsyncStorage } from 'AsyncStorage';
+import { AsyncStorage } from "AsyncStorage";
 
 // const styles = (theme) => ({
 //   root: {
@@ -40,7 +40,6 @@ class ChangeEKSReource extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
       columns: [
         { name: "code", title: "Type" },
         { name: "etc", title: "Resources" },
@@ -64,17 +63,17 @@ class ChangeEKSReource extends Component {
       open: false,
 
       confirmOpen: false,
-      confirmInfo : {
-        title :"Change EKS Node Resource",
-        context :"Are you sure you want to Change Node Resources?",
-        button : {
-          open : "",
-          yes : "CONFIRM",
-          no : "CANCEL",
-        }
+      confirmInfo: {
+        title: "Change EKS Node Resource",
+        context: "Are you sure you want to Change Node Resources?",
+        button: {
+          open: "",
+          yes: "CONFIRM",
+          no: "CANCEL",
+        },
       },
-      confrimTarget : "",
-      confirmTargetKeyname:""
+      confrimTarget: "",
+      confirmTargetKeyname: "",
     };
     // this.onChange = this.onChange.bind(this);
   }
@@ -115,55 +114,56 @@ class ChangeEKSReource extends Component {
   };
 
   handleSaveClick = (e) => {
-    if (Object.keys(this.state.selectedRow).length  === 0) {
+    if (Object.keys(this.state.selectedRow).length === 0) {
       alert("Please select Instance Type");
       return;
     } else {
       this.setState({
         confirmOpen: true,
-      })
+      });
     }
-  }
+  };
 
   confirmed = (result) => {
-    this.setState({confirmOpen:false});
+    this.setState({ confirmOpen: false });
 
     //show progress loading...
-    this.setState({openProgress:true});
+    this.setState({ openProgress: true });
 
-    if(result) {
+    if (result) {
+      debugger;
       const url = `/nodes/eks/change`;
       const data = {
-        cluster : "eks-cluster1",
-        region : "ap-northeast-2",
-        node : "ip-172-31-0-123.ap-northeast-2.compute.internal",
-        // cluster : this.props.nodeData.cluster,
-        type :  this.state.selectedRow.code,
+        // cluster: "eks-cluster1",
+        // region: "ap-northeast-2",
+        // node: "ip-172-31-0-123.ap-northeast-2.compute.internal",
+        cluster : this.props.nodeData.cluster,
         // region : this.props.propsRow.region,
-        // node : this.props.nodeData.name,
+        node : this.props.nodeData.name,
+        type: this.state.selectedRow.code,
       };
 
-      axios.post(url, data)
+      axios
+        .post(url, data)
         .then((res) => {
-          if(res.data.error){
-            alert(res.data.message)
-            return
+          if (res.data.error) {
+            alert(res.data.message);
+            return;
           }
         })
-        .catch((err) => {
-        });
-        
-        this.props.handleClose()
-        this.setState({openProgress:false})
+        .catch((err) => {});
+
+      this.props.handleClose();
+      this.setState({ openProgress: false });
 
       // loging Add Node
       let userId = null;
-    AsyncStorage.getItem("userName",(err, result) => { 
-      userId= result;
-    })
-      utilLog.fn_insertPLogs(userId, "log-ND-MD02");
+      AsyncStorage.getItem("userName", (err, result) => {
+        userId = result;
+      });
+      utilLog.fn_insertPLogs(userId, "log-ND-EX10");
     } else {
-      this.setState({openProgress:false})
+      this.setState({ openProgress: false });
     }
   };
 
@@ -192,15 +192,23 @@ class ChangeEKSReource extends Component {
   render() {
     return (
       <div>
-        {this.state.openProgress ? <ProgressTemp openProgress={this.state.openProgress} closeProgress={this.closeProgress}/> : ""}
+        {this.state.openProgress ? (
+          <ProgressTemp
+            openProgress={this.state.openProgress}
+            closeProgress={this.closeProgress}
+          />
+        ) : (
+          ""
+        )}
 
         <Confirm2
-          confirmInfo={this.state.confirmInfo} 
-          confrimTarget ={this.state.confrimTarget} 
-          confirmTargetKeyname = {this.state.confirmTargetKeyname}
+          confirmInfo={this.state.confirmInfo}
+          confrimTarget={this.state.confrimTarget}
+          confirmTargetKeyname={this.state.confirmTargetKeyname}
           confirmed={this.confirmed}
-          confirmOpen={this.state.confirmOpen}/>
-          
+          confirmOpen={this.state.confirmOpen}
+        />
+
         <div className="md-contents-body">
           <section className="md-content">
             {/* deployment informations */}
@@ -208,21 +216,29 @@ class ChangeEKSReource extends Component {
             <div id="md-content-info">
               <div class="md-partition">
                 <div class="md-item">
-                  <span><strong>Name : </strong></span>
+                  <span>
+                    <strong>Name : </strong>
+                  </span>
                   <span>{this.props.nodeData.name}</span>
                 </div>
                 <div class="md-item">
-                  <span><strong>OS : </strong></span>
+                  <span>
+                    <strong>OS : </strong>
+                  </span>
                   <span>{this.props.nodeData.os}</span>
                 </div>
               </div>
               <div class="md-partition">
                 <div class="md-item">
-                  <span><strong>Status : </strong></span>
+                  <span>
+                    <strong>Status : </strong>
+                  </span>
                   <span>{this.props.nodeData.status}</span>
                 </div>
                 <div class="md-item">
-                  <span><strong>IP : </strong></span>
+                  <span>
+                    <strong>IP : </strong>
+                  </span>
                   <span>{this.props.nodeData.ip}</span>
                 </div>
               </div>
@@ -233,15 +249,10 @@ class ChangeEKSReource extends Component {
               <p>Instance Type</p>
               {/* cluster selector */}
               <Paper>
-                <Grid
-                  rows={this.state.instTypes}
-                  columns={this.state.columns}
-                >
+                <Grid rows={this.state.instTypes} columns={this.state.columns}>
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[
-                      { columnName: "code", direction: "asc" },
-                    ]}
+                    defaultSorting={[{ columnName: "code", direction: "asc" }]}
                   />
 
                   {/* 페이징 */}
@@ -263,9 +274,7 @@ class ChangeEKSReource extends Component {
                   {/* 테이블 */}
                   <Table />
                   <TableColumnResizing
-                    defaultColumnWidths={
-                      this.state.defaultColumnWidths
-                    }
+                    defaultColumnWidths={this.state.defaultColumnWidths}
                   />
                   <TableHeaderRow
                     showSortingControls

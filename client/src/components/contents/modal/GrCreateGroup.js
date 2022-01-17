@@ -3,10 +3,10 @@ import { withStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 // import SelectBox from "../../modules/SelectBox";
 import * as utilLog from "../../util/UtLogs.js";
-import { AsyncStorage } from 'AsyncStorage';
+import { AsyncStorage } from "AsyncStorage";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import {
   Button,
   Dialog,
@@ -35,14 +35,14 @@ import {
   TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Paper from "@material-ui/core/Paper";
-import axios from 'axios';
-import LensIcon from '@material-ui/icons/Lens';
+import axios from "axios";
+import LensIcon from "@material-ui/icons/Lens";
 
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
 import { fn_goLoginPage, fn_tokenValid } from "../../util/Utility.js";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 // import Typography from "@material-ui/core/Typography";
 // import DialogActions from "@material-ui/core/DialogActions";
 // import DialogContent from "@material-ui/core/DialogContent";
@@ -76,22 +76,22 @@ class GrCreateGroup extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupName : "",
-      description : "",
+      groupName: "",
+      description: "",
       open: false,
 
-      rows : [],
+      rows: [],
 
-      selectedRoleIds : [],
-      roleSelectionId : [],
+      selectedRoleIds: [],
+      roleSelectionId: [],
 
-      selectedUserIds : [],
-      userSelectionId : [],
+      selectedUserIds: [],
+      userSelectionId: [],
 
-      selectedClusters : [],
-      clusterSelectionId : [],
+      selectedClusters: [],
+      clusterSelectionId: [],
 
-      activeStep : 0,
+      activeStep: 0,
     };
     // this.onChange = this.onChange.bind(this);
   }
@@ -102,33 +102,32 @@ class GrCreateGroup extends Component {
     });
   };
 
-  componentWillMount() {
-  }
+  componentWillMount() {}
 
   handleClickOpen = () => {
-    this.setState({ 
+    this.setState({
       open: true,
-      roleSelection : []
+      roleSelection: [],
     });
   };
 
   handleClose = () => {
     this.setState({
-      groupName : "",
-      description : "",
-      rows : [],
-      selectedRoleIds : [],
-      roleSelectionId : [],
-      selectedUserIds : [],
-      userSelectionId : [],
-      activeStep : 0,
+      groupName: "",
+      description: "",
+      rows: [],
+      selectedRoleIds: [],
+      roleSelectionId: [],
+      selectedUserIds: [],
+      userSelectionId: [],
+      activeStep: 0,
       open: false,
     });
     this.props.menuClose();
   };
 
   handleSave = (e) => {
-    const {t} = this.props;
+    const { t } = this.props;
     if (this.state.groupName === "") {
       alert(t("groupRole.pop-create.msg.chk-groupName"));
       return;
@@ -139,7 +138,7 @@ class GrCreateGroup extends Component {
     //  else if (Object.keys(this.state.selectedRoleIds).length === 0) {
     //   alert("Please select roles");
     //   return;
-    // } 
+    // }
     else if (Object.keys(this.state.selectedClusters).length === 0) {
       alert(t("groupRole.pop-create.msg.chk-clusters"));
       return;
@@ -150,31 +149,32 @@ class GrCreateGroup extends Component {
 
     // Update user role
     const url = `/settings/group-role`;
-      const data = {
-        groupName:this.state.groupName,
-        description:this.state.description,
-        // role_id:this.state.selectedRoleIds,
-        user_id:this.state.selectedUserIds,
-        clusters: this.state.selectedClusters,
-      };
-      axios.post(url, data)
+    const data = {
+      groupName: this.state.groupName,
+      description: this.state.description,
+      // role_id:this.state.selectedRoleIds,
+      user_id: this.state.selectedUserIds,
+      clusters: this.state.selectedClusters,
+    };
+    axios
+      .post(url, data)
       .then((res) => {
-          alert(res.data.message);
-          this.setState({ open: false });
-          this.props.menuClose();
-          this.props.onUpdateData();
+        alert(res.data.message);
+        this.setState({ open: false });
+        this.props.menuClose();
+        this.props.onUpdateData();
 
-          let userId = null;
-          AsyncStorage.getItem("userName",(err, result) => { 
-            userId= result;
-          })
-          utilLog.fn_insertPLogs(userId, "log-GR-EX01");
+        let userId = null;
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-GR-EX01");
       })
       .catch((err) => {
-          AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
+        AsyncStorage.getItem("useErrAlert", (error, result) => {
+          if (result === "true") alert(err);
+        });
       });
-
-
 
     //close modal popup
     this.setState({ open: false });
@@ -199,10 +199,10 @@ class GrCreateGroup extends Component {
     });
 
     this.setState({
-      selectedUserIds : userIds,
-      userSelectionId : selectionId
-    })
-  }
+      selectedUserIds: userIds,
+      userSelectionId: selectionId,
+    });
+  };
 
   onSelectClusters = (rows, selectionId) => {
     let clusters = [];
@@ -211,13 +211,13 @@ class GrCreateGroup extends Component {
     });
 
     this.setState({
-      selectedClusters : clusters,
-      clusterSelectionId : selectionId
-    })
-  }
+      selectedClusters: clusters,
+      clusterSelectionId: selectionId,
+    });
+  };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     const DialogTitle = withStyles(styles)((props) => {
       const { children, classes, onClose, ...other } = props;
       return (
@@ -229,18 +229,22 @@ class GrCreateGroup extends Component {
               className={classes.closeButton}
               onClick={onClose}
             >
-              <CloseIcon/>
+              <CloseIcon />
             </IconButton>
           ) : null}
         </MuiDialogTitle>
       );
     });
 
-    const steps = [t("groupRole.pop-create.step.1.title"), t("groupRole.pop-create.step.2.title"), t("groupRole.pop-create.step.3.title")];
+    const steps = [
+      t("groupRole.pop-create.step.1.title"),
+      t("groupRole.pop-create.step.2.title"),
+      t("groupRole.pop-create.step.3.title"),
+    ];
     // const steps = ['Set Group Informations', 'Select Group Roles','Select Projects', 'Select Group Users'];
     const handleNext = () => {
-      switch (this.state.activeStep){
-        case 0 :
+      switch (this.state.activeStep) {
+        case 0:
           if (this.state.groupName === "") {
             alert(t("groupRole.pop-create.msg.chk-groupName"));
             return;
@@ -248,7 +252,7 @@ class GrCreateGroup extends Component {
             alert(t("groupRole.pop-create.msg.chk-description"));
             return;
           } else {
-            this.setState({activeStep : this.state.activeStep + 1});
+            this.setState({ activeStep: this.state.activeStep + 1 });
             return;
           }
         // case 1:
@@ -264,16 +268,16 @@ class GrCreateGroup extends Component {
             alert(t("groupRole.pop-create.msg.chk-clusters"));
             return;
           } else {
-            this.setState({activeStep : this.state.activeStep + 1});
+            this.setState({ activeStep: this.state.activeStep + 1 });
             return;
           }
         default:
           return;
       }
     };
-  
+
     const handleBack = () => {
-      this.setState({activeStep : this.state.activeStep - 1});
+      this.setState({ activeStep: this.state.activeStep - 1 });
     };
     return (
       <div>
@@ -295,81 +299,85 @@ class GrCreateGroup extends Component {
           maxWidth="md"
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
-          {t("groupRole.pop-create.title")}
+            {t("groupRole.pop-create.title")}
           </DialogTitle>
           <DialogContent dividers>
             <div className="md-contents-body small-grid">
-            <Stepper activeStep={this.state.activeStep} alternativeLabel>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            <div>
-            <Typography>
-              {this.state.activeStep === 0 ? (
-                <div>
-                  
-                  <section className="md-content">
-                    <p>{t("groupRole.pop-create.step.1.groupRoleName.title")}</p>
-                    <TextField
-                      id="outlined-multiline-static"
-                      rows={1}
-                      placeholder={t("groupRole.pop-create.step.1.groupRoleName.placeholder")}
-                      variant="outlined"
-                      value={this.state.groupName}
-                      fullWidth={true}
-                      name="groupName"
-                      onChange={this.onChange}
-                    />
-                  </section>
-                  <section className="md-content">
-                    <p>{t("groupRole.pop-create.step.1.description.title")}</p>
-                    <TextField
-                      id="outlined-multiline-static"
-                      rows={1}
-                      placeholder={t("groupRole.pop-create.step.1.description.placeholder")}
-                      variant="outlined"
-                      value={this.state.description}
-                      fullWidth={true}
-                      name="description"
-                      onChange={this.onChange}
-                    />
-                  </section>
-                </div>
-              ) : 
-              // this.state.activeStep === 1 ? (
-              //   <section className="md-content">
-              //     <GrRoles 
-              //       selection={this.state.roleSelectionId}
-              //       onSelectedRoles={this.onSelectRoles}
-              //     />
-              //   </section>
-              // ) : 
-              
-              this.state.activeStep === 1 ? (
-                <section className="md-content">
-                  <GrClusters 
-                    selection={this.state.clusterSelectionId}
-                    onselectedClusters={this.onSelectClusters}
-                    propsData={this.props.propsData}
-                    t={t}
-                  />
-                </section>
-              ) : (
-                <section className="md-content">
-                  <GrUsers 
-                    selection={this.state.userSelectionId}
-                    onSelectedUsers={this.onSelectUsers}
-                    t={t}
-                  />
-                </section>
-              )}
-            </Typography>
-          </div>
-              
-             
+              <Stepper activeStep={this.state.activeStep} alternativeLabel>
+                {steps.map((label) => (
+                  <Step key={label}>
+                    <StepLabel>{label}</StepLabel>
+                  </Step>
+                ))}
+              </Stepper>
+              <div>
+                <Typography>
+                  {this.state.activeStep === 0 ? (
+                    <div>
+                      <section className="md-content">
+                        <p>
+                          {t("groupRole.pop-create.step.1.groupRoleName.title")}
+                        </p>
+                        <TextField
+                          id="outlined-multiline-static"
+                          rows={1}
+                          placeholder={t(
+                            "groupRole.pop-create.step.1.groupRoleName.placeholder"
+                          )}
+                          variant="outlined"
+                          value={this.state.groupName}
+                          fullWidth={true}
+                          name="groupName"
+                          onChange={this.onChange}
+                        />
+                      </section>
+                      <section className="md-content">
+                        <p>
+                          {t("groupRole.pop-create.step.1.description.title")}
+                        </p>
+                        <TextField
+                          id="outlined-multiline-static"
+                          rows={1}
+                          placeholder={t(
+                            "groupRole.pop-create.step.1.description.placeholder"
+                          )}
+                          variant="outlined"
+                          value={this.state.description}
+                          fullWidth={true}
+                          name="description"
+                          onChange={this.onChange}
+                        />
+                      </section>
+                    </div>
+                  ) : // this.state.activeStep === 1 ? (
+                  //   <section className="md-content">
+                  //     <GrRoles
+                  //       selection={this.state.roleSelectionId}
+                  //       onSelectedRoles={this.onSelectRoles}
+                  //     />
+                  //   </section>
+                  // ) :
+
+                  this.state.activeStep === 1 ? (
+                    <section className="md-content">
+                      <GrClusters
+                        selection={this.state.clusterSelectionId}
+                        onselectedClusters={this.onSelectClusters}
+                        propsData={this.props.propsData}
+                        t={t}
+                      />
+                    </section>
+                  ) : (
+                    <section className="md-content">
+                      <GrUsers
+                        selection={this.state.userSelectionId}
+                        onSelectedUsers={this.onSelectUsers}
+                        t={t}
+                      />
+                    </section>
+                  )}
+                </Typography>
+              </div>
             </div>
           </DialogContent>
           <DialogActions>
@@ -386,10 +394,9 @@ class GrCreateGroup extends Component {
                 </Button>
               ) : (
                 <Button color="primary" onClick={handleNext}>
-                   {t("common.btn.next")}
+                  {t("common.btn.next")}
                 </Button>
               )}
-              
             </div>
             {/* <Button onClick={this.handleSave} color="primary">
               save
@@ -475,7 +482,7 @@ class GrCreateGroup extends Component {
 //       <div>
 //         <p>Select Group Roles</p>
 //           <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
-//               {this.state.selectedRow.length > 0 
+//               {this.state.selectedRow.length > 0
 //                 ? this.state.selectedRow.map((row)=>{
 //                   return (
 //                     <span>
@@ -483,7 +490,7 @@ class GrCreateGroup extends Component {
 //                       {row.role_name}
 //                     </span>
 //                   );
-//                 }) 
+//                 })
 //                 : <div style={{
 //                   color:"#9a9a9a",
 //                   textAlign: "center",
@@ -543,9 +550,8 @@ class GrCreateGroup extends Component {
 //   }
 // }
 
-
-class GrClusters extends Component{
-  constructor(props){
+class GrClusters extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       columns: [
@@ -565,26 +571,25 @@ class GrClusters extends Component{
         { columnName: "ram", width: 120 },
         // { columnName: "edit", width: 170 },
       ],
-      rows:[],
-      
+      rows: [],
+
       currentPage: 0,
       setCurrentPage: 0,
       pageSize: 5,
       pageSizes: [5, 10, 15, 0],
-      
+
       selection: this.props.selection,
-      selectedRow : [],
+      selectedRow: [],
       completed: 0,
-    }
+    };
   }
 
   componentWillMount() {}
 
   callApi = async () => {
-
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => { 
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     let accessToken;
@@ -593,12 +598,12 @@ class GrClusters extends Component{
     });
 
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
 
     const response = await fetch("/clusters", requestOptions);
@@ -610,26 +615,26 @@ class GrClusters extends Component{
     const { completed } = this.state;
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
-  
-  componentDidMount(){
+
+  componentDidMount() {
     this.timer = setInterval(this.progress, 20);
 
     this.callApi()
       .then(async (res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           let resData = res;
           let result = await fn_tokenValid(res);
-          
-          if(result === "valid"){
+
+          if (result === "valid") {
             this.setState({ rows: resData });
             let selectedRows = [];
             this.props.selection.forEach((index) => {
               selectedRows.push(resData[index]);
             });
-            this.setState({ selectedRow: selectedRows});
-          } else if (result === "refresh"){
+            this.setState({ selectedRow: selectedRows });
+          } else if (result === "refresh") {
             this.onRefresh();
           } else {
             console.log("expired-pront");
@@ -645,122 +650,140 @@ class GrClusters extends Component{
     this.timer = setInterval(this.progress, 20);
 
     this.callApi()
-    .then(async (res) => {
-      if(res === null){
-        this.setState({ rows: [] });
-      } else {
+      .then(async (res) => {
+        if (res === null) {
+          this.setState({ rows: [] });
+        } else {
           this.setState({ rows: res });
           let selectedRows = [];
           this.props.selection.forEach((index) => {
             selectedRows.push(res[index]);
           });
-          this.setState({ selectedRow: selectedRows});
-      }
-      clearInterval(this.timer);
-    })
-    .catch((err) => console.log(err));
+          this.setState({ selectedRow: selectedRows });
+        }
+        clearInterval(this.timer);
+      })
+      .catch((err) => console.log(err));
   };
 
-  render(){
-
+  render() {
     const t = this.props.t;
     const HighlightedCell = ({ value, style, row, ...restProps }) => {
-      var cpuPct = parseFloat(row.cpu.split("/")[0])/parseFloat(row.cpu.split("/")[1].split(" Core")[0]) * 100
-      var memPct = parseFloat(row.ram.split("/")[0])/parseFloat(row.ram.split("/")[1].split(" Gi")[0]) * 100
+      var cpuPct =
+        (parseFloat(row.cpu.split("/")[0]) /
+          parseFloat(row.cpu.split("/")[1].split(" Core")[0])) *
+        100;
+      var memPct =
+        (parseFloat(row.ram.split("/")[0]) /
+          parseFloat(row.ram.split("/")[1].split(" Gi")[0])) *
+        100;
       // console.log(cpuPct, memPct)
-      var status = cpuPct >= 90 || memPct >= 90 ? "Warning" : value
+      var status = cpuPct >= 90 || memPct >= 90 ? "Warning" : value;
       return (
-      <Table.Cell
-        {...restProps}
-        style={{
-          // backgroundColor:
-          //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
-          // cursor: "pointer",
-          ...style,
-        }}
-      >
-        <span
+        <Table.Cell
+          {...restProps}
           style={{
-            color:
-            status === "Healthy" ? "#1ab726"
-              : status === "Unhealthy" ? "red"
-                : status === "Unknown" ? "#b5b5b5"
-                  : status === "Warning" ? "#ff8042" : "black",
+            // backgroundColor:
+            //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
+            // cursor: "pointer",
+            ...style,
           }}
         >
-          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
-          backgroundColor: 
-            status === "Healthy" ? "rgba(85,188,138,.1)"
-                : status === "Unhealthy" ? "rgb(152 13 13 / 10%)"
-                  : status === "Unknown" ? "rgb(255 255 255 / 10%)"
-                    : status === "Warning" ? "rgb(109 31 7 / 10%)" : "white",
-          boxShadow: 
-            status === "Healthy" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
-                : status === "Unhealthy" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
-                  : status === "Unknown" ? "rgb(255 255 255 / 10%)"
-                    : status === "Warning" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
-          borderRadius: "20px",
-          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
-          }}></FiberManualRecordSharpIcon>
-        </span>
-          
-        <span
-          style={{
-            color:
-            status === "Healthy"
-                ? "#1ab726"
-                : status === "Unhealthy"
-                ? "red"
-                : status === "Unknown"
-                ? "#b5b5b5"
-                : status === "Warning"
-                ? "#ff8042"
-                : "black",
-          }}
-        >
-          {status}
-        </span>
-      </Table.Cell>
-    )};
+          <span
+            style={{
+              color:
+                status === "Healthy"
+                  ? "#1ab726"
+                  : status === "Unhealthy"
+                  ? "red"
+                  : status === "Unknown"
+                  ? "#b5b5b5"
+                  : status === "Warning"
+                  ? "#ff8042"
+                  : "black",
+            }}
+          >
+            <FiberManualRecordSharpIcon
+              style={{
+                fontSize: 12,
+                marginRight: 4,
+                backgroundColor:
+                  status === "Healthy"
+                    ? "rgba(85,188,138,.1)"
+                    : status === "Unhealthy"
+                    ? "rgb(152 13 13 / 10%)"
+                    : status === "Unknown"
+                    ? "rgb(255 255 255 / 10%)"
+                    : status === "Warning"
+                    ? "rgb(109 31 7 / 10%)"
+                    : "white",
+                boxShadow:
+                  status === "Healthy"
+                    ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                    : status === "Unhealthy"
+                    ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                    : status === "Unknown"
+                    ? "rgb(255 255 255 / 10%)"
+                    : status === "Warning"
+                    ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px"
+                    : "white",
+                borderRadius: "20px",
+                // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+              }}
+            ></FiberManualRecordSharpIcon>
+          </span>
+
+          <span
+            style={{
+              color:
+                status === "Healthy"
+                  ? "#1ab726"
+                  : status === "Unhealthy"
+                  ? "red"
+                  : status === "Unknown"
+                  ? "#b5b5b5"
+                  : status === "Warning"
+                  ? "#ff8042"
+                  : "black",
+            }}
+          >
+            {status}
+          </span>
+        </Table.Cell>
+      );
+    };
 
     const Cell = (props) => {
-
       const fnEnterCheck = (prop) => {
         var arr = [];
         var i;
-        for(i=0; i < Object.keys(prop.value).length; i++){
-          const str = Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i]
-          arr.push(str)
+        for (i = 0; i < Object.keys(prop.value).length; i++) {
+          const str =
+            Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i];
+          arr.push(str);
         }
-        return (
-         arr.map(item => {
-           return (
-             <p>{item}</p>
-           )
-         })
-        )
+        return arr.map((item) => {
+          return <p>{item}</p>;
+        });
         // return (
-          // props.value.indexOf("|") > 0 ? 
-          //   props.value.split("|").map( item => {
-          //     return (
-          //       <p>{item}</p>
-          //   )}) : 
-          //     props.value
+        // props.value.indexOf("|") > 0 ?
+        //   props.value.split("|").map( item => {
+        //     return (
+        //       <p>{item}</p>
+        //   )}) :
+        //     props.value
         // )
-      }
+      };
 
       const { column } = props;
       // console.log("cell : ", props);
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
-      } else if (column.name === "labels"){
-        return (
-        <Table.Cell>{fnEnterCheck(props)}</Table.Cell>
-        )
+      } else if (column.name === "labels") {
+        return <Table.Cell>{fnEnterCheck(props)}</Table.Cell>;
       }
       return <Table.Cell {...props} />;
     };
-
 
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
@@ -779,95 +802,98 @@ class GrClusters extends Component{
       selection.forEach((id) => {
         selectedRows.push(this.state.rows[id]);
       });
-      this.setState({ selectedRow: selectedRows});
+      this.setState({ selectedRow: selectedRows });
       this.setState({ selection: selection });
 
       this.props.onselectedClusters(selectedRows, selection);
     };
 
-    return(
+    return (
       <div>
         <p>{t("groupRole.pop-create.step.2.selectClusters.title")}</p>
-          <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
-              {this.state.selectedRow.length > 0 
-                ? this.state.selectedRow.map((row)=>{
-                  return (
-                    <span>
-                      <LensIcon style={{fontSize:"8px", marginRight:"5px"}}/>
-                      {row.name}
-                    </span>
-                  );
-                }) 
-                : <div style={{
-                  color:"#9a9a9a",
-                  textAlign: "center",
-                  paddingTop: "30px"}}>
-                    {t("groupRole.pop-create.step.2.selectClusters.placeholder")}
-                  </div>}
-          </div>
+        <div
+          id="md-content-info"
+          style={{ display: "block", minHeight: "95px", marginBottom: "10px" }}
+        >
+          {this.state.selectedRow.length > 0 ? (
+            this.state.selectedRow.map((row) => {
+              return (
+                <span>
+                  <LensIcon style={{ fontSize: "8px", marginRight: "5px" }} />
+                  {row.name}
+                </span>
+              );
+            })
+          ) : (
+            <div
+              style={{
+                color: "#9a9a9a",
+                textAlign: "center",
+                paddingTop: "30px",
+              }}
+            >
+              {t("groupRole.pop-create.step.2.selectClusters.placeholder")}
+            </div>
+          )}
+        </div>
         {/* <p>Select Role</p> */}
         <Paper>
-           {this.state.rows.length > 0 ? (
-              [
-          <Grid rows={this.state.rows} columns={this.state.columns}>
-            {/* <Toolbar /> */}
-            {/* 검색 */}
-            {/* <SearchState defaultValue="" />
+          {this.state.rows.length > 0 ? (
+            [
+              <Grid rows={this.state.rows} columns={this.state.columns}>
+                {/* <Toolbar /> */}
+                {/* 검색 */}
+                {/* <SearchState defaultValue="" />
             <SearchPanel style={{ marginLeft: 0 }} /> */}
 
-            {/* Sorting */}
-            <SortingState
-              defaultSorting={[{ columnName: "status", direction: "asc" }]}
-            />
+                {/* Sorting */}
+                <SortingState
+                  defaultSorting={[{ columnName: "status", direction: "asc" }]}
+                />
 
-            {/* 페이징 */}
-            <PagingState
-              defaultCurrentPage={0}
-              defaultPageSize={this.state.pageSize}
-            />
-            <PagingPanel pageSizes={this.state.pageSizes} />
-            <SelectionState
-              selection={this.state.selection}
-              onSelectionChange={onSelectionChange}
-            />
+                {/* 페이징 */}
+                <PagingState
+                  defaultCurrentPage={0}
+                  defaultPageSize={this.state.pageSize}
+                />
+                <PagingPanel pageSizes={this.state.pageSizes} />
+                <SelectionState
+                  selection={this.state.selection}
+                  onSelectionChange={onSelectionChange}
+                />
 
-            <IntegratedFiltering />
-            <IntegratedSorting />
-            <IntegratedSelection />
-            <IntegratedPaging />
+                <IntegratedFiltering />
+                <IntegratedSorting />
+                <IntegratedSelection />
+                <IntegratedPaging />
 
-            {/* 테이블 */}
-            <Table  cellComponent={Cell}/>
-            <TableColumnResizing
-              defaultColumnWidths={this.state.defaultColumnWidths}
-            />
-            <TableHeaderRow
-              showSortingControls
-              rowComponent={HeaderRow}
-            />
-            <TableColumnVisibility
-              // defaultHiddenColumnNames={['role_id']}
-            />
-            <TableSelection
-              selectByRowClick
-              highlightRow
-            />
-          </Grid>]
-            ) : (
-              <CircularProgress
-                variant="determinate"
-                value={this.state.completed}
-                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-              ></CircularProgress>
-            )}
+                {/* 테이블 */}
+                <Table cellComponent={Cell} />
+                <TableColumnResizing
+                  defaultColumnWidths={this.state.defaultColumnWidths}
+                />
+                <TableHeaderRow showSortingControls rowComponent={HeaderRow} />
+                <TableColumnVisibility
+                // defaultHiddenColumnNames={['role_id']}
+                />
+                <TableSelection selectByRowClick highlightRow />
+              </Grid>,
+            ]
+          ) : (
+            <CircularProgress
+              variant="determinate"
+              value={this.state.completed}
+              style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+            ></CircularProgress>
+          )}
         </Paper>
       </div>
     );
   }
 }
 
-class GrUsers extends Component{
-  constructor(props){
+class GrUsers extends Component {
+  constructor(props) {
     super(props);
     this.state = {
       columns: [
@@ -882,10 +908,10 @@ class GrUsers extends Component{
       setCurrentPage: 0,
       pageSize: 5,
       pageSizes: [5, 10, 15, 0],
-      rows:[],
+      rows: [],
       selection: this.props.selection,
-      selectedRow : [],
-    }
+      selectedRow: [],
+    };
   }
 
   callApi = async () => {
@@ -894,21 +920,20 @@ class GrUsers extends Component{
     return body;
   };
 
-  componentWillMount(){
+  componentWillMount() {
     this.callApi()
       .then((res) => {
-        
-        this.setState({ rows: res});
+        this.setState({ rows: res });
         let selectedRows = [];
         this.props.selection.forEach((index) => {
           selectedRows.push(res[index]);
         });
-        this.setState({ selectedRow: selectedRows});
-        })
+        this.setState({ selectedRow: selectedRows });
+      })
       .catch((err) => console.log(err));
   }
 
-  render(){
+  render() {
     const t = this.props.t;
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
@@ -927,32 +952,40 @@ class GrUsers extends Component{
       selection.forEach((id) => {
         selectedRows.push(this.state.rows[id]);
       });
-      this.setState({ selectedRow: selectedRows});
+      this.setState({ selectedRow: selectedRows });
       this.setState({ selection: selection });
 
       this.props.onSelectedUsers(selectedRows, selection);
     };
 
-    return(
+    return (
       <div>
         <p>{t("groupRole.pop-create.step.3.selectUsers.title")}</p>
-          <div id="md-content-info" style={{display:"block", minHeight:"95px",marginBottom:"10px"}}>
-              {this.state.selectedRow.length > 0 
-                ? this.state.selectedRow.map((row)=>{
-                  return (
-                    <span>
-                      <LensIcon style={{fontSize:"8px", marginRight:"5px"}}/>
-                      {row.user_id}
-                    </span>
-                  );
-                }) 
-                : <div style={{
-                  color:"#9a9a9a",
-                  textAlign: "center",
-                  paddingTop: "30px"}}>
-                    {t("groupRole.pop-create.step.3.selectUsers.placeholder")}
-                  </div>}
-          </div>
+        <div
+          id="md-content-info"
+          style={{ display: "block", minHeight: "95px", marginBottom: "10px" }}
+        >
+          {this.state.selectedRow.length > 0 ? (
+            this.state.selectedRow.map((row) => {
+              return (
+                <span>
+                  <LensIcon style={{ fontSize: "8px", marginRight: "5px" }} />
+                  {row.user_id}
+                </span>
+              );
+            })
+          ) : (
+            <div
+              style={{
+                color: "#9a9a9a",
+                textAlign: "center",
+                paddingTop: "30px",
+              }}
+            >
+              {t("groupRole.pop-create.step.3.selectUsers.placeholder")}
+            </div>
+          )}
+        </div>
         {/* <p>Select Role</p> */}
         <Paper>
           <Grid rows={this.state.rows} columns={this.state.columns}>
@@ -987,17 +1020,9 @@ class GrUsers extends Component{
             <TableColumnResizing
               defaultColumnWidths={this.state.defaultColumnWidths}
             />
-            <TableHeaderRow
-              showSortingControls
-              rowComponent={HeaderRow}
-            />
-            <TableColumnVisibility
-              defaultHiddenColumnNames={['role_id']}
-            />
-            <TableSelection
-              selectByRowClick
-              highlightRow
-            />
+            <TableHeaderRow showSortingControls rowComponent={HeaderRow} />
+            <TableColumnVisibility defaultHiddenColumnNames={["role_id"]} />
+            <TableSelection selectByRowClick highlightRow />
           </Grid>
         </Paper>
       </div>
@@ -1005,5 +1030,4 @@ class GrUsers extends Component{
   }
 }
 
-
-export default withTranslation()(GrCreateGroup); 
+export default withTranslation()(GrCreateGroup);

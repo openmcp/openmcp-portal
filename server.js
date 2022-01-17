@@ -1679,6 +1679,69 @@ app.get("/nodes/:node", (req, res) => {
   });
 });
 
+app.patch("/apis/nodes/taint/add", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/nodes_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  let requestData = {
+    clusterName :req.body.clusterName,
+    nodeName :req.body.nodeName,
+    effect :req.body.effect,
+    key :req.body.key,
+    value: req.body.value,
+  };
+
+  let data = JSON.stringify(requestData);
+
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/nodes/taint/add`,
+    method: "PATCH",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+});
+
+
+app.patch("/apis/nodes/taint/delete", (req, res) => {
+  // let rawdata = fs.readFileSync("./json_data/nodes_detail.json");
+  // let overview = JSON.parse(rawdata);
+  // res.send(overview);
+
+  let requestData = {
+    clusterName :req.body.clusterName,
+    nodeName :req.body.nodeName,
+    index: req.body.index,
+  };
+
+  let data = JSON.stringify(requestData);
+  let request = require("request");
+  let options = {
+    uri: `${apiServer}/apis/nodes/taint/delete`,
+    method: "PATCH",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+});
+
+
+
+
 app.get("/nodes/:node/power-usage", async (req, res) => {
   
 
@@ -1882,7 +1945,7 @@ app.post("/nodes/eks/change", (req, res) => {
       requestData = {
         akid: result.rows[0].accessKey,
         secretKey: result.rows[0].secretKey,
-        region: req.body.region,
+        region: result.rows[0].region,
         type: req.body.type,
         node: req.body.node,
       };
@@ -2253,6 +2316,7 @@ app.post("/clusters/public-cloud", (req, res) => {
   // //console.log(overview);
   // res.send(overview);
 
+  console.log("ddddd")
   var request = require("request");
   let data = JSON.stringify(req.body);
 

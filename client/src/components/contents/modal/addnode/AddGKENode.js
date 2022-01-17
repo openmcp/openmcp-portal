@@ -232,7 +232,7 @@ class AddGKENode extends Component {
   );
 
   render() {
-    const t = this.props;
+    const t = this.props.t;
     const columns = [
       { name: "name", title: t("nodes.pop-addNode.grid.name") },
       { name: "status", title: t("nodes.pop-addNode.grid.status") },

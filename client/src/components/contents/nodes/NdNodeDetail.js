@@ -86,7 +86,10 @@ class NdNodeDetail extends Component {
   };
 
   onUpdateData = () => {
-    console.log("onUpdateData={this.props.onUpdateData}");
+    // console.log("onUpdateData={this.props.onUpdateData}");
+    this.timer = setInterval(this.progress, 20);
+    this.setState({ rows: "" });
+
     this.callApi()
       .then((res) => {
         if (res === null) {
@@ -94,6 +97,7 @@ class NdNodeDetail extends Component {
         } else {
           this.setState({ rows: res });
         }
+        
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -177,13 +181,21 @@ class NdNodeDetail extends Component {
 }
 
 class BasicInfo extends Component {
+
+  onUpdateData = () => {
+    this.props.onUpdateData();
+  }
   render() {
     const t = this.props.t;
     return (
       <div className="content-box">
         <div className="cb-header">
           <span>{t("nodes.detail.basicInfo.title")}</span>
-          <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/>
+          <NdTaintConfig name={this.props.rowData.name} taints={this.props.rowData.taint}
+          cluster={this.props.rowData.cluster}
+          node={this.props.rowData.name}
+          onUpdateData={this.onUpdateData}
+          t={t}/>
         </div>
         <div className="cb-body">
           <div>
@@ -519,8 +531,8 @@ class NodeResourceUsage extends Component {
       <div className="content-box">
         <div className="cb-header">
           <span> {t("nodes.detail.resourceUsage.title")}</span>
-          {this.props.propsRow.provider === "eks" ||
-          this.props.propsRow.provider === "kvm" ? (
+          {this.props.propsRow.provider === "EKS" ||
+          this.props.propsRow.provider === "KVM" ? (
             <NdResourceConfig
               rows={this.state.rows}
               rowData={this.props.rowData}

@@ -1826,6 +1826,39 @@ g {
   padding: 5px;
 }
 
+.nd-taint-config .taint-title {
+  font-size: 18px;
+  font-weight: bold;
+  color:#006280;
+  margin:10px 0;
+}
+
+.nd-taint-config .taint-list > div{
+  margin: 15px 0;
+  padding: 0 20px;
+  border-bottom : 1px solid #ececec;
+}
+
+.nd-taint-config .taint-list > div:last-child{
+  margin-bottom: 40px;
+}
+
+
+.nd-taint-config .taint-list > div > label{
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.nd-taint-config .taint-list > div > span{
+  min-width: 300px;
+  margin-right:50px;
+}
+
+.nd-taint-config .taint-list > div .taint-delete {
+  float :right;
+  line-height: 0.6em;
+}
+
 /* Modal Deployment migrations */
 .md-contents-body {
 }

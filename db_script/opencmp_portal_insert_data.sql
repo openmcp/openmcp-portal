@@ -48,6 +48,9 @@ insert into tb_codes values ('LOG-PT','log-ND-EX04','Execute Add EKS Node','Node
 insert into tb_codes values ('LOG-PT','log-ND-EX05','Execute Add GKE Node','Nodes > Add GKE Node');
 insert into tb_codes values ('LOG-PT','log-ND-EX06','Execute Add AKS Node','Nodes > Add AKS Node');
 insert into tb_codes values ('LOG-PT','log-ND-EX07','Execute Add KVM Node','Nodes > Add KVM Node');
+insert into tb_codes values ('LOG-PT','log-ND-EX08','Execute Add Node Taint','Nodes > Node Overview > ConfigTaint > Add Taint(save)');
+insert into tb_codes values ('LOG-PT','log-ND-EX09','Execute Delete Node Taint','Nodes > Node Overview > ConfigTaint > Delete');
+insert into tb_codes values ('LOG-PT','log-ND-EX10','Execute Change Node Resources','Nodes > Node Overview > Node Resources > Resource Config');
 
 -- Projects Pages
 insert into tb_codes values ('LOG-PT','log-PJ-VW01','View Projects Page','WorkLoads > Projects');
