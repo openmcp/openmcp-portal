@@ -35,7 +35,7 @@ class DbStatus extends Component {
   }
 
   componentDidMount() {
-    this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
+    // this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
 
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);

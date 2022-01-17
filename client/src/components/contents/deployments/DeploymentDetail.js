@@ -26,7 +26,7 @@ import * as utilLog from "./../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import { FaCube } from "react-icons/fa";
-// import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
+import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
 import { withTranslation } from "react-i18next";
 
 let apiParams = "";
@@ -163,10 +163,10 @@ class BasicInfo extends Component {
       <div className="content-box">
         <div className="cb-header">
           <span>{t("deployments.detail.basicInfo.title")}</span>
-          {/* <PdPodResourceConfig
+          <PdPodResourceConfig
             data={this.props.rowData}
             refresh={this.props.refresh}
-          /> */}
+          />
         </div>
         <div className="cb-body">
           <div style={{ display: "flex" }}>

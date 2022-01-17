@@ -168,7 +168,6 @@
 //         <div className="cb-header">
 //           <span>Data Transfer Bill : </span>
 //           <span>$ 2.6</span>
-//           {/* <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/> */}
 //         </div>
 //         <div className="cb-body">
 //           <div style={{ display: "flex", margin:"0px 0 0 10px"}}>
@@ -226,7 +225,6 @@
 //         <div className="cb-header">
 //           <span>Resource Usage Bill : </span>
 //           <span>$ 100.12</span>
-//           {/* <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/> */}
 //         </div>
 //         <div className="cb-body">
 //           <div style={{ display: "flex", margin:"0px 0 0 10px" }}>

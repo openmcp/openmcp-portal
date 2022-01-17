@@ -20,7 +20,7 @@ import { NavigateNext } from "@material-ui/icons";
 //   TableHeaderRow,
 //   PagingPanel,
 // } from "@devexpress/dx-react-grid-material-ui";
-// import NdTaintConfig from './../modal/NdTaintConfig';
+import NdTaintConfig from './../modal/NdTaintConfig';
 import PieReChart2 from "../../modules/PieReChart2";
 import * as utilLog from "./../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
@@ -183,7 +183,7 @@ class BasicInfo extends Component {
       <div className="content-box">
         <div className="cb-header">
           <span>{t("nodes.detail.basicInfo.title")}</span>
-          {/* <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/> */}
+          <NdTaintConfig name={this.props.rowData.name} taint={this.props.rowData.taint}/>
         </div>
         <div className="cb-body">
           <div>
