@@ -21,9 +21,9 @@ import {
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../../modules/Editor";
 import { NavigateNext } from "@material-ui/icons";
-import * as utilLog from './../../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import { withTranslation } from 'react-i18next';
+import * as utilLog from "./../../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from "react-i18next";
 
 let apiParams = "";
 class PjIngress extends Component {
@@ -49,11 +49,11 @@ class PjIngress extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext: ``,
     };
   }
 
@@ -61,10 +61,10 @@ class PjIngress extends Component {
     const result = {
       menu: "projects",
       title: this.props.match.params.project,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
+      pathParams: {
+        searchString: this.props.location.search,
+        project: this.props.match.params.project,
+      },
     };
     this.props.menuData(result);
 
@@ -73,7 +73,9 @@ class PjIngress extends Component {
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
-    const response = await fetch(`/projects/${apiParams}/resources/ingress${this.props.location.search}`);
+    const response = await fetch(
+      `/projects/${apiParams}/resources/ingress${this.props.location.search}`
+    );
     const body = await response.json();
     return body;
   };
@@ -89,23 +91,23 @@ class PjIngress extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
         let userId = null;
-        AsyncStorage.getItem("userName",(err, result) => { 
-          userId= result;
-        })
-        utilLog.fn_insertPLogs(userId, 'log-PJ-VW07');
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-PJ-VW07");
       })
       .catch((err) => console.log(err));
   }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -142,22 +144,19 @@ class PjIngress extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      
+
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value === undefined){
-          return ""
+        if (props.value === undefined) {
+          return "";
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          return props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item) => {
+                return <p>{item}</p>;
+              })
+            : props.value;
         }
       };
 
@@ -204,23 +203,32 @@ class PjIngress extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            {t("projects.detail.resources.ingress.title")}
-            <small>{apiParams}</small>
+            {apiParams}
+            <small>
+              <NavigateNext className="detail-navigate-next" />
+              {t("projects.detail.resources.ingress.title")}
+            </small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("projects.title")}
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("projects.detail.resources.title")}
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("projects.detail.resources.ingress.title")}
             </li>
           </ol>
@@ -229,7 +237,7 @@ class PjIngress extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create" context={this.state.editorContext}/>,
+                <Editor title="create" context={this.state.editorContext} />,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
@@ -278,4 +286,4 @@ class PjIngress extends Component {
   }
 }
 
-export default withTranslation()(PjIngress); 
+export default withTranslation()(PjIngress);

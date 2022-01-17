@@ -20,9 +20,9 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import * as utilLog from './../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import { withTranslation } from 'react-i18next';
+import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from "react-i18next";
 
 // let apiParams = "";
 class IngressDetail extends Component {
@@ -36,10 +36,10 @@ class IngressDetail extends Component {
     const result = {
       menu: "projects",
       title: this.props.match.params.project,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
+      pathParams: {
+        searchString: this.props.location.search,
+        project: this.props.match.params.project,
+      },
     };
     this.props.menuData(result);
     // apiParams = this.props.match.params.project;
@@ -50,21 +50,20 @@ class IngressDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        console.log(res)
-        if(res === null){
+        console.log(res);
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
         let userId = null;
-        AsyncStorage.getItem("userName",(err, result) => { 
-          userId= result;
-        })
-        utilLog.fn_insertPLogs(userId, 'log-NW-VW06');
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-NW-VW06");
       })
       .catch((err) => console.log(err));
-      
   }
 
   callApi = async () => {
@@ -82,30 +81,42 @@ class IngressDetail extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <div>
         <div className="content-wrapper fulled">
-          {/* 컨텐츠 헤더 */} 
+          {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              {t("network.ingress.detail.title")}
-              <small>{this.props.match.params.ingress}</small>
+              {this.props.match.params.ingress}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t("network.ingress.detail.title")}
+              </small>
             </h1>
             <ol className="breadcrumb">
               <li>
                 <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/network"> {t("network.title")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
-                <NavLink to="/network/services"> {t("network.ingress.title")}</NavLink>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
+                <NavLink to="/network/services">
+                  {" "}
+                  {t("network.ingress.title")}
+                </NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("network.ingress.detail.title")}
               </li>
             </ol>
@@ -115,9 +126,9 @@ class IngressDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
-                <Rules rowData={this.state.rows.rules} t={t}/>,
-                <Events rowData={this.state.rows.events} t={t}/>,
+                <BasicInfo rowData={this.state.rows.basic_info} t={t} />,
+                <Rules rowData={this.state.rows.rules} t={t} />,
+                <Events rowData={this.state.rows.events} t={t} />,
               ]
             ) : (
               <CircularProgress
@@ -138,7 +149,9 @@ class BasicInfo extends Component {
     const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">{t("network.ingress.detail.basicInfo.title")}</div>
+        <div className="cb-header">
+          {t("network.ingress.detail.basicInfo.title")}
+        </div>
         <div className="cb-body">
           <div style={{ display: "flex" }}>
             <div className="cb-body-left">
@@ -162,7 +175,9 @@ class BasicInfo extends Component {
                 {this.props.rowData.project}
               </div>
               <div>
-                <span>{t("network.ingress.detail.basicInfo.createdTime")} : </span>
+                <span>
+                  {t("network.ingress.detail.basicInfo.createdTime")} :{" "}
+                </span>
                 {this.props.rowData.created_time}
               </div>
             </div>
@@ -191,7 +206,7 @@ class Rules extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -225,15 +240,19 @@ class Rules extends Component {
   //     .catch((err) => console.log(err));
   // };
 
-  
-
   render() {
     const t = this.props.t;
     const columns = [
       { name: "domain", title: t("network.ingress.detail.rules.grid.domain") },
-      { name: "protocol", title: t("network.ingress.detail.rules.grid.protocol") },
+      {
+        name: "protocol",
+        title: t("network.ingress.detail.rules.grid.protocol"),
+      },
       { name: "path", title: t("network.ingress.detail.rules.grid.path") },
-      { name: "services", title: t("network.ingress.detail.rules.grid.service") },
+      {
+        name: "services",
+        title: t("network.ingress.detail.rules.grid.service"),
+      },
       { name: "port", title: t("network.ingress.detail.rules.grid.port") },
       { name: "secret", title: t("network.ingress.detail.rules.grid.secret") },
     ];
@@ -242,22 +261,19 @@ class Rules extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      
+
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value === undefined){
-          return ""
+        if (props.value === undefined) {
+          return "";
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          return props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item) => {
+                return <p>{item}</p>;
+              })
+            : props.value;
         }
       };
 
@@ -282,7 +298,9 @@ class Rules extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">{t("network.ingress.detail.rules.title")}</div>
+        <div className="cb-header">
+          {t("network.ingress.detail.rules.title")}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -351,7 +369,7 @@ class Events extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -388,12 +406,27 @@ class Events extends Component {
   render() {
     const t = this.props.t;
     const columns = [
-      { name: "project", title: t("network.services.detail.events.grid.project") },
-      { name: "type", title:  t("network.services.detail.events.grid.type") },
-      { name: "reason", title:  t("network.services.detail.events.grid.reason") },
-      { name: "object", title:  t("network.services.detail.events.grid.object") },
-      { name: "message", title:  t("network.services.detail.events.grid.message") },
-      { name: "time", title:  t("network.services.detail.events.grid.createdTime") },
+      {
+        name: "project",
+        title: t("network.services.detail.events.grid.project"),
+      },
+      { name: "type", title: t("network.services.detail.events.grid.type") },
+      {
+        name: "reason",
+        title: t("network.services.detail.events.grid.reason"),
+      },
+      {
+        name: "object",
+        title: t("network.services.detail.events.grid.object"),
+      },
+      {
+        name: "message",
+        title: t("network.services.detail.events.grid.message"),
+      },
+      {
+        name: "time",
+        title: t("network.services.detail.events.grid.createdTime"),
+      },
     ];
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
@@ -413,7 +446,9 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">{t("network.ingress.detail.events.title")}</div>
+        <div className="cb-header">
+          {t("network.ingress.detail.events.title")}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -464,4 +499,4 @@ class Events extends Component {
   }
 }
 
-export default withTranslation()(IngressDetail); 
+export default withTranslation()(IngressDetail);

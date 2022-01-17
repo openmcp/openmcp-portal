@@ -23,9 +23,9 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import * as utilLog from './../../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import { withTranslation } from 'react-i18next';
+import * as utilLog from "./../../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from "react-i18next";
 // import { withStyles, makeStyles } from "@material-ui/core/styles";
 // import clsx from "clsx";
 
@@ -52,17 +52,17 @@ class PjwStatefulSetDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
         let userId = null;
-        AsyncStorage.getItem("userName",(err, result) => { 
-          userId= result;
-        })
-        utilLog.fn_insertPLogs(userId, 'log-PJ-VW12');
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-PJ-VW12");
       })
       .catch((err) => console.log(err));
   }
@@ -81,13 +81,13 @@ class PjwStatefulSetDetail extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
-  refresh = () =>{
+  refresh = () => {
     console.log("refresh");
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     // this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -95,22 +95,21 @@ class PjwStatefulSetDetail extends Component {
         // clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  }
-
+  };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <div>
         <div className="sub-content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
           <section className="sub-content-header" style={{ paddingTop: 15 }}>
-          {t("projects.detail.resources.workloads.statefulsets.detail.title")}
+            {this.props.match.params.statefulset}
             <small>
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              {this.props.match.params.statefulset}
+              <NavigateNext className="detail-navigate-next" />
+              {t(
+                "projects.detail.resources.workloads.statefulsets.detail.title"
+              )}
             </small>
             {/* <ol className="breadcrumb">
               <li>
@@ -133,12 +132,12 @@ class PjwStatefulSetDetail extends Component {
               [
                 <BasicInfo rowData={this.state.rows.basic_info} t={t} />,
                 // <ReplicaStatus refresh={this.refresh} />,
-                <Pods rowData={this.state.rows.pods} t={t}/>,
-                <Ports rowData={this.state.rows.ports} t={t}/>,
+                <Pods rowData={this.state.rows.pods} t={t} />,
+                <Ports rowData={this.state.rows.ports} t={t} />,
                 // <PhysicalResources
                 //   rowData={this.state.rows.physical_resources}
                 // />,
-                <Events rowData={this.state.rows.events} t={t}/>,
+                <Events rowData={this.state.rows.events} t={t} />,
               ]
             ) : (
               <CircularProgress
@@ -159,9 +158,13 @@ class BasicInfo extends Component {
     const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.basicInfo.title")}</div>
+        <div className="cb-header">
+          {t(
+            "projects.detail.resources.workloads.statefulsets.detail.basicInfo.title"
+          )}
+        </div>
         <div className="cb-body">
-          <div style={{display:"flex"}}>
+          <div style={{ display: "flex" }}>
             <div className="cb-body-left">
               <div>
                 <span>Name : </span>
@@ -172,33 +175,27 @@ class BasicInfo extends Component {
                 {this.props.rowData.project}
               </div>
               <div>
-                  <span>Labels : </span>
-                  <div style={{margin : "-25px 0px 0px 66px"}}>
-                    {
-                      Object.keys(this.props.rowData.labels).length > 0 ?
-                        (
-                          Object.entries(this.props.rowData.labels).map(i=>{
-                          return (<div>{i.join(" : ")}</div>)
-                        })
-                        ) : 
-                        "-"
-                    }
-                  </div>
+                <span>Labels : </span>
+                <div style={{ margin: "-25px 0px 0px 66px" }}>
+                  {Object.keys(this.props.rowData.labels).length > 0
+                    ? Object.entries(this.props.rowData.labels).map((i) => {
+                        return <div>{i.join(" : ")}</div>;
+                      })
+                    : "-"}
                 </div>
-              
+              </div>
             </div>
             <div className="cb-body-right">
-                <div>
-                  <span>Created Time : </span>
-                  {this.props.rowData.created_time}
-                </div>
-                <div>
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
+              <div>
                 <span>Uid : </span>
                 {this.props.rowData.uid}
               </div>
             </div>
           </div>
-
         </div>
       </div>
     );
@@ -255,7 +252,6 @@ class BasicInfo extends Component {
 //       .catch((err) => console.log(err));
 //   };
 
-
 //   delClickEventHandler = (e, cluster) => {
 //     e.preventDefault();
 //     // console.log("delClickEventHandler", e, cluster)
@@ -272,7 +268,6 @@ class BasicInfo extends Component {
 //         })
 //   }
 
-
 //   addClickEventHandler = (e, cluster) => {
 //     e.preventDefault();
 //     // console.log("addClickEventHandler", e, cluster)
@@ -288,7 +283,6 @@ class BasicInfo extends Component {
 //         })
 //   }
 
-  
 //   addPod = (cluster) =>{
 //     const url = `/projects/${apiParams.project}/resources/workloads/deployments/${apiParams.deployment}/replica_status/add_pod`;
 //     const data = {
@@ -305,7 +299,7 @@ class BasicInfo extends Component {
 //       data : {
 //         cluster: cluster
 //       }
-      
+
 //     }
 //     return axios.delete(url, data);
 //   }
@@ -315,16 +309,16 @@ class BasicInfo extends Component {
 //       return (
 //         <div className="rectangle"
 //           id={pId}
-//           style={{ 
+//           style={{
 //             backgroundColor: status === "ready" ? "#367fa9" : "orange",
 //           }}
-          
+
 //         />
 //       );
 //     };
 //     // const circle = (status) => (
 //     //   <div className="circle"
-//     //     style={{ 
+//     //     style={{
 //     //       backgroundColor: status === "ready" ? "#367fa9" : "orange",
 //     //     }}
 //     //   />
@@ -343,7 +337,7 @@ class BasicInfo extends Component {
 //                 obj[v.status] = (obj[v.status] || 0) + 1;
 //                 return obj;
 //               }, {})
-  
+
 //               const count = i.pods.length
 //               return (
 //                 <div className="rs-cluster">
@@ -362,7 +356,7 @@ class BasicInfo extends Component {
 //                   })}
 //                   </div>
 //                   <div className="cluster-button">
-                  
+
 //                     <div onClick= {e => this.addClickEventHandler(e, i.cluster)}>+</div>
 //                     <div onClick={e => this.delClickEventHandler(e, i.cluster)}>-</div>
 //                   </div>
@@ -375,7 +369,7 @@ class BasicInfo extends Component {
 //                 value={this.state.completed}
 //                 style={{ position: "absolute", left: "50%", marginTop: "20px" }}
 //               ></CircularProgress>
-//           )}  
+//           )}
 //           </div>
 //         </div>
 //       </div>
@@ -389,8 +383,8 @@ class Pods extends Component {
     this.state = {
       columns: [
         { name: "name", title: "Name" },
-        { name: "status", title: "Status"},
-        { name: "cluster", title: "Cluster"},
+        { name: "status", title: "Status" },
+        { name: "cluster", title: "Cluster" },
         { name: "project", title: "Project" },
         { name: "pod_ip", title: "Pod IP" },
         { name: "node", title: "Node" },
@@ -416,7 +410,7 @@ class Pods extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -480,7 +474,11 @@ class Pods extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.pods.title")}</div>
+        <div className="cb-header">
+          {t(
+            "projects.detail.resources.workloads.statefulsets.detail.pods.title"
+          )}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -552,7 +550,7 @@ class Ports extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -560,7 +558,7 @@ class Ports extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props.rowData)
+    console.log(this.props.rowData);
     // this.props.onSelectMenu(false, "");
   }
 
@@ -595,24 +593,21 @@ class Ports extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      
+
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value === undefined){
-          return ""
+        if (props.value === undefined) {
+          return "";
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          return props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item) => {
+                return <p>{item}</p>;
+              })
+            : props.value;
         }
-      }
+      };
 
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
@@ -635,7 +630,11 @@ class Ports extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.ports.title")}</div>
+        <div className="cb-header">
+          {t(
+            "projects.detail.resources.workloads.statefulsets.detail.ports.title"
+          )}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -751,7 +750,7 @@ class Events extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -805,7 +804,11 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">{t("projects.detail.resources.workloads.statefulsets.detail.events.title")}</div>
+        <div className="cb-header">
+          {t(
+            "projects.detail.resources.workloads.statefulsets.detail.events.title"
+          )}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -856,4 +859,4 @@ class Events extends Component {
   }
 }
 
-export default withTranslation()(PjwStatefulSetDetail); 
+export default withTranslation()(PjwStatefulSetDetail);

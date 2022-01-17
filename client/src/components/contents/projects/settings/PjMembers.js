@@ -20,7 +20,7 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "../../../modules/Editor";
-import { NavigateNext} from '@material-ui/icons';
+import { NavigateNext } from "@material-ui/icons";
 
 let apiParams = "";
 class PjMembers extends Component {
@@ -28,9 +28,9 @@ class PjMembers extends Component {
     super(props);
     this.state = {
       columns: [
-        { name: "name", title: "Name"},
+        { name: "name", title: "Name" },
         { name: "role", title: "Role" },
-        { name: "last_login_time", title: "Last Login Time"},
+        { name: "last_login_time", title: "Last Login Time" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },
@@ -42,26 +42,25 @@ class PjMembers extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext: ``,
     };
   }
 
   componentWillMount() {
     const result = {
-      menu : "projects",
-      title : this.props.match.params.project,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
-
-    }
+      menu: "projects",
+      title: this.props.match.params.project,
+      pathParams: {
+        searchString: this.props.location.search,
+        project: this.props.match.params.project,
+      },
+    };
     this.props.menuData(result);
-    
+
     apiParams = this.props.match.params.project;
   }
 
@@ -82,7 +81,7 @@ class PjMembers extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -90,10 +89,9 @@ class PjMembers extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   render() {
-
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -103,15 +101,22 @@ class PjMembers extends Component {
           //   value === "Healthy" ? "white" : value === "Unhealthy" ? "white" : undefined,
           // cursor: "pointer",
           ...style,
-        }}>
+        }}
+      >
         <span
           style={{
             color:
-              value === "Warning" ? "orange" : 
-                value === "Unschedulable" ? "red" : 
-                  value === "Stop" ? "red" : 
-                    value === "Running" ? "#1ab726" : "black"
-          }}>
+              value === "Warning"
+                ? "orange"
+                : value === "Unschedulable"
+                ? "red"
+                : value === "Stop"
+                ? "red"
+                : value === "Running"
+                ? "#1ab726"
+                : "black",
+          }}
+        >
           {value}
         </span>
       </Table.Cell>
@@ -123,43 +128,42 @@ class PjMembers extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      
+
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value === undefined){
-          return ""
+        if (props.value === undefined) {
+          return "";
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          return props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item) => {
+                return <p>{item}</p>;
+              })
+            : props.value;
         }
-      }
-
+      };
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
         // console.log("name", props.value);
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/projects/${apiParams}/settings/members/${props.value}`,
-            search: this.props.location.search,
-            state: {
-              data : row
-            }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/projects/${apiParams}/settings/members/${props.value}`,
+                search: this.props.location.search,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {fnEnterCheck()}
+            </Link>
+          </Table.Cell>
         );
-      } 
+      }
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
@@ -176,7 +180,7 @@ class PjMembers extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
@@ -184,19 +188,26 @@ class PjMembers extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            Members
-            <small>{apiParams}</small>
+            {apiParams}
+            <small>
+              <NavigateNext className="detail-navigate-next" />
+              Members
+            </small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">Home</NavLink>
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               Projects
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               Settings
             </li>
           </ol>
@@ -205,11 +216,8 @@ class PjMembers extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create" context={this.state.editorContext}/>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                <Editor title="create" context={this.state.editorContext} />,
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -218,18 +226,25 @@ class PjMembers extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[
+                      { columnName: "status", direction: "desc" },
+                    ]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}

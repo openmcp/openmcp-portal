@@ -122,7 +122,7 @@ class LeftMenu extends Component {
                           color: "#fff",
                         }}
                       />
-                      {this.props.title}
+                      {this.props.menu}
                       {/* {t("common.btn.prev")} */}
                     </Link>
                   </p>

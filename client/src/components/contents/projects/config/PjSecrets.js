@@ -93,7 +93,6 @@ class PjSecrets extends Component {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
-
         }
         clearInterval(this.timer);
         let userId = null;
@@ -203,8 +202,11 @@ class PjSecrets extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            {t("projects.detail.config.secrets.title")}
-            <small>{apiParams}</small>
+            {apiParams}
+            <small>
+              <NavigateNext className="detail-navigate-next" />
+              {t("projects.detail.config.secrets.title")}
+            </small>
           </h1>
           <ol className="breadcrumb">
             <li>

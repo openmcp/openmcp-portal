@@ -20,10 +20,10 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "../../modules/Editor";
-import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import { withTranslation } from 'react-i18next';
+import { NavigateNext } from "@material-ui/icons";
+import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from "react-i18next";
 
 let apiParams = "";
 class PjVolumes extends Component {
@@ -55,7 +55,7 @@ class PjVolumes extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext: ``,
     };
   }
 
@@ -63,20 +63,20 @@ class PjVolumes extends Component {
     const result = {
       menu: "projects",
       title: this.props.match.params.project,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
+      pathParams: {
+        searchString: this.props.location.search,
+        project: this.props.match.params.project,
+      },
     };
     this.props.menuData(result);
 
     apiParams = this.props.match.params.project;
   }
 
-  
-
   callApi = async () => {
-    const response = await fetch(`/projects/${apiParams}/volumes${this.props.location.search}`);
+    const response = await fetch(
+      `/projects/${apiParams}/volumes${this.props.location.search}`
+    );
     const body = await response.json();
     return body;
   };
@@ -91,35 +91,38 @@ class PjVolumes extends Component {
     //데이터가 들어오기 전까지 프로그래스바를 보여준다.
     this.timer = setInterval(this.progress, 20);
     this.callApi()
-    .then((res) => {
-      console.log(res)
-        if(res === null){
+      .then((res) => {
+        console.log(res);
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
-
         }
         clearInterval(this.timer);
         let userId = null;
-        AsyncStorage.getItem("userName",(err, result) => { 
-          userId= result;
-        })
-        utilLog.fn_insertPLogs(userId, 'log-PJ-VW08');
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-PJ-VW08");
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell>
         <span
           style={{
             color:
-             value === "Healthy" ? "#1ab726" : 
-              value === "Unhealthy" ? "red" : 
-                value === "Unknown" ? "#b5b5b5" : "black"
+              value === "Healthy"
+                ? "#1ab726"
+                : value === "Unhealthy"
+                ? "red"
+                : value === "Unknown"
+                ? "#b5b5b5"
+                : "black",
           }}
         >
           {value}
@@ -145,13 +148,19 @@ class PjVolumes extends Component {
             // }}
             {...props}
             style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/projects/${apiParams}/volumes/${props.value}`,
-            search: this.props.location.search,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
+          >
+            <Link
+              to={{
+                pathname: `/projects/${apiParams}/volumes/${props.value}`,
+                search: this.props.location.search,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {props.value}
+            </Link>
+          </Table.Cell>
         );
       }
       return <Table.Cell {...props} />;
@@ -170,7 +179,7 @@ class PjVolumes extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
@@ -178,19 +187,26 @@ class PjVolumes extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            {t("projects.detail.volumes.title")}
-            <small></small>
+            {apiParams}
+            <small>
+              <NavigateNext className="detail-navigate-next" />
+              {t("projects.detail.volumes.title")}
+            </small>
           </h1>
           <ol className="breadcrumb">
-          <li>
+            <li>
               <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("projects.title")}
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("projects.detail.volumes.title")}
             </li>
           </ol>
@@ -199,11 +215,8 @@ class PjVolumes extends Component {
           <Paper>
             {this.state.rows ? (
               [
-                <Editor title="create" context={this.state.editorContext}/>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                <Editor title="create" context={this.state.editorContext} />,
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -217,7 +230,10 @@ class PjVolumes extends Component {
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 

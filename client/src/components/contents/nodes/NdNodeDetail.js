@@ -31,7 +31,7 @@ import ProgressTemp from "./../../modules/ProgressTemp";
 import axios from "axios";
 import PieReChartPowerRange from "../../modules/PieReChartPowerRange";
 import LineReChart from "../../modules/LineReChart";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 
 class NdNodeDetail extends Component {
   constructor(props) {
@@ -100,7 +100,7 @@ class NdNodeDetail extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     // console.log("CsOverview_Render : ",this.state.rows.basic_info);
     return (
       <div>
@@ -108,8 +108,11 @@ class NdNodeDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              {t("nodes.detail.title")}
-              <small>{this.props.match.params.node}</small>
+              {this.props.match.params.node}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t("nodes.detail.title")}
+              </small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -339,10 +342,10 @@ class KubernetesStatus extends Component {
       if (this.state.confirmType === "power") {
         if (this.state.powerFlag === "on") {
           url = `/nodes/${provider}/start`;
-          logType = 'log-ND-EX01';
+          logType = "log-ND-EX01";
         } else if (this.state.powerFlag === "off") {
           url = `/nodes/${provider}/stop`;
-          logType = 'log-ND-EX02';
+          logType = "log-ND-EX02";
         }
 
         if (provider === "EKS") {
@@ -379,7 +382,7 @@ class KubernetesStatus extends Component {
           cluster: this.props.propsRow.cluster,
           node: this.props.propsRow.name,
         };
-        logType = 'log-ND-EX03';
+        logType = "log-ND-EX03";
       }
 
       axios
@@ -471,7 +474,7 @@ class KubernetesStatus extends Component {
                     textTransform: "capitalize",
                   }}
                 >
-                   {t("nodes.detail.nodeStatus.btn-deletNode")}
+                  {t("nodes.detail.nodeStatus.btn-deletNode")}
                 </Button>
               ) : (
                 ""
@@ -668,7 +671,7 @@ class NodePowerUsage extends Component {
         <div className="cb-body flex" style={{ position: "relative" }}>
           {this.state.rows ? (
             [
-              <div style ={{margin:"0 70px"}}>
+              <div style={{ margin: "0 70px" }}>
                 <PieReChartPowerRange
                   range={this.state.range}
                   data={this.state.rows}
@@ -709,4 +712,4 @@ class NodePowerUsage extends Component {
   }
 }
 
-export default withTranslation()(NdNodeDetail); 
+export default withTranslation()(NdNodeDetail);

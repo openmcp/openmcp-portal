@@ -27,8 +27,7 @@ import { AsyncStorage } from "AsyncStorage";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import { FaCube } from "react-icons/fa";
 // import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
-import { withTranslation } from 'react-i18next';
-
+import { withTranslation } from "react-i18next";
 
 let apiParams = "";
 class OMCPDeploymentDetail extends Component {
@@ -60,7 +59,6 @@ class OMCPDeploymentDetail extends Component {
         utilLog.fn_insertPLogs(userId, "log-DP-VW04");
       })
       .catch((err) => console.log(err));
-
   }
 
   callApi = async () => {
@@ -92,46 +90,50 @@ class OMCPDeploymentDetail extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <div>
         <div className="content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header" onClick={this.onRefresh}>
-          <h1>
-            {t("deployments.detail.title")}
-            <small>{this.props.match.params.deployment}</small>
-          </h1>
-          <ol className="breadcrumb">
-            <li>
-              <Link to="/dashboard">{t("common.nav.home")}</Link>
-            </li>
-            <li className="active">
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              {t("deployments.title")}
-            </li>
-            <li className="active">
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              {t("deployments.detail.title")}
-            </li>
-          </ol>
-        </section>
+            <h1>
+              {this.props.match.params.deployment}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t("deployments.detail.title")}
+              </small>
+            </h1>
+            <ol className="breadcrumb">
+              <li>
+                <Link to="/dashboard">{t("common.nav.home")}</Link>
+              </li>
+              <li className="active">
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
+                {t("deployments.title")}
+              </li>
+              <li className="active">
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
+                {t("deployments.detail.title")}
+              </li>
+            </ol>
+          </section>
           {/* 내용부분 */}
           <section className="content">
             {this.state.rows ? (
               [
                 <BasicInfo
                   rowData={this.state.rows.basic_info}
-                  refresh={this.refresh} t={t}
+                  refresh={this.refresh}
+                  t={t}
                 />,
                 <ReplicaStatus
                   refresh={this.refresh}
                   queryString={this.props.location.search}
-                  replica = {this.state.rows.basic_info.status}
+                  replica={this.state.rows.basic_info.status}
                   t={t}
                 />,
                 <Pods rowData={this.state.rows.pods} t={t} />,
@@ -180,7 +182,7 @@ class BasicInfo extends Component {
               </div>
               <div>
                 <span>{t("deployments.detail.basicInfo.replica")} : </span>
-                  {this.props.rowData.status}
+                {this.props.rowData.status}
               </div>
               {/* <div>
                 <span>{t("deployments.detail.basicInfo.labels")} : </span>
@@ -207,7 +209,6 @@ class BasicInfo extends Component {
                 {this.props.rowData.uid}
               </div>
             </div>
-            
           </div>
         </div>
       </div>
@@ -229,9 +230,9 @@ class ReplicaStatus extends React.Component {
     const response = await fetch(
       `/projects/${
         this.props.queryString.split("project=")[1]
-      }/resources/workloads/deployments/omcp-deployment/${apiParams.deployment}/replica_status${
-        this.props.queryString
-      }`
+      }/resources/workloads/deployments/omcp-deployment/${
+        apiParams.deployment
+      }/replica_status${this.props.queryString}`
     );
 
     const body = await response.json();
@@ -304,31 +305,55 @@ class ReplicaStatus extends React.Component {
     return (
       <div className="content-box replica-set">
         <div className="cb-header">
-          {t("deployments.detail.replicaStatus.title") + " ("+t("deployments.detail.replicaStatus.total")+" : " +this.props.replica + ")"}
+          {t("deployments.detail.replicaStatus.title") +
+            " (" +
+            t("deployments.detail.replicaStatus.total") +
+            " : " +
+            this.props.replica +
+            ")"}
         </div>
         <div className="cb-body" style={{ width: "100%" }}>
           <div>
             {this.state.rows ? (
               this.state.rows.map((item, index) => {
-                return(
-                <div className="rs-cluster">
-                  <div className="cluster-title" style={{backgroundColor:parseInt(item.replicas) === 0 ?"#C4C4C4" : "#2877a5"}}>
-                    {item.cluster}
-                  </div>
-                  <div className="cluster-content">
-                    <div className="pod-count" style={{marginBottom:"17px"}}>
-                      <span style={{fontSize:"19px", color:parseInt(item.replicas) === 0 ?"#C4C4C4" : "#000000"}}>
-                        Pods : {item.replicas}
-                      </span>
+                return (
+                  <div className="rs-cluster">
+                    <div
+                      className="cluster-title"
+                      style={{
+                        backgroundColor:
+                          parseInt(item.replicas) === 0 ? "#C4C4C4" : "#2877a5",
+                      }}
+                    >
+                      {item.cluster}
                     </div>
-                    {parseInt(item.replicas) === 0 ? 
-                    <div>{rectangle("none")}</div> : 
-                    [...Array(parseInt(item.replicas))].map((n, index) => {
-                      return <div>{rectangle("ready")}</div>;
-                    })}
+                    <div className="cluster-content">
+                      <div
+                        className="pod-count"
+                        style={{ marginBottom: "17px" }}
+                      >
+                        <span
+                          style={{
+                            fontSize: "19px",
+                            color:
+                              parseInt(item.replicas) === 0
+                                ? "#C4C4C4"
+                                : "#000000",
+                          }}
+                        >
+                          Pods : {item.replicas}
+                        </span>
+                      </div>
+                      {parseInt(item.replicas) === 0 ? (
+                        <div>{rectangle("none")}</div>
+                      ) : (
+                        [...Array(parseInt(item.replicas))].map((n, index) => {
+                          return <div>{rectangle("ready")}</div>;
+                        })
+                      )}
+                    </div>
                   </div>
-                </div>
-                )
+                );
               })
             ) : (
               <CircularProgress
@@ -844,11 +869,11 @@ class Events extends Component {
     const t = this.props.t;
     const columns = [
       { name: "project", title: t("deployments.detail.events.grid.project") },
-      { name: "type", title:  t("deployments.detail.events.grid.type") },
-      { name: "reason", title:  t("deployments.detail.events.grid.reason") },
-      { name: "object", title:  t("deployments.detail.events.grid.object") },
-      { name: "message", title:  t("deployments.detail.events.grid.message") },
-      { name: "time", title:  t("deployments.detail.events.grid.time") },
+      { name: "type", title: t("deployments.detail.events.grid.type") },
+      { name: "reason", title: t("deployments.detail.events.grid.reason") },
+      { name: "object", title: t("deployments.detail.events.grid.object") },
+      { name: "message", title: t("deployments.detail.events.grid.message") },
+      { name: "time", title: t("deployments.detail.events.grid.time") },
     ];
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -920,4 +945,4 @@ class Events extends Component {
   }
 }
 
-export default withTranslation()(OMCPDeploymentDetail); 
+export default withTranslation()(OMCPDeploymentDetail);

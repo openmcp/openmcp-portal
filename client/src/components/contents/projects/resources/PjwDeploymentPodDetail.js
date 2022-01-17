@@ -1,24 +1,35 @@
 import React, { Component } from "react";
-import { NavLink} from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { NavigateNext} from '@material-ui/icons';
+import { NavigateNext } from "@material-ui/icons";
 import Paper from "@material-ui/core/Paper";
-import LineChart from '../../../modules/LineChart';
+import LineChart from "../../../modules/LineChart";
 import {
-  SearchState,IntegratedFiltering,PagingState,IntegratedPaging,SortingState,IntegratedSorting,
+  SearchState,
+  IntegratedFiltering,
+  PagingState,
+  IntegratedPaging,
+  SortingState,
+  IntegratedSorting,
 } from "@devexpress/dx-react-grid";
-import LineReChart from '../../../modules/LineReChart';
+import LineReChart from "../../../modules/LineReChart";
 import {
-  Grid,Table,Toolbar,SearchPanel,TableColumnResizing,TableHeaderRow,PagingPanel,
+  Grid,
+  Table,
+  Toolbar,
+  SearchPanel,
+  TableColumnResizing,
+  TableHeaderRow,
+  PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 
 let apiParams = "";
 class PjwDeploymentPodDetail extends Component {
   state = {
-    rows:"",
+    rows: "",
     completed: 0,
-    reRender : ""
-  }
+    reRender: "",
+  };
 
   componentWillMount() {
     this.props.menuData("none");
@@ -29,7 +40,7 @@ class PjwDeploymentPodDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -37,7 +48,7 @@ class PjwDeploymentPodDetail extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-  }  
+  }
 
   callApi = async () => {
     var param = this.props.match.params;
@@ -58,19 +69,26 @@ class PjwDeploymentPodDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            { this.props.match.params.pod}
-              <small>Pod Overview</small>
+              Pod Overview
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {this.props.match.params.pod}
+              </small>
             </h1>
             <ol className="breadcrumb">
               <li>
                 <NavLink to="/dashboard">Home</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/clusters">Clusters</NavLink>
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 Nodes
               </li>
             </ol>
@@ -78,21 +96,23 @@ class PjwDeploymentPodDetail extends Component {
 
           {/* 내용부분 */}
           <section className="content">
-          {this.state.rows ? (
-            [
-            <BasicInfo rowData={this.state.rows.basic_info}/>,
-            <Containers rowData={this.state.rows.containers}/>,
-            <PodStatus rowData={this.state.rows.pod_status}/>,
-            <PhysicalResources rowData={this.state.rows.physical_resources}/>,
-            <Events rowData={this.state.rows.events}/>
-            ]
-          ) : (
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-              style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-            ></CircularProgress>
-          )}
+            {this.state.rows ? (
+              [
+                <BasicInfo rowData={this.state.rows.basic_info} />,
+                <Containers rowData={this.state.rows.containers} />,
+                <PodStatus rowData={this.state.rows.pod_status} />,
+                <PhysicalResources
+                  rowData={this.state.rows.physical_resources}
+                />,
+                <Events rowData={this.state.rows.events} />,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
           </section>
         </div>
       </div>
@@ -101,7 +121,7 @@ class PjwDeploymentPodDetail extends Component {
 }
 
 class BasicInfo extends Component {
-  render(){
+  render() {
     return (
       <div className="content-box">
         <div className="cb-header">Basic Info</div>
@@ -110,19 +130,26 @@ class BasicInfo extends Component {
             <span>Name : </span>
             <strong>{this.props.rowData.name}</strong>
           </div>
-          <div style={{display:"flex"}}>
+          <div style={{ display: "flex" }}>
             <div className="cb-body-left">
               <div>
                 <span>Status : </span>
                 <span
                   style={{
                     color:
-                    this.props.rowData.status === "Pending" ? "orange" : 
-                      this.props.rowData.status === "Failed" ? "red" : 
-                        this.props.rowData.status === "Unknown" ? "#b5b5b5" : 
-                          this.props.rowData.status === "Succeeded" ? "skyblue" : 
-                            this.props.rowData.status === "Running" ? "#1ab726" : "black"
-                  }}>
+                      this.props.rowData.status === "Pending"
+                        ? "orange"
+                        : this.props.rowData.status === "Failed"
+                        ? "red"
+                        : this.props.rowData.status === "Unknown"
+                        ? "#b5b5b5"
+                        : this.props.rowData.status === "Succeeded"
+                        ? "skyblue"
+                        : this.props.rowData.status === "Running"
+                        ? "#1ab726"
+                        : "black",
+                  }}
+                >
                   {this.props.rowData.status}
                 </span>
               </div>
@@ -145,24 +172,23 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                  <span>namespace : </span>
-                  {this.props.rowData.namespace}
-                </div>
-                <div>
-                  <span>Node IP : </span>
-                  {this.props.rowData.node_ip}
-                </div>
-                <div>
-                  <span>Pod IP : </span>
-                  {this.props.rowData.pod_ip}
-                </div>
-                <div>
-                  <span>Created Time : </span>
-                  {this.props.rowData.created_time}
-                </div>
+                <span>namespace : </span>
+                {this.props.rowData.namespace}
+              </div>
+              <div>
+                <span>Node IP : </span>
+                {this.props.rowData.node_ip}
+              </div>
+              <div>
+                <span>Pod IP : </span>
+                {this.props.rowData.pod_ip}
+              </div>
+              <div>
+                <span>Created Time : </span>
+                {this.props.rowData.created_time}
+              </div>
             </div>
           </div>
-          
         </div>
       </div>
     );
@@ -192,7 +218,7 @@ class Containers extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -202,8 +228,6 @@ class Containers extends Component {
   componentWillMount() {
     // this.props.onSelectMenu(false, "");
   }
-
-  
 
   // callApi = async () => {
   //   const response = await fetch("/clusters");
@@ -242,20 +266,17 @@ class Containers extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
       <div className="content-box">
         <div className="cb-header">Containers</div>
         <div className="cb-body">
-        <Paper>
+          <Paper>
             {this.state.rows ? (
               [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -264,18 +285,23 @@ class Containers extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -293,8 +319,8 @@ class Containers extends Component {
         </div>
       </div>
     );
-  };
-};
+  }
+}
 
 class PodStatus extends Component {
   constructor(props) {
@@ -319,7 +345,7 @@ class PodStatus extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -329,8 +355,6 @@ class PodStatus extends Component {
   componentWillMount() {
     // this.props.onSelectMenu(false, "");
   }
-
-  
 
   // callApi = async () => {
   //   const response = await fetch("/clusters");
@@ -369,20 +393,17 @@ class PodStatus extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
       <div className="content-box">
         <div className="cb-header">Pod Status</div>
         <div className="cb-body">
-        <Paper>
+          <Paper>
             {this.state.rows ? (
               [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -391,18 +412,23 @@ class PodStatus extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -420,31 +446,42 @@ class PodStatus extends Component {
         </div>
       </div>
     );
-  };
-};
+  }
+}
 
 class PhysicalResources extends Component {
-  render(){
+  render() {
     const network_title = ["in", "out"];
     return (
       <div className="content-box line-chart">
         <div className="cb-header">Physical Resources</div>
         <div className="cb-body">
           <div className="cb-body-content">
-            <LineReChart 
+            <LineReChart
               rowData={this.props.rowData.cpu}
               unit="m"
               name="cpu"
               title="CPU"
               cardinal={false}
-            >
-            </LineReChart>
+            ></LineReChart>
           </div>
           <div className="cb-body-content">
-            <LineReChart rowData={this.props.rowData.memory} unit="mib" name="memory" title="Memory" cardinal={false}></LineReChart>
+            <LineReChart
+              rowData={this.props.rowData.memory}
+              unit="mib"
+              name="memory"
+              title="Memory"
+              cardinal={false}
+            ></LineReChart>
           </div>
           <div className="cb-body-content">
-            <LineReChart rowData={this.props.rowData.network} unit="Bps" name={network_title} title="Network" cardinal={true}></LineReChart>
+            <LineReChart
+              rowData={this.props.rowData.network}
+              unit="Bps"
+              name={network_title}
+              title="Network"
+              cardinal={true}
+            ></LineReChart>
           </div>
         </div>
       </div>
@@ -477,7 +514,7 @@ class Events extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -487,8 +524,6 @@ class Events extends Component {
   componentWillMount() {
     // this.props.onSelectMenu(false, "");
   }
-
-  
 
   // callApi = async () => {
   //   const response = await fetch("/clusters");
@@ -527,20 +562,17 @@ class Events extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
       <div className="content-box">
         <div className="cb-header">Events</div>
         <div className="cb-body">
-        <Paper>
+          <Paper>
             {this.state.rows ? (
               [
-                <Grid
-                  rows={this.state.rows}
-                  columns={this.state.columns}
-                >
+                <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -549,18 +581,23 @@ class Events extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                  // defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -578,8 +615,7 @@ class Events extends Component {
         </div>
       </div>
     );
-  };
-};
-
+  }
+}
 
 export default PjwDeploymentPodDetail;

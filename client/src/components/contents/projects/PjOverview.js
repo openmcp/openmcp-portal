@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { NavLink } from 'react-router-dom';
+import { NavLink } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 // import line_chart_sample from './../../../json/line_chart_sample.json'
-import {NavigateNext} from '@material-ui/icons';
+import { NavigateNext } from "@material-ui/icons";
 
 import {
   // SearchState,
@@ -21,32 +21,31 @@ import {
   TableColumnResizing,
   // PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import LineReChart from './../../modules/LineReChart';
-import SelectBox from './../../modules/SelectBox';
-import * as utilLog from './../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import { withTranslation } from 'react-i18next';
-
+import LineReChart from "./../../modules/LineReChart";
+import SelectBox from "./../../modules/SelectBox";
+import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from "react-i18next";
 
 let apiParams = "";
 class PjOverview extends Component {
   state = {
-    rows:"",
+    rows: "",
     completed: 0,
-    reRender : "",
-  }
+    reRender: "",
+  };
 
   componentWillMount() {
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
     const result = {
-      menu : "projects",
-      title : this.props.match.params.project,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project,
+      menu: "projects",
+      title: this.props.match.params.project,
+      pathParams: {
+        searchString: this.props.location.search,
+        project: this.props.match.params.project,
         // state : this.props.location.state.data
       },
-    }
+    };
     this.props.menuData(result);
     apiParams = this.props.match.params.project;
   }
@@ -56,25 +55,26 @@ class PjOverview extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
         let userId = null;
-        AsyncStorage.getItem("userName",(err, result) => { 
-          userId= result;
-        })
-        utilLog.fn_insertPLogs(userId, 'log-PJ-VW02');
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-PJ-VW02");
       })
       .catch((err) => console.log(err));
-
-  }  
+  }
 
   callApi = async () => {
     var param = this.props.match.params.project;
-    const response = await fetch(`/projects/${param}/overview${this.props.location.search}`);
+    const response = await fetch(
+      `/projects/${param}/overview${this.props.location.search}`
+    );
     const body = await response.json();
     return body;
   };
@@ -85,7 +85,7 @@ class PjOverview extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     // console.log("PjOverview_Render : ",this.state.rows.basic_info);
     return (
       <div>
@@ -93,19 +93,26 @@ class PjOverview extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            {t("projects.detail.overview.title")}
-              <small>{this.props.match.params.project}</small>
+              {this.props.match.params.project}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t("projects.detail.overview.title")}
+              </small>
             </h1>
             <ol className="breadcrumb">
               <li>
                 <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/projects">{t("projects.title")}</NavLink>
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("projects.detail.overview.title")}
               </li>
             </ol>
@@ -113,22 +120,32 @@ class PjOverview extends Component {
 
           {/* 내용부분 */}
           <section className="content">
-          {this.state.rows ? (
-            [
-            <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
-            <div style={{display:"flex"}}>
-              <ProjectResources rowData={this.state.rows.project_resource} t={t}/>
-              <UsageTop5 rowData={this.state.rows.usage_top5} query ={this.props.location.search} t={t}/>
-            </div>,
-            <PhysicalResources rowData={this.state.rows.physical_resources} t={t}/>
-            ]
-          ) : (
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-              style={{ position: "absolute", left: "50%", marginTop: "20px" }}
-            ></CircularProgress>
-          )}
+            {this.state.rows ? (
+              [
+                <BasicInfo rowData={this.state.rows.basic_info} t={t} />,
+                <div style={{ display: "flex" }}>
+                  <ProjectResources
+                    rowData={this.state.rows.project_resource}
+                    t={t}
+                  />
+                  <UsageTop5
+                    rowData={this.state.rows.usage_top5}
+                    query={this.props.location.search}
+                    t={t}
+                  />
+                </div>,
+                <PhysicalResources
+                  rowData={this.state.rows.physical_resources}
+                  t={t}
+                />,
+              ]
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+                style={{ position: "absolute", left: "50%", marginTop: "20px" }}
+              ></CircularProgress>
+            )}
           </section>
         </div>
       </div>
@@ -137,50 +154,60 @@ class PjOverview extends Component {
 }
 
 class BasicInfo extends Component {
-  render(){
+  render() {
     const t = this.props.t;
     // console.log("BasicInfo:", this.props.rowData.name)
-    
+
     return (
       <div className="content-box">
-        <div className="cb-header">{t("projects.detail.overview.basicInfo.title")}</div>
+        <div className="cb-header">
+          {t("projects.detail.overview.basicInfo.title")}
+        </div>
         <div className="cb-body">
-        <div style={{display:"flex"}}>
+          <div style={{ display: "flex" }}>
             <div className="cb-body-left">
               <div>
-                <span>{t("projects.detail.overview.basicInfo.sub.name")} : </span>
+                <span>
+                  {t("projects.detail.overview.basicInfo.sub.name")} :{" "}
+                </span>
                 <strong>{this.props.rowData.name}</strong>
               </div>
               <div>
-                <span>{t("projects.detail.overview.basicInfo.sub.cluster")} : </span>
+                <span>
+                  {t("projects.detail.overview.basicInfo.sub.cluster")} :{" "}
+                </span>
                 {this.props.rowData.cluster}
               </div>
               <div>
-                  <span>{t("projects.detail.overview.basicInfo.sub.labels")} : </span>
-                  <div style={{margin : "-25px 0px 0px 66px"}}>
-                    {
-                      Object.keys(this.props.rowData.labels).length > 0 ?
-                        (
-                          Object.entries(this.props.rowData.labels).map(i=>{
-                          return (<div>{i.join(" : ")}</div>)
-                        })
-                        ) : 
-                        "-"
-                    }
-                  </div>
+                <span>
+                  {t("projects.detail.overview.basicInfo.sub.labels")} :{" "}
+                </span>
+                <div style={{ margin: "-25px 0px 0px 66px" }}>
+                  {Object.keys(this.props.rowData.labels).length > 0
+                    ? Object.entries(this.props.rowData.labels).map((i) => {
+                        return <div>{i.join(" : ")}</div>;
+                      })
+                    : "-"}
                 </div>
+              </div>
             </div>
             <div className="cb-body-right">
               <div>
-                <span>{t("projects.detail.overview.basicInfo.sub.status")} : </span>
+                <span>
+                  {t("projects.detail.overview.basicInfo.sub.status")} :{" "}
+                </span>
                 {this.props.rowData.status}
               </div>
               <div>
-                <span>{t("projects.detail.overview.basicInfo.sub.uid")} : </span>
+                <span>
+                  {t("projects.detail.overview.basicInfo.sub.uid")} :{" "}
+                </span>
                 {this.props.rowData.uid}
               </div>
               <div>
-                <span>{t("projects.detail.overview.basicInfo.sub.createdTime")} : </span>
+                <span>
+                  {t("projects.detail.overview.basicInfo.sub.createdTime")} :{" "}
+                </span>
                 {this.props.rowData.created_time}
               </div>
             </div>
@@ -198,13 +225,22 @@ class ProjectResources extends Component {
       { name: "total", title: "Total" },
       { name: "abnormal", title: "Abnormal" },
     ],
-  }
-  render(){
+  };
+  render() {
     const t = this.props.t;
     const columns = [
-      { name: "resource", title: t("projects.detail.overview.projectResource.grid.resource") },
-      { name: "total", title: t("projects.detail.overview.projectResource.grid.total") },
-      { name: "abnormal", title: t("projects.detail.overview.projectResource.grid.abnormal")}
+      {
+        name: "resource",
+        title: t("projects.detail.overview.projectResource.grid.resource"),
+      },
+      {
+        name: "total",
+        title: t("projects.detail.overview.projectResource.grid.total"),
+      },
+      {
+        name: "abnormal",
+        title: t("projects.detail.overview.projectResource.grid.abnormal"),
+      },
     ];
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -220,21 +256,19 @@ class ProjectResources extends Component {
     );
     return (
       <div className="content-box col-sep-2 ">
-        <div className="cb-header">{t("projects.detail.overview.projectResource.title")}</div>
+        <div className="cb-header">
+          {t("projects.detail.overview.projectResource.title")}
+        </div>
         <div className="cb-body table-style">
-          <Grid
-            rows = {this.props.rowData}
-            columns = {columns}
-            >
-
+          <Grid rows={this.props.rowData} columns={columns}>
             {/* Sorting */}
             <SortingState
             // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
             />
             <IntegratedSorting />
 
-            <Table/>
-            <TableHeaderRow showSortingControls rowComponent={HeaderRow}/>
+            <Table />
+            <TableHeaderRow showSortingControls rowComponent={HeaderRow} />
           </Grid>
         </div>
       </div>
@@ -249,22 +283,30 @@ class UsageTop5 extends Component {
       { columnName: "name", width: 350 },
       { columnName: "usage", width: 200 },
     ],
-    rows : this.props.rowData.cpu,
-  }
+    rows: this.props.rowData.cpu,
+  };
 
   callApi = async () => {
-    const response = await fetch(`/projects/${apiParams}/overview${this.props.query}`);
+    const response = await fetch(
+      `/projects/${apiParams}/overview${this.props.query}`
+    );
     const body = await response.json();
     return body;
   };
-  
-  render(){
+
+  render() {
     const t = this.props.t;
     const columns = [
-      { name: "name", title: t("projects.detail.overview.usageTop5.grid.name") },
-      { name: "usage", title: t("projects.detail.overview.usageTop5.grid.usage")  },
+      {
+        name: "name",
+        title: t("projects.detail.overview.usageTop5.grid.name"),
+      },
+      {
+        name: "usage",
+        title: t("projects.detail.overview.usageTop5.grid.usage"),
+      },
     ];
-    
+
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row
         {...restProps}
@@ -278,9 +320,9 @@ class UsageTop5 extends Component {
     );
 
     const onSelectBoxChange = (data) => {
-      switch(data){
+      switch (data) {
         case "cpu":
-          this.setState({rows:this.props.rowData.cpu});
+          this.setState({ rows: this.props.rowData.cpu });
 
           // 실시간처리
           // this.callApi()
@@ -291,7 +333,7 @@ class UsageTop5 extends Component {
 
           break;
         case "memory":
-          this.setState({rows:this.props.rowData.memory});
+          this.setState({ rows: this.props.rowData.memory });
 
           // 실시간처리
           // this.callApi()
@@ -305,33 +347,38 @@ class UsageTop5 extends Component {
         default:
           this.setState(this.props.rowData.cpu);
       }
-    }
+    };
 
-    const selectBoxData = [{name:"cpu", value:"cpu"},{name:"memory", value:"memory"}];
+    const selectBoxData = [
+      { name: "cpu", value: "cpu" },
+      { name: "memory", value: "memory" },
+    ];
 
     return (
       <div className="content-box col-sep-2">
         <div className="cb-header">
           {t("projects.detail.overview.usageTop5.title")}
-          <SelectBox rows={selectBoxData} onSelectBoxChange={onSelectBoxChange}
-          defaultValue=""></SelectBox>
+          <SelectBox
+            rows={selectBoxData}
+            onSelectBoxChange={onSelectBoxChange}
+            defaultValue=""
+          ></SelectBox>
         </div>
-        
+
         <div className="cb-body table-style">
           {this.state.aaa}
-          <Grid
-            rows = {this.state.rows}
-            columns = {columns}>
-
+          <Grid rows={this.state.rows} columns={columns}>
             {/* Sorting */}
             <SortingState
             // defaultSorting={[{ columnName: 'city', direction: 'desc' }]}
             />
             <IntegratedSorting />
 
-            <Table/>
-            <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
-            <TableHeaderRow showSortingControls rowComponent={HeaderRow}/>
+            <Table />
+            <TableColumnResizing
+              defaultColumnWidths={this.state.defaultColumnWidths}
+            />
+            <TableHeaderRow showSortingControls rowComponent={HeaderRow} />
           </Grid>
         </div>
       </div>
@@ -366,7 +413,9 @@ class PhysicalResources extends Component {
     const network_title = ["in", "out"];
     return (
       <div className="content-box line-chart">
-        <div className="cb-header">{t("projects.detail.overview.physicalResources.title")}</div>
+        <div className="cb-header">
+          {t("projects.detail.overview.physicalResources.title")}
+        </div>
         <div className="cb-body">
           <div className="cb-body-content">
             <LineReChart
@@ -401,5 +450,4 @@ class PhysicalResources extends Component {
   }
 }
 
-export default withTranslation()(PjOverview); 
-
+export default withTranslation()(PjOverview);

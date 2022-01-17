@@ -20,21 +20,20 @@ import {
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
 // import Editor from "./../../modules/Editor";
-import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import PjCreateProject from '../modal/PjCreateProject.js';
-import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
-import IconButton from '@material-ui/core/IconButton';
-import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Popper from '@material-ui/core/Popper';
-import MenuList from '@material-ui/core/MenuList';
-import Grow from '@material-ui/core/Grow';
+import { NavigateNext } from "@material-ui/icons";
+import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import PjCreateProject from "../modal/PjCreateProject.js";
+import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+import Popper from "@material-ui/core/Popper";
+import MenuList from "@material-ui/core/MenuList";
+import Grow from "@material-ui/core/Grow";
 import { HiOutlineDuplicate } from "react-icons/hi";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-
 
 class Projects extends Component {
   constructor(props) {
@@ -57,7 +56,7 @@ class Projects extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      anchorEl:null,
+      anchorEl: null,
     };
   }
 
@@ -65,20 +64,18 @@ class Projects extends Component {
     this.props.menuData("none");
   }
 
-  
-
   callApi = async () => {
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => {
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
 
     const requestOptions = {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ g_clusters : g_clusters })
+      body: JSON.stringify({ g_clusters: g_clusters }),
     };
 
     const response = await fetch("/projects", requestOptions);
@@ -97,25 +94,25 @@ class Projects extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
         let userId = null;
-        AsyncStorage.getItem("userName",(err, result) => { 
-          userId= result;
-        })
-        utilLog.fn_insertPLogs(userId, 'log-PJ-VW01');
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-PJ-VW01");
       })
       .catch((err) => console.log(err));
-  };
+  }
 
   onRefresh = () => {
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
@@ -126,8 +123,8 @@ class Projects extends Component {
   };
 
   render() {
-    const {t} = this.props;
-    const columns= [
+    const { t } = this.props;
+    const columns = [
       { name: "name", title: t("projects.grid.name") },
       { name: "status", title: t("projects.grid.status") },
       { name: "cluster", title: t("projects.grid.cluster") },
@@ -141,26 +138,42 @@ class Projects extends Component {
         <span
           style={{
             color:
-            value === "Active" ? "#1ab726"
-              : value === "Deactive" ? "red" : "black",
+              value === "Active"
+                ? "#1ab726"
+                : value === "Deactive"
+                ? "red"
+                : "black",
           }}
         >
-          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
-          backgroundColor: 
-          value === "Active" ? "rgba(85,188,138,.1)"
-            : value === "Deactive" ? "rgb(152 13 13 / 10%)" : "white",
-          boxShadow: 
-          value === "Active" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
-            : value === "Deactive" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px" : "white",
-          borderRadius: "20px",
-          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
-          }}></FiberManualRecordSharpIcon>
+          <FiberManualRecordSharpIcon
+            style={{
+              fontSize: 12,
+              marginRight: 4,
+              backgroundColor:
+                value === "Active"
+                  ? "rgba(85,188,138,.1)"
+                  : value === "Deactive"
+                  ? "rgb(152 13 13 / 10%)"
+                  : "white",
+              boxShadow:
+                value === "Active"
+                  ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                  : value === "Deactive"
+                  ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                  : "white",
+              borderRadius: "20px",
+              // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+            }}
+          ></FiberManualRecordSharpIcon>
         </span>
         <span
           style={{
             color:
-              value === "Active" ? "#1ab726" 
-                : value === "Deactive" ? "red" : undefined,
+              value === "Active"
+                ? "#1ab726"
+                : value === "Deactive"
+                ? "red"
+                : undefined,
           }}
         >
           {value}
@@ -168,33 +181,27 @@ class Projects extends Component {
       </Table.Cell>
     );
 
-
-    
-    
     const Cell = (props) => {
       const fnEnterCheck = (prop) => {
         var arr = [];
         var i;
-        for(i=0; i < Object.keys(prop.value).length; i++){
-          const str = Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i]
-          arr.push(str)
+        for (i = 0; i < Object.keys(prop.value).length; i++) {
+          const str =
+            Object.keys(prop.value)[i] + " : " + Object.values(prop.value)[i];
+          arr.push(str);
         }
-        return (
-         arr.map(item => {
-           return (
-             <p>{item}</p>
-           )
-         })
-        )
+        return arr.map((item) => {
+          return <p>{item}</p>;
+        });
         // return (
-          // props.value.indexOf("|") > 0 ? 
-          //   props.value.split("|").map( item => {
-          //     return (
-          //       <p>{item}</p>
-          //   )}) : 
-          //     props.value
+        // props.value.indexOf("|") > 0 ?
+        //   props.value.split("|").map( item => {
+        //     return (
+        //       <p>{item}</p>
+        //   )}) :
+        //     props.value
         // )
-      }
+      };
 
       const { column, row } = props;
       // console.log("cell : ", props);
@@ -202,21 +209,22 @@ class Projects extends Component {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/projects/${props.value}/overview`,
-            search: "cluster="+row.cluster,
-            state: {
-              data : row
-            }
-          }}>{props.value}</Link></Table.Cell>
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/projects/${props.value}/overview`,
+                search: "cluster=" + row.cluster,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {props.value}
+            </Link>
+          </Table.Cell>
         );
-      } else if (column.name === "labels"){
-        return (
-        <Table.Cell>{fnEnterCheck(props)}</Table.Cell>
-        )
+      } else if (column.name === "labels") {
+        return <Table.Cell>{fnEnterCheck(props)}</Table.Cell>;
       }
       return <Table.Cell {...props} />;
     };
@@ -235,19 +243,19 @@ class Projects extends Component {
 
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     const handleClick = (event) => {
-      if(this.state.anchorEl === null){
-        this.setState({anchorEl : event.currentTarget});
+      if (this.state.anchorEl === null) {
+        this.setState({ anchorEl: event.currentTarget });
       } else {
-        this.setState({anchorEl : null});
+        this.setState({ anchorEl: null });
       }
     };
 
     const handleClose = () => {
-      this.setState({anchorEl : null});
+      this.setState({ anchorEl: null });
     };
 
     const open = Boolean(this.state.anchorEl);
@@ -257,8 +265,10 @@ class Projects extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-            <i><HiOutlineDuplicate/></i>
-            <span onClick={this.onRefresh} style={{cursor:"pointer"}}>
+            <i>
+              <HiOutlineDuplicate />
+            </i>
+            <span onClick={this.onRefresh} style={{ cursor: "pointer" }}>
               {t("projects.title")}
             </span>
             <small></small>
@@ -268,7 +278,9 @@ class Projects extends Component {
               <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("projects.title")}
             </li>
           </ol>
@@ -277,14 +289,15 @@ class Projects extends Component {
           <Paper>
             {this.state.rows ? (
               [
-
-                <div style={{
-                  position: "absolute",
-                  right: "21px",
-                  top: "20px",
-                  zIndex: "10",
-                  textTransform: "capitalize",
-                }}>
+                <div
+                  style={{
+                    position: "absolute",
+                    right: "21px",
+                    top: "20px",
+                    zIndex: "10",
+                    textTransform: "capitalize",
+                  }}
+                >
                   <IconButton
                     aria-label="more"
                     aria-controls="long-menu"
@@ -293,29 +306,46 @@ class Projects extends Component {
                   >
                     <MoreVertIcon />
                   </IconButton>
-                  <Popper open={open} anchorEl={this.state.anchorEl} role={undefined} transition disablePortal placement={'bottom-end'}>
+                  <Popper
+                    open={open}
+                    anchorEl={this.state.anchorEl}
+                    role={undefined}
+                    transition
+                    disablePortal
+                    placement={"bottom-end"}
+                  >
                     {({ TransitionProps, placement }) => (
                       <Grow
-                      {...TransitionProps}
-                      style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center top' }}
+                        {...TransitionProps}
+                        style={{
+                          transformOrigin:
+                            placement === "bottom"
+                              ? "center top"
+                              : "center top",
+                        }}
                       >
                         <Paper>
                           <MenuList autoFocusItem={open} id="menu-list-grow">
-                              <MenuItem 
+                            <MenuItem
                               onKeyDown={(e) => e.stopPropagation()}
-                              style={{ textAlign: "center", display: "block", fontSize:"14px"}}>
-                                <PjCreateProject menuClose={handleClose} onUpdateData={this.onRefresh}/>
-                              </MenuItem>
-                            </MenuList>
-                          </Paper>
+                              style={{
+                                textAlign: "center",
+                                display: "block",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <PjCreateProject
+                                menuClose={handleClose}
+                                onUpdateData={this.onRefresh}
+                              />
+                            </MenuItem>
+                          </MenuList>
+                        </Paper>
                       </Grow>
                     )}
                   </Popper>
                 </div>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={columns}
-                >
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -324,20 +354,25 @@ class Projects extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'created_time', direction: 'desc' }]}
+                    defaultSorting={[
+                      { columnName: "created_time", direction: "desc" },
+                    ]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
-                  
-
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -358,4 +393,4 @@ class Projects extends Component {
   }
 }
 
-export default withTranslation()(Projects); 
+export default withTranslation()(Projects);

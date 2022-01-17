@@ -22,9 +22,9 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import * as utilLog from './../../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import { withTranslation } from 'react-i18next';
+import * as utilLog from "./../../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import { withTranslation } from "react-i18next";
 
 // let apiParams = "";
 class PjIngressDetail extends Component {
@@ -38,10 +38,10 @@ class PjIngressDetail extends Component {
     const result = {
       menu: "projects",
       title: this.props.match.params.project,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
+      pathParams: {
+        searchString: this.props.location.search,
+        project: this.props.match.params.project,
+      },
     };
     this.props.menuData(result);
     // apiParams = this.props.match.params.project;
@@ -52,17 +52,17 @@ class PjIngressDetail extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res == null){
+        if (res == null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
         }
         clearInterval(this.timer);
         let userId = null;
-        AsyncStorage.getItem("userName",(err, result) => { 
-          userId= result;
-        })
-        utilLog.fn_insertPLogs(userId, 'log-PJ-VW15');
+        AsyncStorage.getItem("userName", (err, result) => {
+          userId = result;
+        });
+        utilLog.fn_insertPLogs(userId, "log-PJ-VW15");
       })
       .catch((err) => console.log(err));
   }
@@ -82,34 +82,45 @@ class PjIngressDetail extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <div>
         <div className="content-wrapper pod-detail">
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-            {t("network.ingress.detail.title")}
-              <small>{this.props.match.params.ingress}</small>
+              {this.props.match.params.ingress}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t("network.ingress.detail.title")}
+              </small>
             </h1>
             <ol className="breadcrumb">
               <li>
                 <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("projects.title")}
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("projects.detail.resources.title")}
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("projects.detail.resources.ingress.title")}
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("network.ingress.detail.title")}
               </li>
             </ol>
@@ -119,7 +130,7 @@ class PjIngressDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
+                <BasicInfo rowData={this.state.rows.basic_info} t={t} />,
                 <Rules rowData={this.state.rows.rules} t={t} />,
                 <Events rowData={this.state.rows.events} t={t} />,
               ]
@@ -142,7 +153,9 @@ class BasicInfo extends Component {
     const t = this.props.t;
     return (
       <div className="content-box">
-        <div className="cb-header">{t("network.ingress.detail.basicInfo.title")}</div>
+        <div className="cb-header">
+          {t("network.ingress.detail.basicInfo.title")}
+        </div>
         <div className="cb-body">
           <div style={{ display: "flex" }}>
             <div className="cb-body-left">
@@ -201,7 +214,7 @@ class Rules extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -235,8 +248,6 @@ class Rules extends Component {
   //     .catch((err) => console.log(err));
   // };
 
-  
-
   render() {
     const t = this.props.t;
     const Cell = (props) => {
@@ -244,22 +255,19 @@ class Rules extends Component {
       // console.log("cell : ", props);
       // const values = props.value.split("|");
       // console.log("values", props.value);
-      
+
       // const values = props.value.replace("|","1");
       // console.log("values,values", values)
 
       const fnEnterCheck = () => {
-        if(props.value === undefined){
-          return ""
+        if (props.value === undefined) {
+          return "";
         } else {
-          return (
-            props.value.indexOf("|") > 0 ? 
-              props.value.split("|").map( item => {
-                return (
-                  <p>{item}</p>
-              )}) : 
-                props.value
-          )
+          return props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item) => {
+                return <p>{item}</p>;
+              })
+            : props.value;
         }
       };
 
@@ -284,7 +292,9 @@ class Rules extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">{t("network.ingress.detail.rules.title")}</div>
+        <div className="cb-header">
+          {t("network.ingress.detail.rules.title")}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -360,7 +370,7 @@ class Events extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
@@ -414,7 +424,9 @@ class Events extends Component {
 
     return (
       <div className="content-box">
-        <div className="cb-header">{t("network.ingress.detail.events.title")}</div>
+        <div className="cb-header">
+          {t("network.ingress.detail.events.title")}
+        </div>
         <div className="cb-body">
           <Paper>
             {this.state.rows ? (
@@ -465,4 +477,4 @@ class Events extends Component {
   }
 }
 
-export default withTranslation()(PjIngressDetail); 
+export default withTranslation()(PjIngressDetail);

@@ -19,13 +19,13 @@ import {
   TableHeaderRow,
   PagingPanel,
 } from "@devexpress/dx-react-grid-material-ui";
-import { NavigateNext} from '@material-ui/icons';
-import * as utilLog from './../../util/UtLogs.js';
-import { AsyncStorage } from 'AsyncStorage';
-import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import { NavigateNext } from "@material-ui/icons";
+import * as utilLog from "./../../util/UtLogs.js";
+import { AsyncStorage } from "AsyncStorage";
+import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import LinearProgressBar from "../../modules/LinearProgressBar.js";
 // import Editor from "../../modules/Editor";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 
 let apiParams = "";
 class CsNodes extends Component {
@@ -36,7 +36,7 @@ class CsNodes extends Component {
       defaultColumnWidths: [
         { columnName: "name", width: 250 },
         { columnName: "status", width: 100 },
-        { columnName: "cluster", width: 100},
+        { columnName: "cluster", width: 100 },
         { columnName: "role", width: 75 },
         { columnName: "system_version", width: 200 },
         { columnName: "cpu", width: 155 },
@@ -51,29 +51,25 @@ class CsNodes extends Component {
       // Paging Settings
       currentPage: 0,
       setCurrentPage: 0,
-      pageSize: 10, 
+      pageSize: 10,
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
-      editorContext : ``,
+      editorContext: ``,
     };
   }
 
   componentWillMount() {
     const result = {
-      menu : "clusters",
-      title : this.props.match.params.cluster,
-      pathParams : {
-        cluster : this.props.match.params.cluster
-      }
-      
-    }
+      menu: "clusters",
+      title: this.props.match.params.cluster,
+      pathParams: {
+        cluster: this.props.match.params.cluster,
+      },
+    };
     this.props.menuData(result);
     apiParams = this.props.match.params.cluster;
   }
-
-
-  
 
   callApi = async () => {
     // var param = this.props.match.params.cluster;
@@ -94,29 +90,27 @@ class CsNodes extends Component {
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
-        if(res === null){
+        if (res === null) {
           this.setState({ rows: [] });
         } else {
           this.setState({ rows: res });
           let userId = null;
-          AsyncStorage.getItem("userName",(err, result) => { 
-            userId= result;
-          })
-          utilLog.fn_insertPLogs(userId, 'log-CL-VW04');
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-CL-VW04");
         }
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
-
-      
-  };
+  }
 
   render() {
-    const {t} = this.props;
-    const columns= [
+    const { t } = this.props;
+    const columns = [
       { name: "name", title: t("nodes.grid.name") },
       { name: "status", title: t("nodes.grid.status") },
-      { name: "cluster", title: t("nodes.grid.cluster")},
+      { name: "cluster", title: t("nodes.grid.cluster") },
       { name: "role", title: t("nodes.grid.role") },
       { name: "system_version", title: t("nodes.grid.version") },
       { name: "cpu", title: t("nodes.grid.cpu") },
@@ -133,97 +127,132 @@ class CsNodes extends Component {
         <span
           style={{
             color:
-            value === "Healthy" ? "#1ab726"
-              : value === "Unhealthy" ? "red"
-                : value === "Unknown" ? "#b5b5b5"
-                  : value === "Warning" ? "#ff8042" : "black",
+              value === "Healthy"
+                ? "#1ab726"
+                : value === "Unhealthy"
+                ? "red"
+                : value === "Unknown"
+                ? "#b5b5b5"
+                : value === "Warning"
+                ? "#ff8042"
+                : "black",
           }}
         >
-          <FiberManualRecordSharpIcon style={{fontSize:12, marginRight:4,
-          backgroundColor: 
-          value === "Healthy" ? "rgba(85,188,138,.1)"
-            : value === "Unhealthy" ? "rgb(152 13 13 / 10%)"
-              : value === "Unknown" ? "rgb(255 255 255 / 10%)"
-                : value === "Warning" ? "rgb(109 31 7 / 10%)" : "white",
-          boxShadow: 
-          value === "Healthy" ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
-            : value === "Unhealthy" ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
-              : value === "Unknown" ? "rgb(255 255 255 / 10%)"
-                : value === "Warning" ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px" : "white",
-          borderRadius: "20px",
-          // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
-          }}></FiberManualRecordSharpIcon>
+          <FiberManualRecordSharpIcon
+            style={{
+              fontSize: 12,
+              marginRight: 4,
+              backgroundColor:
+                value === "Healthy"
+                  ? "rgba(85,188,138,.1)"
+                  : value === "Unhealthy"
+                  ? "rgb(152 13 13 / 10%)"
+                  : value === "Unknown"
+                  ? "rgb(255 255 255 / 10%)"
+                  : value === "Warning"
+                  ? "rgb(109 31 7 / 10%)"
+                  : "white",
+              boxShadow:
+                value === "Healthy"
+                  ? "0 0px 5px 0 rgb(85 188 138 / 36%)"
+                  : value === "Unhealthy"
+                  ? "rgb(188 85 85 / 36%) 0px 0px 5px 0px"
+                  : value === "Unknown"
+                  ? "rgb(255 255 255 / 10%)"
+                  : value === "Warning"
+                  ? "rgb(188 114 85 / 36%) 0px 0px 5px 0px"
+                  : "white",
+              borderRadius: "20px",
+              // WebkitBoxShadow: "0 0px 1px 0 rgb(85 188 138 / 36%)",
+            }}
+          ></FiberManualRecordSharpIcon>
         </span>
         <span
           style={{
             color:
-            value === "Healthy" ? "#1ab726" : 
-              value === "Unhealthy" ? "red" : 
-                value === "Unknown" ? "#b5b5b5" : "black"
-          }}>
+              value === "Healthy"
+                ? "#1ab726"
+                : value === "Unhealthy"
+                ? "red"
+                : value === "Unknown"
+                ? "#b5b5b5"
+                : "black",
+          }}
+        >
           {value}
         </span>
       </Table.Cell>
     );
-    
+
     //셀
     const Cell = (props) => {
       const { column, row } = props;
       const fnEnterCheck = () => {
-        let data = []
-        if(props.value === undefined){
-          return ""
+        let data = [];
+        if (props.value === undefined) {
+          return "";
         } else {
-          props.value.indexOf("|") > 0 ? 
-            props.value.split("|").map( (item,index) => 
-                data[index] = item
-            ) : data[0] = props.value
-          return data.length > 1 ? <p>{data[1] + " ("+data[0]+")" }</p> : props.value
+          props.value.indexOf("|") > 0
+            ? props.value.split("|").map((item, index) => (data[index] = item))
+            : (data[0] = props.value);
+          return data.length > 1 ? (
+            <p>{data[1] + " (" + data[0] + ")"}</p>
+          ) : (
+            props.value
+          );
         }
-      }
+      };
 
-      const fn_linearProgressBar = () =>{
+      const fn_linearProgressBar = () => {
         var data = [];
-        if(props.value.indexOf("|") > -1) {
-          props.value.split("|").forEach( item => {
-            if(item.indexOf(" ") > -1) {
-              item.split(" ").map((i, index) => data[index] = i);
+        if (props.value.indexOf("|") > -1) {
+          props.value.split("|").forEach((item) => {
+            if (item.indexOf(" ") > -1) {
+              item.split(" ").map((i, index) => (data[index] = i));
             }
           });
         } else {
           data = [];
         }
-        
-        return (
-          <p style={{marginTop:"5px"}}>
-            <LinearProgressBar value={data[0]} total={data[2]}/>
-          </p>
-        )
-      }
 
+        return (
+          <p style={{ marginTop: "5px" }}>
+            <LinearProgressBar value={data[0]} total={data[2]} />
+          </p>
+        );
+      };
 
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
       } else if (column.name === "name") {
         return (
-          <Table.Cell
-            {...props}
-            style={{ cursor: "pointer" }}
-          ><Link to={{
-            pathname: `/clusters/${apiParams}/nodes/${props.value}`,
-            search:`clustername=${row.cluster}`,
-            state: {
-              data : row
-            }
-          }}>{fnEnterCheck()}</Link></Table.Cell>
-        );
-      } else if (column.name === "cpu" || column.name === "memory" || column.name === "pods"){
-        return <Table.Cell>
-          {fnEnterCheck()}
-          {fn_linearProgressBar()}
+          <Table.Cell {...props} style={{ cursor: "pointer" }}>
+            <Link
+              to={{
+                pathname: `/clusters/${apiParams}/nodes/${props.value}`,
+                search: `clustername=${row.cluster}`,
+                state: {
+                  data: row,
+                },
+              }}
+            >
+              {fnEnterCheck()}
+            </Link>
           </Table.Cell>
-        // 
-      };
+        );
+      } else if (
+        column.name === "cpu" ||
+        column.name === "memory" ||
+        column.name === "pods"
+      ) {
+        return (
+          <Table.Cell>
+            {fnEnterCheck()}
+            {fn_linearProgressBar()}
+          </Table.Cell>
+        );
+        //
+      }
       return <Table.Cell>{fnEnterCheck()}</Table.Cell>;
     };
 
@@ -240,7 +269,7 @@ class CsNodes extends Component {
     );
     const Row = (props) => {
       // console.log("row!!!!!! : ",props);
-      return <Table.Row {...props} key={props.tableRow.key}/>;
+      return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
     return (
@@ -248,20 +277,23 @@ class CsNodes extends Component {
         {/* 컨텐츠 헤더 */}
         <section className="content-header">
           <h1>
-          {t("nodes.title")}
-            <small>{apiParams}</small>
+            {apiParams}
+            <small>
+              <NavigateNext className="detail-navigate-next"/>
+              {t("nodes.title")}
+            </small>
           </h1>
           <ol className="breadcrumb">
             <li>
               <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
             </li>
             <li className="active">
-              <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+              <NavigateNext
+                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+              />
               {t("clusters.title")}
             </li>
-            <li className="active">
-              {t("nodes.title")}
-            </li>
+            <li className="active">{t("nodes.title")}</li>
           </ol>
         </section>
         <section className="content" style={{ position: "relative" }}>
@@ -269,10 +301,7 @@ class CsNodes extends Component {
             {this.state.rows ? (
               [
                 // <Editor title="create" context={this.state.editorContext}/>,
-                <Grid
-                  rows={this.state.rows}
-                  columns={columns}
-                >
+                <Grid rows={this.state.rows} columns={columns}>
                   <Toolbar />
                   {/* 검색 */}
                   <SearchState defaultValue="" />
@@ -281,18 +310,25 @@ class CsNodes extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[{ columnName: 'status', direction: 'desc' }]}
+                    defaultSorting={[
+                      { columnName: "status", direction: "desc" },
+                    ]}
                   />
                   <IntegratedSorting />
 
                   {/* 페이징 */}
-                  <PagingState defaultCurrentPage={0} defaultPageSize={this.state.pageSize} />
+                  <PagingState
+                    defaultCurrentPage={0}
+                    defaultPageSize={this.state.pageSize}
+                  />
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
-                  <TableColumnResizing defaultColumnWidths={this.state.defaultColumnWidths} />
+                  <TableColumnResizing
+                    defaultColumnWidths={this.state.defaultColumnWidths}
+                  />
                   <TableHeaderRow
                     showSortingControls
                     rowComponent={HeaderRow}
@@ -313,4 +349,4 @@ class CsNodes extends Component {
   }
 }
 
-export default withTranslation()(CsNodes); 
+export default withTranslation()(CsNodes);

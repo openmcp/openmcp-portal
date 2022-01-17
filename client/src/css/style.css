@@ -940,7 +940,7 @@ body {
 }
 
 .content-header > h1 > small {
-  font-size: 15px;
+  font-size: 16px;
   display: inline-block;
   padding-left: 10px;
   font-weight: 300;
@@ -2771,4 +2771,11 @@ g {
     background-color: #e3e3e3;
     margin-bottom: 5px;
     color: #444444;
+}
+
+.detail-navigate-next {
+  font-size: 26px;
+  margin: 0px 2px -8px -7px;
+  color: rgb(181 181 181);
+  font-weight: 100,
 }

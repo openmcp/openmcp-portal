@@ -28,12 +28,12 @@ import Box from "@material-ui/core/Box";
 // import Paper from "@material-ui/core/Paper";
 // import Editor from "../../../modules/Editor";
 import { Container } from "@material-ui/core";
-import PjwDeployments from './PjwDeployments';
-import PjwDeploymentDetail from './PjwDeploymentDetail';
-import { NavigateNext } from '@material-ui/icons';
-import PjwStatefulsets from './PjwStatefulsets';
-import PjwStatefulSetDetail from './PjwStatefulSetDetail';
-import { withTranslation } from 'react-i18next';
+import PjwDeployments from "./PjwDeployments";
+import PjwDeploymentDetail from "./PjwDeploymentDetail";
+import { NavigateNext } from "@material-ui/icons";
+import PjwStatefulsets from "./PjwStatefulsets";
+import PjwStatefulSetDetail from "./PjwStatefulSetDetail";
+import { withTranslation } from "react-i18next";
 
 const styles = (theme) => ({
   root: {
@@ -65,9 +65,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Container>
-          <Box>
-            {children}
-          </Box>
+          <Box>{children}</Box>
         </Container>
       )}
     </div>
@@ -94,11 +92,11 @@ class PjWorkloads extends Component {
     reRender: "",
     value: 0,
     tabHeader: [
-      { label: "deployments", index: 1, param:"deployments" },
-      { label: "statefulsets", index: 2, param:"statefulsets" },
-    // { label: "DaemonSets", index: 3 },
-    // { label: "CronJobs", index: 4 },
-    // { label: "Jobs", index: 5 }
+      { label: "deployments", index: 1, param: "deployments" },
+      { label: "statefulsets", index: 2, param: "statefulsets" },
+      // { label: "DaemonSets", index: 3 },
+      // { label: "CronJobs", index: 4 },
+      // { label: "Jobs", index: 5 }
     ],
   };
 
@@ -106,24 +104,24 @@ class PjWorkloads extends Component {
     //왼쪽 메뉴쪽에 타이틀 데이터 전달
 
     const result = {
-      menu : "projects",
-      title : this.props.match.params.project,
-      pathParams : {
-        searchString : this.props.location.search,
-        project : this.props.match.params.project
-      }
-    }
+      menu: "projects",
+      title: this.props.match.params.project,
+      pathParams: {
+        searchString: this.props.location.search,
+        project: this.props.match.params.project,
+      },
+    };
     this.props.menuData(result);
-     if(this.props.match.url.indexOf("statefulsets") > 0 ){
-       this.setState({ value: 1 });
-     } else {
+    if (this.props.match.url.indexOf("statefulsets") > 0) {
+      this.setState({ value: 1 });
+    } else {
       this.setState({ value: 0 });
-     }
+    }
     // apiParams = this.props.match.params.project;
   }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     const handleChange = (event, newValue) => {
       this.setState({ value: newValue });
     };
@@ -149,24 +147,33 @@ class PjWorkloads extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              {t(`projects.detail.resources.workloads.title`)}
-              <small>{this.props.match.params.project}</small>
+              {this.props.match.params.project}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t(`projects.detail.resources.workloads.title`)}
+              </small>
             </h1>
             <ol className="breadcrumb">
               <li>
                 <NavLink to="/dashboard">{t("common.nav.home")}</NavLink>
               </li>
               <li>
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 <NavLink to="/Projects">{t("projects.title")}</NavLink>
               </li>
-              
+
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("projects.detail.resources.title")}
               </li>
               <li className="active">
-                <NavigateNext style={{fontSize:12, margin: "-2px 2px", color: "#444"}}/>
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
                 {t("projects.detail.resources.workloads.title")}
               </li>
             </ol>
@@ -188,21 +195,29 @@ class PjWorkloads extends Component {
                     width: "100%",
                     zIndex: "990",
                   }}
-                  TabIndicatorProps ={{ style:{backgroundColor:"#00d0ff"}}}
+                  TabIndicatorProps={{ style: { backgroundColor: "#00d0ff" } }}
                 >
                   {this.state.tabHeader.map((i) => {
                     return (
-                    <Tab label={t(`projects.detail.resources.workloads.${i.label}.title`)} {...a11yProps(i.index)}
-                          component={Link}
-                          to={{
-                            pathname: `/projects/${this.props.match.params.project}/resources/workloads/${i.param}`,
-                            search : this.props.location.search
-                            // state: {
-                            //   data : row
-                            // }
-                          }}
-                          style={{minHeight:"42px", fontSize: "13px", minWidth:"100px"  }}
-                    />
+                      <Tab
+                        label={t(
+                          `projects.detail.resources.workloads.${i.label}.title`
+                        )}
+                        {...a11yProps(i.index)}
+                        component={Link}
+                        to={{
+                          pathname: `/projects/${this.props.match.params.project}/resources/workloads/${i.param}`,
+                          search: this.props.location.search,
+                          // state: {
+                          //   data : row
+                          // }
+                        }}
+                        style={{
+                          minHeight: "42px",
+                          fontSize: "13px",
+                          minWidth: "100px",
+                        }}
+                      />
                     );
                   })}
                   {/* <Tab label="Item One" {...a11yProps(0)} />
@@ -216,15 +231,25 @@ class PjWorkloads extends Component {
                       <TabPanel value={this.state.value} index={0}></TabPanel>
                       );
                   })} */}
-              <TabPanel className="tab-panel" value={this.state.value} index={0}>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={0}
+              >
                 <Switch>
-                  <Route path="/projects/:project/resources/workloads/deployments/:deployment" 
-                    render={({match,location}) => <PjwDeploymentDetail  match={match} location={location}/>} >
-                  </Route>
-                  <Route path="/projects/:project/resources/workloads/deployments" 
-                    render={({match,location}) => <PjwDeployments  match={match} location={location}/>} >
-                  </Route>
-            
+                  <Route
+                    path="/projects/:project/resources/workloads/deployments/:deployment"
+                    render={({ match, location }) => (
+                      <PjwDeploymentDetail match={match} location={location} />
+                    )}
+                  ></Route>
+                  <Route
+                    path="/projects/:project/resources/workloads/deployments"
+                    render={({ match, location }) => (
+                      <PjwDeployments match={match} location={location} />
+                    )}
+                  ></Route>
+
                   {/* <Route path="/projects/:project/resources/workloads/deployments/:deployment/pods/:pod" 
                     render={({match,location}) => <PjwDeployment_PodDetail  match={match} location={location} menuData={this.onMenuData}/>} >
                   </Route>
@@ -234,14 +259,24 @@ class PjWorkloads extends Component {
                 </Switch>
                 {/* <DeploymentsTab pathParam={this.props.match.params.project}></DeploymentsTab> */}
               </TabPanel>
-              <TabPanel className="tab-panel" value={this.state.value} index={1}>
+              <TabPanel
+                className="tab-panel"
+                value={this.state.value}
+                index={1}
+              >
                 <Switch>
-                  <Route path="/projects/:project/resources/workloads/statefulsets/:statefulset" 
-                    render={({match,location}) => <PjwStatefulSetDetail  match={match} location={location}/>} >
-                  </Route>
-                  <Route path="/projects/:project/resources/workloads/statefulsets" 
-                        render={({match,location}) => <PjwStatefulsets  match={match} location={location}/>} >
-                  </Route>
+                  <Route
+                    path="/projects/:project/resources/workloads/statefulsets/:statefulset"
+                    render={({ match, location }) => (
+                      <PjwStatefulSetDetail match={match} location={location} />
+                    )}
+                  ></Route>
+                  <Route
+                    path="/projects/:project/resources/workloads/statefulsets"
+                    render={({ match, location }) => (
+                      <PjwStatefulsets match={match} location={location} />
+                    )}
+                  ></Route>
                 </Switch>
               </TabPanel>
               {/* <TabPanel  className="tab-panel"value={this.state.value} index={2}>

@@ -90,8 +90,11 @@ class CsPodDetail extends Component {
           {/* 컨텐츠 헤더 */}
           <section className="content-header">
             <h1>
-              {t("pods.pod.detail.title")}
-              <small> {this.props.match.params.pod} </small>
+              {this.props.match.params.pod}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t("pods.pod.detail.title")}
+              </small>
             </h1>
             <ol className="breadcrumb">
               <li>
@@ -116,13 +119,14 @@ class CsPodDetail extends Component {
           <section className="content">
             {this.state.rows ? (
               [
-                <BasicInfo rowData={this.state.rows.basic_info} t={t}/>,
-                <PodStatus rowData={this.state.rows.pod_status} t={t}/>,
-                <Containers rowData={this.state.rows.containers} t={t}/>,
+                <BasicInfo rowData={this.state.rows.basic_info} t={t} />,
+                <PodStatus rowData={this.state.rows.pod_status} t={t} />,
+                <Containers rowData={this.state.rows.containers} t={t} />,
                 <PhysicalResources
                   rowData={this.state.rows.physical_resources}
-                  t={t}/>,
-                <Events rowData={this.state.rows.events} t={t}/>,
+                  t={t}
+                />,
+                <Events rowData={this.state.rows.events} t={t} />,
               ]
             ) : (
               <CircularProgress
@@ -144,7 +148,7 @@ class BasicInfo extends Component {
     return (
       <div className="content-box">
         <div className="cb-header">
-        <span>{t("pods.pod.detail.basicInfo.title")}</span>
+          <span>{t("pods.pod.detail.basicInfo.title")}</span>
           {/* <PdPodResourceConfig name={this.props.rowData.name} resources={this.props.rowData.resources}/> */}
           {/* <PdPodResourceConfig
             data={this.props.rowData}
@@ -192,7 +196,9 @@ class BasicInfo extends Component {
                 {this.props.rowData.node}
               </div>
               <div>
-                <span>{t("pods.pod.detail.basicInfo.totalRestartCount")} : </span>
+                <span>
+                  {t("pods.pod.detail.basicInfo.totalRestartCount")} :{" "}
+                </span>
                 {this.props.rowData.total_restart_count}
               </div>
             </div>
@@ -277,7 +283,10 @@ class PodStatus extends Component {
     const columns = [
       { name: "type", title: t("pods.pod.detail.podStatus.grid.type") },
       { name: "status", title: t("pods.pod.detail.podStatus.grid.status") },
-      { name: "last_update", title: t("pods.pod.detail.podStatus.grid.updatedTime") },
+      {
+        name: "last_update",
+        title: t("pods.pod.detail.podStatus.grid.updatedTime"),
+      },
       { name: "reason", title: t("pods.pod.detail.podStatus.grid.reason") },
       { name: "message", title: t("pods.pod.detail.podStatus.grid.message") },
     ];
@@ -410,7 +419,10 @@ class Containers extends Component {
     const columns = [
       { name: "name", title: t("pods.pod.detail.containers.grid.name") },
       { name: "status", title: t("pods.pod.detail.containers.grid.status") },
-      { name: "restart_count", title: t("pods.pod.detail.containers.grid.restartCount") },
+      {
+        name: "restart_count",
+        title: t("pods.pod.detail.containers.grid.restartCount"),
+      },
       { name: "port", title: t("pods.pod.detail.containers.grid.port") },
       { name: "image", title: t("pods.pod.detail.containers.grid.image") },
     ];
@@ -483,15 +495,15 @@ class Containers extends Component {
   }
 }
 
-
-
 class PhysicalResources extends Component {
   render() {
     const t = this.props.t;
     const network_title = ["in", "out"];
     return (
       <div className="content-box line-chart">
-        <div className="cb-header">{t("pods.pod.detail.physicalResources.title")}</div>
+        <div className="cb-header">
+          {t("pods.pod.detail.physicalResources.title")}
+        </div>
         <div className="cb-body">
           <div className="cb-body-content">
             <LineReChart
@@ -582,11 +594,11 @@ class Events extends Component {
     const t = this.props.t;
     const columns = [
       { name: "project", title: t("pods.pod.detail.events.grid.project") },
-      { name: "type", title:  t("pods.pod.detail.events.grid.type") },
-      { name: "reason", title:  t("pods.pod.detail.events.grid.reason") },
-      { name: "object", title:  t("pods.pod.detail.events.grid.object") },
-      { name: "message", title:  t("pods.pod.detail.events.grid.message") },
-      { name: "time", title:  t("pods.pod.detail.events.grid.createdTime") },
+      { name: "type", title: t("pods.pod.detail.events.grid.type") },
+      { name: "reason", title: t("pods.pod.detail.events.grid.reason") },
+      { name: "object", title: t("pods.pod.detail.events.grid.object") },
+      { name: "message", title: t("pods.pod.detail.events.grid.message") },
+      { name: "time", title: t("pods.pod.detail.events.grid.createdTime") },
     ];
     const HeaderRow = ({ row, ...restProps }) => (
       <Table.Row

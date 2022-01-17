@@ -27,8 +27,7 @@ import { AsyncStorage } from "AsyncStorage";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import { FaCube } from "react-icons/fa";
 // import PdPodResourceConfig from "../modal/PdPodResourceConfig.js";
-import { withTranslation } from 'react-i18next';
-
+import { withTranslation } from "react-i18next";
 
 let apiParams = "";
 class DeploymentDetail extends Component {
@@ -60,7 +59,6 @@ class DeploymentDetail extends Component {
         utilLog.fn_insertPLogs(userId, "log-DP-VW03");
       })
       .catch((err) => console.log(err));
-
   }
 
   callApi = async () => {
@@ -92,41 +90,45 @@ class DeploymentDetail extends Component {
   };
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <div>
         <div className="content-wrapper pj-deployments fulled">
           {/* 컨텐츠 헤더 */}
           <section className="content-header" onClick={this.onRefresh}>
-          <h1>
-            {t("deployments.detail.title")}
-            <small>{this.props.match.params.deployment}</small>
-          </h1>
-          <ol className="breadcrumb">
-            <li>
-              <Link to="/dashboard">{t("common.nav.home")}</Link>
-            </li>
-            <li className="active">
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              {t("deployments.title")}
-            </li>
-            <li className="active">
-              <NavigateNext
-                style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
-              />
-              {t("deployments.detail.title")}
-            </li>
-          </ol>
-        </section>
+            <h1>
+              {this.props.match.params.deployment}
+              <small>
+                <NavigateNext className="detail-navigate-next" />
+                {t("deployments.detail.title")}
+              </small>
+            </h1>
+            <ol className="breadcrumb">
+              <li>
+                <Link to="/dashboard">{t("common.nav.home")}</Link>
+              </li>
+              <li className="active">
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
+                {t("deployments.title")}
+              </li>
+              <li className="active">
+                <NavigateNext
+                  style={{ fontSize: 12, margin: "-2px 2px", color: "#444" }}
+                />
+                {t("deployments.detail.title")}
+              </li>
+            </ol>
+          </section>
           {/* 내용부분 */}
           <section className="content">
             {this.state.rows ? (
               [
                 <BasicInfo
                   rowData={this.state.rows.basic_info}
-                  refresh={this.refresh} t={t}
+                  refresh={this.refresh}
+                  t={t}
                 />,
                 <ReplicaStatus
                   refresh={this.refresh}
@@ -212,7 +214,7 @@ class ReplicaStatus extends React.Component {
       rows: {},
       ready: 0,
       notReady: 0,
-      currentPodNum : 0,
+      currentPodNum: 0,
       // status,
     };
   }
@@ -265,7 +267,7 @@ class ReplicaStatus extends React.Component {
             rows: res,
             ready: res.ready_replicas,
             notReady: res.replicas - res.ready_replicas,
-            currentPodNum : parseInt(res.replicas)
+            currentPodNum: parseInt(res.replicas),
           });
         }
       })
@@ -307,7 +309,7 @@ class ReplicaStatus extends React.Component {
   addPod = (cluster) => {
     const url = `/apis/deployments/replica_status/set_pod_num`;
     let podNum = this.state.currentPodNum + 1;
-    this.setState({currentPodNum : podNum})
+    this.setState({ currentPodNum: podNum });
     const data = {
       cluster: cluster,
       namespace: this.props.queryString.split("project=")[1],
@@ -328,7 +330,7 @@ class ReplicaStatus extends React.Component {
       alert("It can't because Pod is the last");
     } else {
       let podNum = this.state.currentPodNum - 1;
-      this.setState({currentPodNum : podNum})
+      this.setState({ currentPodNum: podNum });
       const url = `/apis/deployments/replica_status/set_pod_num`;
       const data = {
         cluster: cluster,
@@ -370,7 +372,9 @@ class ReplicaStatus extends React.Component {
 
     return (
       <div className="content-box replica-set">
-        <div className="cb-header">{t("deployments.detail.replicaStatus.title")}</div>
+        <div className="cb-header">
+          {t("deployments.detail.replicaStatus.title")}
+        </div>
         <div className="cb-body" style={{ width: "100%" }}>
           <div>
             {this.state.rows ? (
@@ -949,11 +953,11 @@ class Events extends Component {
     const t = this.props.t;
     const columns = [
       { name: "project", title: t("deployments.detail.events.grid.project") },
-      { name: "type", title:  t("deployments.detail.events.grid.type") },
-      { name: "reason", title:  t("deployments.detail.events.grid.reason") },
-      { name: "object", title:  t("deployments.detail.events.grid.object") },
-      { name: "message", title:  t("deployments.detail.events.grid.message") },
-      { name: "time", title:  t("deployments.detail.events.grid.time") },
+      { name: "type", title: t("deployments.detail.events.grid.type") },
+      { name: "reason", title: t("deployments.detail.events.grid.reason") },
+      { name: "object", title: t("deployments.detail.events.grid.object") },
+      { name: "message", title: t("deployments.detail.events.grid.message") },
+      { name: "time", title: t("deployments.detail.events.grid.time") },
     ];
 
     const HeaderRow = ({ row, ...restProps }) => (
@@ -1025,4 +1029,4 @@ class Events extends Component {
   }
 }
 
-export default withTranslation()(DeploymentDetail); 
+export default withTranslation()(DeploymentDetail);
