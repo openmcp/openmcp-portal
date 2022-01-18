@@ -488,7 +488,7 @@ class KubernetesStatus extends Component {
                     textTransform: "capitalize",
                   }}
                 >
-                  {t("nodes.detail.nodeStatus.btn-deletNode")}
+                  {t("nodes.detail.nodeStatus.btn-deleteNode")}
                 </Button>
               ) : (
                 ""
