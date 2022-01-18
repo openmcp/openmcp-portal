@@ -20,7 +20,7 @@ import { NavigateNext } from "@material-ui/icons";
 //   TableHeaderRow,
 //   PagingPanel,
 // } from "@devexpress/dx-react-grid-material-ui";
-import NdTaintConfig from './../modal/NdTaintConfig';
+import NdTaintConfig from "./../modal/NdTaintConfig";
 import PieReChart2 from "../../modules/PieReChart2";
 import * as utilLog from "./../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
@@ -97,7 +97,7 @@ class NdNodeDetail extends Component {
         } else {
           this.setState({ rows: res });
         }
-        
+
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -181,21 +181,23 @@ class NdNodeDetail extends Component {
 }
 
 class BasicInfo extends Component {
-
   onUpdateData = () => {
     this.props.onUpdateData();
-  }
+  };
   render() {
     const t = this.props.t;
     return (
       <div className="content-box">
         <div className="cb-header">
           <span>{t("nodes.detail.basicInfo.title")}</span>
-          <NdTaintConfig name={this.props.rowData.name} taints={this.props.rowData.taint}
-          cluster={this.props.rowData.cluster}
-          node={this.props.rowData.name}
-          onUpdateData={this.onUpdateData}
-          t={t}/>
+          <NdTaintConfig
+            name={this.props.rowData.name}
+            taints={this.props.rowData.taint}
+            cluster={this.props.rowData.cluster}
+            node={this.props.rowData.name}
+            onUpdateData={this.onUpdateData}
+            t={t}
+          />
         </div>
         <div className="cb-body">
           <div>
@@ -378,7 +380,7 @@ class KubernetesStatus extends Component {
             cluster: "aks-cluster-01",
             node: "aks-np01-47695231-vmss_4",
           };
-        } else if (provider === "KVM") {
+        } else if (provider === "KVM" || provider === "On-Premise") {
           data = {
             cluster: this.props.propsRow.cluster,
             node: this.props.propsRow.name,
@@ -442,7 +444,7 @@ class KubernetesStatus extends Component {
 
         <div className="cb-header">
           <span>{t("nodes.detail.nodeStatus.title")}</span>
-          {this.props.propsRow.provider === "KVM" ? (
+          {this.props.propsRow.provider === "KVM" || this.props.propsRow.provider === "On-Premise" ? (
             <div style={{ position: "absolute", top: "0px", right: "0px" }}>
               <Button
                 variant="outlined"
@@ -473,7 +475,7 @@ class KubernetesStatus extends Component {
                 {t("nodes.detail.nodeStatus.btn-stopNode")}
               </Button>
 
-              {this.props.propsRow.provider === "KVM" ? (
+              {this.props.propsRow.provider === "KVM" || this.props.propsRow.provider === "On-Premise" ? (
                 <Button
                   variant="outlined"
                   color="primary"
@@ -532,7 +534,7 @@ class NodeResourceUsage extends Component {
         <div className="cb-header">
           <span> {t("nodes.detail.resourceUsage.title")}</span>
           {this.props.propsRow.provider === "EKS" ||
-          this.props.propsRow.provider === "KVM" ? (
+          this.props.propsRow.provider === "KVM" || this.props.propsRow.provider === "On-Premise"? (
             <NdResourceConfig
               rows={this.state.rows}
               rowData={this.props.rowData}
