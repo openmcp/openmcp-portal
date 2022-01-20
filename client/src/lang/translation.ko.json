@@ -758,6 +758,11 @@
         "selector": "선택자",
         "createdTime": "생성일시"
       },
+      "pop-delete":{
+        "btn-delete": "서비스 삭제",
+        "title": "서비스 삭제",
+        "context":"서비스를 삭제하시겠습니까?"
+      },
       "pop-create": {
         "btn-create": "서비스 생성",
         "title": "서비스 생성"
@@ -840,7 +845,7 @@
       }
     },
     "loadbalancer": {
-      "title": "로드 밸런서",
+      "title": "Kiali",
       "msg": {
         "noneData": "설정된 URL이 없습니다."
       }

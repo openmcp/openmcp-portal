@@ -2693,12 +2693,35 @@ app.post("/services", (req, res) => {
 });
 
 // Services Detail
-app.get("/services/:service", (req, res) => {
-  let rawdata = fs.readFileSync("./json_data/service_detail.json");
-  let overview = JSON.parse(rawdata);
-  res.send(overview);
-});
+// app.get("/services/:service", (req, res) => {
+//   let rawdata = fs.readFileSync("./json_data/service_detail.json");
+//   let overview = JSON.parse(rawdata);
+//   res.send(overview);
+// });
 
+app.delete("/api/services/delete", (req, res) => {
+  var request = require("request");
+  let requestData = {
+    serviceData: req.body.serviceData,
+  };
+
+  var data = JSON.stringify(requestData);
+
+  var options = {
+    uri: `${apiServer}/apis/services/delete`,
+    method: "POST",
+    body: data,
+  };
+
+  request(options, function (error, response, body) {
+    if (!error && response.statusCode == 200) {
+      res.send(body);
+    } else {
+      console.log("error", error);
+    }
+  });
+
+});
 ////////////////////////
 // Network > DNS
 ////////////////////////

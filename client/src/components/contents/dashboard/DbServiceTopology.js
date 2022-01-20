@@ -9,10 +9,9 @@ import { AsyncStorage } from "AsyncStorage";
 import axios from "axios";
 import { Button, CircularProgress } from "@material-ui/core";
 // import { useHistory } from "react-router-dom";
-import { withTranslation } from 'react-i18next';
+import { withTranslation } from "react-i18next";
 
 am4core.useTheme(am4themes_animated);
-
 
 // function GoPodDetail() {
 //   const history = useHistory();
@@ -39,7 +38,7 @@ class DbServiceTopology extends Component {
     super(props);
     this.state = {
       rows: "",
-      loadErr:"",
+      loadErr: "",
       completed: 0,
       reRender: "",
       masterCluster: "",
@@ -66,20 +65,19 @@ class DbServiceTopology extends Component {
   }
 
   onRefresh = () => {
-    const {t} = this.props;
-    this.setState({ loadErr:"" });
-    
+    const { t } = this.props;
+    this.setState({ loadErr: "" });
+
     this.timer = setInterval(this.progress, 20);
 
     let g_clusters;
-    AsyncStorage.getItem("g_clusters",(err, result) => { 
-      g_clusters = result.split(',');
+    AsyncStorage.getItem("g_clusters", (err, result) => {
+      g_clusters = result.split(",");
     });
-    
 
     const url = `/apis/dashboard/service_topology`;
     const data = {
-      g_clusters : g_clusters,
+      g_clusters: g_clusters,
       pathService:
         "M163.565,144H155.3a.436.436,0,0,0-.435.435V152.7a.436.436,0,0,0,.435.435h8.261A.436.436,0,0,0,164,152.7v-8.261A.436.436,0,0,0,163.565,144Zm0,10.87H155.3a.436.436,0,0,0-.435.435v8.261a.436.436,0,0,0,.435.435h8.261a.436.436,0,0,0,.435-.435V155.3A.436.436,0,0,0,163.565,154.87ZM152.7,144h-8.261a.436.436,0,0,0-.435.435V152.7a.436.436,0,0,0,.435.435H152.7a.436.436,0,0,0,.435-.435v-8.261A.436.436,0,0,0,152.7,144Zm0,10.87h-8.261a.436.436,0,0,0-.435.435v8.261a.436.436,0,0,0,.435.435H152.7a.436.436,0,0,0,.435-.435V155.3A.436.436,0,0,0,152.7,154.87Z",
       pathCluster:
@@ -96,7 +94,7 @@ class DbServiceTopology extends Component {
         } else {
           if (res.data.hasOwnProperty("errno")) {
             if (res.data.code === "ECONNREFUSED") {
-              this.setState({loadErr : t("dashboard.connectionFailed")})
+              this.setState({ loadErr: t("dashboard.connectionFailed") });
             }
             this.setState({ rows: "" });
           } else {
@@ -107,7 +105,9 @@ class DbServiceTopology extends Component {
         clearInterval(this.timer);
       })
       .catch((err) => {
-        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
+        AsyncStorage.getItem("useErrAlert", (error, result) => {
+          if (result === "true") alert(err);
+        });
       });
   };
 
@@ -121,7 +121,7 @@ class DbServiceTopology extends Component {
     );
     chart.legend = new am4charts.Legend();
 
-    chart.zoomable = true;
+    // chart.zoomable = true;
     chart.mouseWheelBehavior = "none";
     chart.zoomStep = 2;
 
@@ -181,7 +181,7 @@ class DbServiceTopology extends Component {
     icon.propertyFields.path = "path";
     icon.horizontalCenter = "middle";
     icon.verticalCenter = "middle";
-    icon.paddingBottom = 5;
+    icon.paddingBottom = 10;
     icon.fill = "#fff";
     icon.strokeOpacity = 0;
     // icon.scale = 1.0;
@@ -195,12 +195,12 @@ class DbServiceTopology extends Component {
     series.nodes.template.events.on("hit", function (event) {
       // chart.zoomToDataItem(event.target.dataItem, 2, true);
 
-      if(event.target.dataItem.level === 2){
+      if (event.target.dataItem.level === 3) {
         let podName = event.target.dataItem.dataContext.name;
         let cluster = event.target.dataItem.dataContext.data.cluster;
         let namespace = event.target.dataItem.dataContext.data.namespace;
-  
-        let url = `/pods/${podName}/overview?cluster=${cluster}&project=${namespace}`
+
+        let url = `/pods/${podName}/overview?cluster=${cluster}&project=${namespace}`;
         urlHistory.push(url);
       } else {
         chart.zoomToDataItem(event.target.dataItem, 2, true);
@@ -241,7 +241,7 @@ class DbServiceTopology extends Component {
       } else if (target.dataItem.level === 1) {
         target.label.dy = 10;
         return fill.lighten(target.dataItem.level * -0.15);
-      } else if (target.dataItem.level === 2) {
+      } else {
         target.label.dy = 8;
 
         var before5min = new Date(util.getDateBefore("m", 5));
@@ -254,15 +254,18 @@ class DbServiceTopology extends Component {
           )
         );
 
-        if(target.dataItem.dataContext.status !== "Running"){
+        if (target.dataItem.dataContext.status !== "Running") {
           return am4core.color("#EC4E05");
-        } else if (createdTime > before5min){
+        } else if (createdTime > before5min) {
           return am4core.color("#2682D8");
         }
         return am4core.color("#0B2844");
-      } else {
       }
-      return fill.lighten(target.dataItem.level * -0.15);
+      // return fill.lighten(target.dataItem.level * -0.15);
+    });
+
+    chart.legend.itemContainers.template.events.on("hit", function(ev) {
+      console.log("Clicked on", ev.target);
     });
 
     // series.links.template.adapter.add("distance", function(distance, target) {
@@ -273,7 +276,7 @@ class DbServiceTopology extends Component {
     //   }
     //   return distance;
     // });
-  }
+  };
 
   componentWillUnmount() {
     if (this.chart) {
@@ -282,41 +285,54 @@ class DbServiceTopology extends Component {
   }
 
   render() {
-    const {t} = this.props;
+    const { t } = this.props;
     return (
       <div className="dash-comp" style={{ width: "100%" }}>
-        <Button variant="outlined" color="primary" onClick={this.onRefresh} style={{position:"absolute", right:"2px", top:"-42px", zIndex:"10", width:"148px", height:"31px", textTransform: "capitalize"}}>
-        {t("dashboard.topology.btn-refresh")}
-              </Button>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.onRefresh}
+          style={{
+            position: "absolute",
+            right: "2px",
+            top: "-42px",
+            zIndex: "10",
+            width: "148px",
+            height: "31px",
+            textTransform: "capitalize",
+          }}
+        >
+          {t("dashboard.topology.btn-refresh")}
+        </Button>
         <div
           className="topology"
           id="serviceTopology"
           style={{ width: "100%", height: "600px" }}
         ></div>
-        {this.state.rows ? (
-         null
-          ) : (
-            <div  style={{
-              position:"absolute",
-              textAlign:"center",
-              top : "0px",
-              left : "0px",
+        {this.state.rows ? null : (
+          <div
+            style={{
+              position: "absolute",
+              textAlign: "center",
+              top: "0px",
+              left: "0px",
               right: "0px",
               margin: "25% auto",
-            }}>
-            {this.state.loadErr ? 
+            }}
+          >
+            {this.state.loadErr ? (
               <div>{this.state.loadErr}</div>
-              :
-            <CircularProgress
-              variant="determinate"
-              value={this.state.completed}
-             
-            ></CircularProgress>}
-            </div>
-          )}
+            ) : (
+              <CircularProgress
+                variant="determinate"
+                value={this.state.completed}
+              ></CircularProgress>
+            )}
+          </div>
+        )}
       </div>
     );
   }
 }
 
-export default withTranslation()(DbServiceTopology); 
+export default withTranslation()(DbServiceTopology);

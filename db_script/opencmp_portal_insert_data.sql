@@ -101,6 +101,7 @@ insert into tb_codes values ('LOG-PT','log-NW-VW05','View Network Services Overv
 insert into tb_codes values ('LOG-PT','log-NW-VW06','View Network Ingress Overview','WorkLoads > Network > Ingress > Overview');
 insert into tb_codes values ('LOG-PT','log-NW-EX01','Execute Create Service','WorkLoads > Network > Services > Create Service');
 insert into tb_codes values ('LOG-PT','log-NW-EX02','Execute Create Ingress','WorkLoads > Network > Ingress > Create Ingress');
+insert into tb_codes values ('LOG-PT','log-NW-EX03','Execute Delete Service','WorkLoads > Network > Service > Delete Service');
 
 -- Migrations
 insert into tb_codes values ('LOG-PT','log-MG-VW01','View Migration Page','Motions > Migrations > Migrations');

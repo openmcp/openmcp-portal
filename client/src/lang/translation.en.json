@@ -761,6 +761,11 @@
         "btn-create": "Create Service",
         "title": "Create Service"
       },
+      "pop-delete":{
+        "btn-delete": "Delete Service",
+        "title": "Delete Services",
+        "context":"Are you sure delete service?"
+      },
       "detail": {
         "title": "Service Overview",
         "basicInfo": {
@@ -839,7 +844,7 @@
       }
     },
     "loadbalancer": {
-      "title": "Load Balancer",
+      "title": "Kiali",
       "msg": {
         "noneData": "There's no URL set up"
       }

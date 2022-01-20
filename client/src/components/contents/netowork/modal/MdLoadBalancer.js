@@ -169,7 +169,7 @@ class LoadbalancePopup extends Component {
     console.log(popup);
 
     if(popup !== undefined){
-      popup.close();
+      // popup.close();
     }
 
     const t = this.props.t;
@@ -231,7 +231,7 @@ class LoadbalancePopup extends Component {
           popup = 
           window.open(
             url,
-            "Popup",
+            cluster,
             parameters
           );
           // popup.open();

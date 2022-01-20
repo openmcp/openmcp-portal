@@ -9,6 +9,8 @@ import {
   IntegratedPaging,
   SortingState,
   IntegratedSorting,
+  SelectionState,
+  IntegratedSelection,
 } from "@devexpress/dx-react-grid";
 import {
   Grid,
@@ -18,6 +20,7 @@ import {
   TableColumnResizing,
   TableHeaderRow,
   PagingPanel,
+  TableSelection,
 } from "@devexpress/dx-react-grid-material-ui";
 import Editor from "./../../modules/Editor";
 // import { NavigateNext} from '@material-ui/icons';
@@ -32,6 +35,8 @@ import MenuList from "@material-ui/core/MenuList";
 import Grow from "@material-ui/core/Grow";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withTranslation } from "react-i18next";
+import Confirm from "../../modules/Confirm";
+import ProgressTemp from "../../modules/ProgressTemp";
 
 // let apiParams = "";
 class Services extends Component {
@@ -59,6 +64,10 @@ class Services extends Component {
       pageSizes: [5, 10, 15, 0],
 
       completed: 0,
+      selection: [],
+      selectedRow: "",
+      confrimTarget: "false",
+      openProgress: false,
       //       editorContext2 : `apiVersion: v1
       // kind: Service
       // metadata:
@@ -84,7 +93,6 @@ spec:
     app: [openmcp-nginx]
 `,
       anchorEl: null,
-
     };
   }
 
@@ -110,8 +118,6 @@ spec:
     const body = await response.json();
     return body;
   };
-
-
 
   progress = () => {
     const { completed } = this.state;
@@ -147,11 +153,13 @@ spec:
         } else {
           this.setState({ rows: res });
         }
+        this.setState({ openProgress: false });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
   };
 
+  //create service
   excuteScript = (context) => {
     if (this.state.openProgress) {
       this.setState({ openProgress: false });
@@ -178,8 +186,59 @@ spec:
         utilLog.fn_insertPLogs(userId, "log-NW-EX01");
       })
       .catch((err) => {
-        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
+        AsyncStorage.getItem("useErrAlert", (error, result) => {
+          if (result === "true") alert(err);
+        });
       });
+  };
+
+  //delete service
+  confirmed = (result) => {
+    this.setState({ confirmOpen: false });
+
+    if (result) {
+      //show progress loading...
+      this.setState({ openProgress: true });
+
+      const url = `/api/services/delete`;
+      const data = {
+        serviceData: this.state.selectedRow,
+      };
+
+      axios
+        .delete(url, { data: data })
+        .then((res) => {
+          // alert(res.data.message);
+          // console.log(res);
+          // let res = {
+          //   data: [
+          //     {
+          //       code: 200,
+          //       result: "success",
+          //       text: "Deployment delete completed",
+          //     },
+          //     {
+          //       code: 200,
+          //       result: "success",
+          //       text: "Deployment delete completed",
+          //     },
+          //   ],
+          // };
+          this.setState({ open: false });
+          this.onRefresh();
+          let userId = null;
+          AsyncStorage.getItem("userName", (err, result) => {
+            userId = result;
+          });
+          utilLog.fn_insertPLogs(userId, "log-NW-EX03");
+        })
+        .catch((err) => {
+          AsyncStorage.getItem("useErrAlert", (error, result) => {
+            if (result === "true") alert(err);
+          });
+          this.setState({ openProgress: false });
+        });
+    }
   };
 
   render() {
@@ -195,6 +254,17 @@ spec:
       // { name: "port", title: "Port" },
       { name: "created_time", title: t("network.services.grid.createdTime") },
     ];
+
+    const confirmInfo = {
+      title: t("network.services.pop-delete.title"),
+      context: t("network.services.pop-delete.context"),
+      button: {
+        open: t("network.services.pop-delete.btn-delete"),
+        yes: t("common.btn.confirm"),
+        no: t("common.btn.cancel"),
+      },
+    };
+
     // 셀 데이터 스타일 변경
     const HighlightedCell = ({ value, style, row, ...restProps }) => (
       <Table.Cell
@@ -285,6 +355,22 @@ spec:
       return <Table.Row {...props} key={props.tableRow.key} />;
     };
 
+    const onSelectionChange = (selection) => {
+      // if (selection.length > 1) selection.splice(0, 1);
+      this.setState({ selection: selection });
+
+      let selectedRows = [];
+      let selectedTarget = [];
+      selection.forEach((id) => {
+        selectedRows.push(this.state.rows[id]);
+        selectedTarget.push(this.state.rows[id].name + ", ");
+      });
+      this.setState({
+        selectedRow: selectedRows,
+        confrimTarget: selectedTarget,
+      });
+    };
+
     const handleClick = (event) => {
       if (this.state.anchorEl === null) {
         this.setState({ anchorEl: event.currentTarget });
@@ -319,6 +405,14 @@ spec:
             </li>
           </ol>
         </section> */}
+        {this.state.openProgress ? (
+          <ProgressTemp
+            openProgress={this.state.openProgress}
+            closeProgress={this.closeProgress}
+          />
+        ) : (
+          ""
+        )}
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (
@@ -378,6 +472,20 @@ spec:
                                 menuClose={handleClose}
                               />
                             </MenuItem>
+                            <MenuItem
+                              style={{
+                                textAlign: "center",
+                                display: "block",
+                                fontSize: "14px",
+                              }}
+                            >
+                              <Confirm
+                                confirmInfo={confirmInfo}
+                                confrimTarget={this.state.confrimTarget}
+                                confirmed={this.confirmed}
+                                menuClose={handleClose}
+                              />
+                            </MenuItem>
                           </MenuList>
                         </Paper>
                       </Grow>
@@ -404,8 +512,14 @@ spec:
                     defaultCurrentPage={0}
                     defaultPageSize={this.state.pageSize}
                   />
+
                   <IntegratedPaging />
                   <PagingPanel pageSizes={this.state.pageSizes} />
+
+                  <SelectionState
+                    selection={this.state.selection}
+                    onSelectionChange={onSelectionChange}
+                  />
 
                   {/* 테이블 */}
                   <Table cellComponent={Cell} rowComponent={Row} />
@@ -416,6 +530,8 @@ spec:
                     showSortingControls
                     rowComponent={HeaderRow}
                   />
+                  <IntegratedSelection />
+                  <TableSelection selectByRowClick highlightRow />
                 </Grid>,
               ]
             ) : (
