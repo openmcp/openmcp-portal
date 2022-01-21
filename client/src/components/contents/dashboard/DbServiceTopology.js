@@ -119,7 +119,17 @@ class DbServiceTopology extends Component {
     series = chart.series.push(
       new am4plugins_forceDirected.ForceDirectedSeries()
     );
+    // legend settings
     chart.legend = new am4charts.Legend();
+    chart.legend.position = "bottom";
+    chart.legend.maxHeight = 120;
+    chart.legend.scrollable = true;
+    // chart.legend.useDefaultMarker = true;
+    // var marker = chart.legend.markers.template.children.getIndex(0);
+    // marker.cornerRadius(1, 12, 12, 12);
+    // marker.strokeWidth = 2;
+    // marker.strokeOpacity = 1;
+    // marker.stroke = am4core.color("#ccc");
 
     // chart.zoomable = true;
     chart.mouseWheelBehavior = "none";
@@ -264,9 +274,9 @@ class DbServiceTopology extends Component {
       // return fill.lighten(target.dataItem.level * -0.15);
     });
 
-    chart.legend.itemContainers.template.events.on("hit", function(ev) {
-      console.log("Clicked on", ev.target);
-    });
+    // chart.legend.itemContainers.template.events.on("hit", function(ev) {
+    //   console.log("Clicked on", ev.target);
+    // });
 
     // series.links.template.adapter.add("distance", function(distance, target) {
     //   if(target.dataItem.level === 1){
@@ -307,7 +317,7 @@ class DbServiceTopology extends Component {
         <div
           className="topology"
           id="serviceTopology"
-          style={{ width: "100%", height: "600px" }}
+          style={{ width: "100%", height: "700px" }}
         ></div>
         {this.state.rows ? null : (
           <div

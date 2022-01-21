@@ -123,8 +123,18 @@ class DbClusterTopology extends Component {
       new am4plugins_forceDirected.ForceDirectedSeries()
     );
     chart.legend = new am4charts.Legend();
+    chart.legend.position = "bottom";
+    chart.legend.maxHeight = 120;
+    chart.legend.scrollable = true;
+    
+    // let marker = chart.legend.markers.template.children.getIndex(0);
+    // marker.cornerRadius(1, 12, 12, 12);
 
-    chart.zoomable = true;
+
+
+
+    
+    // chart.zoomable = true;
     chart.mouseWheelBehavior = "none";
     chart.zoomStep = 2;
 
@@ -301,7 +311,7 @@ class DbClusterTopology extends Component {
         <div
           className="topology"
           id="clusterTopology"
-          style={{ width: "100%", height: "600px" }}
+          style={{ width: "100%", height: "700px" }}
         ></div>
         {this.state.rows ? null : (
           <div
