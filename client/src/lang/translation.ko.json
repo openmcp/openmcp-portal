@@ -83,7 +83,8 @@
       "next": "다음",
       "delete": "삭제",
       "open": "열기",
-      "prev": "이전"
+      "prev": "이전",
+      "refresh":"새로고침"
     },
     "label": {
       "target": "대상",

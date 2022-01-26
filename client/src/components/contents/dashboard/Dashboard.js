@@ -179,7 +179,7 @@ class Dashboard extends Component {
                   myComponentList={this.state.myComponentList}
                 />
                 ) : (
-                  <div></div>
+                  null
               )}
             </span>
             <div style={{

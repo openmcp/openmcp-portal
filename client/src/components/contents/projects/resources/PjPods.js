@@ -25,6 +25,7 @@ import * as utilLog from "./../../../util/UtLogs.js";
 import { AsyncStorage } from "AsyncStorage";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
 import { withTranslation } from "react-i18next";
+import { Button } from "@material-ui/core";
 
 let apiParams = "";
 class PjPods extends Component {
@@ -95,9 +96,8 @@ class PjPods extends Component {
     this.setState({ completed: completed >= 100 ? 0 : completed + 1 });
   };
 
-  //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  componentDidMount() {
-    //데이터가 들어오기 전까지 프로그래스바를 보여준다.
+  onRefresh = () => {
+    this.setState({ rows: "" });
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -114,6 +114,11 @@ class PjPods extends Component {
         utilLog.fn_insertPLogs(userId, "log-PJ-VW05");
       })
       .catch((err) => console.log(err));
+  };
+
+  //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  componentDidMount() {
+    this.onRefresh();
   }
 
   render() {
@@ -298,6 +303,22 @@ class PjPods extends Component {
           <Paper>
             {this.state.rows ? (
               [
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  onClick={this.onRefresh}
+                  style={{
+                    position: "absolute",
+                    right: "22px",
+                    top: "28px",
+                    zIndex: "10",
+                    width: "148px",
+                    height: "31px",
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {t("common.btn.refresh")}
+                </Button>,
                 // <Editor title="create" context={this.state.editorContext}/>,
                 <Grid rows={this.state.rows} columns={this.state.columns}>
                   <Toolbar />

@@ -136,7 +136,7 @@ class DbClusterTopology extends Component {
     
     // chart.zoomable = true;
     chart.mouseWheelBehavior = "none";
-    chart.zoomStep = 2;
+    chart.zoomStep = 4;
 
     chart.zoomOutButton.background.cornerRadius(5, 5, 5, 5);
     chart.zoomOutButton.background.fill = am4core.color("#25283D");
@@ -174,14 +174,16 @@ class DbClusterTopology extends Component {
     series.minRadius = 10;
     series.maxRadius = 30;
     series.maxLevels = 3;
-    series.centerStrength = 0.5; //화면의 중앙으로 끌리는 상대적 강도
-    series.manyBodyStrength = -5; //뭉침의 강도
+    series.centerStrength = 3; //화면의 중앙으로 끌리는 상대적 강도
+    series.manyBodyStrength = -40; //뭉침의 강도
+    // series.centerStrength = 0.5; //화면의 중앙으로 끌리는 상대적 강도
+    // series.manyBodyStrength = -5; //뭉침의 강도
     // series.centerStrength = 2; //화면의 중앙으로 끌리는 상대적 강도
     // series.manyBodyStrength = -20; //뭉침의 강도
 
-    series.links.template.strength = 1;
+    series.links.template.strength = 1.8;
     series.links.template.strokeWidth = 2;
-    series.links.template.distance = 3; //링크간의 거리
+    series.links.template.distance = 1.2; //링크간의 거리
 
     // series.nodes.template.tooltipText = "{name} [bold]{status}[/]";
     series.nodes.template.tooltipText = "{name}";
@@ -297,8 +299,8 @@ class DbClusterTopology extends Component {
           onClick={this.onRefresh}
           style={{
             position: "absolute",
-            right: "2px",
-            top: "-42px",
+            right: "160px",
+            top: "2px",
             zIndex: "10",
             width: "148px",
             height: "31px",

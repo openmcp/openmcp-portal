@@ -83,7 +83,8 @@
       "next": "NEXT",
       "delete": "DELETE",
       "open": "OPEN",
-      "prev": "Prev"
+      "prev": "Prev",
+      "refresh":"Refresh"
     },
     "label": {
       "target": "Target",

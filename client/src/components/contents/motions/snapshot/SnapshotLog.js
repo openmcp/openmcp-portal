@@ -106,14 +106,14 @@ class SnapshotLog extends Component {
         });
         utilLog.fn_insertPLogs(userId, "log-SS-VW02");
         
-        this.timer = setInterval(this.repeatApiCall, 5000);
+        this.timer2 = setInterval(this.repeatApiCall, 5000);
       })
       .catch((err) => console.log(err));
 
   }
 
   componentWillUnmount() {
-    clearInterval(this.timer);
+    clearInterval(this.timer2);
   }
 
   repeatApiCall=()=>{
