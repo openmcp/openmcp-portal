@@ -845,7 +845,7 @@
       }
     },
     "loadbalancer": {
-      "title": "Kiali",
+      "title": "LB Visualization",
       "msg": {
         "noneData": "There's no URL set up"
       }

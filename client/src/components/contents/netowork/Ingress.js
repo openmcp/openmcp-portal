@@ -32,6 +32,7 @@ import MenuList from '@material-ui/core/MenuList';
 import Grow from '@material-ui/core/Grow';
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withTranslation } from 'react-i18next';
+import ProgressTemp from "../../modules/ProgressTemp";
 
 class Ingress extends Component {
   constructor(props) {
@@ -142,6 +143,7 @@ spec:
         } else {
           this.setState({ rows: res });
         }
+        this.setState({ openProgress: false });
         clearInterval(this.timer);
       })
       .catch((err) => console.log(err));
@@ -154,7 +156,7 @@ spec:
       this.setState({ openProgress: true });
     }
 
-    const url = `/ingress/create`;
+    const url = `/apis/yamleapply`;
     const data = {
       yaml: context,
     };
@@ -163,7 +165,7 @@ spec:
       .then((res) => {
         // alert(res.data.message);
         this.setState({ open: false });
-        this.onUpdateData();
+        this.onRefresh();
 
         let userId = null;
         AsyncStorage.getItem("userName", (err, result) => {
@@ -173,6 +175,7 @@ spec:
       })
       .catch((err) => {
         AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
+        this.setState({ openProgress: false });
       });
   };
 
@@ -310,6 +313,14 @@ spec:
             </li>
           </ol>
         </section> */}
+        {this.state.openProgress ? (
+          <ProgressTemp
+            openProgress={this.state.openProgress}
+            closeProgress={this.closeProgress}
+          />
+        ) : (
+          ""
+        )}
         <section className="content" style={{ position: "relative" }}>
           <Paper>
             {this.state.rows ? (

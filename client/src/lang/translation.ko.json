@@ -846,7 +846,7 @@
       }
     },
     "loadbalancer": {
-      "title": "Kiali",
+      "title": "LB Visualization",
       "msg": {
         "noneData": "설정된 URL이 없습니다."
       }

@@ -167,7 +167,7 @@ spec:
       this.setState({ openProgress: true });
     }
 
-    const url = `/services/create`;
+    const url = `/apis/yamleapply`;
     const data = {
       yaml: context,
     };
@@ -177,8 +177,7 @@ spec:
       .then((res) => {
         // alert(res.data.message);
         this.setState({ open: false });
-        this.onUpdateData();
-
+        this.onRefresh();
         let userId = null;
         AsyncStorage.getItem("userName", (err, result) => {
           userId = result;
