@@ -91,6 +91,15 @@ class OpenMCPPolicy extends Component {
               result.push(item);
             }
           });
+
+          // let LSTMItem = {
+          //   name: "lstm-auto-scaler-enable",
+          //   status: "Enabled",
+          //   value: "Mode : Disable|"
+          // }
+
+          // result.push(LSTMItem)
+          
           this.setState({ rows: result });
         }
         clearInterval(this.timer);
@@ -116,11 +125,20 @@ class OpenMCPPolicy extends Component {
         if(res === null){
           this.setState({ rows: [] });
         } else {
+          
           res.forEach((item) => {
             if(item.name !== "has-target-cluster"){
               result.push(item);
             }
           });
+
+          // let LSTMItem = {
+          //   name: "lstm-auto-scaler-enable",
+          //   status: "Enabled",
+          //   value: "Mode : Enable|"
+          // };
+
+          // result.push(LSTMItem);
           this.setState({ rows: result });
         }
         clearInterval(this.timer);

@@ -48,8 +48,8 @@ class Nodes extends Component {
         { columnName: "cluster", width: 100},
         { columnName: "role", width: 75 },
         { columnName: "system_version", width: 200 },
-        { columnName: "cpu", width: 155 },
-        { columnName: "memory", width: 155 },
+        { columnName: "cpu", width: 160 },
+        { columnName: "memory", width: 160 },
         { columnName: "pods", width: 155 },
         { columnName: "provider", width: 100 },
         { columnName: "region", width: 90 },
@@ -269,11 +269,14 @@ class Nodes extends Component {
       const fn_linearProgressBar2 = () =>{
         var data = [];
         var predict = [];
+        let total;
         if(props.value.indexOf("|") > -1) {
           props.value.split("|").forEach((item, idx) => {
             if(item.indexOf(" ") > -1) {
               item.split(" ").map((i, index) => data[index] = i);
             }
+
+            total = data[2];
 
             if(idx === 2){
               predict = item;
@@ -287,7 +290,8 @@ class Nodes extends Component {
           <p style={{marginTop:"5px"}}>
             {predict.length > 0 ? [
               <div style={{color:"#afafaf"}}>
-                {parseFloat(predict).toFixed(2) + ' (prediction)'}
+                {/* {parseFloat(predict).toFixed(1) + ` (prediction: ${parseFloat(parseFloat(predict).toFixed(1)/total*100).toFixed(1)}%)` } */}
+                {parseFloat(predict).toFixed(1) + ` (prediction)` }
               </div>,
               <LinearProgressBar2 value={predict} total={data[2]} mColor={"gray"} bColor={"bgGray"}/>
             ]
