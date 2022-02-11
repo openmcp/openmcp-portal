@@ -65,7 +65,8 @@ class DbClusterTopology extends Component {
 
   onRefresh = () => {
     const { t } = this.props;
-    this.setState({ loadErr: "" });
+    this.setState({ loadErr: "", rows: "" });
+    series.data = null;
 
     this.timer = setInterval(this.progress, 20);
 
@@ -95,7 +96,6 @@ class DbClusterTopology extends Component {
             if (res.data.code === "ECONNREFUSED") {
               this.setState({ loadErr: t("dashboard.connectionFailed") });
             }
-            this.setState({ rows: "" });
           } else {
             this.setState({ rows: res.data.topology });
             series.data = res.data.topology;
@@ -110,7 +110,9 @@ class DbClusterTopology extends Component {
         utilLog.fn_insertPLogs(userId, "log-DS-VW05");
       })
       .catch((err) => {
-        AsyncStorage.getItem("useErrAlert", (error, result) => {if (result === "true") alert(err);});
+        AsyncStorage.getItem("useErrAlert", (error, result) => {
+          if (result === "true") alert(err);
+        });
       });
   };
 
@@ -126,14 +128,10 @@ class DbClusterTopology extends Component {
     chart.legend.position = "bottom";
     chart.legend.maxHeight = 120;
     chart.legend.scrollable = true;
-    
+
     // let marker = chart.legend.markers.template.children.getIndex(0);
     // marker.cornerRadius(1, 12, 12, 12);
 
-
-
-
-    
     // chart.zoomable = true;
     chart.mouseWheelBehavior = "none";
     chart.zoomStep = 4;
@@ -299,8 +297,8 @@ class DbClusterTopology extends Component {
           onClick={this.onRefresh}
           style={{
             position: "absolute",
-            right: "160px",
-            top: "2px",
+            right: "2px",
+            top: "-42px",
             zIndex: "10",
             width: "148px",
             height: "31px",

@@ -66,7 +66,8 @@ class DbServiceTopology extends Component {
 
   onRefresh = () => {
     const { t } = this.props;
-    this.setState({ loadErr: "" });
+    this.setState({ loadErr: "", rows: "" });
+    series.data = null;
 
     this.timer = setInterval(this.progress, 20);
 

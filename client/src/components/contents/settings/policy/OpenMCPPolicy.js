@@ -88,7 +88,6 @@ class OpenMCPPolicy extends Component {
         } else {
           res.forEach((item) => {
             if(item.name !== "has-target-cluster"){
-              console.log(item.name);
               result.push(item);
             }
           });
@@ -119,7 +118,6 @@ class OpenMCPPolicy extends Component {
         } else {
           res.forEach((item) => {
             if(item.name !== "has-target-cluster"){
-              console.log(item.name);
               result.push(item);
             }
           });
