@@ -235,6 +235,6 @@ INSERT INTO public.oauth_clients(client_id, client_secret, redirect_uri) VALUES 
 -- metering default regions 
  INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('KR', 0.1, 'Korea', current_timestamp, current_timestamp);
  INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('US', 0.1, 'US',current_timestamp, current_timestamp);
- INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('JP', 0.1, 'Japen',current_timestamp, current_timestamp);
+ INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('JP', 0.1, 'Japan',current_timestamp, current_timestamp);
  INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('HK', 0.1, 'Hongkong',current_timestamp,current_timestamp);
  INSERT INTO public.tb_metering_cluster(region, cost, region_name, created_time, updated_time) VALUES ('CN', 0.1, 'China',current_timestamp,current_timestamp);
