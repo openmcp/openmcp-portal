@@ -157,7 +157,7 @@ class AddKVMNode extends Component {
         .post(url, data)
         .then((res) => {
           if (res.data.code === 500) {
-            alert(res.data.result + "\n" + res.data.text);
+            // alert(res.data.result + "\n" + res.data.text);
           } else {
             this.props.handleClose();
             let userId = null;

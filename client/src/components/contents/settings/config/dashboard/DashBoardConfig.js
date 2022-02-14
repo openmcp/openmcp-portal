@@ -98,7 +98,7 @@ class DashBoardConfigSet extends Component {
 
     Axios.put(url, data)
       .then((res) => {
-        alert(res.data.message);
+        // alert(res.data.message);
         AsyncStorage.setItem("dashboard-cycle", this.state["DASHBOARD-CYCLE"]);
 
         let userId = null;

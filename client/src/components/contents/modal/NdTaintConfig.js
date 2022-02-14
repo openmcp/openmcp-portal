@@ -109,7 +109,7 @@ class NdTaintConfig extends Component {
       .patch(url, data)
       .then((res) => {
         this.props.onUpdateData();
-        alert(res.data[0].text);
+        // alert(res.data[0].text);
 
         let userId = null;
         AsyncStorage.getItem("userName", (err, result) => {
@@ -147,10 +147,10 @@ class NdTaintConfig extends Component {
         .patch(url, data)
         .then((res) => {
           if (res.data.error) {
-            alert(res.data.message);
+            // alert(res.data.message);
           } else {
             this.props.onUpdateData();
-            alert(res.data[0].text);
+            // alert(res.data[0].text);
           }
           let userId = null;
           AsyncStorage.getItem("userName", (err, result) => {

@@ -195,7 +195,7 @@ class ChangeAKSReource extends Component {
       axios.post(url, data)
         .then((res) => {
           if(res.data.error){
-            alert(res.data.message)
+            // alert(res.data.message)
             return
           }
           this.setState({open: false, openProgress:false})

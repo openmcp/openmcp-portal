@@ -133,7 +133,7 @@ class DashboardSelectModule extends Component {
           // console.log("sdfsdf",this.props)
           
           utilLog.fn_insertPLogs(userId, "log-DS-MD01");
-          alert(res.data.message);
+          // alert(res.data.message);
         }
       })
       .catch((err) => {

@@ -249,7 +249,7 @@ class OMCPDeployment extends Component {
       axios
         .post(url, data)
         .then((res) => {
-          alert(res.data[0].text);
+          // alert(res.data[0].text);
           this.handleClose();
           this.setState({ rows: "" });
           this.setState({ openProgress: false });

@@ -156,7 +156,7 @@ class AddEKSNode extends Component {
         .post(url, data)
         .then((res) => {
           if (res.data.error) {
-            alert(res.data.message);
+            // alert(res.data.message);
           } else {
             this.props.handleClose();
             //write log

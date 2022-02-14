@@ -167,7 +167,7 @@ class PdPodResourceConfig extends Component {
             });
             utilLog.fn_insertPLogs(userId, "log-DP-MD01");
           }
-          alert(res.data[0].text);
+          // alert(res.data[0].text);
         }
       })
       .catch((err) => {

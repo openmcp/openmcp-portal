@@ -151,7 +151,7 @@ class MtEditMetering extends React.Component {
       .post(url, data)
       .then((res) => {
         this.props.onUpdateData();
-        alert(res.data.message);
+        // alert(res.data.message);
         let userId = null;
         AsyncStorage.getItem("userName", (err, result) => {
           userId = result;

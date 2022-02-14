@@ -177,7 +177,7 @@ class ChangeKVMReource extends Component {
       axios.post(url, data)
         .then((res) => {
           if(res.data.error){
-            alert(res.data.message)
+            // alert(res.data.message)
             return
           }
         })

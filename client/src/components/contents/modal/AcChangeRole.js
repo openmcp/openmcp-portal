@@ -166,7 +166,7 @@ class AcChangeRole extends Component {
       };
       axios.put(url, data)
       .then((res) => {
-          alert(res.data.message);
+          // alert(res.data.message);
           this.setState({ open: false });
           this.props.onUpdateData();
           let userId = null;

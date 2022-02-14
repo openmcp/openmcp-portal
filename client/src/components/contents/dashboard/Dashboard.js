@@ -125,7 +125,7 @@ class Dashboard extends Component {
     axios
       .post(url, data)
       .then((res) => {
-        alert(res.data[0].text);
+        // alert(res.data[0].text);
         this.setState({ openProgress: false });
         this.onRefresh();
 

@@ -126,7 +126,7 @@ class PcSetTextValuePolicy extends Component {
             });
             utilLog.fn_insertPLogs(userId, "log-PO-EX01");
           }
-          alert(res.data[0].text);
+          // alert(res.data[0].text);
         }
       })
       .catch((err) => {
