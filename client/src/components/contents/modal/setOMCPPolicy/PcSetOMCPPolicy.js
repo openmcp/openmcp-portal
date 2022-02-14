@@ -55,7 +55,7 @@ class PcSetOMCPPolicy extends Component {
           selectBoxData = [{name:"Equal", value:"Equal"},{name:"Unequal", value:"Unequal"}]
           
           return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData} selectBoxData={selectBoxData}/>
-        case "lstm-auto-scaler-enable":
+        case "predictive-scaling":
           selectBoxData = [{name:"Enable", value:"Enable"},{name:"Disable", value:"Disable"}]
           
           return <PcSetSelectBoxPolicy isFloat= {false} policyName={this.state.policyName} policy={this.props.policy} onUpdateData={this.props.onUpdateData} selectBoxData={selectBoxData}/>
