@@ -57,8 +57,8 @@ class SetThreshold extends Component {
         { name: "ram_danger", title: "Ram(D)" },
         { name: "storage_warn", title: "Storage(W)" },
         { name: "storage_danger", title: "Storage(D)" },
-        { name: "created_time", title: "Created Time" },
-        { name: "updated_time", title: "Updated Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
+        { name: "updated_time", title: "Updated Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "node_name", width: 150 },

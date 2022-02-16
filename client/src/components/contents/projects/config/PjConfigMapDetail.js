@@ -169,7 +169,7 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Created Time : </span>
+                <span>Created Time (UTC) : </span>
                 {this.props.rowData.created_time}
               </div>
             </div>

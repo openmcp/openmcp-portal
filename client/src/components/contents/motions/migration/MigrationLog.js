@@ -40,8 +40,8 @@ class MigrationLog extends Component {
         { name: "sourceCluster", title: "Source Cluster"},
         { name: "targetCluster", title: "Target Cluster"},
         { name: "namespace", title: "Namespace"},
-        { name: "creationTime", title: "Created Time"},
-        { name: "elapsedTime", title: "Elapsed Time"},
+        { name: "creationTime", title: "Created Time (UTC)"},
+        { name: "elapsedTime", title: "Elapsed Time (UTC)"},
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 300 },

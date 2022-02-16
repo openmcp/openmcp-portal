@@ -65,7 +65,7 @@ class SnapShotControl extends Component {
     this.state = {
       columns: [
         { name: "name", title: "SnapShot" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
         { name: "control", title: " " },
       ],
       tableColumnExtensions: [

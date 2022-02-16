@@ -78,7 +78,7 @@ class PcAddProjectPolicy extends Component {
         { name: "name", title: "Name" },
         { name: "status", title: "Status" },
         { name: "cluster", title: "Cluster" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 200 },

@@ -36,7 +36,7 @@ class PjVolumes extends Component {
         { name: "project", title: "Project" },
         { name: "capacity", title: "Capacity" },
         // { name: "mount", title: "Mount" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 180 },

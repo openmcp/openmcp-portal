@@ -187,7 +187,7 @@ class BasicInfo extends Component {
             </div>
             <div className="cb-body-right">
               <div>
-                <span>Created Time : </span>
+                <span>Created Time (UTC) : </span>
                 {this.props.rowData.created_time}
               </div>
               <div>
@@ -391,7 +391,7 @@ class Pods extends Component {
         { name: "node_ip", title: "Node IP" },
         // { name: "cpu", title: "CPU" },
         // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 330 },

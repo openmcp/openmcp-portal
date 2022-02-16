@@ -34,7 +34,7 @@ class PjConfigMaps extends Component {
         { name: "name", title: "Name" },
         { name: "project", title: "Project" },
         { name: "keys", title: "Keys" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 300 },

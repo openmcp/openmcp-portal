@@ -55,7 +55,7 @@ class Metering extends Component {
         { name: "region", title: "Region" },
         { name: "region_name", title: "Region Name" },
         { name: "cost", title: "Cluster Cost" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
         { name: "workers", title: "workers" },
       ],
       defaultColumnWidths: [
@@ -324,8 +324,8 @@ class MeteringWorker extends Component {
         { name: "memory", title: "Memory" },
         { name: "disk", title: "Disk" },
         { name: "cost", title: "Worker Node Cost" },
-        { name: "created_time", title: "Created time" },
-        { name: "updated_time", title: "Updated Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
+        { name: "updated_time", title: "Updated Time (UTC)" },
       ],
       tableColumnExtensions: [
         { columnName: "id", width: "50px" },

@@ -182,7 +182,7 @@ class BasicInfo extends Component {
                 {this.props.rowData.storage_class}
               </div>
               <div>
-                <span>Created Time : </span>
+                <span>Created Time (UTC) : </span>
                 {this.props.rowData.created_time}
               </div>
             </div>
@@ -207,7 +207,7 @@ class MountedBy extends Component {
         { name: "node_ip", title: "Node IP" },
         // { name: "cpu", title: "CPU" },
         // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 370 },

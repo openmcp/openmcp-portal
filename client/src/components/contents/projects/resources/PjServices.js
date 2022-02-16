@@ -39,7 +39,7 @@ class PjServices extends Component {
         { name: "external_ip", title: "External IP" },
         { name: "selector", title: "Selector" },
         // { name: "port", title: "Port" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 200 },

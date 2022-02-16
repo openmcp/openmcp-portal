@@ -42,7 +42,7 @@ class PjPods extends Component {
         { name: "node_ip", title: "Node IP" },
         // { name: "cpu", title: "CPU" },
         // { name: "memory", title: "Memory" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 330 },

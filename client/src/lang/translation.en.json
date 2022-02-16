@@ -280,7 +280,7 @@
             "reason": "Reason",
             "object": "Object",
             "message": "Message",
-            "time": "Created Time"
+            "time": "Created Time (UTC)"
           }
         }
       },
@@ -343,7 +343,7 @@
           "ip": "IP",
           "os": "OS",
           "docker": "Docker",
-          "createdTime": "Created Time",
+          "createdTime": "Created Time (UTC)",
           "provider": "Provider"
         }
       },
@@ -380,7 +380,7 @@
       "status": "Status",
       "cluster": "Cluster",
       "labels": "Labels",
-      "createdTime": "Created Time"
+      "createdTime": "Created Time (UTC)"
     },
     "pop-create": {
       "btn-create": "Create Project",
@@ -414,7 +414,7 @@
             "labels": "Lasbels",
             "status": "Status",
             "uid": "UID",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           }
         },
         "projectResource": {
@@ -501,7 +501,7 @@
           "status": "Ready",
           "project": "Project",
           "capacity": "Capacity",
-          "createdTime": "Created Time"
+          "createdTime": "Created Time (UTC)"
         },
         "detail": {
           "title": "Volume Overview",
@@ -523,7 +523,7 @@
             "name": "Name",
             "project": "Project",
             "type": "Type",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           },
           "detail": {
             "title": "Secret Overview",
@@ -541,7 +541,7 @@
             "name": "Name",
             "project": "Project",
             "keys": "Keys",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           },
           "detail": {
             "title": "ConfigMap Overview",
@@ -570,7 +570,7 @@
       "clusterDp": "Cluster:Deployment count",
       "project": "Project",
       "image": "Image",
-      "createdTime": "Created Time"
+      "createdTime": "Created Time (UTC)"
     },
     "pop-create": {
       "btn-create": "Create",
@@ -612,7 +612,7 @@
         "name": "Name",
         "project": "Project",
         "labels": "Labels",
-        "createdTime": "Created Time",
+        "createdTime": "Created Time (UTC)",
         "uid": "UID",
         "replica": "Replica",
         "kind": "Kind"
@@ -640,7 +640,7 @@
           "reason": "Reason",
           "object": "Object",
           "message": "Message",
-          "createdTime": "Created Time"
+          "createdTime": "Created Time (UTC)"
         }
       }
     }
@@ -657,7 +657,7 @@
         "podIp": "Pod IP",
         "node": "Node",
         "nodeIp": "Node IP",
-        "createdTime": "Created Time"
+        "createdTime": "Created Time (UTC)"
       },
       "detail": {
         "title": "Pod Overview",
@@ -673,14 +673,14 @@
 
           "nodeIp": "Node IP",
           "podIp": "Pod IP",
-          "createdTime": "Created Time"
+          "createdTime": "Created Time (UTC)"
         },
         "podStatus": {
           "title": "Pod Status",
           "grid": {
             "type": "Type",
             "status": "Status",
-            "updatedTime": "Updated Time",
+            "updatedTime": "Updated Time (UTC) (UTC)",
             "reason": "Reason",
             "message": "Message"
           }
@@ -706,7 +706,7 @@
             "reason": "Reason",
             "object": "Object",
             "message": "Message",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           }
         }
       }
@@ -756,7 +756,7 @@
         "clusterIp": "Cluster IP",
         "externalIp": "External IP",
         "selector": "Selector",
-        "createdTime": "Created Time"
+        "createdTime": "Created Time (UTC)"
       },
       "pop-create": {
         "btn-create": "Create Service",
@@ -780,7 +780,7 @@
           "clusterIp": "Cluster IP",
           "externerIp": "Externer IP",
           "endpoints": "Endpoints",
-          "createdTime": "Created Time"
+          "createdTime": "Created Time (UTC)"
         },
         "pods": {
           "title": "Pods"
@@ -793,7 +793,7 @@
             "reason": "Reason",
             "object": "Object",
             "message": "Message",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           }
         }
       }
@@ -805,7 +805,7 @@
         "cluster": "Cluster",
         "project": "Project",
         "address": "Address",
-        "createdTime": "Created Time"
+        "createdTime": "Created Time (UTC)"
       },
       "pop-create": {
         "btn-create": "Create Ingress",
@@ -818,7 +818,7 @@
           "name": "Name",
           "project": "Project",
           "address": "Address",
-          "createdTime": "Created Time"
+          "createdTime": "Created Time (UTC)"
         },
         "rules": {
           "title": "Rules",
@@ -839,7 +839,7 @@
             "reason": "Reason",
             "object": "Object",
             "message": "Message",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           }
         }
       }

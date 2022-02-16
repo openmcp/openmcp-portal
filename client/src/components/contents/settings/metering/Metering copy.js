@@ -32,7 +32,7 @@
 //     super(props);
 //     this.state = {
 //       columns: [
-//         { name: "created_time", title: "Created Time" },
+//         { name: "created_time", title: "Created Time (UTC)" },
 //         { name: "res_cpu_price", title: "CPU Price" },
 //         { name: "res_memory_price", title: "Memory Price" },
 //         { name: "res_disk_price", title: "Disk Price" },

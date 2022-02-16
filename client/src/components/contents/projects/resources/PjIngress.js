@@ -35,7 +35,7 @@ class PjIngress extends Component {
         { name: "cluster", title: "Cluster" },
         { name: "project", title: "Project" },
         { name: "address", title: "Address" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 130 },

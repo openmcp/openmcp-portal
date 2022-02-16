@@ -31,7 +31,7 @@ class UserLogs extends Component {
         { name: "description", title: "Activity" },
         { name: "etc", title: "Path" },
         { name: "code", title: "Code" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "user_id", width: 130 },

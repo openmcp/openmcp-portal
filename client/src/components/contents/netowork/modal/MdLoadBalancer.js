@@ -178,7 +178,7 @@ class LoadbalancePopup extends Component {
         if (res !== null) {
           let url = "";
           if (res.ip !== "-" && res.port !== 0) {
-            url = `http://${res.ip}:${res.port}/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
+            url = `http://${res.ip}:${res.port}/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=60&refresh=10000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
           } else {
             alert(t("network.loadbalancer.msg.noneData"));
             return;
@@ -186,9 +186,9 @@ class LoadbalancePopup extends Component {
 
           const cluster = this.props.cluster;
           if (cluster === "openmcp") {
-            url = `http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
+            url = `http://115.94.141.62:20001/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=60&refresh=10000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
           } else if (cluster === "cluster04") {
-            url = `http://115.94.141.62:20002/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=604800&refresh=30000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
+            url = `http://115.94.141.62:20002/kiali/console/graph/namespaces/?edges=requestDistribution&graphType=app&idleNodes=false&duration=60&refresh=10000&operationNodes=false&idleEdges=false&injectServiceNodes=false&layout=dagre&namespaces=default`;
           }
 
           let innerHeight = window.innerHeight;

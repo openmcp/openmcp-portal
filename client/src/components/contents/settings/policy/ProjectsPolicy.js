@@ -40,7 +40,7 @@ class ProjectsPolicy extends Component {
         { name: "cls_mem_trh_r", title: "Cluster Memory"},
         { name: "pod_cpu_trh_r", title: "Pods CPU"},
         { name: "pod_mem_trh_r", title: "Pods Memory"},
-        { name: "updated_time", title: "Updated Time"},
+        { name: "updated_time", title: "Updated Time (UTC)"},
       ],
       defaultColumnWidths: [
         { columnName: "project", width: 300 },

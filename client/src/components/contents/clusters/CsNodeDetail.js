@@ -176,7 +176,7 @@ class CsNodeDetail extends Component {
 //                   {this.props.rowData.docker}
 //                 </div>
 //                 <div>
-//                   <span>Created Time : </span>
+//                   <span>Created Time (UTC) : </span>
 //                   {this.props.rowData.created_time}
 //                 </div>
 //                 <div>

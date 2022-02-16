@@ -44,8 +44,8 @@ class SnapshotLog extends Component {
         { name: "progress", title: "Progress" },
         { name: "status", title: "Status" },
         { name: "description", title: "Description" },
-        { name: "creationTime", title: "Created Time" },
-        { name: "elapsedTime", title: "Elapsed Time" },
+        { name: "creationTime", title: "Created Time (UTC)" },
+        { name: "elapsedTime", title: "Elapsed Time (UTC)" },
         { name: "snapshotkey", title: "Snapshot key" },
         { name: "sub_info", title: "sub" },
         

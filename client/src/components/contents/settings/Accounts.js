@@ -41,7 +41,7 @@ class Accounts extends Component {
         { name: "user_id", title: "User ID" },
         { name: "role", title: "Roles" },
         { name: "last_login_time", title: "Last login time" },
-        { name: "created_time", title: "Created time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "user_id", width: 150 },

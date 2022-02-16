@@ -280,7 +280,7 @@
             "reason": "사유",
             "object": "객체",
             "message": "내용",
-            "time": "생성일시"
+            "time": "생성일시 (UTC)"
           }
         }
       },
@@ -343,7 +343,7 @@
           "ip": "IP",
           "os": "OS",
           "docker": "Docker",
-          "createdTime": "생성일시",
+          "createdTime": "생성일시 (UTC)",
           "provider": "제공원"
         }
       },
@@ -380,7 +380,7 @@
       "status": "상태",
       "cluster": "클러스터",
       "labels": "레이블",
-      "createdTime": "생성일시"
+      "createdTime": "생성일시 (UTC)"
     },
     "pop-create": {
       "btn-create": "프로젝트 생성",
@@ -414,7 +414,7 @@
             "labels": "Lasbels",
             "status": "Status",
             "uid": "UID",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           }
         },
         "projectResource": {
@@ -501,7 +501,7 @@
           "status": "Ready",
           "project": "Project",
           "capacity": "Capacity",
-          "createdTime": "Created Time"
+          "createdTime": "Created Time (UTC)"
         },
         "detail": {
           "title": "볼륨 개요",
@@ -524,7 +524,7 @@
             "name": "Name",
             "project": "Project",
             "type": "Type",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           },
           "detail": {
             "title": "Secret 개요",
@@ -542,7 +542,7 @@
             "name": "Name",
             "project": "Project",
             "keys": "Keys",
-            "createdTime": "Created Time"
+            "createdTime": "Created Time (UTC)"
           },
           "detail": {
             "title": "ConfigMap 개요",
@@ -571,7 +571,7 @@
       "clusterDp": "클러스터:디플로이먼트 수",
       "project": "프로젝트",
       "image": "이미지",
-      "createdTime": "생성일시"
+      "createdTime": "생성일시 (UTC)"
     },
     "pop-create": {
       "btn-create": "디플로이먼트 생성",
@@ -613,7 +613,7 @@
         "name": "이름",
         "project": "프로젝트",
         "labels": "레이블",
-        "createdTime": "생성일시",
+        "createdTime": "생성일시 (UTC)",
         "uid": "UID",
         "replica": "레플리카",
         "kind": "종류"
@@ -641,7 +641,7 @@
           "reason": "사유",
           "object": "객체",
           "message": "내용",
-          "createdTime": "생성일시"
+          "createdTime": "생성일시 (UTC)"
         }
       }
     }
@@ -658,7 +658,7 @@
         "podIp": "파드 IP",
         "node": "노드",
         "nodeIp": "노드 IP",
-        "createdTime": "생성일시"
+        "createdTime": "생성일시 (UTC)"
       },
       "detail": {
         "title": "파드 개요",
@@ -674,14 +674,14 @@
 
           "nodeIp": "노드 IP",
           "podIp": "파드 IP",
-          "createdTime": "생성일시"
+          "createdTime": "생성일시 (UTC)"
         },
         "podStatus": {
           "title": "Pod 상태",
           "grid": {
             "type": "타입",
             "status": "상태",
-            "updatedTime": "최종수정일시",
+            "updatedTime": "최종수정일시 (UTC)",
             "reason": "사유",
             "message": "내용"
           }
@@ -707,7 +707,7 @@
             "reason": "사유",
             "object": "객체",
             "message": "내용",
-            "createdTime": "생성일시"
+            "createdTime": "생성일시 (UTC)"
           }
         }
       }
@@ -757,7 +757,7 @@
         "clusterIp": "클러스터 IP",
         "externalIp": "외부 IP",
         "selector": "선택자",
-        "createdTime": "생성일시"
+        "createdTime": "생성일시 (UTC)"
       },
       "pop-delete":{
         "btn-delete": "서비스 삭제",
@@ -781,7 +781,7 @@
           "clusterIp": "클러스터 IP",
           "externerIp": "외부 IP",
           "endpoints": "엔드포인트",
-          "createdTime": "생성일시"
+          "createdTime": "생성일시 (UTC)"
         },
         "pods": {
           "title": "파드"
@@ -794,7 +794,7 @@
             "reason": "사유",
             "object": "객체",
             "message": "내용",
-            "createdTime": "생성일시"
+            "createdTime": "생성일시 (UTC)"
           }
         }
       }
@@ -806,7 +806,7 @@
         "cluster": "클러스터",
         "project": "프로젝트",
         "address": "IP주소",
-        "createdTime": "생성일시"
+        "createdTime": "생성일시 (UTC)"
       },
       "pop-create": {
         "btn-create": "인그레스 생성",
@@ -819,7 +819,7 @@
           "name": "이름",
           "project": "프로젝트",
           "address": "주소",
-          "createdTime": "생성일시"
+          "createdTime": "생성일시 (UTC)"
         },
         "rules": {
           "title": "Rules",
@@ -840,7 +840,7 @@
             "reason": "사유",
             "object": "객체",
             "message": "내용",
-            "createdTime": "생성일시"
+            "createdTime": "생성일시 (UTC)"
           }
         }
       }

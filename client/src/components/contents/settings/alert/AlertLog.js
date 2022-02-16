@@ -33,7 +33,7 @@ class AlertLog extends Component {
         { name: "status", title: "Status"},
         { name: "message", title: "Message"},
         { name: "resource", title: "Resource"},
-        { name: "created_time", title: "Created Time"},
+        { name: "created_time", title: "Created Time (UTC)"},
       ],
       defaultColumnWidths: [
         { columnName: "node_name", width: 250 },

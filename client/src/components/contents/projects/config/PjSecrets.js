@@ -34,7 +34,7 @@ class PjSecrets extends Component {
         { name: "name", title: "Name" },
         { name: "project", title: "Project" },
         { name: "type", title: "Type" },
-        { name: "created_time", title: "Created Time" },
+        { name: "created_time", title: "Created Time (UTC)" },
       ],
       defaultColumnWidths: [
         { columnName: "name", width: 300 },
