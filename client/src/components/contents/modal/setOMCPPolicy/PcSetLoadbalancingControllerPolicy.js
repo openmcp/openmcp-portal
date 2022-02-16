@@ -221,7 +221,7 @@ class PcSetLoadbalancingControllerPolicy extends Component {
                         valueLabelDisplay="auto"
                         aria-labelledby="range-slider"
                         // getAriaValueText={valuetext}
-                        step={null}
+                        step={0.1}
                         min={0}
                         max={1}
                         // marks={this.props.isFloat ? this.g_float_marks : this.g_int_marks}
