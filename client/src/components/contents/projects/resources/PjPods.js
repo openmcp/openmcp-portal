@@ -97,7 +97,28 @@ class PjPods extends Component {
   };
 
   onRefresh = () => {
-    this.setState({ rows: "" });
+    // this.setState({ rows: "" });
+    this.timer = setInterval(this.progress, 20);
+    this.callApi()
+      .then((res) => {
+        if (res == null) {
+          this.setState({ rows: [] });
+        } else {
+          this.setState({ rows: res });
+        }
+        clearInterval(this.timer);
+        // let userId = null;
+        // AsyncStorage.getItem("userName", (err, result) => {
+        //   userId = result;
+        // });
+        // utilLog.fn_insertPLogs(userId, "log-PJ-VW05");
+      })
+      .catch((err) => console.log(err));
+  };
+
+  //컴포넌트가 모두 마운트가 되었을때 실행된다.
+  componentDidMount() {
+    // this.setState({ rows: "" });
     this.timer = setInterval(this.progress, 20);
     this.callApi()
       .then((res) => {
@@ -112,13 +133,10 @@ class PjPods extends Component {
           userId = result;
         });
         utilLog.fn_insertPLogs(userId, "log-PJ-VW05");
+
+        this.timer2 = setInterval(this.onRefresh, 5000);
       })
       .catch((err) => console.log(err));
-  };
-
-  //컴포넌트가 모두 마운트가 되었을때 실행된다.
-  componentDidMount() {
-    this.onRefresh();
   }
 
   render() {

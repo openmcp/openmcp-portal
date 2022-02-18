@@ -222,7 +222,7 @@ class ExcuteMigration extends Component {
     axios
       .post(url, data)
       .then((res) => {
-        alert(t("migrations.migration.pop-migration.msg.completedRequest"));
+        // alert(t("migrations.migration.pop-migration.msg.completedRequest"));
         this.setState({ open: false });
         this.props.onUpdateData();
         this.props.menuClose();

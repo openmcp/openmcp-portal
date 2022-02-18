@@ -886,8 +886,8 @@
           "title": "스냅샷 생성 정보"
         },
         "msg": {
-          "chk-selectSnapshot": "Please select deployment",
-          "completedRequest": "Snapshot request has been completed"
+          "chk-selectSnapshot": "스냅샷을 선택해주세요",
+          "completedRequest": "스냅샷 요청이 완료되었습니다."
         }
       }
     },

@@ -52,8 +52,10 @@ class ExcuteSnapshot extends Component {
   };
 
   handleClickOpen = () => {
+    const {t} = this.props;
+
     if (Object.keys(this.props.rowData).length === 0) {
-      alert("Please select deployment");
+      alert(t("snapshots.snapshot.pop-snapshot.msg.chk-selectSnapshot"));
       this.setState({ open: false });
       return;
     }
@@ -129,7 +131,7 @@ class ExcuteSnapshot extends Component {
     axios
       .post(url, data)
       .then((res) => {
-        // alert(res.data[0].text);
+        // alert(t("snapshots.snapshot.pop-snapshot.msg.completedRequest"));
         this.setState({ open: false });
         
         let userId = null;

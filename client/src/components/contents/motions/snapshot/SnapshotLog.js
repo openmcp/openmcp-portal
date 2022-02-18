@@ -123,7 +123,7 @@ class SnapshotLog extends Component {
         this.setState({ rows: [] });
       } else {
         this.setState({ rows: res });
-        console.log("repeat");
+        // console.log("repeat");
       }
     })
     .catch((err) => console.log(err));
