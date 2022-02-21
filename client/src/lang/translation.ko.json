@@ -569,6 +569,8 @@
       "replicas": "레플리카",
       "cluster": "클러스터",
       "clusterDp": "클러스터:디플로이먼트 수",
+      "region": "지역",
+      "zone": "구역",
       "project": "프로젝트",
       "image": "이미지",
       "createdTime": "생성일시 (UTC)"

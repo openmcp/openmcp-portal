@@ -568,6 +568,8 @@
       "replicas": "Replicas",
       "cluster": "Cluster",
       "clusterDp": "Cluster:Deployment count",
+      "region": "Region",
+      "zone": "Zone",
       "project": "Project",
       "image": "Image",
       "createdTime": "Created Time (UTC)"
