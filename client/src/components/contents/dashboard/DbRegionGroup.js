@@ -31,7 +31,7 @@ class DbRegionGroup extends Component {
   }
 
   componentDidMount() {
-    this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
+    // this.timer2 = setInterval(this.onRefresh, this.state.refreshCycle);
     this.timer = setInterval(this.progress, 20);
     this.onRefresh();
 

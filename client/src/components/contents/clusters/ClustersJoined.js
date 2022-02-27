@@ -40,6 +40,7 @@ import LinearProgressBar from "../../modules/LinearProgressBar.js";
 import axios from "axios";
 //import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { withTranslation } from "react-i18next";
+import { TableIndexColumn } from "../../common/TableIndexColumn.js";
 
 // function GoLogin() {
 //   const history = useHistory();
@@ -61,21 +62,23 @@ import { withTranslation } from "react-i18next";
 class ClustersJoined extends Component {
   constructor(props) {
     super(props);
-    const { t } = this.props;
+    // const { t } = this.props;
     this.state = {
-      columns: [
-        { name: "name", title: t("clusters.joined.grid.name") },
-        { name: "status", title: t("clusters.joined.grid.status") },
-        { name: "region", title: t("clusters.joined.grid.region") },
-        { name: "zone", title: t("clusters.joined.grid.zone") },
-        { name: "nodes", title: t("clusters.joined.grid.nodes") },
-        { name: "cpu", title: t("clusters.joined.grid.cpu") },
-        { name: "ram", title: t("clusters.joined.grid.memory") },
-        { name: "provider", title: t("clusters.joined.grid.provider") },
-        // { name: "disk", title: "Disk" },
-        // { name: "network", title: "Network" },
-      ],
+      // columns: [
+      //   { name: "no", title: "No." },
+      //   { name: "name", title: t("clusters.joined.grid.name") },
+      //   { name: "status", title: t("clusters.joined.grid.status") },
+      //   { name: "region", title: t("clusters.joined.grid.region") },
+      //   { name: "zone", title: t("clusters.joined.grid.zone") },
+      //   { name: "nodes", title: t("clusters.joined.grid.nodes") },
+      //   { name: "cpu", title: t("clusters.joined.grid.cpu") },
+      //   { name: "ram", title: t("clusters.joined.grid.memory") },
+      //   { name: "provider", title: t("clusters.joined.grid.provider") },
+      //   // { name: "disk", title: "Disk" },
+      //   // { name: "network", title: "Network" },
+      // ],
       defaultColumnWidths: [
+        { columnName: "no", width: 40 },
         { columnName: "name", width: 100 },
         { columnName: "status", width: 100 },
         { columnName: "region", width: 100 },
@@ -270,6 +273,7 @@ class ClustersJoined extends Component {
   render() {
     const { t } = this.props;
     const columns = [
+      { name: "no", title: "No." },
       { name: "name", title: t("clusters.joined.grid.name") },
       { name: "status", title: t("clusters.joined.grid.status") },
       { name: "region", title: t("clusters.joined.grid.region") },
@@ -409,6 +413,8 @@ class ClustersJoined extends Component {
       // console.log("cell : ", props);
       if (column.name === "status") {
         return <HighlightedCell {...props} />;
+      } else if (column.name === "no") {
+        return (<Table.Cell style={{ textAlign: "center" }}><p>{props.tableRow.rowId+1}</p></Table.Cell>)
       } else if (column.name === "name") {
         return (
           <Table.Cell {...props} style={{ cursor: "pointer" }}>
@@ -578,9 +584,9 @@ class ClustersJoined extends Component {
 
                   {/* Sorting */}
                   <SortingState
-                    defaultSorting={[
-                      { columnName: "status", direction: "desc" },
-                    ]}
+                    // defaultSorting={[
+                    //   { columnName: "status", direction: "desc" },
+                    // ]}
                   />
 
                   {/* 페이징 */}

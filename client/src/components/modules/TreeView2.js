@@ -137,7 +137,7 @@ class TreeView2 extends React.Component {
                 nodeSvgShape={svgSquare}
                 collapsible	= {false}
                 zoomable = {false}
-                separation = {{siblings: 0.5, nonSiblings: 2}}
+                separation = {{siblings: 0.7, nonSiblings: 2}}
                 // nodeSvgShape={svgSquare2}
                 transitionDuration="0"
                 translate={{
@@ -150,10 +150,11 @@ class TreeView2 extends React.Component {
                   render: <NodeLabel className="myLabelComponentInSvg" />,
                   // <StorageIcon style={{ fontSize:"43px", color: "#367fa9", stroke: "none" }}/>,
                   foreignObjectWrapper: {
-                    // width:"250px",
+                    width:"80px",
                     y: -30,
                     // x: -60,
-                    x: -58,
+                    // x: -58,
+                    x: -41,
                     style: {textAlign:"center",cursor:"default"}
                   },
                 }}
