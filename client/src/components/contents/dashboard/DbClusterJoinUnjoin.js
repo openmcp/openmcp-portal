@@ -192,14 +192,26 @@ class ClusterDnd extends Component {
   }
 
   componentWillMount() {
-    var joined = this.props.data[0].children.map((item, i) => ({
+
+    let joindClusterData;
+    let UnJoindClusterData;
+
+    this.props.data.find((element) => {
+      if(element.name === "OpenMCP"){
+        joindClusterData = element
+      } else {
+        UnJoindClusterData = element
+      }
+    })
+
+    var joined = joindClusterData.children.map((item, i) => ({
       id: `${item.attributes.zone}||${item.attributes.region}||${item.name}||${item.attributes.endpoint}`,
       content: `${item.name} (${item.attributes.endpoint})`,
     }));
 
     var joinable =
       this.props.data.length > 1
-        ? this.props.data[1].children.map((item, i) => ({
+        ? UnJoindClusterData.children.map((item, i) => ({
             id: `${item.attributes.zone}||${item.attributes.region}||${item.name}||${item.attributes.endpoint}`,
             content: `${item.name}`,
           }))
