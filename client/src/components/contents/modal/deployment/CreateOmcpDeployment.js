@@ -204,9 +204,9 @@ spec:
       template:
         spec:
           containers:
-          - image: ${this.state.name}
+          - image: ${this.state.containerImage}
             imagePullPolicy: IfNotPresent
-            name: ${this.state.containerImage}
+            name: ${this.state.name}
             ports:
             - containerPort: ${this.state.containerPort}`
 
